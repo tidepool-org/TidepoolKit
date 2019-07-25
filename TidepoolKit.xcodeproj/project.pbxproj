@@ -190,13 +190,13 @@
 		48F7135422E9FCB900FC2C89 /* TidepoolKit */ = {
 			isa = PBXGroup;
 			children = (
-				48F7137322E9FEE200FC2C89 /* DebugLog.swift */,
-				48F7137022E9FEE100FC2C89 /* Reachability.swift */,
-				48F7137F22E9FEE200FC2C89 /* TidepoolAPI */,
-				48F7137422E9FEE200FC2C89 /* TidepoolApp */,
 				48F7137122E9FEE100FC2C89 /* TidepoolKit.swift */,
 				48F7137222E9FEE200FC2C89 /* TPKitConstants.swift */,
 				48F7138922E9FEE200FC2C89 /* TPKitSetting.swift */,
+				48F7137422E9FEE200FC2C89 /* API */,
+				48F7137F22E9FEE200FC2C89 /* Networking */,
+				48F713E122EA05BA00FC2C89 /* Debug */,
+				48F713E022EA04E500FC2C89 /* Third Party */,
 				48F7135522E9FCB900FC2C89 /* TidepoolKit.h */,
 				48F7135622E9FCB900FC2C89 /* Info.plist */,
 			);
@@ -213,44 +213,44 @@
 			path = TidepoolKitTests;
 			sourceTree = "<group>";
 		};
-		48F7137422E9FEE200FC2C89 /* TidepoolApp */ = {
+		48F7137422E9FEE200FC2C89 /* API */ = {
 			isa = PBXGroup;
 			children = (
-				48F7137522E9FEE200FC2C89 /* TPDataFood.swift */,
-				48F7137622E9FEE200FC2C89 /* TPUserDataCommon */,
+				48F7137622E9FEE200FC2C89 /* TPDataCommon */,
 				48F7137922E9FEE200FC2C89 /* TPDataCbg.swift */,
-				48F7137A22E9FEE200FC2C89 /* DateUtils.swift */,
+				48F7137522E9FEE200FC2C89 /* TPDataFood.swift */,
+				48F7137D22E9FEE200FC2C89 /* TPDataBasal.swift */,
 				48F7137B22E9FEE200FC2C89 /* TPUser.swift */,
 				48F7137C22E9FEE200FC2C89 /* TPDataset.swift */,
-				48F7137D22E9FEE200FC2C89 /* TPDataBasal.swift */,
 				48F7137E22E9FEE200FC2C89 /* TPUserDataArray.swift */,
 			);
-			path = TidepoolApp;
+			path = API;
 			sourceTree = "<group>";
 		};
-		48F7137622E9FEE200FC2C89 /* TPUserDataCommon */ = {
+		48F7137622E9FEE200FC2C89 /* TPDataCommon */ = {
 			isa = PBXGroup;
 			children = (
 				48F7137722E9FEE200FC2C89 /* TPUserDataOrigin.swift */,
 				48F7137822E9FEE200FC2C89 /* TPUserDataCommon.swift */,
 			);
-			path = TPUserDataCommon;
+			path = TPDataCommon;
 			sourceTree = "<group>";
 		};
-		48F7137F22E9FEE200FC2C89 /* TidepoolAPI */ = {
+		48F7137F22E9FEE200FC2C89 /* Networking */ = {
 			isa = PBXGroup;
 			children = (
+				48F7138522E9FEE200FC2C89 /* APIConnect.swift */,
+				48F7138422E9FEE200FC2C89 /* TPObjectMeta.swift */,
+				48F7138822E9FEE200FC2C89 /* TPUserDataArrayExtension.swift */,
 				48F7138022E9FEE200FC2C89 /* APIDataSetArray.swift */,
 				48F7138122E9FEE200FC2C89 /* APIProfile.swift */,
 				48F7138222E9FEE200FC2C89 /* APIUser.swift */,
 				48F7138322E9FEE200FC2C89 /* APIUserSettings.swift */,
-				48F7138422E9FEE200FC2C89 /* TPObjectMeta.swift */,
-				48F7138522E9FEE200FC2C89 /* APIConnect.swift */,
 				48F7138622E9FEE200FC2C89 /* APIAccessUsers.swift */,
 				48F7138722E9FEE200FC2C89 /* APIDataSet.swift */,
-				48F7138822E9FEE200FC2C89 /* TPUserDataArrayExtension.swift */,
+				48F7137A22E9FEE200FC2C89 /* DateUtils.swift */,
 			);
-			path = TidepoolAPI;
+			path = Networking;
 			sourceTree = "<group>";
 		};
 		48F713A722EA00CF00FC2C89 /* TidepoolKitUI */ = {
@@ -292,6 +292,22 @@
 			children = (
 			);
 			name = Frameworks;
+			sourceTree = "<group>";
+		};
+		48F713E022EA04E500FC2C89 /* Third Party */ = {
+			isa = PBXGroup;
+			children = (
+				48F7137022E9FEE100FC2C89 /* Reachability.swift */,
+			);
+			path = "Third Party";
+			sourceTree = "<group>";
+		};
+		48F713E122EA05BA00FC2C89 /* Debug */ = {
+			isa = PBXGroup;
+			children = (
+				48F7137322E9FEE200FC2C89 /* DebugLog.swift */,
+			);
+			path = Debug;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
