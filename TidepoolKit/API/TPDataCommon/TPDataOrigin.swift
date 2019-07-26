@@ -15,7 +15,7 @@
 
 import Foundation
 
-public struct TPUserDataOrigin: RawRepresentable {
+public struct TPDataOrigin: RawRepresentable {
     let id: String?
     let name: String?
     let type: String?

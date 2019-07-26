@@ -15,8 +15,16 @@
 
 import Foundation
 
-public struct TPKitConstants {
-    public static let BgConvertToMgDl: Double = 18.01559
-    public static let BgLowDefault = 70
-    public static let BgHighDefault = 180
+public enum EnergyUnits: String {
+    case calories = "calories"
+    case kilocalories = "kilocalories" /* (aka dietary Calorie)*/
+    case joules = "joules"
+    case kilojoules = "kilojoules"
 }
+
+public struct Energy {
+    public var value: Double         // 0.0 <= x < 10000.0 for kilocalories, converted for other types; 4.1848 joules / calories]
+    public var units: EnergyUnits
+}
+
+

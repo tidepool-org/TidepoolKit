@@ -17,18 +17,18 @@ import Foundation
 
 public struct Suppressed {
     public var deliveryType: String?
-    public var rate: Float?
+    public var rate: Double?
     public var type: String?
 }
 
 public class TPDataBasal: TPData {
     
-    public let rate: Float
+    public let rate: Double
     public let duration: Int
     public var suppressed: Suppressed?
     public var deliveryType: String?
 
-    public init(_ id: String?, time: Date, rate: Float, duration: Int) {
+    public init(_ id: String?, time: Date, rate: Double, duration: Int) {
         self.rate = rate
         self.duration = duration
         super.init(id: id, time: time)

@@ -15,8 +15,9 @@
 
 import Foundation
 
-public struct TPKitConstants {
-    public static let BgConvertToMgDl: Double = 18.01559
-    public static let BgLowDefault = 70
-    public static let BgHighDefault = 180
+public struct Protein {
+    public var value: Double 	// 0.0 <= x <= 1000.0
+    public let units = "grams"
 }
+
+

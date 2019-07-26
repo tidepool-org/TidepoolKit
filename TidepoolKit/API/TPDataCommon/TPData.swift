@@ -28,7 +28,7 @@ public class TPData: RawRepresentable {
     public let time: Date?
     
     // other optional data...
-    public var origin: TPUserDataOrigin?
+    public var origin: TPDataOrigin?
     public var payload: [String: Any]?
 
     public init(id: String? = nil , time: Date?) {
@@ -69,7 +69,7 @@ public class TPData: RawRepresentable {
         self.id = rawValue["id"] as? String
         self.time = rawValue["time"] as? Date
         if let originDict = rawValue["origin"] as? [String: Any] {
-            if let origin = TPUserDataOrigin(rawValue: originDict) {
+            if let origin = TPDataOrigin(rawValue: originDict) {
                 self.origin = origin
             }
         }

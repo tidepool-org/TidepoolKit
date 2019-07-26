@@ -15,8 +15,14 @@
 
 import Foundation
 
-public struct TPKitConstants {
-    public static let BgConvertToMgDl: Double = 18.01559
-    public static let BgLowDefault = 70
-    public static let BgHighDefault = 180
+public struct Nutrition {
+	public var energy: Energy? = nil
+	public var carbohydrate: TPDataCarbohydrate? = nil
+	public var fat: Fat? = nil
+	public var protein: Protein? = nil
+	public init(carbs: TPDataCarbohydrate?) {
+		self.carbohydrate = carbs
+	}
 }
+
+

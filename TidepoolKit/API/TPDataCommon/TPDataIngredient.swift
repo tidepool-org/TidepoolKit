@@ -15,8 +15,13 @@
 
 import Foundation
 
-public struct TPKitConstants {
-    public static let BgConvertToMgDl: Double = 18.01559
-    public static let BgLowDefault = 70
-    public static let BgHighDefault = 180
+public struct Ingredient {
+	public var amount: Amount? = nil
+	public var brand: String? = nil	// 0 < len <= 100]
+	public var code: String? = nil	// 0 < len <= 100; UPC or other]
+	public var ingredients: [Ingredient]?
+	public var name: String? = nil	// 0 < len <= 100]
+	public var nutrition: Nutrition? = nil
 }
+
+

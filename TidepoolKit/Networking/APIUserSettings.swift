@@ -23,8 +23,8 @@ class APIUserSettings: Codable, TPFetchable {
     }
 
     struct BGTarget: Codable {
-        let low: Float
-        let high: Float
+        let low: Double
+        let high: Double
     }
 
     let units: BGUnits?

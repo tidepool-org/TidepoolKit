@@ -21,7 +21,7 @@ public enum TPCbgUnit: String, Encodable {
     case millimolesPerLiter = "mmol/L"
     
     // service syntax check
-    func inRange(_ value: Float) -> Bool {
+    func inRange(_ value: Double) -> Bool {
         switch self {
         case .milligramsPerDeciliter:
             return value >= 0.0 && value <= 1000.0
@@ -35,18 +35,18 @@ public class TPDataCbg: TPData {
     //
     // type specific data
     //
-    public let value: Float
+    public let value: Double
     public let units: TPCbgUnit
 
     /// Only values acceptable to the Tidepool service are allowed in creating a TPDataCbg item.
-    public init?(_ id: String?, time: Date, value: Float, units: TPCbgUnit) {
+    public init?(time: Date, value: Double, units: TPCbgUnit) {
         self.value = value
         self.units = units
         guard self.units.inRange(self.value) else {
             LogError("TPDataCbg init: value \(value) \(units.rawValue) out of range!")
             return nil
         }
-        super.init(id: id, time: time)
+        super.init(time: time)
         self.type = .cbg
     }
     
@@ -76,7 +76,7 @@ public class TPDataCbg: TPData {
             LogError("TPDataCbg:init(rawValue) invalid units found!")
             return nil
         }
-        self.value = value.floatValue
+        self.value = value.doubleValue
         self.units = units
         super.init(rawValue: rawValue)
     }

@@ -15,8 +15,21 @@
 
 import Foundation
 
-public struct TPKitConstants {
-    public static let BgConvertToMgDl: Double = 18.01559
-    public static let BgLowDefault = 70
-    public static let BgHighDefault = 180
+public enum AssociationType: String {
+	case link = "link"
+    case datum = "datum"
+    case medium = "medium"
+    case venue = "venue"
+    case food = "food"
 }
+
+public struct Association {
+	public let type: AssociationType
+	public var link: String? = nil		// [url; if and only if type == "link"; 1 <= len <= 2K]
+	public var id: String? = nil		// [id; if and only if type == "medium"/"datum"/"venue"/"food"; id to medium/datum/venue/food]
+	public var reason: String? 			// why is there this association; 1 <= len <= 1000]
+}
+
+
+
+

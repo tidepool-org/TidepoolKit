@@ -180,9 +180,9 @@ class TPKitTests10UserData: XCTestCase {
             NSLog("\(#function): ensureLogin completed... with result: \(result)")
             XCTAssert(tpKit.isLoggedIn())
             let newId = UUID.init().uuidString
-            let origin = TPUserDataOrigin(id: newId, name: "org.tidepool.tidepoolKitTest", type: "service", payload: self.TestCbgOriginPayload2)!
+            let origin = TPDataOrigin(id: newId, name: "org.tidepool.tidepoolKitTest", type: "service", payload: self.TestCbgOriginPayload2)!
             let payload = self.TestCbgPayload2
-            guard let cbgSample = TPDataCbg(nil, time: Date(), value: 90, units: .milligramsPerDeciliter) else {
+            guard let cbgSample = TPDataCbg(time: Date(), value: 90, units: .milligramsPerDeciliter) else {
                 NSLog("\(#function) failed to create cbg sample!")
                 XCTFail()
                 return
@@ -207,9 +207,9 @@ class TPKitTests10UserData: XCTestCase {
         waitForExpectations(timeout: 20.0, handler: nil)
     }
 
-    func createCarbItem(_ net: Float) -> TPDataFood? {
+    func createCarbItem(_ net: Double) -> TPDataFood? {
         let newId = UUID.init().uuidString
-        let origin = TPUserDataOrigin(id: newId, name: "org.tidepool.tidepoolKitTest", type: "service", payload: nil)!
+        let origin = TPDataOrigin(id: newId, name: "org.tidepool.tidepoolKitTest", type: "service", payload: nil)!
         let foodSample = TPDataFood(nil, time: Date(), carbs: net)
         foodSample?.origin = origin
         XCTAssertNotNil(foodSample, "\(#function) failed to create food sample!")
