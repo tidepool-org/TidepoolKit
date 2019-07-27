@@ -28,10 +28,10 @@ public class TPDataBasal: TPData {
     public var suppressed: Suppressed?
     public var deliveryType: String?
 
-    public init(_ id: String?, time: Date, rate: Double, duration: Int) {
+    public init(time: Date, rate: Double, duration: Int) {
         self.rate = rate
         self.duration = duration
-        super.init(id: id, time: time)
+        super.init(time: time)
         type = .basal
     }
 

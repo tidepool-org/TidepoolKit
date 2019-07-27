@@ -105,7 +105,13 @@ class TPKitTests10UserData: XCTestCase {
                     NSLog("\(#function) failed user data fetch!")
                     XCTFail()
                 case .success(let userDataArray):
-                    NSLog("\(#function) fetched \(userDataArray.userData.count) items!")
+                    let itemCount = userDataArray.userData.count
+                    NSLog("\(#function) fetched \(itemCount) items!")
+                    guard itemCount > 0 else {
+                        NSLog("\(#function) no data to delete, pass test!")
+                        expectation.fulfill()
+                        return
+                    }
                     tpKit.deleteUserData(userDataArray) {
                         result in
                         expectation.fulfill()
@@ -210,7 +216,7 @@ class TPKitTests10UserData: XCTestCase {
     func createCarbItem(_ net: Double) -> TPDataFood? {
         let newId = UUID.init().uuidString
         let origin = TPDataOrigin(id: newId, name: "org.tidepool.tidepoolKitTest", type: "service", payload: nil)!
-        let foodSample = TPDataFood(nil, time: Date(), carbs: net)
+        let foodSample = TPDataFood(time: Date(), carbs: net)
         foodSample?.origin = origin
         XCTAssertNotNil(foodSample, "\(#function) failed to create food sample!")
         NSLog("created TPDataFood: \(foodSample!.debugDescription)")
@@ -237,6 +243,59 @@ class TPKitTests10UserData: XCTestCase {
             let foodSample = self.createCarbItem(30)
             XCTAssertNotNil(foodSample, "\(#function) failed to create food sample!")
 
+            let tpDataArray = TPUserDataArray([foodSample!])
+            tpKit.putUserData(tpDataArray) {
+                result,arg  in
+                expectation.fulfill()
+                switch result {
+                case .failure:
+                    NSLog("\(#function) failed user data upload!")
+                    XCTFail()
+                case .success:
+                    NSLog("\(#function) upload succeeded!")
+                }
+            }
+        }
+        // Wait 20.0 seconds until expectation has been fulfilled (sometimes staging takes almost 10 seconds). If not, fail.
+        waitForExpectations(timeout: 20.0, handler: nil)
+    }
+
+    func createFoodItem() -> TPDataFood? {
+        let newOriginId = UUID.init().uuidString
+        let origin = TPDataOrigin(id: newOriginId, name: "org.tidepool.tidepoolKitTest", type: "service", payload: nil)!
+        let carbs = TPDataCarbohydrate(net: 100, dietaryFiber: 10, sugars: 10, total: 100)
+        let energy = TPDataEnergy(value: 50, units: .kilocalories)
+        let fat = TPDataFat(total: 10)
+        let protein = TPDataProtein(total: 15)
+        let nutrition = TPDataNutrition(energy: energy, carbs: carbs, fat: fat, protein: protein)
+        XCTAssertNotNil(nutrition, "\(#function) failed to create nutrition struct!")
+        let foodSample = TPDataFood(time: Date(), nutrition: nutrition!)
+        foodSample?.origin = origin
+        XCTAssertNotNil(foodSample, "\(#function) failed to create food sample!")
+        NSLog("created TPDataFood: \(foodSample!.debugDescription)")
+        return foodSample
+    }
+
+    func test17CreateFoodDataItem() {
+        let foodSample = createFoodItem()
+        XCTAssertNotNil(foodSample, "\(#function) failed to create food sample!")
+        let asDict = foodSample!.rawValue
+        NSLog("serialized as dictionary: \(asDict)")
+    }
+
+    func test18PostFoodDataItem() {
+        let expectation = self.expectation(description: "Post of user carb data successful")
+        let tpKit = TidepoolKit.sharedInstance
+        // first, ensure we are logged in, and then ...
+        NSLog("\(#function): next calling ensureLogin...")
+        ensureLogin() {
+            result in
+            NSLog("\(#function): ensureLogin completed... with result: \(result)")
+            XCTAssert(tpKit.isLoggedIn())
+            
+            let foodSample = self.createFoodItem()
+            XCTAssertNotNil(foodSample, "\(#function) failed to create food sample!")
+            
             let tpDataArray = TPUserDataArray([foodSample!])
             tpKit.putUserData(tpDataArray) {
                 result,arg  in

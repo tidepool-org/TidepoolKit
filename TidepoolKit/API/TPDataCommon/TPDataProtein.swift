@@ -15,9 +15,44 @@
 
 import Foundation
 
-public struct Protein {
-    public var value: Double 	// 0.0 <= x <= 1000.0
+public struct TPDataProtein: RawRepresentable {
+    public let total: Double
     public let units = "grams"
+
+    public init?(total: Double) {
+        self.total = total
+        if TPData.validateDouble(total, min: 0.0, max: 1000.0) == nil {
+            return nil
+        }
+    }
+    
+    // MARK: - RawRepresentable
+    public typealias RawValue = [String: Any]
+
+    public init?(rawValue: RawValue) {
+        guard let total = rawValue["total"] as? Double else {
+            return nil
+        }
+        self.total = total
+        if let unitsIn = rawValue["units"] as? String {
+            guard unitsIn == "grams" else {
+                return nil
+            }
+        }
+    }
+    
+    public var rawValue: RawValue {
+        var resultDict: [String: Any] = [:]
+        resultDict["total"] = total as Any
+        resultDict["units"] = units
+        return resultDict
+    }
+    
+    var debugDescription: String {
+        get {
+            var result = "protein: "
+            result += "\n total: \(total) \(units)"
+            return result
+        }
+    }
 }
-
-

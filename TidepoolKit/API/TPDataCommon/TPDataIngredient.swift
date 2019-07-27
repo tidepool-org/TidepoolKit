@@ -21,7 +21,7 @@ public struct Ingredient {
 	public var code: String? = nil	// 0 < len <= 100; UPC or other]
 	public var ingredients: [Ingredient]?
 	public var name: String? = nil	// 0 < len <= 100]
-	public var nutrition: Nutrition? = nil
+	public var nutrition: TPDataNutrition? = nil
 }
 
 

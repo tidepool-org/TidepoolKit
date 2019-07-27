@@ -36,7 +36,7 @@ public class TPDataFood: TPData {
 	public var meal: Meal? = nil
 	public var mealOther: String? = nil 	// specified if and only if meal == "other"; 0 < len <= 100]
 	public var amount: Amount? = nil
-	public var nutrition: Nutrition? = nil
+	public var nutrition: TPDataNutrition? = nil
 	public var ingredients: [Ingredient]? = nil
 
     // TODO: move to common...
@@ -45,17 +45,23 @@ public class TPDataFood: TPData {
 	public var notes: [String]? = nil 	// array of note (string; 1 <= len <= 1000; NOT the same as messages); optional; 1 <= len <= 100; retains order
 	public var associations: [Association]? = nil	// 1 <= len <= 100
 
-	public init?(_ id: String?, time: Date, carbs: Double) {
-        self.nutrition = Nutrition(carbs: TPDataCarbohydrate(net: carbs))
-        super.init(id: id, time: time)
+	public init?(time: Date, carbs: Double) {
+        self.nutrition = TPDataNutrition(carbs: TPDataCarbohydrate(net: carbs))
+        super.init(time: time)
         type = .food
 	}
+
+    public init?(time: Date, nutrition: TPDataNutrition) {
+        self.nutrition = nutrition
+        super.init(time: time)
+        type = .food
+    }
 
     public override var debugDescription: String {
         get {
             var result = "\nuser data type: \(type.rawValue)"
-            if let carbs = self.nutrition?.carbohydrate {
-                result += carbs.debugDescription
+            if let nutrition = self.nutrition {
+                result += "\n\(nutrition.debugDescription)"
             }
             result += super.debugDescription
             return result
@@ -69,7 +75,7 @@ public class TPDataFood: TPData {
     required public init?(rawValue: RawValue) {
         if let nutrition = rawValue["nutrition"] as? [String: Any] {
             if let carb = nutrition["carbohydrate"] as? [String: Any] {
-                self.nutrition = Nutrition(carbs: TPDataCarbohydrate(rawValue: carb))
+                self.nutrition = TPDataNutrition(carbs: TPDataCarbohydrate(rawValue: carb))
             }
         }
 
@@ -84,14 +90,15 @@ public class TPDataFood: TPData {
         result["name"] = name as Any?
         result["brand"] = brand as Any?
         result["code"] = code as Any?
-        if let nutrition = nutrition {
-            var nutritionDict = [String: AnyObject]()
-            if let carbs = nutrition.carbohydrate {
-                let carbsDict = carbs.rawValue
-                nutritionDict["carbohydrate"] = carbsDict as AnyObject?
-            }
-            result["nutrition"] = nutritionDict as AnyObject?
-        }
+        result["nutrition"] = nutrition?.rawValue
+//        if let nutrition = nutrition {
+//            var nutritionDict = [String: AnyObject]()
+//            if let carbs = nutrition.carbohydrate {
+//                let carbsDict = carbs.rawValue
+//                nutritionDict["carbohydrate"] = carbsDict as AnyObject?
+//            }
+//            result["nutrition"] = nutritionDict as AnyObject?
+//        }
         return result
     }
     

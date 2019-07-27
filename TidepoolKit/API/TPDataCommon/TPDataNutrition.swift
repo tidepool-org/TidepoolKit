@@ -15,14 +15,67 @@
 
 import Foundation
 
-public struct Nutrition {
-	public var energy: Energy? = nil
-	public var carbohydrate: TPDataCarbohydrate? = nil
-	public var fat: Fat? = nil
-	public var protein: Protein? = nil
-	public init(carbs: TPDataCarbohydrate?) {
+public struct TPDataNutrition: RawRepresentable  {
+	public let energy: TPDataEnergy?
+	public let carbohydrate: TPDataCarbohydrate?
+	public let fat: TPDataFat?
+	public let protein: TPDataProtein?
+    
+    public init?(energy: TPDataEnergy? = nil, carbs: TPDataCarbohydrate? = nil, fat: TPDataFat? = nil, protein: TPDataProtein? = nil) {
+        self.energy = energy
 		self.carbohydrate = carbs
+        self.fat = fat
+        self.protein = protein
+        if energy == nil && carbs == nil && fat == nil && protein == nil {
+            return nil
+        }
 	}
+    
+    // MARK: - RawRepresentable
+    public typealias RawValue = [String: Any]
+    
+    public init?(rawValue: RawValue) {
+        let energyDict = rawValue["energy"] as? RawValue
+        self.energy = energyDict != nil ? TPDataEnergy(rawValue: energyDict!) : nil
+        let carbDict = rawValue["carbohydrate"] as? RawValue
+        self.carbohydrate = carbDict != nil ? TPDataCarbohydrate(rawValue: carbDict!) : nil
+        let fatDict = rawValue["fat"] as? RawValue
+        self.fat = fatDict != nil ? TPDataFat(rawValue: fatDict!) : nil
+        let proteinDict = rawValue["protein"] as? RawValue
+        self.protein = proteinDict != nil ? TPDataProtein(rawValue: proteinDict!) : nil
+        if energy == nil && carbohydrate == nil && fat == nil && protein == nil {
+            return nil
+        }
+    }
+    
+    public var rawValue: RawValue {
+        var resultDict: [String: Any] = [:]
+        resultDict["energy"] = energy?.rawValue
+        resultDict["carbohydrate"] = carbohydrate?.rawValue
+        resultDict["fat"] = fat?.rawValue
+        resultDict["protein"] = protein?.rawValue
+        return resultDict
+    }
+    
+    var debugDescription: String {
+        get {
+            var result = "nutrition: "
+            if let energy = energy {
+                result += "\n\(energy.debugDescription)"
+            }
+            if let carbohydrate = carbohydrate {
+                result += "\n\(carbohydrate.debugDescription)"
+            }
+            if let fat = fat {
+                result += "\n\(fat.debugDescription)"
+            }
+            if let protein = protein {
+                result += "\n\(protein.debugDescription)"
+            }
+            return result
+        }
+    }
+    
 }
 
 

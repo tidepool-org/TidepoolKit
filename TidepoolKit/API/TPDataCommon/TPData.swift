@@ -59,6 +59,26 @@ public class TPData: RawRepresentable {
     // Override!
     public var type: TPUserDataType = .unsupported
 
+    static func validateDouble(_ value: Double?, min: Double? = nil, max: Double? = nil) -> Double? {
+        var result: Double? = value
+        guard let value = value else {
+            return nil
+        }
+        if let min = min {
+            if value < min {
+                LogError("Err: value \(value) is less than minimum!")
+                result = nil
+            }
+        }
+        if let max = max {
+            if value > max {
+                LogError("Err: value \(value) is greater than maximum!")
+               result = nil
+            }
+        }
+        return result
+    }
+
     //
     // MARK: - RawRepresentable
     //

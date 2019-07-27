@@ -21,32 +21,12 @@ public struct TPDataCarbohydrate: RawRepresentable {
     let sugars: Double?
     let total: Double?
     let units = "grams"
-
-    static func validateDouble(_ value: Double?, min: Double? = nil, max: Double? = nil) -> Double? {
-        var result: Double? = value
-        guard let value = value else {
-            return nil
-        }
-        if let min = min {
-            if value < min {
-                LogError("Err: value \(value) is less than minimum!")
-                result = nil
-            }
-        }
-        if let max = max {
-            if value > max {
-                LogError("Err: value \(value) is greater than maximum!")
-               result = nil
-            }
-        }
-        return result
-    }
     
     public init?(net: Double, dietaryFiber: Double? = nil, sugars: Double? = nil, total: Double? = nil) {
-        self.dietaryFiber = TPDataCarbohydrate.validateDouble(dietaryFiber, min: 0.0, max: 1000.0)
-        self.net = TPDataCarbohydrate.validateDouble(net, min: 0.0, max: 1000.0)
-        self.sugars = TPDataCarbohydrate.validateDouble(sugars, min: 0.0, max: 1000.0)
-        self.total = TPDataCarbohydrate.validateDouble(total, min: 0.0, max: 1000.0)
+        self.dietaryFiber = TPData.validateDouble(dietaryFiber, min: 0.0, max: 1000.0)
+        self.net = TPData.validateDouble(net, min: 0.0, max: 1000.0)
+        self.sugars = TPData.validateDouble(sugars, min: 0.0, max: 1000.0)
+        self.total = TPData.validateDouble(total, min: 0.0, max: 1000.0)
         if self.net == nil {
             return nil
         }
