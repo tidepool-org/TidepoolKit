@@ -88,12 +88,7 @@ public struct TPDataEnergy : TPData {
         resultDict["units"] = units.rawValue
         return resultDict
     }
-    
-    var debugDescription: String {
-        get {
-            return TPDataType.description(self.rawValue)
-        }
-    }
+
 }
 
 

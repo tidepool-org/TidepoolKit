@@ -25,13 +25,15 @@ public struct TPDataCarbohydrate: TPData {
     public let units = "grams"
     
     public init?(net: Double, dietaryFiber: Double? = nil, sugars: Double? = nil, total: Double? = nil) {
-        self.dietaryFiber = TPDataType.validateDouble(dietaryFiber, min: 0.0, max: 1000.0)
-        self.net = TPDataType.validateDouble(net, min: 0.0, max: 1000.0)
-        self.sugars = TPDataType.validateDouble(sugars, min: 0.0, max: 1000.0)
-        self.total = TPDataType.validateDouble(total, min: 0.0, max: 1000.0)
-        if self.net == nil {
-            return nil
-        }
+        self.dietaryFiber = dietaryFiber
+        self.net = net
+        self.sugars = sugars
+        self.total = total
+        // validate
+        if !TPDataType.isValidDoubleOrNil(dietaryFiber, min: 0.0, max: 1000.0) { return nil }
+        if !TPDataType.isValidDouble(net, min: 0.0, max: 1000.0) { return nil }
+        if !TPDataType.isValidDoubleOrNil(sugars, min: 0.0, max: 1000.0) { return nil }
+        if !TPDataType.isValidDoubleOrNil(total, min: 0.0, max: 1000.0) { return nil }
     }
     
     // MARK: - RawRepresentable
@@ -67,10 +69,5 @@ public struct TPDataCarbohydrate: TPData {
         return resultDict
     }
     
-    var debugDescription: String {
-        get {
-            return TPDataType.description(self.rawValue)
-        }
-    }
 }
 

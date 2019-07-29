@@ -45,17 +45,18 @@ public struct TPDataOrigin: TPData {
     
     public var rawValue: RawValue {
         var originDict: [String: Any] = [:]
-        originDict["id"] = id as Any
-        originDict["name"] = name as Any
-        originDict["type"] = type as Any
+        if let id = id {
+            originDict["id"] = id as Any
+        }
+        if let name = name {
+            originDict["name"] = name as Any
+        }
+        if let type = type {
+            originDict["type"] = type as Any
+        }
         payload?.addSelfToDict(&originDict)
         return originDict
     }
     
-    var debugDescription: String {
-        get {
-            return TPDataType.description(self.rawValue)
-        }
-    }
 }
 

@@ -260,18 +260,65 @@ class TPKitTests10UserData: XCTestCase {
         waitForExpectations(timeout: 20.0, handler: nil)
     }
 
+    func createCookieIngredient(count: Double) -> TPDataIngredient {
+        let result = TPDataIngredient(
+                amount: TPDataAmount(value: count, units: "cookies"),
+                brand: "Maxine's Heavenly",
+                code: "8 53026 00504 3",
+                ingredients: [
+                    TPDataIngredient(
+                        ingredients: [
+                            TPDataIngredient(name: "oats")!,
+                            TPDataIngredient(name: "oat flour")!,
+                            TPDataIngredient(name: "oat fiber")!],
+                        name: "Gluten Free Oat Blend")!,
+                    TPDataIngredient(name: "Palm Fruit Oil")!,
+                    TPDataIngredient(
+                        ingredients: [
+                            TPDataIngredient(name: "dry roasted peanuts")!],
+                        name: "Peanut Butter")!,
+                    TPDataIngredient(
+                        ingredients: [
+                            TPDataIngredient(name: "cane sugar")!,
+                            TPDataIngredient(name: "unsweetened chocolate")!,
+                            TPDataIngredient(name: "cocoa butter")!],
+                        name: "Semi-sweet Chocolate Chunks")!,
+                    TPDataIngredient(name: "Organic Coconut Sugar")!,
+                    TPDataIngredient(name: "Organic Coconut Nectar")!,
+                    TPDataIngredient(name: "Organic Coconut White Rice Flour")!,
+                    TPDataIngredient(name: "Dates")!,
+                    TPDataIngredient(name: "Arrowroot Flour")!,
+                    TPDataIngredient(name: "Dry Roasted Peanuts")!,
+                    TPDataIngredient(name: "Water")!,
+                    TPDataIngredient(name: "Flaxseed")!,
+                    TPDataIngredient(name: "Organic Gum Acacia")!,
+                    TPDataIngredient(name: "Sunflower Lecithin")!,
+                    TPDataIngredient(name: "Sea Salt")!,
+                    TPDataIngredient(name: "Baking Soda")!
+              ],
+                name: "Peanut Butter Chocolate Chip Cookies",
+                nutrition: TPDataNutrition(energy: TPDataEnergy(value: 120*count, units: .calories), carbs: TPDataCarbohydrate(net: 14*count, dietaryFiber: 2*count, sugars: 6*count, total: 14*count), fat: TPDataFat(total: 7*count), protein: TPDataProtein(total: 2*count)))
+        return result!
+    }
+    
     func createFoodItem() -> TPDataFood? {
-        let newOriginId = UUID.init().uuidString
-        let origin = TPDataOrigin(id: newOriginId, name: "org.tidepool.tidepoolKitTest", type: "service", payload: nil)!
         let carbs = TPDataCarbohydrate(net: 100, dietaryFiber: 10, sugars: 10, total: 100)
         let energy = TPDataEnergy(value: 50, units: .kilocalories)
         let fat = TPDataFat(total: 10)
         let protein = TPDataProtein(total: 15)
         let nutrition = TPDataNutrition(energy: energy, carbs: carbs, fat: fat, protein: protein)
         XCTAssertNotNil(nutrition, "\(#function) failed to create nutrition struct!")
-        let foodSample = TPDataFood(time: Date(), nutrition: nutrition!)
-        foodSample?.origin = origin
+        // add ingredients
+        let cookies = createCookieIngredient(count: 2)
+        let ingredients = [
+            cookies,
+            TPDataIngredient(amount: TPDataAmount(value: 1, units: "pint"), name: "milk")!]
+        let foodSample = TPDataFood(time: Date(), name: "cookies and milk", meal: .other, mealOther: "brunch", nutrition: nutrition!, ingredients: ingredients)
         XCTAssertNotNil(foodSample, "\(#function) failed to create food sample!")
+        // add in origin...
+        let newOriginId = UUID.init().uuidString
+        let origin = TPDataOrigin(id: newOriginId, name: "org.tidepool.tidepoolKitTest", type: "service", payload: nil)!
+        foodSample?.origin = origin
         NSLog("created TPDataFood: \(foodSample!.debugDescription)")
         NSLog("with Nutrition: \(nutrition!.debugDescription))")
         return foodSample

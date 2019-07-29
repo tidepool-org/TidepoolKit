@@ -29,23 +29,23 @@ public struct TPDataIngredient: TPData {
         self.amount = amount
         self.nutrition = nutrition
         self.code = code
-        guard TPDataType.validateString(code, maxLen: 100) else {
-            return nil
-        }
         self.brand = brand
-        guard TPDataType.validateString(brand, maxLen: 100) else {
-            return nil
-        }
         self.name = name
-        guard TPDataType.validateString(name, maxLen: 100) else {
-            return nil
-        }
         if let ingredients = ingredients, ingredients.count < 100, !ingredients.isEmpty {
             self.ingredients = ingredients
         } else {
             self.ingredients = nil
         }
+        // validate
+        guard TPDataType.validateString(code, maxLen: 100) else { return nil }
+        guard TPDataType.validateString(brand, maxLen: 100) else { return nil }
+        guard TPDataType.validateString(name, maxLen: 100) else { return nil }
+        if ingredients != nil && self.ingredients == nil {
+            LogError("Err: Ingredients array invalid!")
+            return nil
+        }
         if amount == nil && brand == nil && code == nil && ingredients == nil && name == nil && nutrition == nil {
+            LogError("Err: Ingredient contains no data!")
             return nil
         }
     }
@@ -65,10 +65,12 @@ public struct TPDataIngredient: TPData {
             self.nutrition = nil
         }
         var ingredientsArray: [TPDataIngredient] = []
-        if let ingredientRawArray = rawValue["ingredients"] as? [[String: Any]] {
+        if let ingredientRawArray = rawValue["ingredients"] as? [Any] {
             for item in ingredientRawArray {
-                if let ingredient = TPDataIngredient(rawValue: item) {
-                    ingredientsArray.append(ingredient)
+                if let itemDict = item as? [String: Any] {
+                    if let ingredient = TPDataIngredient(rawValue: itemDict) {
+                        ingredientsArray.append(ingredient)
+                    }
                 }
             }
         }
@@ -92,13 +94,18 @@ public struct TPDataIngredient: TPData {
         if let name = name {
             resultDict["name"] = name as Any
         }
+        nutrition?.addSelfToDict(&resultDict)
+        if let ingredients = ingredients {
+            var rawIngredients: [RawValue] = []
+            for item in ingredients {
+                rawIngredients.append(item.rawValue)
+            }
+            if !rawIngredients.isEmpty {
+                resultDict["ingredients"] = rawIngredients
+            }
+        }
         return resultDict
     }
     
-    var debugDescription: String {
-        get {
-            return TPDataType.description(self.rawValue)
-        }
-    }
 }
 

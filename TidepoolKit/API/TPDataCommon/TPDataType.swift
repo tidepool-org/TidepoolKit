@@ -115,6 +115,17 @@ public enum TPDataType: String, Codable {
                 let indent = linePrefix + " "
                 result += "\(linePrefix)\(key):"
                 result += TPDataType.description(valueDict, linePrefix: indent)
+            } else if let dictArray = value as? [Any] {
+                result += "\(linePrefix)\(key): ["
+                let linePrefix = linePrefix + " "
+                for item in dictArray {
+                    if let subDict = item as? [String: Any] {
+                        result += "\(linePrefix)["
+                        result +=  TPDataType.description(subDict, linePrefix: linePrefix + " ")
+                        result += "]"
+                   }
+                }
+                result += "\(linePrefix)]"
             } else {
                 result += "\(linePrefix)\(key): \(value)"
             }

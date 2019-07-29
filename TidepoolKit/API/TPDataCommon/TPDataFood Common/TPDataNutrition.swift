@@ -55,12 +55,6 @@ public struct TPDataNutrition: TPData {
         return resultDict
     }
     
-    var debugDescription: String {
-        get {
-            return TPDataType.description(self.rawValue)
-        }
-    }
-    
 }
 
 

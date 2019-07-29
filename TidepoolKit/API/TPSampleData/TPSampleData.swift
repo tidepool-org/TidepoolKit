@@ -15,13 +15,17 @@
 
 import Foundation
 
-// Note: This is meant to specify any data types that are commonly expected to be in all TPData types contained in the first level of a TPSampleData object, and that can be uploaded/downloaded together to/from the Tidepool service.
+// Note: This is meant to specify any optional data types that are commonly expected to be in all TPData types contained in the first level of a TPSampleData object, and that can be uploaded/downloaded together to/from the Tidepool service. These fields would be added after initialization, and validated when set...
 public class TPSampleData {
     
     public var id: String?
     public var time: Date?
     public var origin: TPDataOrigin?
     public var payload: TPDataPayload?
+    public var location: Location? = nil
+    public var tags: [String]? = nil     // set of tag (string; 1 <= len <= 100); 1 <= len <= 100; duplicates not allowed; returns ordered alphabetically
+    public var notes: [String]? = nil     // array of note (string; 1 <= len <= 1000; NOT the same as messages); optional; 1 <= len <= 100; retains order
+    public var associations: [Association]? = nil    // 1 <= len <= 100
 
     public init?(time: Date) {
         self.id = nil

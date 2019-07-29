@@ -196,6 +196,20 @@
 			path = TPSampleData;
 			sourceTree = "<group>";
 		};
+		4812E80622EF56200058AF41 /* TPDataFood Common */ = {
+			isa = PBXGroup;
+			children = (
+				48F713EF22EA7F5C00FC2C89 /* TPDataAmount.swift */,
+				48F713E222EA2F2000FC2C89 /* TPDataCarbohydrate.swift */,
+				48F713E422EA7C7300FC2C89 /* TPDataEnergy.swift */,
+				48F713E622EA7C7300FC2C89 /* TPDataFat.swift */,
+				48F713EC22EA7F5C00FC2C89 /* TPDataIngredient.swift */,
+				48F713E722EA7C7300FC2C89 /* TPDataNutrition.swift */,
+				48F713E522EA7C7300FC2C89 /* TPDataProtein.swift */,
+			);
+			path = "TPDataFood Common";
+			sourceTree = "<group>";
+		};
 		48F7134822E9FCB900FC2C89 = {
 			isa = PBXGroup;
 			children = (
@@ -265,17 +279,11 @@
 			children = (
 				4812E7FF22EE4FFC0058AF41 /* TPDataType.swift */,
 				48F7137822E9FEE200FC2C89 /* TPData.swift */,
-				48F713EF22EA7F5C00FC2C89 /* TPDataAmount.swift */,
+				4812E80622EF56200058AF41 /* TPDataFood Common */,
 				48F713ED22EA7F5C00FC2C89 /* TPDataAssociation.swift */,
-				48F713E222EA2F2000FC2C89 /* TPDataCarbohydrate.swift */,
-				48F713E422EA7C7300FC2C89 /* TPDataEnergy.swift */,
-				48F713E622EA7C7300FC2C89 /* TPDataFat.swift */,
-				48F713EC22EA7F5C00FC2C89 /* TPDataIngredient.swift */,
 				48F713EE22EA7F5C00FC2C89 /* TPDataLocation.swift */,
-				48F713E722EA7C7300FC2C89 /* TPDataNutrition.swift */,
 				48F7137722E9FEE200FC2C89 /* TPDataOrigin.swift */,
 				4812E80422EE50F60058AF41 /* TPDataPayload.swift */,
-				48F713E522EA7C7300FC2C89 /* TPDataProtein.swift */,
 			);
 			path = TPDataCommon;
 			sourceTree = "<group>";

@@ -47,9 +47,4 @@ public struct TPDataPayload: TPData {
         return self.payload
     }
     
-    var debugDescription: String {
-        get {
-            return TPDataType.description(self.rawValue)
-        }
-    }
 }

@@ -15,44 +15,41 @@
 
 import Foundation
 
-public struct TPDataFat: TPData {
-    public static var tpType: TPDataType { return .fat }
-
-    public let total: Double?
-    public let units = "grams"
+public struct TPDataAmount: TPData {
+    public static var tpType: TPDataType { return .amount }
     
-    public init?(total: Double) {
-        self.total = TPDataType.validateDouble(total, min: 0.0, max: 1000.0)
-        if self.total == nil {
-            return nil
-        }
+    public let  value: Double
+    public let  units: String
+    
+    public init?(value: Double, units: String) {
+        self.value = value
+        self.units = units
+        if !TPDataType.isValidDouble(value, min: 0.0) { return nil }
+        if !TPDataType.validateString(units, maxLen: 100) { return nil }
     }
-    
+
     // MARK: - RawRepresentable
     public typealias RawValue = [String: Any]
     
     public init?(rawValue: RawValue) {
-        self.total = rawValue["total"] as? Double
-        if let unitsIn = rawValue["units"] as? String {
-            guard unitsIn == "grams" else {
-                return nil
-            }
+        if let value = rawValue["value"] as? Double {
+            self.value = value
+        } else {
+            return nil
+        }
+        if let units = rawValue["units"] as? String {
+            self.units = units
+        } else {
+            return nil
         }
     }
     
     public var rawValue: RawValue {
         var resultDict: [String: Any] = [:]
-        if let total = total {
-            resultDict["total"] = total as Any
-            resultDict["units"] = units
-        }
+        resultDict["value"] = value as Any
+        resultDict["units"] = units as Any
         return resultDict
     }
-    
-    var debugDescription: String {
-        get {
-            return TPDataType.description(self.rawValue)
-        }
-    }
 }
+
 
