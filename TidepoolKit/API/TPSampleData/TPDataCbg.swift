@@ -31,9 +31,16 @@ public enum TPCbgUnit: String, Encodable {
     }
 }
 
-public class TPDataCbg: TPData {
+public class TPDataCbg: TPSampleData, TPData {
+    
     //
-    // type specific data
+    // MARK: - TPData protocol
+    //
+    public static var tpType: TPDataType { return .cbg }
+    
+
+    //
+    // MARK: - Type specific data
     //
     public let value: Double
     public let units: TPCbgUnit
@@ -46,24 +53,16 @@ public class TPDataCbg: TPData {
             LogError("TPDataCbg init: value \(value) \(units.rawValue) out of range!")
             return nil
         }
+        // TPSampleData fields
         super.init(time: time)
-        self.type = .cbg
-    }
-    
-    public override var debugDescription: String {
-        get {
-            var result = "\n type: \(type.rawValue)"
-            result += "\n value: \(value) \(units)"
-            result += super.debugDescription
-            return result
-        }
     }
     
     //
     // MARK: - RawRepresentable
     //
+    public typealias RawValue = [String: Any]
 
-    required public init?(rawValue: RawValue) {
+    required override public init?(rawValue: RawValue) {
         guard let value = rawValue["value"] as? NSNumber else {
             LogError("TPDataCbg:init(rawValue) no value found!")
             return nil
@@ -78,11 +77,14 @@ public class TPDataCbg: TPData {
         }
         self.value = value.doubleValue
         self.units = units
+        
+        // base properties in superclass...
         super.init(rawValue: rawValue)
     }
     
-    public override var rawValue: RawValue {
-        var result = super.rawValue
+    override public var rawValue: RawValue {
+        // start with common data
+        var result = self.baseRawValue(type(of: self).tpType)
         // add in type-specific data...
         result["units"] = units.rawValue as Any?
         result["value"] = value as Any?

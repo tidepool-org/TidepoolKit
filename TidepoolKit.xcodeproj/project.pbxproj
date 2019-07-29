@@ -7,6 +7,9 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		4812E80022EE4FFC0058AF41 /* TPDataType.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4812E7FF22EE4FFC0058AF41 /* TPDataType.swift */; };
+		4812E80322EE507A0058AF41 /* TPSampleData.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4812E80222EE507A0058AF41 /* TPSampleData.swift */; };
+		4812E80522EE50F60058AF41 /* TPDataPayload.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4812E80422EE50F60058AF41 /* TPDataPayload.swift */; };
 		48F7135C22E9FCB900FC2C89 /* TidepoolKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 48F7135222E9FCB900FC2C89 /* TidepoolKit.framework */; };
 		48F7136322E9FCB900FC2C89 /* TidepoolKit.h in Headers */ = {isa = PBXBuildFile; fileRef = 48F7135522E9FCB900FC2C89 /* TidepoolKit.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		48F7136E22E9FEB600FC2C89 /* TPKitTests00Login.swift in Sources */ = {isa = PBXBuildFile; fileRef = 48F7136C22E9FEB600FC2C89 /* TPKitTests00Login.swift */; };
@@ -77,6 +80,9 @@
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
+		4812E7FF22EE4FFC0058AF41 /* TPDataType.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TPDataType.swift; sourceTree = "<group>"; };
+		4812E80222EE507A0058AF41 /* TPSampleData.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TPSampleData.swift; sourceTree = "<group>"; };
+		4812E80422EE50F60058AF41 /* TPDataPayload.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TPDataPayload.swift; sourceTree = "<group>"; };
 		48F7135222E9FCB900FC2C89 /* TidepoolKit.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = TidepoolKit.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		48F7135522E9FCB900FC2C89 /* TidepoolKit.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = TidepoolKit.h; sourceTree = "<group>"; };
 		48F7135622E9FCB900FC2C89 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
@@ -179,6 +185,17 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
+		4812E80122EE50660058AF41 /* TPSampleData */ = {
+			isa = PBXGroup;
+			children = (
+				4812E80222EE507A0058AF41 /* TPSampleData.swift */,
+				48F7137922E9FEE200FC2C89 /* TPDataCbg.swift */,
+				48F7137522E9FEE200FC2C89 /* TPDataFood.swift */,
+				48F7137D22E9FEE200FC2C89 /* TPDataBasal.swift */,
+			);
+			path = TPSampleData;
+			sourceTree = "<group>";
+		};
 		48F7134822E9FCB900FC2C89 = {
 			isa = PBXGroup;
 			children = (
@@ -235,9 +252,7 @@
 			isa = PBXGroup;
 			children = (
 				48F7137622E9FEE200FC2C89 /* TPDataCommon */,
-				48F7137922E9FEE200FC2C89 /* TPDataCbg.swift */,
-				48F7137522E9FEE200FC2C89 /* TPDataFood.swift */,
-				48F7137D22E9FEE200FC2C89 /* TPDataBasal.swift */,
+				4812E80122EE50660058AF41 /* TPSampleData */,
 				48F7137B22E9FEE200FC2C89 /* TPUser.swift */,
 				48F7137C22E9FEE200FC2C89 /* TPDataset.swift */,
 				48F7137E22E9FEE200FC2C89 /* TPUserDataArray.swift */,
@@ -248,6 +263,7 @@
 		48F7137622E9FEE200FC2C89 /* TPDataCommon */ = {
 			isa = PBXGroup;
 			children = (
+				4812E7FF22EE4FFC0058AF41 /* TPDataType.swift */,
 				48F7137822E9FEE200FC2C89 /* TPData.swift */,
 				48F713EF22EA7F5C00FC2C89 /* TPDataAmount.swift */,
 				48F713ED22EA7F5C00FC2C89 /* TPDataAssociation.swift */,
@@ -258,6 +274,7 @@
 				48F713EE22EA7F5C00FC2C89 /* TPDataLocation.swift */,
 				48F713E722EA7C7300FC2C89 /* TPDataNutrition.swift */,
 				48F7137722E9FEE200FC2C89 /* TPDataOrigin.swift */,
+				4812E80422EE50F60058AF41 /* TPDataPayload.swift */,
 				48F713E522EA7C7300FC2C89 /* TPDataProtein.swift */,
 			);
 			path = TPDataCommon;
@@ -550,6 +567,7 @@
 				48F713E822EA7C7300FC2C89 /* TPDataEnergy.swift in Sources */,
 				48F7139922E9FEE200FC2C89 /* APIUser.swift in Sources */,
 				48F713F122EA7F5C00FC2C89 /* TPDataAssociation.swift in Sources */,
+				4812E80522EE50F60058AF41 /* TPDataPayload.swift in Sources */,
 				48F7138E22E9FEE200FC2C89 /* TPDataFood.swift in Sources */,
 				48F7139B22E9FEE200FC2C89 /* TPObjectMeta.swift in Sources */,
 				48F713E322EA2F2000FC2C89 /* TPDataCarbohydrate.swift in Sources */,
@@ -557,6 +575,8 @@
 				48F7139D22E9FEE200FC2C89 /* APIAccessUsers.swift in Sources */,
 				48F7138B22E9FEE200FC2C89 /* TidepoolKit.swift in Sources */,
 				48F7139622E9FEE200FC2C89 /* TPUserDataArray.swift in Sources */,
+				4812E80322EE507A0058AF41 /* TPSampleData.swift in Sources */,
+				4812E80022EE4FFC0058AF41 /* TPDataType.swift in Sources */,
 				48F7139F22E9FEE200FC2C89 /* TPUserDataArrayExtension.swift in Sources */,
 				48F7139C22E9FEE200FC2C89 /* APIConnect.swift in Sources */,
 				48F7139022E9FEE200FC2C89 /* TPData.swift in Sources */,

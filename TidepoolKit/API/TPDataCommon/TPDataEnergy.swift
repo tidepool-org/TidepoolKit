@@ -51,14 +51,16 @@ public enum EnergyUnits: String {
 
 }
 
-public struct TPDataEnergy {
+public struct TPDataEnergy : TPData {
+    public static var tpType: TPDataType { return .energy }
+    
     public let value: Double         // 0.0 <= x < 10000.0 for kilocalories, converted for other types; 4.1848 joules / calories]
     public let units: EnergyUnits
 
     public init?(value: Double, units: EnergyUnits) {
         self.units = units
         self.value = value
-        if TPData.validateDouble(value, min: units.min(), max:  units.max()) == nil {
+        if TPDataType.validateDouble(value, min: units.min(), max:  units.max()) == nil {
             return nil
         }
     }
@@ -89,9 +91,7 @@ public struct TPDataEnergy {
     
     var debugDescription: String {
         get {
-            var result = "energy: "
-            result += "\n value: \(value) \(units.rawValue)"
-            return result
+            return TPDataType.description(self.rawValue)
         }
     }
 }

@@ -15,13 +15,90 @@
 
 import Foundation
 
-public struct Ingredient {
-	public var amount: Amount? = nil
-	public var brand: String? = nil	// 0 < len <= 100]
-	public var code: String? = nil	// 0 < len <= 100; UPC or other]
-	public var ingredients: [Ingredient]?
-	public var name: String? = nil	// 0 < len <= 100]
-	public var nutrition: TPDataNutrition? = nil
+public struct TPDataIngredient: TPData {
+    public static var tpType: TPDataType { return .ingredient }
+    
+	public let amount: TPDataAmount?
+	public let brand: String?	// len <= 100
+	public let code: String?	// len <= 100; UPC or other
+	public let ingredients: [TPDataIngredient]? // count <= 100
+	public let name: String?	// len <= 100
+	public let nutrition: TPDataNutrition?
+    
+    public init?(amount: TPDataAmount? = nil, brand: String? = nil, code: String? = nil, ingredients: [TPDataIngredient]? = nil, name: String? = nil, nutrition: TPDataNutrition? = nil) {
+        self.amount = amount
+        self.nutrition = nutrition
+        self.code = code
+        guard TPDataType.validateString(code, maxLen: 100) else {
+            return nil
+        }
+        self.brand = brand
+        guard TPDataType.validateString(brand, maxLen: 100) else {
+            return nil
+        }
+        self.name = name
+        guard TPDataType.validateString(name, maxLen: 100) else {
+            return nil
+        }
+        if let ingredients = ingredients, ingredients.count < 100, !ingredients.isEmpty {
+            self.ingredients = ingredients
+        } else {
+            self.ingredients = nil
+        }
+        if amount == nil && brand == nil && code == nil && ingredients == nil && name == nil && nutrition == nil {
+            return nil
+        }
+    }
+    
+    // MARK: - RawRepresentable
+    public typealias RawValue = [String: Any]
+    
+    public init?(rawValue: RawValue) {
+        if let amountDict = rawValue["amount"] as? [String: Any] {
+            self.amount = TPDataAmount(rawValue: amountDict)
+        } else {
+            self.amount = nil
+        }
+        if let nutritionDict = rawValue["nutrition"] as? [String: Any] {
+            self.nutrition = TPDataNutrition(rawValue: nutritionDict)
+        } else {
+            self.nutrition = nil
+        }
+        var ingredientsArray: [TPDataIngredient] = []
+        if let ingredientRawArray = rawValue["ingredients"] as? [[String: Any]] {
+            for item in ingredientRawArray {
+                if let ingredient = TPDataIngredient(rawValue: item) {
+                    ingredientsArray.append(ingredient)
+                }
+            }
+        }
+        self.ingredients = ingredientsArray.isEmpty ? nil : ingredientsArray
+        self.brand = rawValue["brand"] as? String
+        self.code = rawValue["code"] as? String
+        self.name = rawValue["name"] as? String
+    }
+    
+    public var rawValue: RawValue {
+        var resultDict: [String: Any] = [:]
+        if let amount = amount {
+            resultDict["amount"] = amount.rawValue
+        }
+        if let brand = brand {
+            resultDict["brand"] = brand as Any
+        }
+        if let code = code {
+            resultDict["code"] = code as Any
+        }
+        if let name = name {
+            resultDict["name"] = name as Any
+        }
+        return resultDict
+    }
+    
+    var debugDescription: String {
+        get {
+            return TPDataType.description(self.rawValue)
+        }
+    }
 }
-
 

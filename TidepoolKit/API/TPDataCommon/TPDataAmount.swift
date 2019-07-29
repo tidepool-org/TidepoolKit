@@ -15,9 +15,47 @@
 
 import Foundation
 
-public struct Amount {
-    public var value: Double
-    public var units: String
+public struct TPDataAmount: TPData {
+    public static var tpType: TPDataType { return .amount }
+    
+    public let  value: Double?
+    public let  units: String?
+    
+    public init?(value: Double, units: String) {
+        self.value = value
+        self.units = units
+        guard TPDataType.isValidDouble(value, min: 0.0) else {
+            return nil
+        }
+        guard TPDataType.validateString(units, maxLen: 100) else {
+            return nil
+        }
+    }
+
+    // MARK: - RawRepresentable
+    public typealias RawValue = [String: Any]
+    
+    public init?(rawValue: RawValue) {
+        self.value = rawValue["value"] as? Double
+        self.units = rawValue["units"] as? String
+        if value == nil {
+            return nil
+        }
+    }
+    
+    public var rawValue: RawValue {
+        var resultDict: [String: Any] = [:]
+        resultDict["value"] = value as Any
+        resultDict["units"] = units as Any
+        return resultDict
+    }
+    
+    var debugDescription: String {
+        get {
+            return TPDataType.description(self.rawValue)
+        }
+    }
+
 }
 
 

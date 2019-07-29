@@ -130,7 +130,7 @@ class TPKitTests10UserData: XCTestCase {
         waitForExpectations(timeout: 20.0, handler: nil)
     }
 
-    let TestCbgOriginPayload1: [String: Any] = [
+    let TestCbgOriginPayload1 = TPDataPayload([
         "sourceRevision": [
             "source": [
                 "name": "JoJo Loop",
@@ -147,15 +147,15 @@ class TPKitTests10UserData: XCTestCase {
             "model": "G6",
             "manufacturer": "Dexcom"
         ]
-    ]
+    ])
 
-    let TestCbgPayload1: [String: Any] = [
+    let TestCbgPayload1 = TPDataPayload([
         "HKMetadataKeySyncIdentifier" : "80XBG2972576",
         "HKMetadataKeySyncVersion" : 1,
         "com.loudnate.GlucoseKit.HKMetadataKey.GlucoseIsDisplayOnly" : 0
-    ]
+    ])
 
-    let TestCbgOriginPayload2: [String: Any] = [
+    let TestCbgOriginPayload2 = TPDataPayload([
         "sourceRevision" : [
             "operatingSystemVersion" : "12.2.0",
             "source" : [
@@ -165,16 +165,16 @@ class TPKitTests10UserData: XCTestCase {
             "productType" : "iPhone10,6",
             "version" : "15631"
         ]
-    ]
+    ])
 
-    let TestCbgPayload2: [String: Any] = [
+    let TestCbgPayload2 = TPDataPayload([
         "Trend Arrow" : "Flat",
         "Transmitter Time" : "2019-04-06T23:55:06.000Z",
         "HKDeviceName" : "10386270000221",
         "Trend Rate" : -0.10000000000000001,
         "HKTimeZone" : "America/Los_Angeles",
         "Status" : "IN_RANGE"
-    ]
+    ])
 
     func test14PostCbgDataItem() {
         let expectation = self.expectation(description: "Post of user cbg data successful")
@@ -273,6 +273,7 @@ class TPKitTests10UserData: XCTestCase {
         foodSample?.origin = origin
         XCTAssertNotNil(foodSample, "\(#function) failed to create food sample!")
         NSLog("created TPDataFood: \(foodSample!.debugDescription)")
+        NSLog("with Nutrition: \(nutrition!.debugDescription))")
         return foodSample
     }
 

@@ -17,8 +17,13 @@
 import Foundation
 import HealthKit
 
-public class TPDataFood: TPData {
-
+public class TPDataFood: TPSampleData, TPData {
+    
+    //
+    // MARK: - TPData protocol
+    //
+    public static var tpType: TPDataType { return .food }
+    
 	public enum Meal: String {
 		case breakfast = "breakfast"
         case lunch = "lunch"
@@ -35,9 +40,9 @@ public class TPDataFood: TPData {
 	public var code: String? = nil 	//  0 < len <= 100; UPC or other]
 	public var meal: Meal? = nil
 	public var mealOther: String? = nil 	// specified if and only if meal == "other"; 0 < len <= 100]
-	public var amount: Amount? = nil
-	public var nutrition: TPDataNutrition? = nil
-	public var ingredients: [Ingredient]? = nil
+	public var amount: TPDataAmount? = nil
+	public let nutrition: TPDataNutrition?
+	public var ingredients: [TPDataIngredient]? = nil
 
     // TODO: move to common...
 	public var location: Location? = nil
@@ -47,58 +52,58 @@ public class TPDataFood: TPData {
 
 	public init?(time: Date, carbs: Double) {
         self.nutrition = TPDataNutrition(carbs: TPDataCarbohydrate(net: carbs))
+        // TPSampleData fields
         super.init(time: time)
-        type = .food
 	}
 
     public init?(time: Date, nutrition: TPDataNutrition) {
         self.nutrition = nutrition
+        // TPSampleData fields
         super.init(time: time)
-        type = .food
-    }
+   }
 
-    public override var debugDescription: String {
-        get {
-            var result = "\nuser data type: \(type.rawValue)"
-            if let nutrition = self.nutrition {
-                result += "\n\(nutrition.debugDescription)"
-            }
-            result += super.debugDescription
-            return result
-        }
-    }
-    
     //
     // MARK: - RawRepresentable
     //
-    
-    required public init?(rawValue: RawValue) {
-        if let nutrition = rawValue["nutrition"] as? [String: Any] {
-            if let carb = nutrition["carbohydrate"] as? [String: Any] {
-                self.nutrition = TPDataNutrition(carbs: TPDataCarbohydrate(rawValue: carb))
+    public typealias RawValue = [String: Any]
+
+    required override public init?(rawValue: RawValue) {
+        self.nutrition = TPDataType.getTypeFromDict(TPDataNutrition.self, rawValue)
+        if let rawIngredients: [RawValue] = rawValue["ingredients"] as? [RawValue] {
+            var ingredients: [TPDataIngredient] = []
+            for item in rawIngredients {
+                if let ingredient = TPDataType.getTypeFromDict(TPDataIngredient.self, item) {
+                    ingredients.append(ingredient)
+                }
+            }
+            if !ingredients.isEmpty {
+                self.ingredients = ingredients
             }
         }
-
+        // TODO: finish!
+        
+        // base properties in superclass...
         super.init(rawValue: rawValue)
-        type = .food
     }
     
-    public override var rawValue: RawValue {
-        var result = super.rawValue
+    override public var rawValue: RawValue {
+        // start with common data
+        var result = self.baseRawValue(type(of: self).tpType)
         // add in type-specific data...
         // TODO: finish!
         result["name"] = name as Any?
         result["brand"] = brand as Any?
         result["code"] = code as Any?
         result["nutrition"] = nutrition?.rawValue
-//        if let nutrition = nutrition {
-//            var nutritionDict = [String: AnyObject]()
-//            if let carbs = nutrition.carbohydrate {
-//                let carbsDict = carbs.rawValue
-//                nutritionDict["carbohydrate"] = carbsDict as AnyObject?
-//            }
-//            result["nutrition"] = nutritionDict as AnyObject?
-//        }
+        if let ingredients = ingredients {
+            var rawIngredients: [RawValue] = []
+            for item in ingredients {
+                rawIngredients.append(item.rawValue)
+            }
+            if !rawIngredients.isEmpty {
+                result["ingredients"] = rawIngredients
+            }
+        }
         return result
     }
     

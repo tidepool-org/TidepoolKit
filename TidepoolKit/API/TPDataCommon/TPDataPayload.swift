@@ -15,41 +15,36 @@
 
 import Foundation
 
-public struct TPDataOrigin: TPData {
-    public static var tpType: TPDataType { return .origin }
-
-    let id: String?
-    let name: String?
-    let type: String?
-    let payload: TPDataPayload?
-
-    public init?(id: String?, name: String?, type: String?, payload: TPDataPayload?) {
-        self.id = id
-        self.name = name
-        self.type = type
-        self.payload = payload
-    }
+// Note: If TPDataPayload is initialized with values of type Date, these will be turned into String types compatible with the Tidepool service.
+public struct TPDataPayload: TPData {
+    public static var tpType: TPDataType { return .payload }
     
-    // MARK: - RawRepresentable
-    public typealias RawValue = [String: Any]
-
-    public init?(rawValue: RawValue) {
-        self.id = rawValue["id"] as? String
-        self.name = rawValue["name"] as? String
-        self.type = rawValue["type"] as? String
-        self.payload = TPDataType.getTypeFromDict(TPDataPayload.self, rawValue)
-        if id == nil && name == nil && type == nil && payload == nil {
+    public let payload: [String: Any]
+    
+    public init?(_ payload: [String: Any]) {
+        self.payload = payload
+        var payload = payload
+        for (key, value) in payload {
+            // TODO: document this time format adjust!
+            if let dateValue = value as? Date {
+                payload[key] = DateUtils.dateToJSON(dateValue)
+            }
+        }
+        if !JSONSerialization.isValidJSONObject(payload) {
+            LogError("Invalid payload failed to serialize: \(String(describing: payload))")
             return nil
         }
     }
     
+    // MARK: - RawRepresentable
+    public typealias RawValue = [String: Any]
+    
+    public init?(rawValue: RawValue) {
+        self.payload = rawValue
+    }
+    
     public var rawValue: RawValue {
-        var originDict: [String: Any] = [:]
-        originDict["id"] = id as Any
-        originDict["name"] = name as Any
-        originDict["type"] = type as Any
-        payload?.addSelfToDict(&originDict)
-        return originDict
+        return self.payload
     }
     
     var debugDescription: String {
@@ -58,4 +53,3 @@ public struct TPDataOrigin: TPData {
         }
     }
 }
-

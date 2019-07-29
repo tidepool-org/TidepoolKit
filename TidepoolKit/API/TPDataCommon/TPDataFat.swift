@@ -15,12 +15,14 @@
 
 import Foundation
 
-public struct TPDataFat: RawRepresentable {
+public struct TPDataFat: TPData {
+    public static var tpType: TPDataType { return .fat }
+
     public let total: Double?
     public let units = "grams"
     
     public init?(total: Double) {
-        self.total = TPData.validateDouble(total, min: 0.0, max: 1000.0)
+        self.total = TPDataType.validateDouble(total, min: 0.0, max: 1000.0)
         if self.total == nil {
             return nil
         }
@@ -49,11 +51,7 @@ public struct TPDataFat: RawRepresentable {
     
     var debugDescription: String {
         get {
-            var result = "fat: "
-            if let total = total {
-                result += "\n total: \(total) \(units)"
-            }
-            return result
+            return TPDataType.description(self.rawValue)
         }
     }
 }

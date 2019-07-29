@@ -15,13 +15,15 @@
 
 import Foundation
 
-public struct TPDataProtein: RawRepresentable {
+public struct TPDataProtein: TPData {
+    public static var tpType: TPDataType { return .protein }
+
     public let total: Double
     public let units = "grams"
 
     public init?(total: Double) {
         self.total = total
-        if TPData.validateDouble(total, min: 0.0, max: 1000.0) == nil {
+        if TPDataType.validateDouble(total, min: 0.0, max: 1000.0) == nil {
             return nil
         }
     }
@@ -50,9 +52,7 @@ public struct TPDataProtein: RawRepresentable {
     
     var debugDescription: String {
         get {
-            var result = "protein: "
-            result += "\n total: \(total) \(units)"
-            return result
+            return TPDataType.description(self.rawValue)
         }
     }
 }

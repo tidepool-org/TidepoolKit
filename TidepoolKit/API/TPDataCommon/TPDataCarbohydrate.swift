@@ -15,18 +15,20 @@
 
 import Foundation
 
-public struct TPDataCarbohydrate: RawRepresentable {
-    let dietaryFiber: Double?
-    let net: Double?
-    let sugars: Double?
-    let total: Double?
-    let units = "grams"
+public struct TPDataCarbohydrate: TPData {
+    public static var tpType: TPDataType { return .carbohydrate }
+
+    public let dietaryFiber: Double?
+    public let net: Double?
+    public let sugars: Double?
+    public let total: Double?
+    public let units = "grams"
     
     public init?(net: Double, dietaryFiber: Double? = nil, sugars: Double? = nil, total: Double? = nil) {
-        self.dietaryFiber = TPData.validateDouble(dietaryFiber, min: 0.0, max: 1000.0)
-        self.net = TPData.validateDouble(net, min: 0.0, max: 1000.0)
-        self.sugars = TPData.validateDouble(sugars, min: 0.0, max: 1000.0)
-        self.total = TPData.validateDouble(total, min: 0.0, max: 1000.0)
+        self.dietaryFiber = TPDataType.validateDouble(dietaryFiber, min: 0.0, max: 1000.0)
+        self.net = TPDataType.validateDouble(net, min: 0.0, max: 1000.0)
+        self.sugars = TPDataType.validateDouble(sugars, min: 0.0, max: 1000.0)
+        self.total = TPDataType.validateDouble(total, min: 0.0, max: 1000.0)
         if self.net == nil {
             return nil
         }
@@ -67,20 +69,7 @@ public struct TPDataCarbohydrate: RawRepresentable {
     
     var debugDescription: String {
         get {
-            var result = "carbohydrate: "
-            if let net = net {
-                result += "\n net: \(net) \(units)"
-            }
-            if let dietaryFiber = dietaryFiber {
-                result += "\n dietaryFiber: \(dietaryFiber)"
-            }
-            if let sugars = sugars {
-                result += "\n sugars: \(sugars)"
-            }
-            if let total = total {
-                result += "\n total: \(total)"
-            }
-            return result
+            return TPDataType.description(self.rawValue)
         }
     }
 }

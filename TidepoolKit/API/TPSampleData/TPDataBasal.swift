@@ -21,50 +21,42 @@ public struct Suppressed {
     public var type: String?
 }
 
-public class TPDataBasal: TPData {
+public class TPDataBasal: TPSampleData, TPData {
     
+    //
+    // MARK: - TPData protocol
+    //
+    public static var tpType: TPDataType { return .basal }
+    
+    //
+    // MARK: - Type specific data
+    //
+
     public let rate: Double
     public let duration: Int
     public var suppressed: Suppressed?
     public var deliveryType: String?
 
-    public init(time: Date, rate: Double, duration: Int) {
+    public init?(time: Date, rate: Double, duration: Int) {
         self.rate = rate
         self.duration = duration
+        // TPSampleData fields
         super.init(time: time)
-        type = .basal
     }
 
-    public override var debugDescription: String {
-        get {
-            var result = "\nuser data type: \(type.rawValue)"
-            result += "\n rate: \(rate)"
-            result += "\n duration: \(duration)"
-            if let deliveryType = deliveryType {
-                result += "\n deliveryType: \(deliveryType)"
-            }
-            if let suppressed = suppressed {
-                result += "\n suppressed:"
-                result += "\n   deliveryType: \(suppressed.deliveryType ?? "MISSING")"
-                result += "\n   rate: \(suppressed.rate ?? 0)"
-                result += "\n   type: \(suppressed.type ?? "MISSING")"
-            }
-            result += super.debugDescription
-            return result
-        }
-    }
-    
     //
     // MARK: - RawRepresentable
     //
-    
-    required public init?(rawValue: RawValue) {
+    public typealias RawValue = [String: Any]
+
+    required override public init?(rawValue: RawValue) {
         return nil
         // todo: implement!
     }
 
-    public override var rawValue: RawValue {
-        let result = super.rawValue
+    override public var rawValue: RawValue {
+        // start with common data
+        let result = self.baseRawValue(type(of: self).tpType)
         // add in type-specific data...
         // TODO: finish!
         return result
