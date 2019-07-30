@@ -112,8 +112,7 @@ class LoginViewController: UIViewController {
         switch result {
         case .success(let user):
             NSLog("Login success: \(user)")
-            let userId = user.userId
-            self.fetchUserProfile(userId)
+            self.logInComplete()
         case .failure(let error):
             NSLog("login failed! Error: \(error)")
             var errorText = "Check your Internet connection!"
@@ -125,47 +124,6 @@ class LoginViewController: UIViewController {
         }
     }
     
-    private func fetchUserProfile(_ userId: String) {
-        tpKit.updateLoginUserWithServiceProfileInfo() {
-            result in
-            switch result {
-            case .success(_):
-                self.fetchUserSettings()
-            case .failure(let error):
-                NSLog("profile fetch failed! Error: \(error)")
-                self.errorFeedbackLabel.text = "Failed to fetch profile!"
-                self.errorFeedbackLabel.isHidden = false
-            }
-        }
-    }
-    
-    private func fetchUserSettings() {
-        tpKit.updateLoginUserWithServiceSettingsInfo() {
-            result in
-            switch result {
-            case .success(_):
-                self.fetchAccessUsers()
-            case .failure(let error):
-                NSLog("settings fetch failed! Error: \(error)")
-                self.errorFeedbackLabel.text = "Failed to fetch settings!"
-                self.errorFeedbackLabel.isHidden = false
-            }
-        }
-    }
-    
-    private func fetchAccessUsers() {
-        tpKit.getAccessUsers() {
-            result in
-            switch result {
-            case .success(_):
-                self.logInComplete()
-            case .failure(_):
-                self.errorFeedbackLabel.text = "Failed to fetch access users!"
-                self.errorFeedbackLabel.isHidden = false
-            }
-        }
-    }
-
     private func logInComplete() {
         self.dismiss(animated: true)
     }

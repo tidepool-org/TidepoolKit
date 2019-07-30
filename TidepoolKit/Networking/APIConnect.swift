@@ -237,24 +237,6 @@ class APIConnector {
         }
     }
     
-    func updateLoggedInUser(_ profile: APIProfile) -> TPUser? {
-        if self.user != nil {
-            self.user!.updateWithProfileInfo(profile)
-            return self.user!
-        } else {
-            return nil
-        }
-    }
-    
-    func updateLoggedInUser(_ settings: APIUserSettings) -> TPUser? {
-        if self.user != nil {
-            self.user!.updateWithUserSettings(settings)
-            return self.user!
-        } else {
-            return nil
-        }
-    }
-    
     func logout() {
         LogVerbose("\(#function)")
         let wasLoggedIn = self.sessionTokenSetting.value != nil
@@ -411,8 +393,6 @@ class APIConnector {
             completion(Result.success(tpObject))
         }
     }
-
-//    func post<P: TPPostable, T: TPFetchable>(_ postable: P, _ fetchType: T.Type, headers: [String: String]? = nil, userId: String? = nil, _ completion: @escaping (Result<T, TidepoolKitError>) -> (Void)) {
 
     /// Pass type.self to enable type inference in all cases.
     /// - parameter httpMethod: "POST" or "DELETE"

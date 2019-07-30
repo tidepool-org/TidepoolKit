@@ -18,10 +18,10 @@ import Foundation
 /// Simple array containing mixed data types.
 public class TPUserDataArray {
     
-    var userData: [TPSampleData]
+    var userData: [TPUserData]
     let forDelete: Bool
 
-    public init(_ userData: [TPSampleData], forDelete: Bool = false) {
+    public init(_ userData: [TPUserData], forDelete: Bool = false) {
         self.userData = userData
         self.forDelete = forDelete
     }

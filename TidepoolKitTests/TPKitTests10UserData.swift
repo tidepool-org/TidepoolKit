@@ -16,19 +16,10 @@
 import XCTest
 @testable import TidepoolKit
 
-class TPKitTests10UserData: XCTestCase {
-
-    override func setUp() {
-        // Put setup code here. This method is called before the invocation of each test method in the class.
-    }
-
-    override func tearDown() {
-        // Put teardown code here. This method is called after the invocation of each test method in the class.
-    }
+class TPKitTests10UserData: TPKitTestsBase {
 
     func test11UploadId() {
         let expectation = self.expectation(description: "Upload id fetch/create successful")
-        // first log out if logged in to force clear of upload id...
         let tpKit = TidepoolKit.sharedInstance
         NSLog("\(#function): starting with logout...")
         // next, log in, and then try configuring upload id: this will fetch a current id, or create one if a current id does not exist. Note: there is no way to force delete of an upload id, so a new account would be needed to test the create!
@@ -87,7 +78,7 @@ class TPKitTests10UserData: XCTestCase {
         waitForExpectations(timeout: 20.0, handler: nil)
     }
 
-    func test13DeletetUserData() {
+    func test13DeleteUserData() {
         let expectation = self.expectation(description: "Delete of user data successful")
         let tpKit = TidepoolKit.sharedInstance
         // first, ensure we are logged in, and then ...
@@ -365,23 +356,23 @@ class TPKitTests10UserData: XCTestCase {
     // MARK: - Helper functions
     //
     
-    func ensureLogin(completion: @escaping (Result<TPUser, TidepoolKitError>) -> Void) {
-        let tpKit = TidepoolKit.sharedInstance
-        tpKit.switchToServer(testService)
-        guard let user = tpKit.loggedInUser() else {
-            tpKit.logIn(testEmail, password: testPassword) {
-                result in
-                switch result {
-                case .success:
-                    completion(result)
-                case .failure(let error):
-                    XCTFail("Login failed: \(error)")
-                }
-            }
-            return
-        }
-        completion(.success(user))
-    }
+//    func ensureLogin(completion: @escaping (Result<TPUser, TidepoolKitError>) -> Void) {
+//        let tpKit = TidepoolKit.sharedInstance
+//        tpKit.switchToServer(testService)
+//        guard let user = tpKit.loggedInUser() else {
+//            tpKit.logIn(testEmail, password: testPassword) {
+//                result in
+//                switch result {
+//                case .success:
+//                    completion(result)
+//                case .failure(let error):
+//                    XCTFail("Login failed: \(error)")
+//                }
+//            }
+//            return
+//        }
+//        completion(.success(user))
+//    }
 
 
 }

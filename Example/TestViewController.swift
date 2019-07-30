@@ -34,18 +34,6 @@ class TestViewController: UIViewController {
             NSLog("Testing... exit from TestTableViewController viewDidLoad before completion!")
             return
         }
-        
-        if tpKit.isLoggedIn() && tpKit.isConnectedToNetwork() {
-            tpKit.updateLoginUserWithServiceProfileInfo() {
-                result in
-            }
-            tpKit.updateLoginUserWithServiceSettingsInfo() {
-                result in
-            }
-            tpKit.getAccessUsers() {
-                result in
-            }
-        }
     }
     private var tpKit: TidepoolKit!
     private var tpKitUI: TidepoolKitUI!

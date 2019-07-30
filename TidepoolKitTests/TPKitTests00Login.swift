@@ -16,26 +16,8 @@
 import XCTest
 @testable import TidepoolKit
 
-/// TODO: Set up a new test password?
-var userid: String = ""
-//var testEmail: String = "ethan+urchintests@tidepool.org"
-//var testPassword: String = "urchintests"
-//var testService: String = "Development"
-var testEmail: String = "larry+kittest@tidepool.org"
-var testPassword: String = "larry+kittest"
-var testService: String = "Staging"
 
-
-class TPKitTests00Login: XCTestCase {
-
-    override func setUp() {
-        super.setUp()
-        
-    }
-
-    override func tearDown() {
-
-    }
+class TPKitTests00Login: TPKitTestsBase {
 
     func test01LoginBadUser() {
         let expectation = self.expectation(description: "Login fails")
@@ -102,18 +84,4 @@ class TPKitTests00Login: XCTestCase {
         waitForExpectations(timeout: 20.0, handler: nil)
     }
     
-    
-    
-//    func testExample() {
-//        // This is an example of a functional test case.
-//        // Use XCTAssert and related functions to verify your tests produce the correct results.
-//    }
-//
-//    func testPerformanceExample() {
-//        // This is an example of a performance test case.
-//        self.measure {
-//            // Put the code you want to measure the time of here.
-//        }
-//    }
-
 }

@@ -156,78 +156,24 @@ public class TidepoolKit {
         }
     }
 
-    
-    // TODO: move most of this to APIConnect...
-    public func updateLoginUserWithServiceProfileInfo(_ completion: @escaping (Result<TPUser, TidepoolKitError>) -> (Void)) {
-        apiConnect.fetch(APIProfile.self) {
+    public func getUserProfileInfo(userId: String? = nil, _ completion: @escaping (Result<TPUserProfile, TidepoolKitError>) -> (Void)) {
+        apiConnect.fetch(TPUserProfile.self) {
             result in
-            switch result {
-            case .success(let profile):
-                LogInfo("profile fetch succeeded!")
-                if let updatedUser = self.apiConnect.updateLoggedInUser(profile) {
-                    LogVerbose("updated loggedIn user with profile: \n\(updatedUser.debugDescription)")
-                   completion(.success(updatedUser))
-                } else {
-                    completion(.failure(.notLoggedIn))
-                }
-            case .failure(let error):
-                LogError("profile fetch failed! Error: \(error)")
-                completion(.failure(error))
-            }
+            completion(result)
         }
     }
     
-    // TODO: move most of this to APIConnect...
-    public func updateLoginUserWithServiceSettingsInfo(_ completion: @escaping (Result<TPUser, TidepoolKitError>) -> (Void)) {
-        apiConnect.fetch(APIUserSettings.self) {
+    public func getUserSettingsInfo(_ completion: @escaping (Result<TPUserProfile, TidepoolKitError>) -> (Void)) {
+        apiConnect.fetch(TPUserProfile.self) {
             result in
-            switch result {
-            case .success(let settings):
-                LogInfo("settings fetch succeeded!")
-                if let updatedUser = self.apiConnect.updateLoggedInUser(settings) {
-                    LogVerbose("updated loggedIn user with settings: \n\(updatedUser.debugDescription)")
-                    completion(.success(updatedUser))
-                } else {
-                    completion(.failure(.notLoggedIn))
-                }
-            case .failure(let error):
-                LogError("settings fetch failed! Error: \(error)")
-                completion(.failure(error))
-            }
+            completion(result)
         }
     }
-
-    // TODO: move most of this to APIConnect. Add access users to TPUser, and rename this to updateLoginUserWithAccessUsers. Callback should happen after all profiles have been fetched.
-    public func getAccessUsers(_ completion: @escaping (Result<[TPUser], TidepoolKitError>) -> (Void)) {
+    
+    public func getAccessUsers(_ completion: @escaping (Result<APIAccessUsers, TidepoolKitError>) -> (Void)) {
         apiConnect.fetch(APIAccessUsers.self) {
             result in
-            switch result {
-            case .success(let accessUsers):
-                LogInfo("access users fetch succeeded: \n\(accessUsers.debugDescription)")
-                var users: [TPUser] = []
-                for id in accessUsers.userIds {
-                    if id == self.apiConnect.loggedInUser()?.userId {
-                        continue
-                    }
-                    let user = TPUser(id, userName: nil)
-                    users.append(user)
-                    self.apiConnect.fetch(APIProfile.self, userId: id) {
-                        result in
-                        switch result {
-                        case .success(let profile):
-                            user.updateWithProfileInfo(profile)
-                            LogVerbose("updated user: \(user.debugDescription)")
-                            break
-                        case .failure:
-                            break
-                        }
-                    }
-                }
-                completion(.success(users))
-            case .failure(let error):
-                LogError("access users fetch failed! Error: \(error)")
-                completion(.failure(error))
-            }
+            completion(result)
         }
     }
     

@@ -16,40 +16,24 @@
 import Foundation
 
 /// This is a service-aligned class, Codable. It is private to the framework.
-class APIUserSettings: Codable, TPFetchable {
+extension TPUserSettings: TPFetchable {
  
-    struct BGUnits: Codable {
-        let bg: String
-    }
-
-    struct BGTarget: Codable {
-        let low: Double
-        let high: Double
-    }
-
-    let units: BGUnits?
-    let bgTarget: BGTarget?
-
-    var debugDescription: String {
-        get {
-            var result = "userSettingsService:"
-            if let units = units {
-                result = result + "\nunits: \(units.bg)"
-            }
-            if let bgTarget = bgTarget {
-                result = result + "\nbgTargetHigh: \(bgTarget.high)"
-                result = result + "\nbgTargetLow: \(bgTarget.low)"
-            }
-            return result
-        }
-    }
-    
     //
     // MARK: - methods private to framework!
     //
 
-    class func settingsFromJsonData(_ data: Data) -> APIUserSettings? {
-        return jsonToObject(data)
+    class func settingsFromJsonData(_ data: Data) -> TPUserSettings? {
+        do {
+            let object: Any = try JSONSerialization.jsonObject(with: data)
+            if let jsonDict = object as? [String: Any] {
+                return TPUserSettings(rawValue: jsonDict)
+            } else {
+                LogError("\(#function) Profile data not json decodable!")
+            }
+        } catch (let error) {
+            LogError("\(#function) Profile data not json decodable: \(error)")
+        }
+        return nil
     }
 
     //
@@ -62,7 +46,7 @@ class APIUserSettings: Codable, TPFetchable {
     }
     
     static func fromJsonData(_ data: Data) -> TPFetchable? {
-        return APIUserSettings.settingsFromJsonData(data)
+        return TPUserSettings.settingsFromJsonData(data)
     }
 
 }

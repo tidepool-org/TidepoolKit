@@ -21,7 +21,7 @@ public struct Suppressed {
     public var type: String?
 }
 
-public class TPDataBasal: TPSampleData, TPData {
+public class TPDataBasal: TPUserData, TPData {
     
     //
     // MARK: - TPData protocol

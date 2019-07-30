@@ -26,10 +26,10 @@ extension TPUserDataArray: TPFetchable, TPUploadable {
         do {
             let object: Any = try JSONSerialization.jsonObject(with: data)
             if let jsonArray = object as? [[String: Any]] {
-                var items: [TPSampleData] = []
+                var items: [TPUserData] = []
                 for jsonDict in jsonArray {
                     LogInfo("APIUserDataArray.userDataFromJsonData calling createFromJson on \(jsonDict)")
-                    if let item = TPSampleData.createFromJson(jsonDict) {
+                    if let item = TPUserData.createFromJson(jsonDict) {
                         items.append(item)
                     }
                 }

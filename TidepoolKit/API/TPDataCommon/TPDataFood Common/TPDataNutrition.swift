@@ -48,7 +48,7 @@ public struct TPDataNutrition: TPData {
     
     public var rawValue: RawValue {
         var resultDict: [String: Any] = [:]
-        resultDict["energy"] = energy?.rawValue
+        energy?.addSelfToDict(&resultDict)
         carbohydrate?.addSelfToDict(&resultDict)
         fat?.addSelfToDict(&resultDict)
         protein?.addSelfToDict(&resultDict)

@@ -31,7 +31,7 @@ public enum TPCbgUnit: String, Encodable {
     }
 }
 
-public class TPDataCbg: TPSampleData, TPData {
+public class TPDataCbg: TPUserData, TPData {
     
     //
     // MARK: - TPData protocol

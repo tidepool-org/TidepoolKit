@@ -17,7 +17,7 @@
 import Foundation
 import HealthKit
 
-public class TPDataFood: TPSampleData, TPData {
+public class TPDataFood: TPUserData, TPData {
     
     //
     // MARK: - TPData protocol

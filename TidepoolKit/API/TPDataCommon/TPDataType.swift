@@ -32,7 +32,9 @@ public enum TPDataType: String, Codable {
     case origin = "origin"
     case payload = "payload"
     case protein = "protein"
-    //
+    // user types
+    case patient = "patient"
+    // requires override!
     case unsupported = "unsupported"
     
     //
