@@ -16,7 +16,17 @@
 import UIKit
 import TidepoolKit
 
+
+public protocol LoginSignupDelegate: AnyObject {
+
+    func loginSignupComplete()
+
+}
+
+
 class LoginViewController: UIViewController {
+
+    var loginSignupDelegate: LoginSignupDelegate?
 
     @IBOutlet weak var inputContainerView: UIView!
     
@@ -72,7 +82,11 @@ class LoginViewController: UIViewController {
         if tpKit.isLoggedIn() {
             tpKit.logOut()
         }
-        self.parent?.dismiss(animated: true)
+        if let loginSignupDelegate = loginSignupDelegate {
+            loginSignupDelegate.loginSignupComplete()
+        } else {
+            self.parent?.dismiss(animated: true)
+        }
     }
     
     //
@@ -125,7 +139,11 @@ class LoginViewController: UIViewController {
     }
     
     private func logInComplete() {
-        self.dismiss(animated: true)
+        if let loginSignupDelegate = loginSignupDelegate {
+            loginSignupDelegate.loginSignupComplete()
+        } else {
+            self.dismiss(animated: true)
+        }
     }
 
     @objc func textFieldDidChange() {

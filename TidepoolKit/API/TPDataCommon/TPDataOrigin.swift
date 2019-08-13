@@ -18,12 +18,12 @@ import Foundation
 public struct TPDataOrigin: TPData {
     public static var tpType: TPDataType { return .origin }
 
-    let id: String?
+    public let id: String?
     let name: String?
     let type: String?
     let payload: TPDataPayload?
 
-    public init?(id: String?, name: String?, type: String?, payload: TPDataPayload?) {
+    public init?(id: String? = nil, name: String? = nil, type: String? = nil, payload: TPDataPayload? = nil) {
         self.id = id
         self.name = name
         self.type = type

@@ -22,8 +22,10 @@ public class TidepoolKitUI {
     private init() {
     }
     
-    public func logInViewController() -> UIViewController {
-        return UIStoryboard(name: "LoginSignup", bundle: Bundle(for: LoginViewController.self)).instantiateInitialViewController() as! LoginViewController
+    public func logInViewController(loginSignupDelegate: LoginSignupDelegate? = nil) -> UIViewController {
+        let loginViewController = UIStoryboard(name: "LoginSignup", bundle: Bundle(for: LoginViewController.self)).instantiateInitialViewController() as! LoginViewController
+        loginViewController.loginSignupDelegate = loginSignupDelegate
+        return loginViewController
     }
     
     
