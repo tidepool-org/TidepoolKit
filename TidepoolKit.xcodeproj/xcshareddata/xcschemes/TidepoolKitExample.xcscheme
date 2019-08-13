@@ -15,8 +15,8 @@
             <BuildableReference
                BuildableIdentifier = "primary"
                BlueprintIdentifier = "48F713C022EA00EC00FC2C89"
-               BuildableName = "Example.app"
-               BlueprintName = "Example"
+               BuildableName = "TidepoolKitExample.app"
+               BlueprintName = "TidepoolKitExample"
                ReferencedContainer = "container:TidepoolKit.xcodeproj">
             </BuildableReference>
          </BuildActionEntry>
@@ -28,13 +28,33 @@
       selectedLauncherIdentifier = "Xcode.DebuggerFoundation.Launcher.LLDB"
       shouldUseLaunchSchemeArgsEnv = "YES">
       <Testables>
+         <TestableReference
+            skipped = "NO">
+            <BuildableReference
+               BuildableIdentifier = "primary"
+               BlueprintIdentifier = "48F7135A22E9FCB900FC2C89"
+               BuildableName = "TidepoolKitTests.xctest"
+               BlueprintName = "TidepoolKitTests"
+               ReferencedContainer = "container:TidepoolKit.xcodeproj">
+            </BuildableReference>
+         </TestableReference>
+         <TestableReference
+            skipped = "NO">
+            <BuildableReference
+               BuildableIdentifier = "primary"
+               BlueprintIdentifier = "48F713AD22EA00CF00FC2C89"
+               BuildableName = "TidepoolKitUITests.xctest"
+               BlueprintName = "TidepoolKitUITests"
+               ReferencedContainer = "container:TidepoolKit.xcodeproj">
+            </BuildableReference>
+         </TestableReference>
       </Testables>
       <MacroExpansion>
          <BuildableReference
             BuildableIdentifier = "primary"
             BlueprintIdentifier = "48F713C022EA00EC00FC2C89"
-            BuildableName = "Example.app"
-            BlueprintName = "Example"
+            BuildableName = "TidepoolKitExample.app"
+            BlueprintName = "TidepoolKitExample"
             ReferencedContainer = "container:TidepoolKit.xcodeproj">
          </BuildableReference>
       </MacroExpansion>
@@ -56,8 +76,8 @@
          <BuildableReference
             BuildableIdentifier = "primary"
             BlueprintIdentifier = "48F713C022EA00EC00FC2C89"
-            BuildableName = "Example.app"
-            BlueprintName = "Example"
+            BuildableName = "TidepoolKitExample.app"
+            BlueprintName = "TidepoolKitExample"
             ReferencedContainer = "container:TidepoolKit.xcodeproj">
          </BuildableReference>
       </BuildableProductRunnable>
@@ -75,8 +95,8 @@
          <BuildableReference
             BuildableIdentifier = "primary"
             BlueprintIdentifier = "48F713C022EA00EC00FC2C89"
-            BuildableName = "Example.app"
-            BlueprintName = "Example"
+            BuildableName = "TidepoolKitExample.app"
+            BlueprintName = "TidepoolKitExample"
             ReferencedContainer = "container:TidepoolKit.xcodeproj">
          </BuildableReference>
       </BuildableProductRunnable>

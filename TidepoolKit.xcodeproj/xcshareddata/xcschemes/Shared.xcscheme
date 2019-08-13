@@ -48,20 +48,6 @@
                ReferencedContainer = "container:TidepoolKit.xcodeproj">
             </BuildableReference>
          </BuildActionEntry>
-         <BuildActionEntry
-            buildForTesting = "YES"
-            buildForRunning = "YES"
-            buildForProfiling = "YES"
-            buildForArchiving = "YES"
-            buildForAnalyzing = "YES">
-            <BuildableReference
-               BuildableIdentifier = "primary"
-               BlueprintIdentifier = "48F713C022EA00EC00FC2C89"
-               BuildableName = "Example.app"
-               BlueprintName = "Example"
-               ReferencedContainer = "container:TidepoolKit.xcodeproj">
-            </BuildableReference>
-         </BuildActionEntry>
       </BuildActionEntries>
    </BuildAction>
    <TestAction
@@ -77,6 +63,16 @@
                BlueprintIdentifier = "48F7135A22E9FCB900FC2C89"
                BuildableName = "TidepoolKitTests.xctest"
                BlueprintName = "TidepoolKitTests"
+               ReferencedContainer = "container:TidepoolKit.xcodeproj">
+            </BuildableReference>
+         </TestableReference>
+         <TestableReference
+            skipped = "NO">
+            <BuildableReference
+               BuildableIdentifier = "primary"
+               BlueprintIdentifier = "48F713AD22EA00CF00FC2C89"
+               BuildableName = "TidepoolKitUITests.xctest"
+               BlueprintName = "TidepoolKitUITests"
                ReferencedContainer = "container:TidepoolKit.xcodeproj">
             </BuildableReference>
          </TestableReference>

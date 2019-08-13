@@ -670,11 +670,9 @@ class APIConnector {
             LogVerbose("sendRequest \(method) url: \(urlStr)")
         }
 
-        UIApplication.shared.isNetworkActivityIndicatorVisible = true
         let task = URLSession.shared.dataTask(with: request as URLRequest) {
             (data, response, error) -> Void in
             DispatchQueue.main.async(execute: {
-                UIApplication.shared.isNetworkActivityIndicatorVisible = false
                 sendResponse.response = response
                 sendResponse.data = data
   
