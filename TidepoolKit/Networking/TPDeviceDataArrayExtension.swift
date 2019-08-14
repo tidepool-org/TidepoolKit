@@ -16,24 +16,24 @@
 import Foundation
 
 /// TPUserDataArray objects are created for either uploading/deleting, or as a result of a download. This is basically a factory object used to convert between service json data and TPUserDataArray objects.
-extension TPUserDataArray: TPFetchable, TPUploadable {
+extension TPDeviceDataArray: TPFetchable, TPUploadable {
     
     //
     // MARK: - methods private to framework!
     //
     
-    class func userDataFromJsonData(_ data: Data) -> TPUserDataArray? {
+    class func userDataFromJsonData(_ data: Data) -> TPDeviceDataArray? {
         do {
             let object: Any = try JSONSerialization.jsonObject(with: data)
             if let jsonArray = object as? [[String: Any]] {
-                var items: [TPUserData] = []
+                var items: [TPDeviceData] = []
                 for jsonDict in jsonArray {
                     LogInfo("APIUserDataArray.userDataFromJsonData calling createFromJson on \(jsonDict)")
-                    if let item = TPUserData.createFromJson(jsonDict) {
+                    if let item = TPDeviceData.createFromJson(jsonDict) {
                         items.append(item)
                     }
                 }
-                return TPUserDataArray(items)
+                return TPDeviceDataArray(items)
             } else {
                 LogError("Received data not json decodable!")
             }
@@ -53,7 +53,7 @@ extension TPUserDataArray: TPFetchable, TPUploadable {
     }
     
     static func fromJsonData(_ data: Data) -> TPFetchable? {
-        return TPUserDataArray.userDataFromJsonData(data)
+        return TPDeviceDataArray.userDataFromJsonData(data)
     }
 
     //

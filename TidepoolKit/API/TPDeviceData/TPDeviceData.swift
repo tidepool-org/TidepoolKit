@@ -16,7 +16,7 @@
 import Foundation
 
 // Note: This is meant to specify any optional data types that are commonly expected to be in all TPData types contained in the first level of a TPSampleData object, and that can be uploaded/downloaded together to/from the Tidepool service. These fields would be added after initialization, and validated when set...
-public class TPUserData {
+public class TPDeviceData {
     
     public var id: String?
     public var time: Date?
@@ -73,7 +73,7 @@ public class TPUserData {
     }
 
     /// Parses json to create a specific TPSampleData subclass item.
-    class func createFromJson(_ jsonDict: [String: Any]) -> TPUserData? {
+    class func createFromJson(_ jsonDict: [String: Any]) -> TPDeviceData? {
         
         // parse thru dictionary to create tpItem!
         guard let type = jsonDict["type"] as? String else {
@@ -82,7 +82,7 @@ public class TPUserData {
         }
         
         // Based on type field, call type-specific init to create the object...
-        var tpData: TPUserData? = nil
+        var tpData: TPDeviceData? = nil
         guard let tpType = TPDataType(rawValue: type) else {
             LogError("Type \(type) not supported!")
             return nil

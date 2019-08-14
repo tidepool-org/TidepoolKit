@@ -187,7 +187,7 @@ class TPKitTests10UserData: TPKitTestsBase {
             cbgSample.origin = origin
             cbgSample.payload = payload
             NSLog("created TPDataCbg: \(cbgSample.debugDescription)")
-            let tpDataArray = TPUserDataArray([cbgSample])
+            let tpDataArray = TPDeviceDataArray([cbgSample])
             tpKit.putUserData(tpDataArray) {
                 result,arg  in
                 expectation.fulfill()
@@ -234,7 +234,7 @@ class TPKitTests10UserData: TPKitTestsBase {
             let foodSample = self.createCarbItem(30)
             XCTAssertNotNil(foodSample, "\(#function) failed to create food sample!")
 
-            let tpDataArray = TPUserDataArray([foodSample!])
+            let tpDataArray = TPDeviceDataArray([foodSample!])
             tpKit.putUserData(tpDataArray) {
                 result,arg  in
                 expectation.fulfill()
@@ -335,7 +335,7 @@ class TPKitTests10UserData: TPKitTestsBase {
             let foodSample = self.createFoodItem()
             XCTAssertNotNil(foodSample, "\(#function) failed to create food sample!")
             
-            let tpDataArray = TPUserDataArray([foodSample!])
+            let tpDataArray = TPDeviceDataArray([foodSample!])
             tpKit.putUserData(tpDataArray) {
                 result,arg  in
                 expectation.fulfill()

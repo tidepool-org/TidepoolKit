@@ -43,7 +43,7 @@ public enum TPDataType: String, Codable {
     // Note: Not sure the best place for these, can't go into a protocol, but nice to have them in a namespace. This enum provides that, although the methods don't really use the enum value...
     
     // ValidateDouble with Double result only returns a Double value if a non-nil value is passed in that in in-bounds of any max or min
-    static func validateDouble(_ value: Double?, min: Double? = nil, max: Double? = nil) -> Double? {
+    public static func validateDouble(_ value: Double?, min: Double? = nil, max: Double? = nil) -> Double? {
         var result: Double? = value
         guard let value = value else {
             return nil
@@ -64,7 +64,7 @@ public enum TPDataType: String, Codable {
     }
     
     // isValidDouble requires a non-nil value, or a value that is in-bounds of any max or min
-    static func isValidDouble(_ value: Double?, min: Double? = nil, max: Double? = nil) -> Bool {
+    public static func isValidDouble(_ value: Double?, min: Double? = nil, max: Double? = nil) -> Bool {
         guard let value = value else {
             return false
         }
@@ -83,7 +83,7 @@ public enum TPDataType: String, Codable {
         return true
     }
     
-    static func isValidDoubleOrNil(_ value: Double?, min: Double? = nil, max: Double? = nil) -> Bool {
+    public static func isValidDoubleOrNil(_ value: Double?, min: Double? = nil, max: Double? = nil) -> Bool {
         guard let value = value else {
             return true
         }
@@ -91,7 +91,7 @@ public enum TPDataType: String, Codable {
     }
     
     // Returns false if string is non-nil and length exceeds maxLen. If nil, or length is ok, returns true.
-    static func validateString(_ string: String?, maxLen: Int? = nil) -> Bool {
+    public static func validateString(_ string: String?, maxLen: Int? = nil) -> Bool {
         if let string = string, let maxLen = maxLen {
             if string.lengthOfBytes(using: .utf8) > maxLen {
                 LogError("Err: length of string \(string) is greater than max \(maxLen)!")
@@ -101,7 +101,7 @@ public enum TPDataType: String, Codable {
         return true
     }
 
-    static func getTypeFromDict<T: TPData>(_ type: T.Type, _ dict: [String: Any]) -> T? {
+    public static func getTypeFromDict<T: TPData>(_ type: T.Type, _ dict: [String: Any]) -> T? {
         if let typeDict = dict[T.tpType.rawValue] as? [String: Any] {
             if let item = T.init(rawValue: typeDict) {
                 return item
@@ -110,7 +110,7 @@ public enum TPDataType: String, Codable {
         return nil
     }
 
-    static func description(_ rawDict: [String: Any], linePrefix: String = "\n ") -> String {
+    public static func description(_ rawDict: [String: Any], linePrefix: String = "\n ") -> String {
         var result: String = ""
         for (key, value) in rawDict {
             if let valueDict = value as? [String: Any] {

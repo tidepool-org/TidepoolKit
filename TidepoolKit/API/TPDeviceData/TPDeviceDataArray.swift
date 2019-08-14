@@ -16,12 +16,12 @@
 import Foundation
 
 /// Simple array containing mixed data types.
-public class TPUserDataArray {
+public class TPDeviceDataArray {
     
-    var userData: [TPUserData]
+    var userData: [TPDeviceData]
     let forDelete: Bool
 
-    public init(_ userData: [TPUserData], forDelete: Bool = false) {
+    public init(_ userData: [TPDeviceData], forDelete: Bool = false) {
         self.userData = userData
         self.forDelete = forDelete
     }

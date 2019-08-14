@@ -19,9 +19,9 @@ public struct TPDataOrigin: TPData {
     public static var tpType: TPDataType { return .origin }
 
     public let id: String?
-    let name: String?
-    let type: String?
-    let payload: TPDataPayload?
+    public let name: String?
+    public let type: String?
+    public let payload: TPDataPayload?
 
     public init?(id: String? = nil, name: String? = nil, type: String? = nil, payload: TPDataPayload? = nil) {
         self.id = id

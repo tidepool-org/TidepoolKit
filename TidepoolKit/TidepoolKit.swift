@@ -91,12 +91,12 @@ public class TidepoolKit {
     /// - parameter endDate: Record date must be before or equal to endEdate
     /// - parameter objectTypes: One or more of "smbg,bolus,cbg,wizard,basal,food", or nil to fetch all these types.
     /// - parameter completion: async completion to be called when fetch completes successfully or with an error condition.
-    public func getUserData(_ startDate: Date, endDate: Date, objectTypes: String = "smbg,bolus,cbg,wizard,basal,food", _ completion: @escaping (Result<TPUserDataArray, TidepoolKitError>) -> (Void)) {
+    public func getUserData(_ startDate: Date, endDate: Date, objectTypes: String = "smbg,bolus,cbg,wizard,basal,food", _ completion: @escaping (Result<TPDeviceDataArray, TidepoolKitError>) -> (Void)) {
         var parameters: Dictionary = ["type": objectTypes]
         parameters.updateValue(DateUtils.dateToJSON(startDate), forKey: "startDate")
         parameters.updateValue(DateUtils.dateToJSON(endDate), forKey: "endDate")
         LogInfo("\(#function) startDate: \(startDate), endData: \(endDate), objectTypes: \(objectTypes)")
-        apiConnect.fetch(TPUserDataArray.self, parameters: parameters) {
+        apiConnect.fetch(TPDeviceDataArray.self, parameters: parameters) {
             result in
             switch result {
             case .success(let tpUserData):
@@ -109,7 +109,7 @@ public class TidepoolKit {
         }
     }
     
-    public func putUserData(_ samples: TPUserDataArray, _ completion: @escaping (Result<Bool, TidepoolKitError>, [Int]?) -> (Void)) {
+    public func putUserData(_ samples: TPDeviceDataArray, _ completion: @escaping (Result<Bool, TidepoolKitError>, [Int]?) -> (Void)) {
         self.configureUploadId() {
             guard self.currentUploadId() != nil else {
                 // TODO: currentUploadId should really return Result with TidepoolKitError!
@@ -132,14 +132,14 @@ public class TidepoolKit {
         }
     }
 
-    public func deleteUserData(_ samples: TPUserDataArray, _ completion: @escaping (Result<Bool, TidepoolKitError>) -> (Void)) {
+    public func deleteUserData(_ samples: TPDeviceDataArray, _ completion: @escaping (Result<Bool, TidepoolKitError>) -> (Void)) {
         self.configureUploadId() {
             guard self.currentUploadId() != nil else {
                 // TODO: currentUploadId should really return Result with TidepoolKitError!
                 completion(.failure(.serviceError))
                 return
             }
-            let apiSamples = TPUserDataArray(samples.userData, forDelete: true)
+            let apiSamples = TPDeviceDataArray(samples.userData, forDelete: true)
             self.apiConnect.upload(apiSamples, httpMethod: "DELETE") {
                 result in
                 switch result {
