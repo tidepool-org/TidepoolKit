@@ -15,21 +15,21 @@
 
 import Foundation
 
-/// Subclass of TPDeleteItemArray used for deleting items.
-public class TPDeleteItemArray: TPDeviceDataArray {
+/// Subclass of APIDeleteItemArray used for deleting items.
+class APIDeleteItemArray: APIDeviceDataArray {
     
-    public init(_ userData: [TPDeleteItem]) {
+    init(_ userData: [TPDeleteItem]) {
         super.init(userData)
     }
 
-    // convenience init for turning any TPDeviceDataArray into a TPDeleteItemArray
-    public init(_ userData: TPDeviceDataArray) {
+    // convenience init for turning any APIDeviceDataArray into a APIDeleteItemArray
+    init(_ userData: APIDeviceDataArray) {
         var deleteArray: [TPDeleteItem] = []
         for item in userData.userData {
             if let deleteItem = TPDeleteItem(item) {
                 deleteArray.append(deleteItem)
             } else {
-                LogError("TPDeviceDataArray item \(item.debugDescription) has no id or origin id, unable to delete!")
+                LogError("APIDeviceDataArray item \(item.debugDescription) has no id or origin id, unable to delete!")
             }
         }
         super.init(deleteArray)

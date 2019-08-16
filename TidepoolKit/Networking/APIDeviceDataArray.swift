@@ -15,15 +15,26 @@
 
 import Foundation
 
+/// APIDeviceDataArray objects are created for either uploading/deleting, or as a result of a download. This is basically a factory object used to convert between service json data and TPDeviceData objects.
+class APIDeviceDataArray: TPFetchable, TPUploadable {
+    
+    var userData: [TPDeviceData]
 
-/// TPUserDataArray objects are created for either uploading/deleting, or as a result of a download. This is basically a factory object used to convert between service json data and TPUserDataArray objects.
-extension TPDeviceDataArray: TPFetchable, TPUploadable {
+    init(_ userData: [TPDeviceData]) {
+        self.userData = userData
+    }
     
-    //
-    // MARK: - methods private to framework!
-    //
+    var debugDescription: String {
+        get {
+            var result = "TPUserDataArray \(userData.count) items:"
+            for item in userData {
+                result += "\n" + item.debugDescription
+            }
+            return result
+        }
+    }
     
-    class func userDataFromJsonData(_ data: Data) -> TPDeviceDataArray? {
+    class func userDataFromJsonData(_ data: Data) -> APIDeviceDataArray? {
         do {
             let object: Any = try JSONSerialization.jsonObject(with: data)
             if let jsonArray = object as? [[String: Any]] {
@@ -34,7 +45,7 @@ extension TPDeviceDataArray: TPFetchable, TPUploadable {
                         items.append(item)
                     }
                 }
-                return TPDeviceDataArray(items)
+                return APIDeviceDataArray(items)
             } else {
                 LogError("Received data not json decodable!")
             }
@@ -54,9 +65,9 @@ extension TPDeviceDataArray: TPFetchable, TPUploadable {
     }
     
     static func fromJsonData(_ data: Data) -> TPFetchable? {
-        return TPDeviceDataArray.userDataFromJsonData(data)
+        return APIDeviceDataArray.userDataFromJsonData(data)
     }
-
+    
     //
     // MARK: TPUploadable
     //
@@ -135,7 +146,7 @@ extension TPDeviceDataArray: TPFetchable, TPUploadable {
             LogError("Unable to parse upload response message as dictionary!")
             return nil
         }
-
+        
         if let errorArray = responseDict["errors"] as? [[String: Any]] {
             for errorDict in errorArray {
                 if let source = errorDict["source"] {
@@ -154,7 +165,7 @@ extension TPDeviceDataArray: TPFetchable, TPUploadable {
             return nil
         }
     }
-
+    
 }
 
 /*
@@ -162,100 +173,100 @@ extension TPDeviceDataArray: TPFetchable, TPUploadable {
  
  // Example of json error response:
  
-{
-    "code": "value-out-of-range",
-    "title": "value is out of range",
-    "detail": "value 1137 is not between 0 and 1000",
-    "source": {
-        "pointer": "/0/value"
-    },
-    "meta": {
-        "type": "cbg"
-    }
-}
-
+ {
+ "code": "value-out-of-range",
+ "title": "value is out of range",
+ "detail": "value 1137 is not between 0 and 1000",
+ "source": {
+ "pointer": "/0/value"
+ },
+ "meta": {
+ "type": "cbg"
+ }
+ }
  
-// Example of json for APIUserDataArray with two samples, one cbg, and one basal...
  
-var jsonUserData = """
-[
-  {
-    "uploadId" : "0f7394fb80e46fad990b6cb2fa034a24",
-    "type" : "cbg",
-    "payload" : {
-      "Trend Arrow" : "Flat",
-      "Transmitter Time" : "2019-04-06T23:55:06.000Z",
-      "HKDeviceName" : "10386270000221",
-      "Trend Rate" : -0.10000000000000001,
-      "HKTimeZone" : "America/Los_Angeles",
-      "Status" : "IN_RANGE"
-    },
-    "units" : "mmol/L",
-    "id" : "996afef4050c0fd9271e2d9517bde367",
-    "value" : 7.6045199999999999,
-    "time" : "2019-04-06T23:55:06.000Z",
-    "origin" : {
-      "type" : "service",
-      "payload" : {
-        "sourceRevision" : {
-          "operatingSystemVersion" : "12.2.0",
-          "source" : {
-            "bundleIdentifier" : "com.dexcom.G6",
-            "name" : "Dexcom G6"
-          },
-          "productType" : "iPhone10,6",
-          "version" : "15631"
-        }
-      },
-      "id" : "65C55636-BD6F-4D62-9946-007734BE254E",
-      "name" : "com.apple.HealthKit"
-    }
-  },
-  {
-    "uploadId" : "0f7394fb80e46fad990b6cb2fa034a24",
-    "deliveryType" : "temp",
-    "payload" : {
-      "HKMetadataKeySyncVersion" : 1,
-      "HKMetadataKeySyncIdentifier" : "74656d70426173616c20302e35373520323031392d30342d30365432333a35333a33385a203430372e36333235303030353234353231",
-      "com.loopkit.InsulinKit.MetadataKeyScheduledBasalRate" : "0.8 IU/hr",
-      "HasLoopKitOrigin" : 1,
-      "HKInsulinDeliveryReason" : 1
-    },
-    "type" : "basal",
-    "id" : "6f1e00831ba7d761af8d0a70c2979689",
-    "duration" : 407632,
-    "suppressed" : {
-      "deliveryType" : "scheduled",
-      "rate" : 0.80000000000000004,
-      "type" : "basal"
-    },
-    "rate" : 1.3247226360275874,
-    "time" : "2019-04-06T23:53:38.971Z",
-    "origin" : {
-      "type" : "service",
-      "payload" : {
-        "device" : {
-          "localIdentifier" : "1F05E6F8",
-          "firmwareVersion" : "2.8.0",
-          "model" : "Eros",
-          "softwareVersion" : "44.0",
-          "name" : "Omnipod",
-          "manufacturer" : "Insulet"
-        },
-        "sourceRevision" : {
-          "version" : "53",
-          "operatingSystemVersion" : "12.2.0",
-          "source" : {
-            "name" : "Loop",
-            "bundleIdentifier" : "com.34SNZ39Q48.loopkit.Loop"
-          },
-          "productType" : "iPhone10,6"
-        }
-      },
-      "id" : "F47B648B-5856-42B6-AA88-28AF2AA23BA9",
-      "name" : "com.apple.HealthKit"
-    }
-  }]
-""".data(using: .utf8)!
-
+ // Example of json for APIUserDataArray with two samples, one cbg, and one basal...
+ 
+ var jsonUserData = """
+ [
+ {
+ "uploadId" : "0f7394fb80e46fad990b6cb2fa034a24",
+ "type" : "cbg",
+ "payload" : {
+ "Trend Arrow" : "Flat",
+ "Transmitter Time" : "2019-04-06T23:55:06.000Z",
+ "HKDeviceName" : "10386270000221",
+ "Trend Rate" : -0.10000000000000001,
+ "HKTimeZone" : "America/Los_Angeles",
+ "Status" : "IN_RANGE"
+ },
+ "units" : "mmol/L",
+ "id" : "996afef4050c0fd9271e2d9517bde367",
+ "value" : 7.6045199999999999,
+ "time" : "2019-04-06T23:55:06.000Z",
+ "origin" : {
+ "type" : "service",
+ "payload" : {
+ "sourceRevision" : {
+ "operatingSystemVersion" : "12.2.0",
+ "source" : {
+ "bundleIdentifier" : "com.dexcom.G6",
+ "name" : "Dexcom G6"
+ },
+ "productType" : "iPhone10,6",
+ "version" : "15631"
+ }
+ },
+ "id" : "65C55636-BD6F-4D62-9946-007734BE254E",
+ "name" : "com.apple.HealthKit"
+ }
+ },
+ {
+ "uploadId" : "0f7394fb80e46fad990b6cb2fa034a24",
+ "deliveryType" : "temp",
+ "payload" : {
+ "HKMetadataKeySyncVersion" : 1,
+ "HKMetadataKeySyncIdentifier" : "74656d70426173616c20302e35373520323031392d30342d30365432333a35333a33385a203430372e36333235303030353234353231",
+ "com.loopkit.InsulinKit.MetadataKeyScheduledBasalRate" : "0.8 IU/hr",
+ "HasLoopKitOrigin" : 1,
+ "HKInsulinDeliveryReason" : 1
+ },
+ "type" : "basal",
+ "id" : "6f1e00831ba7d761af8d0a70c2979689",
+ "duration" : 407632,
+ "suppressed" : {
+ "deliveryType" : "scheduled",
+ "rate" : 0.80000000000000004,
+ "type" : "basal"
+ },
+ "rate" : 1.3247226360275874,
+ "time" : "2019-04-06T23:53:38.971Z",
+ "origin" : {
+ "type" : "service",
+ "payload" : {
+ "device" : {
+ "localIdentifier" : "1F05E6F8",
+ "firmwareVersion" : "2.8.0",
+ "model" : "Eros",
+ "softwareVersion" : "44.0",
+ "name" : "Omnipod",
+ "manufacturer" : "Insulet"
+ },
+ "sourceRevision" : {
+ "version" : "53",
+ "operatingSystemVersion" : "12.2.0",
+ "source" : {
+ "name" : "Loop",
+ "bundleIdentifier" : "com.34SNZ39Q48.loopkit.Loop"
+ },
+ "productType" : "iPhone10,6"
+ }
+ },
+ "id" : "F47B648B-5856-42B6-AA88-28AF2AA23BA9",
+ "name" : "com.apple.HealthKit"
+ }
+ }]
+ """.data(using: .utf8)!
+ 
  */

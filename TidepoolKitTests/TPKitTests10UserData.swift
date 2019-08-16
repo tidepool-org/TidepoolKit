@@ -70,7 +70,7 @@ class TPKitTests10UserData: TPKitTestsBase {
                     NSLog("\(#function) failed user data fetch!")
                     XCTFail()
                 case .success(let userDataArray):
-                    NSLog("\(#function) fetched \(userDataArray.userData.count) items!")
+                    NSLog("\(#function) fetched \(userDataArray.count) items!")
                 }
             }
         }
@@ -96,7 +96,7 @@ class TPKitTests10UserData: TPKitTestsBase {
                     NSLog("\(#function) failed user data fetch!")
                     XCTFail()
                 case .success(let userDataArray):
-                    let itemCount = userDataArray.userData.count
+                    let itemCount = userDataArray.count
                     NSLog("\(#function) fetched \(itemCount) items!")
                     guard itemCount > 0 else {
                         NSLog("\(#function) no data to delete, pass test!")
@@ -105,7 +105,7 @@ class TPKitTests10UserData: TPKitTestsBase {
                     }
                     // convert existing TPDeviceData items into TPDeleteItems
                     var deleteItems: [TPDeleteItem] = []
-                    for item in userDataArray.userData {
+                    for item in userDataArray {
                         if let deleteItem = TPDeleteItem(item) {
                             deleteItems.append(deleteItem)
                         }
@@ -237,8 +237,7 @@ class TPKitTests10UserData: TPKitTestsBase {
             cbgSample.origin = origin
             cbgSample.payload = payload
             NSLog("created TPDataCbg: \(cbgSample.debugDescription)")
-            let tpDataArray = TPDeviceDataArray([cbgSample])
-            tpKit.putUserData(tpDataArray) {
+            tpKit.putUserData([cbgSample]) {
                 result,arg  in
                 expectation.fulfill()
                 switch result {
@@ -284,8 +283,7 @@ class TPKitTests10UserData: TPKitTestsBase {
             let foodSample = self.createCarbItem(30)
             XCTAssertNotNil(foodSample, "\(#function) failed to create food sample!")
 
-            let tpDataArray = TPDeviceDataArray([foodSample!])
-            tpKit.putUserData(tpDataArray) {
+            tpKit.putUserData([foodSample!]) {
                 result,arg  in
                 expectation.fulfill()
                 switch result {
@@ -385,8 +383,7 @@ class TPKitTests10UserData: TPKitTestsBase {
             let foodSample = self.createFoodItem()
             XCTAssertNotNil(foodSample, "\(#function) failed to create food sample!")
             
-            let tpDataArray = TPDeviceDataArray([foodSample!])
-            tpKit.putUserData(tpDataArray) {
+            tpKit.putUserData([foodSample!]) {
                 result,arg  in
                 expectation.fulfill()
                 switch result {
