@@ -78,7 +78,7 @@ class TPKitTests10UserData: TPKitTestsBase {
         waitForExpectations(timeout: 20.0, handler: nil)
     }
 
-    func test13DeleteUserData() {
+    func test13_1_DeleteUserData() {
         let expectation = self.expectation(description: "Delete of user data successful")
         let tpKit = TidepoolKit.sharedInstance
         // first, ensure we are logged in, and then ...
@@ -103,7 +103,15 @@ class TPKitTests10UserData: TPKitTestsBase {
                         expectation.fulfill()
                         return
                     }
-                    tpKit.deleteUserData(userDataArray) {
+                    // convert existing TPDeviceData items into TPDeleteItems
+                    var deleteItems: [TPDeleteItem] = []
+                    for item in userDataArray.userData {
+                        if let deleteItem = TPDeleteItem(item) {
+                            deleteItems.append(deleteItem)
+                        }
+                    }
+                    // and delete...
+                    tpKit.deleteUserData(deleteItems) {
                         result in
                         expectation.fulfill()
                         switch result {
@@ -118,6 +126,48 @@ class TPKitTests10UserData: TPKitTestsBase {
             }
         }
         // Wait 20.0 seconds until expectation has been fulfilled (sometimes staging takes almost 10 seconds). If not, fail.
+        waitForExpectations(timeout: 20.0, handler: nil)
+    }
+
+    /// Test passing a bunch of origin ids, where data doesn't exist...
+    func test13_2_DeleteUserData() {
+        let expectation = self.expectation(description: "Delete of user data successful")
+        let tpKit = TidepoolKit.sharedInstance
+        // first, ensure we are logged in, and then ...
+        NSLog("\(#function): next calling ensureLogin...")
+        ensureLogin() {
+            result in
+            NSLog("\(#function): ensureLogin completed... with result: \(result)")
+            XCTAssert(tpKit.isLoggedIn())
+            var deleteItemArray: [TPDeleteItem] = []
+            for _ in 1...5 {
+                let id = UUID().uuidString
+                if let deleteItem = TPDeleteItem(originId: id) {
+                    deleteItemArray.append(deleteItem)
+                }
+            }
+            XCTAssert(deleteItemArray.count == 5)
+            for _ in 1...5 {
+                let id = UUID().uuidString
+                let origin = TPDataOrigin(id: id)
+                if let deleteItem = TPDeleteItem(origin: origin) {
+                    deleteItemArray.append(deleteItem)
+                }
+            }
+            XCTAssert(deleteItemArray.count == 10)
+            tpKit.deleteUserData(deleteItemArray) {
+                result in
+                expectation.fulfill()
+                switch result {
+                case .failure:
+                    NSLog("\(#function) failed delete user data!")
+                    XCTFail()
+                case .success:
+                    NSLog("\(#function) delete succeeded!")
+                }
+            }
+        }
+        // Wait 20.0 seconds until expectation has been fulfilled. If not, fail.
         waitForExpectations(timeout: 20.0, handler: nil)
     }
 

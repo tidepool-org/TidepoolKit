@@ -15,6 +15,7 @@
 
 import Foundation
 
+
 /// TPUserDataArray objects are created for either uploading/deleting, or as a result of a download. This is basically a factory object used to convert between service json data and TPUserDataArray objects.
 extension TPDeviceDataArray: TPFetchable, TPUploadable {
     
@@ -69,21 +70,7 @@ extension TPDeviceDataArray: TPFetchable, TPUploadable {
         }
         var postBodyDictArray: [[String: Any]] = []
         for item in tpDataItems {
-            if forDelete {
-                // TODO: right now assume that id needed for delete is the origin id (Loop case), but may want to support deleting by Tidepool id. Base this on de-duplicator type?
-                if let origin = item.origin, let id = origin.id {
-                    var sampleToDeleteDict = [String: AnyObject]()
-                    let origin: [String: AnyObject] = [
-                        "id": id as AnyObject
-                    ]
-                    sampleToDeleteDict["origin"] = origin as AnyObject
-                    postBodyDictArray.append(sampleToDeleteDict)
-                } else {
-                    LogError("TPUserDataArray.postBodyData() item \(item.debugDescription) has no origin id, unable to delete!")
-                }
-            } else {
-                postBodyDictArray.append(item.rawValue)
-            }
+            postBodyDictArray.append(item.rawValue)
         }
         guard !postBodyDictArray.isEmpty else {
             LogError("APIUserDataArray.postBodyData() no valid samples!")

@@ -27,7 +27,7 @@ public class TPDeviceData {
     public var notes: [String]? = nil     // array of note (string; 1 <= len <= 1000; NOT the same as messages); optional; 1 <= len <= 100; retains order
     public var associations: [Association]? = nil    // 1 <= len <= 100
 
-    public init?(time: Date) {
+    public init?(time: Date? = nil) {
         self.id = nil
         self.time = time
         self.origin = nil

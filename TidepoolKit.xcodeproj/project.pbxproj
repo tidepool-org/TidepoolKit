@@ -14,6 +14,8 @@
 		481E4B4A22F08C7500B128E8 /* TPUserSettings.swift in Sources */ = {isa = PBXBuildFile; fileRef = 481E4B4822F08C7500B128E8 /* TPUserSettings.swift */; };
 		481E4B4E22F0AA8700B128E8 /* TPKitTestsBase.swift in Sources */ = {isa = PBXBuildFile; fileRef = 481E4B4D22F0AA8700B128E8 /* TPKitTestsBase.swift */; };
 		481E4B5422F0B54200B128E8 /* TPKitTests01UserInfo.swift in Sources */ = {isa = PBXBuildFile; fileRef = 481E4B5322F0B54200B128E8 /* TPKitTests01UserInfo.swift */; };
+		48A28BC9230704C800438382 /* TPDeleteItem.swift in Sources */ = {isa = PBXBuildFile; fileRef = 48A28BC8230704C800438382 /* TPDeleteItem.swift */; };
+		48A28BCC2307118600438382 /* TPDeleteItemArray.swift in Sources */ = {isa = PBXBuildFile; fileRef = 48A28BCB2307118500438382 /* TPDeleteItemArray.swift */; };
 		48F7135C22E9FCB900FC2C89 /* TidepoolKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 48F7135222E9FCB900FC2C89 /* TidepoolKit.framework */; };
 		48F7136322E9FCB900FC2C89 /* TidepoolKit.h in Headers */ = {isa = PBXBuildFile; fileRef = 48F7135522E9FCB900FC2C89 /* TidepoolKit.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		48F7136E22E9FEB600FC2C89 /* TPKitTests00Login.swift in Sources */ = {isa = PBXBuildFile; fileRef = 48F7136C22E9FEB600FC2C89 /* TPKitTests00Login.swift */; };
@@ -113,6 +115,8 @@
 		481E4B4822F08C7500B128E8 /* TPUserSettings.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TPUserSettings.swift; sourceTree = "<group>"; };
 		481E4B4D22F0AA8700B128E8 /* TPKitTestsBase.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TPKitTestsBase.swift; sourceTree = "<group>"; };
 		481E4B5322F0B54200B128E8 /* TPKitTests01UserInfo.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TPKitTests01UserInfo.swift; sourceTree = "<group>"; };
+		48A28BC8230704C800438382 /* TPDeleteItem.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TPDeleteItem.swift; sourceTree = "<group>"; };
+		48A28BCB2307118500438382 /* TPDeleteItemArray.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TPDeleteItemArray.swift; sourceTree = "<group>"; };
 		48F7135222E9FCB900FC2C89 /* TidepoolKit.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = TidepoolKit.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		48F7135522E9FCB900FC2C89 /* TidepoolKit.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = TidepoolKit.h; sourceTree = "<group>"; };
 		48F7135622E9FCB900FC2C89 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
@@ -224,6 +228,8 @@
 				48F7137522E9FEE200FC2C89 /* TPDataFood.swift */,
 				4812E80222EE507A0058AF41 /* TPDeviceData.swift */,
 				48F7137E22E9FEE200FC2C89 /* TPDeviceDataArray.swift */,
+				48A28BC8230704C800438382 /* TPDeleteItem.swift */,
+				48A28BCB2307118500438382 /* TPDeleteItemArray.swift */,
 			);
 			path = TPDeviceData;
 			sourceTree = "<group>";
@@ -654,6 +660,8 @@
 				48F7139522E9FEE200FC2C89 /* TPDataBasal.swift in Sources */,
 				48F7138D22E9FEE200FC2C89 /* DebugLog.swift in Sources */,
 				48F713EA22EA7C7300FC2C89 /* TPDataFat.swift in Sources */,
+				48A28BCC2307118600438382 /* TPDeleteItemArray.swift in Sources */,
+				48A28BC9230704C800438382 /* TPDeleteItem.swift in Sources */,
 				48F7138A22E9FEE200FC2C89 /* Reachability.swift in Sources */,
 				48F713F322EA7F5C00FC2C89 /* TPDataAmount.swift in Sources */,
 			);

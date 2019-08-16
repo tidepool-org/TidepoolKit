@@ -15,23 +15,24 @@
 
 import Foundation
 
-/// Simple array containing mixed data types.
-public class TPDeviceDataArray {
+/// Subclass of TPDeleteItemArray used for deleting items.
+public class TPDeleteItemArray: TPDeviceDataArray {
     
-    public var userData: [TPDeviceData]
+    public init(_ userData: [TPDeleteItem]) {
+        super.init(userData)
+    }
 
-    public init(_ userData: [TPDeviceData]) {
-        self.userData = userData
-    }
-    
-    public var debugDescription: String {
-        get {
-            var result = "TPUserDataArray \(userData.count) items:"
-            for item in userData {
-                result += "\n" + item.debugDescription
+    // convenience init for turning any TPDeviceDataArray into a TPDeleteItemArray
+    public init(_ userData: TPDeviceDataArray) {
+        var deleteArray: [TPDeleteItem] = []
+        for item in userData.userData {
+            if let deleteItem = TPDeleteItem(item) {
+                deleteArray.append(deleteItem)
+            } else {
+                LogError("TPDeviceDataArray item \(item.debugDescription) has no id or origin id, unable to delete!")
             }
-            return result
         }
+        super.init(deleteArray)
     }
-    
+
 }

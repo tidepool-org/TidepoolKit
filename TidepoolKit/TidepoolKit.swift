@@ -132,15 +132,14 @@ public class TidepoolKit {
         }
     }
 
-    public func deleteUserData(_ samples: TPDeviceDataArray, _ completion: @escaping (Result<Bool, TidepoolKitError>) -> (Void)) {
+    public func deleteUserData(_ samples: [TPDeleteItem], _ completion: @escaping (Result<Bool, TidepoolKitError>) -> (Void)) {
         self.configureUploadId() {
             guard self.currentUploadId() != nil else {
-                // TODO: currentUploadId should really return Result with TidepoolKitError!
                 completion(.failure(.serviceError))
                 return
             }
-            let apiSamples = TPDeviceDataArray(samples.userData, forDelete: true)
-            self.apiConnect.upload(apiSamples, httpMethod: "DELETE") {
+            let deleteItems = TPDeleteItemArray(samples)
+            self.apiConnect.upload(deleteItems, httpMethod: "DELETE") {
                 result in
                 switch result {
                 case .success(let failedSamples):
