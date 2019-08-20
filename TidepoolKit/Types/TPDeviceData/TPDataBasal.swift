@@ -49,7 +49,7 @@ public class TPDataBasal: TPDeviceData, TPData {
     //
     public typealias RawValue = [String: Any]
 
-    required override public init?(rawValue: RawValue) {
+    required public init?(rawValue: RawValue) {
         return nil
         // todo: implement!
     }

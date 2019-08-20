@@ -62,7 +62,7 @@ public class TPDataCbg: TPDeviceData, TPData {
     //
     public typealias RawValue = [String: Any]
 
-    required override public init?(rawValue: RawValue) {
+    required public init?(rawValue: RawValue) {
         guard let value = rawValue["value"] as? NSNumber else {
             LogError("TPDataCbg:init(rawValue) no value found!")
             return nil

@@ -16,7 +16,7 @@
 import Foundation
 
 // Note: This is meant to specify any optional data types that are commonly expected to be in all TPData types contained in the first level of a TPSampleData object, and that can be uploaded/downloaded together to/from the Tidepool service. These fields would be added after initialization, and validated when set...
-public class TPDeviceData {
+public class TPDeviceData: RawRepresentable {
     
     public var id: String?
     public var time: Date?
@@ -45,7 +45,7 @@ public class TPDeviceData {
     //
     public typealias RawValue = [String: Any]
 
-    public init?(rawValue: RawValue) {
+    required public init?(rawValue: RawValue) {
         // optionals...
         self.time = DateUtils.dateFromJSON(rawValue["time"] as? String)
         if self.time == nil {

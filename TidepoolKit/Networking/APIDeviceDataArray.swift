@@ -73,33 +73,9 @@ class APIDeviceDataArray: TPFetchable, TPUploadable {
     //
     
     func postBodyData() -> Data? {
-        // TODO: complete!
-        let tpDataItems = userData
-        guard !tpDataItems.isEmpty else {
-            LogError("TPUserDataArray.postBodyData() array is empty!")
-            return nil
-        }
-        var postBodyDictArray: [[String: Any]] = []
-        for item in tpDataItems {
-            postBodyDictArray.append(item.rawValue)
-        }
-        guard !postBodyDictArray.isEmpty else {
-            LogError("APIUserDataArray.postBodyData() no valid samples!")
-            return nil
-        }
-        guard JSONSerialization.isValidJSONObject(postBodyDictArray) else {
-            LogError("APIUserDataArray.postBodyData() invalid json object: \(postBodyDictArray)!")
-            return nil
-        }
-        do {
-            let postBody = try JSONSerialization.data(withJSONObject: postBodyDictArray)
-            return postBody
-        } catch {
-            LogError("APIUserDataArray.postBodyData() unable to serialize array \(postBodyDictArray)!")
-            return nil
-        }
+        return postBodyData(userData)
     }
-    
+
     func parseErrResponse(_ response: Data) -> [Int]? {
         var messageParseError = false
         var rejectedSamples: [Int] = []

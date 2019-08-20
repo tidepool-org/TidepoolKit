@@ -238,10 +238,10 @@
 		4812E80122EE50660058AF41 /* TPDeviceData */ = {
 			isa = PBXGroup;
 			children = (
+				4812E80222EE507A0058AF41 /* TPDeviceData.swift */,
 				48F7137D22E9FEE200FC2C89 /* TPDataBasal.swift */,
 				48F7137922E9FEE200FC2C89 /* TPDataCbg.swift */,
 				48F7137522E9FEE200FC2C89 /* TPDataFood.swift */,
-				4812E80222EE507A0058AF41 /* TPDeviceData.swift */,
 				48A28BC8230704C800438382 /* TPDeleteItem.swift */,
 			);
 			path = TPDeviceData;

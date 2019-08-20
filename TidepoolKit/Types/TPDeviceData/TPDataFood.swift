@@ -87,7 +87,7 @@ public class TPDataFood: TPDeviceData, TPData {
     //
     public typealias RawValue = [String: Any]
 
-    required override public init?(rawValue: RawValue) {
+    required public init?(rawValue: RawValue) {
         self.name = rawValue["name"] as? String
         self.brand = rawValue["brand"] as? String
         self.code = rawValue["code"] as? String

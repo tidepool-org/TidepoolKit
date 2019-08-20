@@ -69,3 +69,31 @@ protocol TPUploadable {
     func parseErrResponse(_ response: Data) -> [Int]?
 }
 
+extension TPUploadable {
+    func postBodyData<T: RawRepresentable>(_ items: [T]) -> Data? {
+        guard !items.isEmpty else {
+            LogError("TPUploadable.postBodyData() array is empty!")
+            return nil
+        }
+        var postBodyDictArray: [[String: Any]] = []
+        for item in items {
+            postBodyDictArray.append(item.rawValue as! [String : Any])
+        }
+        guard !postBodyDictArray.isEmpty else {
+            LogError("TPUploadable.postBodyData() no valid samples!")
+            return nil
+        }
+        guard JSONSerialization.isValidJSONObject(postBodyDictArray) else {
+            LogError("TPUploadable.postBodyData() invalid json object: \(postBodyDictArray)!")
+            return nil
+        }
+        do {
+            let postBody = try JSONSerialization.data(withJSONObject: postBodyDictArray)
+            return postBody
+        } catch {
+            LogError("TPUploadable.postBodyData() unable to serialize array \(postBodyDictArray)!")
+            return nil
+        }
+    }
+
+}

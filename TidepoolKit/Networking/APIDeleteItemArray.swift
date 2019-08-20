@@ -15,24 +15,26 @@
 
 import Foundation
 
-/// Subclass of APIDeleteItemArray used for deleting items.
-class APIDeleteItemArray: APIDeviceDataArray {
+class APIDeleteItemArray: TPUploadable {
     
-    init(_ userData: [TPDeleteItem]) {
-        super.init(userData)
+    var deleteData: [TPDeleteItem]
+
+    // init changes TPDataItems into basic TPDeviceData items so that the upload machinery works...
+    init(_ deleteArray: [TPDeleteItem]) {
+        self.deleteData = deleteArray
+    }
+    
+    //
+    // MARK: - TPUploadable
+    //
+   
+    func postBodyData() -> Data? {
+        return postBodyData(deleteData)
     }
 
-    // convenience init for turning any APIDeviceDataArray into a APIDeleteItemArray
-    init(_ userData: APIDeviceDataArray) {
-        var deleteArray: [TPDeleteItem] = []
-        for item in userData.userData {
-            if let deleteItem = TPDeleteItem(item) {
-                deleteArray.append(deleteItem)
-            } else {
-                LogError("APIDeviceDataArray item \(item.debugDescription) has no id or origin id, unable to delete!")
-            }
-        }
-        super.init(deleteArray)
+    func parseErrResponse(_ response: Data) -> [Int]? {
+        // error response doesn't contain array of items that could not be deleted!
+        return nil
     }
-
+    
 }
