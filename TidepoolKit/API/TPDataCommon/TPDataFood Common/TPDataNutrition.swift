@@ -37,10 +37,10 @@ public struct TPDataNutrition: TPData {
     public typealias RawValue = [String: Any]
     
     public init?(rawValue: RawValue) {
-        self.energy = TPDataType.getTypeFromDict(TPDataEnergy.self, rawValue)
-        self.carbohydrate = TPDataType.getTypeFromDict(TPDataCarbohydrate.self, rawValue)
-        self.fat = TPDataType.getTypeFromDict(TPDataFat.self, rawValue)
-        self.protein = TPDataType.getTypeFromDict(TPDataProtein.self, rawValue)
+        self.energy = TPDataEnergy.getSelfFromDict(rawValue)
+        self.carbohydrate = TPDataCarbohydrate.getSelfFromDict(rawValue)
+        self.fat = TPDataFat.getSelfFromDict(rawValue)
+        self.protein = TPDataProtein.getSelfFromDict(rawValue)
         if energy == nil && carbohydrate == nil && fat == nil && protein == nil {
             return nil
         }

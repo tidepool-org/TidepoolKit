@@ -359,7 +359,6 @@ class TPKitTests10UserData: TPKitTestsBase {
         let origin = TPDataOrigin(id: newOriginId, name: "org.tidepool.tidepoolKitTest", type: "service", payload: nil)!
         foodSample?.origin = origin
         NSLog("created TPDataFood: \(foodSample!.debugDescription)")
-        NSLog("with Nutrition: \(nutrition!.debugDescription))")
         return foodSample
     }
 

@@ -52,8 +52,8 @@ public class TPDeviceData {
             return nil
         }
         self.id = rawValue["id"] as? String
-        self.origin = TPDataType.getTypeFromDict(TPDataOrigin.self, rawValue)
-        self.payload = TPDataType.getTypeFromDict(TPDataPayload.self, rawValue)
+        self.origin = TPDataOrigin.getSelfFromDict(rawValue)
+        self.payload = TPDataPayload.getSelfFromDict(rawValue)
     }
 
     public var rawValue: RawValue {

@@ -37,7 +37,7 @@ public struct TPDataOrigin: TPData {
         self.id = rawValue["id"] as? String
         self.name = rawValue["name"] as? String
         self.type = rawValue["type"] as? String
-        self.payload = TPDataType.getTypeFromDict(TPDataPayload.self, rawValue)
+        self.payload = TPDataPayload.getSelfFromDict(rawValue)
         if id == nil && name == nil && type == nil && payload == nil {
             return nil
         }
@@ -54,6 +54,7 @@ public struct TPDataOrigin: TPData {
         if let type = type {
             originDict["type"] = type as Any
         }
+        // Note: the following is equivalent to originDict[TPDataPayload.typeName] = payload?.rawValue, or originDict["payload"] = payload?.rawValue
         payload?.addSelfToDict(&originDict)
         return originDict
     }

@@ -97,8 +97,8 @@ public class TPDataFood: TPDeviceData, TPData {
             self.meal = nil
         }
         self.mealOther = rawValue["mealOther"] as? String
-        self.amount = TPDataType.getTypeFromDict(TPDataAmount.self, rawValue)
-        self.nutrition = TPDataType.getTypeFromDict(TPDataNutrition.self, rawValue)
+        self.amount = TPDataAmount.getSelfFromDict(rawValue)
+        self.nutrition = TPDataNutrition.getSelfFromDict(rawValue)
         var ingredients: [TPDataIngredient] = []
         if let ingredientsArray: [Any] = rawValue["ingredients"] as? [Any] {
              for item in ingredientsArray {

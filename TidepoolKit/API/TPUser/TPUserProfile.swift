@@ -60,7 +60,7 @@ public class TPUserProfile: RawRepresentable {
     
     required public init?(rawValue: RawValue) {
         self.fullName = rawValue["fullName"] as? String
-        self.patient = TPDataType.getTypeFromDict(TPUserPatient.self, rawValue)
+        self.patient = TPUserPatient.getSelfFromDict(rawValue)
     }
     
     public var rawValue: RawValue {

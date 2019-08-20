@@ -101,15 +101,6 @@ public enum TPDataType: String, Codable {
         return true
     }
 
-    public static func getTypeFromDict<T: TPData>(_ type: T.Type, _ dict: [String: Any]) -> T? {
-        if let typeDict = dict[T.tpType.rawValue] as? [String: Any] {
-            if let item = T.init(rawValue: typeDict) {
-                return item
-            }
-        }
-        return nil
-    }
-
     public static func description(_ rawDict: [String: Any], linePrefix: String = "\n ") -> String {
         var result: String = ""
         for (key, value) in rawDict {

@@ -20,11 +20,25 @@ public protocol TPData: RawRepresentable where RawValue == [String : Any] {
 }
 
 public extension TPData {
-    
-    func addSelfToDict(_ dict: inout [String: Any]) {
-        dict[type(of: self).tpType.rawValue] = self.rawValue
+    static var typeName: String {
+        get {
+            return tpType.rawValue
+        }
     }
     
+    func addSelfToDict(_ dict: inout [String: Any]) {
+        dict[type(of: self).typeName] = self.rawValue
+    }
+    
+    static func getSelfFromDict<T: TPData>(_ dict: [String: Any]) -> T? {
+        if let typeDict = dict[T.typeName] as? [String: Any] {
+            if let item = T.init(rawValue: typeDict) {
+                return item
+            }
+        }
+        return nil
+    }
+
     var debugDescription: String {
         get {
             return TPDataType.description(self.rawValue)
