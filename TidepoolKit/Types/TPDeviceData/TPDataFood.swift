@@ -44,14 +44,14 @@ public class TPDataFood: TPDeviceData, TPData {
 	public let nutrition: TPDataNutrition?
 	public let ingredients: [TPDataIngredient]?
 
-	public init?(time: Date, name: String? = nil, carbs: Double) {
+	public init?(time: Date, name: String? = nil, carbohydrate: Double) {
         self.name = name
         self.brand = nil
         self.code = nil
         self.meal = nil
         self.mealOther = nil
         self.amount = nil
-        self.nutrition = TPDataNutrition(carbs: TPDataCarbohydrate(net: carbs))
+        self.nutrition = TPDataNutrition(carbohydrate: TPDataCarbohydrate(net: carbohydrate))
         self.ingredients = nil
         super.init(time: time)
 	}

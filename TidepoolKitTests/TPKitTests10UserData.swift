@@ -256,7 +256,7 @@ class TPKitTests10UserData: TPKitTestsBase {
     func createCarbItem(_ net: Double) -> TPDataFood? {
         let newId = UUID.init().uuidString
         let origin = TPDataOrigin(id: newId, name: "org.tidepool.tidepoolKitTest", type: "service", payload: nil)!
-        let foodSample = TPDataFood(time: Date(), carbs: net)
+        let foodSample = TPDataFood(time: Date(), carbohydrate: net)
         foodSample?.origin = origin
         XCTAssertNotNil(foodSample, "\(#function) failed to create food sample!")
         NSLog("created TPDataFood: \(foodSample!.debugDescription)")
@@ -336,7 +336,7 @@ class TPKitTests10UserData: TPKitTestsBase {
                     TPDataIngredient(name: "Baking Soda")!
               ],
                 name: "Peanut Butter Chocolate Chip Cookies",
-                nutrition: TPDataNutrition(energy: TPDataEnergy(value: 120*count, units: .calories), carbs: TPDataCarbohydrate(net: 14*count, dietaryFiber: 2*count, sugars: 6*count, total: 14*count), fat: TPDataFat(total: 7*count), protein: TPDataProtein(total: 2*count)))
+                nutrition: TPDataNutrition(energy: TPDataEnergy(value: 120*count, units: .calories), carbohydrate: TPDataCarbohydrate(net: 14*count, dietaryFiber: 2*count, sugars: 6*count, total: 14*count), fat: TPDataFat(total: 7*count), protein: TPDataProtein(total: 2*count)))
         return result!
     }
     
@@ -345,7 +345,7 @@ class TPKitTests10UserData: TPKitTestsBase {
         let energy = TPDataEnergy(value: 50, units: .kilocalories)
         let fat = TPDataFat(total: 10)
         let protein = TPDataProtein(total: 15)
-        let nutrition = TPDataNutrition(energy: energy, carbs: carbs, fat: fat, protein: protein)
+        let nutrition = TPDataNutrition(energy: energy, carbohydrate: carbs, fat: fat, protein: protein)
         XCTAssertNotNil(nutrition, "\(#function) failed to create nutrition struct!")
         // add ingredients
         let cookies = createCookieIngredient(count: 2)
