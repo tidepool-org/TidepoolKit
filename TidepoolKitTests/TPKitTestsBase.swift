@@ -34,8 +34,13 @@ class TPKitTestsBase: XCTestCase {
     override func tearDown() {
     }
     
+    func getTpKitSingleton() -> TidepoolKit {
+        if let tpKit = TidepoolKit.sharedInstance { return tpKit }
+        return TidepoolKit.init(logger: TPKitLoggerExample())!
+    }
+    
     func ensureLogin(completion: @escaping (Result<TPUser, TidepoolKitError>) -> Void) {
-        let tpKit = TidepoolKit.sharedInstance
+        let tpKit = getTpKitSingleton()
         tpKit.switchToServer(testService)
         guard let user = tpKit.loggedInUser() else {
             tpKit.logIn(testEmail, password: testPassword) {

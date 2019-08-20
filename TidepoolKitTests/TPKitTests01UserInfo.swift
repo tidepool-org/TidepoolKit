@@ -20,7 +20,7 @@ class TPKitTests01UserInfo: TPKitTestsBase {
 
     func test01UserProfileFetch() {
         let expectation = self.expectation(description: "Profile fetch successful")
-        let tpKit = TidepoolKit.sharedInstance
+        let tpKit = getTpKitSingleton()
         // Log in if necessary, and then try fetching user profile...
         NSLog("\(#function): next calling ensureLogin...")
         ensureLogin() {
@@ -44,7 +44,7 @@ class TPKitTests01UserInfo: TPKitTestsBase {
     
     func test02UserSettingsFetch() {
         let expectation = self.expectation(description: "User settings fetch successful")
-        let tpKit = TidepoolKit.sharedInstance
+        let tpKit = getTpKitSingleton()
         // Log in if necessary, and then try fetching user settings...
         NSLog("\(#function): next calling ensureLogin...")
         ensureLogin() {
@@ -68,7 +68,7 @@ class TPKitTests01UserInfo: TPKitTestsBase {
 
     func test03AccessUsersFetch() {
         let expectation = self.expectation(description: "Access users fetch successful")
-        let tpKit = TidepoolKit.sharedInstance
+        let tpKit = getTpKitSingleton()
         // Log in if necessary, and then try fetching user settings...
         NSLog("\(#function): next calling ensureLogin...")
         ensureLogin() {

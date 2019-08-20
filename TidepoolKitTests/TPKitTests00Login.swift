@@ -21,7 +21,7 @@ class TPKitTests00Login: TPKitTestsBase {
 
     func test01LoginBadUser() {
         let expectation = self.expectation(description: "Login fails")
-        let tpKit = TidepoolKit.sharedInstance
+        let tpKit = getTpKitSingleton()
         if tpKit.isLoggedIn() {
             tpKit.logOut()
         }
@@ -43,7 +43,7 @@ class TPKitTests00Login: TPKitTestsBase {
 
     func test02Login() {
         let expectation = self.expectation(description: "Login successful")
-        let tpKit = TidepoolKit.sharedInstance
+        let tpKit = getTpKitSingleton()
         if tpKit.isLoggedIn() {
             tpKit.logOut()
         }
@@ -64,7 +64,7 @@ class TPKitTests00Login: TPKitTestsBase {
     }
     
     func test03Logout() {
-        let tpKit = TidepoolKit.sharedInstance
+        let tpKit = getTpKitSingleton()
         if !tpKit.isLoggedIn() {
             let expectation = self.expectation(description: "Login successful")
             tpKit.logIn(testEmail, password: testPassword) {

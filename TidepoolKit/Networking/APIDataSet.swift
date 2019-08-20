@@ -48,30 +48,30 @@ class APIDataSet: Codable {
 
     func matchesDataset(_ tpDataSet: TPDataset) -> Bool {
         guard let clientName = client?.name, let clientVersion = client?.version, let dataSetType = dataSetType, let deduplicatorName = deduplicator?.name else {
-            LogInfo("\(#function) APIDataSet incomplete!")
+            LogInfo("APIDataSet incomplete!")
             return false
         }
         if tpDataSet.clientName != clientName {
-            LogInfo("\(#function) client name mismatch")
+            LogInfo("client name mismatch")
             return false
         }
         if tpDataSet.clientVersion != clientVersion {
-            LogInfo("\(#function) client version mismatch")
+            LogInfo("client version mismatch")
            return false
         }
         guard let deduplicatorSpec = DeduplicatorSpec(deduplicatorName) else {
-            LogInfo("\(#function) dataset deduplicator invalid!")
+            LogInfo("dataset deduplicator invalid!")
             return false
         }
         if deduplicatorSpec.type != tpDataSet.deduplicator {
-            LogInfo("\(#function) deduplicator mismatch")
+            LogInfo("deduplicator mismatch")
             return false
         }
         if tpDataSet.dataSetType.rawValue != dataSetType {
-            LogInfo("\(#function) datasetType mismatch")
+            LogInfo("datasetType mismatch")
             return false
         }
-        LogInfo("\(#function) matched!")
+        LogInfo("matched!")
         return true
     }
     

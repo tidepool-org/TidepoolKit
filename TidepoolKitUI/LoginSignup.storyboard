@@ -38,7 +38,7 @@
                                                     <textView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" text="Log in to a Tidepool DSA account to enable TidepoolKit framework testing:         " textAlignment="natural" translatesAutoresizingMaskIntoConstraints="NO" id="iqw-Ta-JGf">
                                                         <rect key="frame" x="0.0" y="0.0" width="243" height="121.5"/>
                                                         <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
-                                                        <fontDescription key="fontDescription" name="OpenSans" family="Open Sans" pointSize="14"/>
+                                                        <fontDescription key="fontDescription" name="OpenSans" family="Open Sans" pointSize="17"/>
                                                         <textInputTraits key="textInputTraits" autocapitalizationType="sentences"/>
                                                     </textView>
                                                 </subviews>

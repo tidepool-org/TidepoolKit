@@ -33,23 +33,22 @@ public let TidepoolLogInChangedNotification = Notification.Name("TidepoolLogInCh
 
 public class TidepoolKit {
     
-    public static var sharedInstance: TidepoolKit {
+    // Returns non-nil if singleton already exists, otherwise nil..
+    public static var sharedInstance: TidepoolKit? {
         get {
-            if let tpKit = TidepoolKit._sharedInstance {
-                return tpKit
-            }
-            return TidepoolKit.init()!
+            return TidepoolKit._sharedInstance
         }
     }
     
-    /// Only allows one initialization, either implicitly via a first sharedInstance call, or via this call: will fail if already initialized. Calling this init allows the framework user to provide their own peristence strategy for storing the handful of strings that this framework needs for a logged in user.
-    /// - parameter settings: Optional TPKitSetting subclass that will be used to persist strings used by the framework.
-    public init?(settings: TPKitSetting.Type? = nil) {
+    /// Only allows one initialization: this call will fail if an instance has already been created.
+    /// - parameter logger: Optional TPKitLogging object that will be called for logging. If nil, no logging will be done.
+    public init?(logger: TPKitLogging? = nil) {
         // only allow one initialization, either implicitly via a first sharedInstance call, or via this call...
         if TidepoolKit._sharedInstance != nil {
             return nil
         }
-        let settingsClass = settings ?? TPKitSettingUserDefaults.self
+        clientLogger = logger
+        let settingsClass = TPKitSettingUserDefaults.self
         self.apiConnect = APIConnector(settings: settingsClass)
         TidepoolKit._sharedInstance = self
     }
@@ -95,7 +94,7 @@ public class TidepoolKit {
         var parameters: Dictionary = ["type": objectTypes]
         parameters.updateValue(DateUtils.dateToJSON(startDate), forKey: "startDate")
         parameters.updateValue(DateUtils.dateToJSON(endDate), forKey: "endDate")
-        LogInfo("\(#function) startDate: \(startDate), endData: \(endDate), objectTypes: \(objectTypes)")
+        LogInfo("startDate: \(startDate), endData: \(endDate), objectTypes: \(objectTypes)")
         apiConnect.fetch(APIDeviceDataArray.self, parameters: parameters) {
             result in
             switch result {
@@ -218,6 +217,21 @@ public class TidepoolKit {
         apiConnect.configureUploadId(configDataset, completion)
     }
 
+    //
+    // MARK: - Misc...
+    //
     
-
+    /// Current logging object. Stored as a global private to the framework, and used within the framework for logging. Set to enable/disable logging if changes are desired post-initialization.
+    public var logger: TPKitLogging? {
+        get {
+            return clientLogger
+        }
+        set {
+            clientLogger = newValue
+        }
+    }
 }
+
+// global logging protocol, optional...
+var clientLogger: TPKitLogging?
+

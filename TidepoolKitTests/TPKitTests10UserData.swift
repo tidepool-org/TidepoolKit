@@ -20,7 +20,7 @@ class TPKitTests10UserData: TPKitTestsBase {
 
     func test11UploadId() {
         let expectation = self.expectation(description: "Upload id fetch/create successful")
-        let tpKit = TidepoolKit.sharedInstance
+        let tpKit = getTpKitSingleton()
         NSLog("\(#function): starting with logout...")
         // next, log in, and then try configuring upload id: this will fetch a current id, or create one if a current id does not exist. Note: there is no way to force delete of an upload id, so a new account would be needed to test the create!
         NSLog("\(#function): next calling ensureLogin...")
@@ -53,7 +53,7 @@ class TPKitTests10UserData: TPKitTestsBase {
     let kOneWeekTimeInterval: TimeInterval = 60*60*24*7
     func test12GetUserData() {
         let expectation = self.expectation(description: "Fetch of user data successful")
-        let tpKit = TidepoolKit.sharedInstance
+        let tpKit = getTpKitSingleton()
         // first, ensure we are logged in, and then ...
         NSLog("\(#function): next calling ensureLogin...")
         ensureLogin() {
@@ -80,7 +80,7 @@ class TPKitTests10UserData: TPKitTestsBase {
 
     func test13_1_DeleteUserData() {
         let expectation = self.expectation(description: "Delete of user data successful")
-        let tpKit = TidepoolKit.sharedInstance
+        let tpKit = getTpKitSingleton()
         // first, ensure we are logged in, and then ...
         NSLog("\(#function): next calling ensureLogin...")
         ensureLogin() {
@@ -132,7 +132,7 @@ class TPKitTests10UserData: TPKitTestsBase {
     /// Test passing a bunch of origin ids, where data doesn't exist...
     func test13_2_DeleteUserData() {
         let expectation = self.expectation(description: "Delete of user data successful")
-        let tpKit = TidepoolKit.sharedInstance
+        let tpKit = getTpKitSingleton()
         // first, ensure we are logged in, and then ...
         NSLog("\(#function): next calling ensureLogin...")
         ensureLogin() {
@@ -219,7 +219,7 @@ class TPKitTests10UserData: TPKitTestsBase {
 
     func test14PostCbgDataItem() {
         let expectation = self.expectation(description: "Post of user cbg data successful")
-        let tpKit = TidepoolKit.sharedInstance
+        let tpKit = getTpKitSingleton()
         // first, ensure we are logged in, and then ...
         NSLog("\(#function): next calling ensureLogin...")
         ensureLogin() {
@@ -272,7 +272,7 @@ class TPKitTests10UserData: TPKitTestsBase {
     
     func test16PostCarbDataItem() {
         let expectation = self.expectation(description: "Post of user carb data successful")
-        let tpKit = TidepoolKit.sharedInstance
+        let tpKit = getTpKitSingleton()
         // first, ensure we are logged in, and then ...
         NSLog("\(#function): next calling ensureLogin...")
         ensureLogin() {
@@ -372,7 +372,7 @@ class TPKitTests10UserData: TPKitTestsBase {
 
     func test18PostFoodDataItem() {
         let expectation = self.expectation(description: "Post of user carb data successful")
-        let tpKit = TidepoolKit.sharedInstance
+        let tpKit = getTpKitSingleton()
         // first, ensure we are logged in, and then ...
         NSLog("\(#function): next calling ensureLogin...")
         ensureLogin() {
@@ -398,28 +398,6 @@ class TPKitTests10UserData: TPKitTestsBase {
         // Wait 20.0 seconds until expectation has been fulfilled (sometimes staging takes almost 10 seconds). If not, fail.
         waitForExpectations(timeout: 20.0, handler: nil)
     }
-
-    //
-    // MARK: - Helper functions
-    //
-    
-//    func ensureLogin(completion: @escaping (Result<TPUser, TidepoolKitError>) -> Void) {
-//        let tpKit = TidepoolKit.sharedInstance
-//        tpKit.switchToServer(testService)
-//        guard let user = tpKit.loggedInUser() else {
-//            tpKit.logIn(testEmail, password: testPassword) {
-//                result in
-//                switch result {
-//                case .success:
-//                    completion(result)
-//                case .failure(let error):
-//                    XCTFail("Login failed: \(error)")
-//                }
-//            }
-//            return
-//        }
-//        completion(.success(user))
-//    }
 
 
 }

@@ -21,8 +21,16 @@ class TestViewController: UIViewController {
 
     override func viewDidLoad() {
         super.viewDidLoad()
-        tpKit = TidepoolKit.sharedInstance
-        tpKitUI = TidepoolKitUI.sharedInstance
+        tpKit = TidepoolKit.init()
+        tpKit.logger = TPKitLoggerExample()
+        
+        if let x = tpKit.logger {
+            print("logger type is \(type(of: x))")
+        } else {
+            print("logger is nil!")
+        }
+
+        tpKitUI = TidepoolKitUI.init(tpKit: tpKit, logger: TPKitUILoggerExample()) // this will pick up the instance of TidepoolKit created in the line above!
         
         let notificationCenter = NotificationCenter.default
         notificationCenter.addObserver(self, selector: #selector(TestViewController.reachabilityChanged(_:)), name: ReachabilityChangedNotification, object: nil)

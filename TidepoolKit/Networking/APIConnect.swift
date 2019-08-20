@@ -132,7 +132,7 @@ class APIConnector {
     }
     
     func switchToServer(_ serverName: String) {
-        LogVerbose("\(#function): \(serverName)")
+        LogVerbose("\(serverName)")
         if (currentService != serverName) {
             currentService = serverName
             // clear out login settings...
@@ -238,7 +238,7 @@ class APIConnector {
     }
     
     func logout() {
-        LogVerbose("\(#function)")
+        LogVerbose("")
         let wasLoggedIn = self.sessionTokenSetting.value != nil
         // Clear our session token and user settings
         self.sessionTokenSetting.value = nil

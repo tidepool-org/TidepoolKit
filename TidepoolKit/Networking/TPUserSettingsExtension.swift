@@ -28,10 +28,10 @@ extension TPUserSettings: TPFetchable {
             if let jsonDict = object as? [String: Any] {
                 return TPUserSettings(rawValue: jsonDict)
             } else {
-                LogError("\(#function) Profile data not json decodable!")
+                LogError("Profile data not json decodable!")
             }
         } catch (let error) {
-            LogError("\(#function) Profile data not json decodable: \(error)")
+            LogError("Profile data not json decodable: \(error)")
         }
         return nil
     }

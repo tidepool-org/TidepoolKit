@@ -27,6 +27,7 @@ public protocol LoginSignupDelegate: AnyObject {
 class LoginViewController: UIViewController {
 
     var loginSignupDelegate: LoginSignupDelegate?
+    var tpKit: TidepoolKit!
 
     @IBOutlet weak var inputContainerView: UIView!
     
@@ -41,7 +42,6 @@ class LoginViewController: UIViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         
-        tpKit = TidepoolKit.sharedInstance
         configureForReachability()
         updateButtonStates()
         let notificationCenter = NotificationCenter.default
@@ -49,7 +49,6 @@ class LoginViewController: UIViewController {
         notificationCenter.addObserver(self, selector: #selector(LoginViewController.reachabilityChanged(_:)), name: ReachabilityChangedNotification, object: nil)
         self.serviceButton.setTitle(tpKit.currentService, for: .normal)
     }
-    private var tpKit: TidepoolKit!
     
     static var firstTime = true
     override func viewDidAppear(_ animated: Bool) {
@@ -57,7 +56,7 @@ class LoginViewController: UIViewController {
         if LoginViewController.firstTime {
             LoginViewController.firstTime = false
             if tpKit.isLoggedIn() {
-                NSLog("Already logged in!")
+                LogError("Already logged in!")
             }
         }
     }
@@ -78,7 +77,7 @@ class LoginViewController: UIViewController {
     //
     
     @IBAction func logout(_ segue: UIStoryboardSegue) {
-        NSLog("unwind segue to login view controller!")
+        LogInfo("unwind segue to login view controller!")
         if tpKit.isLoggedIn() {
             tpKit.logOut()
         }
@@ -116,7 +115,7 @@ class LoginViewController: UIViewController {
         
         tpKit.logIn(emailTextField.text!, password: passwordTextField.text!) {
             result in
-            NSLog("Login result: \(result)")
+            LogInfo("Login result: \(result)")
             self.processLoginResult(result)
         }
     }
@@ -125,10 +124,10 @@ class LoginViewController: UIViewController {
         self.loginIndicator.stopAnimating()
         switch result {
         case .success(let user):
-            NSLog("Login success: \(user)")
+            LogInfo("Login success: \(user)")
             self.logInComplete()
         case .failure(let error):
-            NSLog("login failed! Error: \(error)")
+            LogError("login failed! Error: \(error)")
             var errorText = "Check your Internet connection!"
             if error == .unauthorized {
                 errorText = "Wrong email or password!"
@@ -164,7 +163,7 @@ class LoginViewController: UIViewController {
     }
     
     @IBAction func selectServiceButtonHandler(_ sender: Any) {
-        let actionSheet = UIAlertController(title: "Server" + " (" + tpKit.currentService + ")", message: "", preferredStyle: .actionSheet)
+        let actionSheet = UIAlertController(title: "Server" + " (" + tpKit.currentService + ")", message: "", preferredStyle: .alert)
         for serverName in tpKit.kSortedServerNames {
             actionSheet.addAction(UIAlertAction(title: serverName, style: .default, handler: { Void in
                 self.tpKit.switchToServer(serverName)
