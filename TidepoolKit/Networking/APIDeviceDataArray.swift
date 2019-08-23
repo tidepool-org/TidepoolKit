@@ -24,23 +24,13 @@ class APIDeviceDataArray: TPFetchable, TPUploadable {
         self.userData = userData
     }
     
-    var debugDescription: String {
-        get {
-            var result = "TPUserDataArray \(userData.count) items:"
-            for item in userData {
-                result += "\n" + item.debugDescription
-            }
-            return result
-        }
-    }
-    
     class func userDataFromJsonData(_ data: Data) -> APIDeviceDataArray? {
         do {
             let object: Any = try JSONSerialization.jsonObject(with: data)
             if let jsonArray = object as? [[String: Any]] {
                 var items: [TPDeviceData] = []
                 for jsonDict in jsonArray {
-                    LogInfo("APIUserDataArray.userDataFromJsonData calling createFromJson on \(jsonDict)")
+                    LogInfo("APIDeviceDataArray.userDataFromJsonData calling createFromJson on \(jsonDict)")
                     if let item = TPDeviceData.createFromJson(jsonDict) {
                         items.append(item)
                     }
@@ -162,7 +152,7 @@ class APIDeviceDataArray: TPFetchable, TPUploadable {
  }
  
  
- // Example of json for APIUserDataArray with two samples, one cbg, and one basal...
+ // Example of json for APIDeviceDataArray with two samples, one cbg, and one basal...
  
  var jsonUserData = """
  [

@@ -1,22 +1,15 @@
-/*
- * Copyright (c) 2019, Tidepool Project
- *
- * This program is free software; you can redistribute it and/or modify it under
- * the terms of the associated License, which is identical to the BSD 2-Clause
- * License as published by the Open Source Initiative at opensource.org.
- *
- * This program is distributed in the hope that it will be useful, but WITHOUT
- * ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS
- * FOR A PARTICULAR PURPOSE. See the License for more details.
- *
- * You should have received a copy of the License along with this program; if
- * not, you can obtain one from Tidepool Project at tidepool.org.
- */
+///
+//  TPUserData.swift
+//  TidepoolKit
+//
+//  Created by Larry Kenyon on 8/23/19.
+//  Copyright © 2019 Tidepool Project. All rights reserved.
+//
 
 import Foundation
 
 // Note: This is meant to specify any optional data types that are commonly expected to be in all TPData types contained in the first level of a TPSampleData object, and that can be uploaded/downloaded together to/from the Tidepool service. These fields would be added after initialization, and validated when set...
-public class TPDeviceData: RawRepresentable {
+public class TPDeviceData: RawRepresentable, CustomStringConvertible {
     
     public var id: String?
     public var time: Date?
@@ -34,7 +27,7 @@ public class TPDeviceData: RawRepresentable {
         self.payload = nil
     }
     
-    var debugDescription: String {
+    public var description: String {
         get {
             return TPDataType.description(self.rawValue)
         }

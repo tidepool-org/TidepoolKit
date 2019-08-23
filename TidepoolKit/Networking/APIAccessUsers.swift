@@ -18,17 +18,7 @@ import Foundation
 public class APIAccessUsers: TPFetchable {
     
     public let userIds: [String]
-    
-    public var debugDescription: String {
-        get {
-            var result = "access group user ids:"
-            for item in userIds {
-                result = result + "\n \(item)"
-            }
-            return result
-        }
-    }
-    
+        
     //
     // MARK: - methods private to framework!
     //

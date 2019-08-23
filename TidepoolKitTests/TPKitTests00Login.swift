@@ -25,16 +25,19 @@ class TPKitTests00Login: TPKitTestsBase {
         if tpKit.isLoggedIn() {
             tpKit.logOut()
         }
-        tpKit.switchToServer(testService)
-        tpKit.logIn("badUserEmail@bad.com", password: testPassword) {
+        tpKit.logIn("badUserEmail@bad.com", password: testPassword, server: testServer) {
             result in
             switch result {
             case .success:
                 XCTFail("Expected login to fail with bad user email!")
             case .failure(let error):
                 NSLog("login with bad user returned: \(error)")
-                XCTAssert(error == .unauthorized)
-                expectation.fulfill()
+                switch error {
+                case .unauthorized:
+                    expectation.fulfill()
+                default:
+                    XCTFail("expected unauthorized error!")
+                }
             }
         }
         // Wait 5.0 seconds until expectation has been fulfilled. If not, fail.
@@ -47,13 +50,12 @@ class TPKitTests00Login: TPKitTestsBase {
         if tpKit.isLoggedIn() {
             tpKit.logOut()
         }
-        tpKit.switchToServer(testService)
-        tpKit.logIn(testEmail, password: testPassword) {
+        tpKit.logIn(testEmail, password: testPassword, server: testServer) {
             result in
             switch result {
-            case .success(let user):
-                XCTAssert(user.userName != nil)
-                XCTAssert(user.userName! == testEmail)
+            case .success(let session):
+                XCTAssert(session.user.userName != nil)
+                XCTAssert(session.user.userName! == testEmail)
                 expectation.fulfill()
             case .failure(let error):
                 XCTFail("Login failed: \(error)")
@@ -67,7 +69,7 @@ class TPKitTests00Login: TPKitTestsBase {
         let tpKit = getTpKitSingleton()
         if !tpKit.isLoggedIn() {
             let expectation = self.expectation(description: "Login successful")
-            tpKit.logIn(testEmail, password: testPassword) {
+            tpKit.logIn(testEmail, password: testPassword, server: testServer) {
                 result in
                 expectation.fulfill()
                 switch result {
@@ -84,4 +86,29 @@ class TPKitTests00Login: TPKitTestsBase {
         waitForExpectations(timeout: 20.0, handler: nil)
     }
     
+    func test04LoginWithSavedSession() {
+        let tpKit = getTpKitSingleton()
+        if !tpKit.isLoggedIn() {
+            let expectation = self.expectation(description: "Login successful")
+            tpKit.logIn(testEmail, password: testPassword, server: testServer) {
+                result in
+                expectation.fulfill()
+                switch result {
+                case .success (let session):
+                    tpKit.logOut()
+                    let result = tpKit.logIn(session)
+                    if case .failure = result {
+                        XCTFail("Login with saved session failed!")
+                    }
+                case .failure(let error):
+                    XCTFail("Initial login failed: \(error)")
+                }
+            }
+        } else {
+            tpKit.logOut()
+            return
+        }
+        waitForExpectations(timeout: 20.0, handler: nil)
+    }
+
 }

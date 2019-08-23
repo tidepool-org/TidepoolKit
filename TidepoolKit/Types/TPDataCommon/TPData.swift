@@ -39,7 +39,7 @@ public extension TPData {
         return nil
     }
 
-    var debugDescription: String {
+    var description: String {
         get {
             return TPDataType.description(self.rawValue)
         }

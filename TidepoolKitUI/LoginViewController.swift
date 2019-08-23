@@ -19,7 +19,7 @@ import TidepoolKit
 
 public protocol LoginSignupDelegate: AnyObject {
 
-    func loginSignupComplete()
+    func loginSignupComplete(_ session: TPSession)
 
 }
 
@@ -39,6 +39,9 @@ class LoginViewController: UIViewController {
     @IBOutlet weak var loginIndicator: UIActivityIndicatorView!
     @IBOutlet weak var networkOfflineLabel: UILabel!
     
+    private var currentServerName = TPKitUISetting(forKey: "tpKitUIcurrentServer")
+    private var currentServer: TidepoolServer?
+    
     override func viewDidLoad() {
         super.viewDidLoad()
         
@@ -47,7 +50,8 @@ class LoginViewController: UIViewController {
         let notificationCenter = NotificationCenter.default
         notificationCenter.addObserver(self, selector: #selector(LoginViewController.textFieldDidChange), name: UITextField.textDidChangeNotification, object: nil)
         notificationCenter.addObserver(self, selector: #selector(LoginViewController.reachabilityChanged(_:)), name: ReachabilityChangedNotification, object: nil)
-        self.serviceButton.setTitle(tpKit.currentService, for: .normal)
+        
+        self.configureCurrentServer()
     }
     
     static var firstTime = true
@@ -56,7 +60,7 @@ class LoginViewController: UIViewController {
         if LoginViewController.firstTime {
             LoginViewController.firstTime = false
             if tpKit.isLoggedIn() {
-                LogError("Already logged in!")
+                //LogError("Already logged in!")
             }
         }
     }
@@ -70,22 +74,6 @@ class LoginViewController: UIViewController {
     func configureForReachability() {
         let connected = tpKit.isConnectedToNetwork()
         networkOfflineLabel.text = connected ? "Connected to Internet" : "No Internet Connection"
-    }
-    
-    //
-    // MARK: - Segues
-    //
-    
-    @IBAction func logout(_ segue: UIStoryboardSegue) {
-        LogInfo("unwind segue to login view controller!")
-        if tpKit.isLoggedIn() {
-            tpKit.logOut()
-        }
-        if let loginSignupDelegate = loginSignupDelegate {
-            loginSignupDelegate.loginSignupComplete()
-        } else {
-            self.parent?.dismiss(animated: true)
-        }
     }
     
     //
@@ -113,33 +101,36 @@ class LoginViewController: UIViewController {
         tapOutsideFieldHandler(self)
         loginIndicator.startAnimating()
         
-        tpKit.logIn(emailTextField.text!, password: passwordTextField.text!) {
+        //LogInfo("Logging into \(server?.rawValue ?? "default") server!")
+        tpKit.logIn(emailTextField.text!, password: passwordTextField.text!, server: self.currentServer) {
             result in
             LogInfo("Login result: \(result)")
             self.processLoginResult(result)
         }
     }
     
-    private func processLoginResult(_ result: Result<TPUser, TidepoolKitError>) {
+    private func processLoginResult(_ result: Result<TPSession, TidepoolKitError>) {
         self.loginIndicator.stopAnimating()
         switch result {
-        case .success(let user):
-            LogInfo("Login success: \(user)")
-            self.logInComplete()
+        case .success(let session):
+            //LogInfo("Login success: \(user)")
+            self.logInComplete(session)
         case .failure(let error):
-            LogError("login failed! Error: \(error)")
             var errorText = "Check your Internet connection!"
-            if error == .unauthorized {
+            switch error {
+            case .unauthorized:
                 errorText = "Wrong email or password!"
+            default:
+                break
             }
             self.errorFeedbackLabel.text = errorText
             self.errorFeedbackLabel.isHidden = false
         }
     }
     
-    private func logInComplete() {
+    private func logInComplete(_ session: TPSession) {
         if let loginSignupDelegate = loginSignupDelegate {
-            loginSignupDelegate.loginSignupComplete()
+            loginSignupDelegate.loginSignupComplete(session)
         } else {
             self.dismiss(animated: true)
         }
@@ -162,12 +153,25 @@ class LoginViewController: UIViewController {
         }
     }
     
+    private func configureCurrentServer(_ server: TidepoolServer? = nil) {
+        if let server = server {
+            self.currentServerName.value = server.rawValue
+        } else if currentServerName.value == nil {
+            currentServerName.value = TidepoolServer.allCases[0].rawValue
+        }
+        let serverName = currentServerName.value!
+        self.currentServer = TidepoolServer(rawValue: serverName)!
+        self.serviceButton.setTitle(serverName, for: .normal)
+    }
+    
     @IBAction func selectServiceButtonHandler(_ sender: Any) {
-        let actionSheet = UIAlertController(title: "Server" + " (" + tpKit.currentService + ")", message: "", preferredStyle: .alert)
-        for serverName in tpKit.kSortedServerNames {
-            actionSheet.addAction(UIAlertAction(title: serverName, style: .default, handler: { Void in
-                self.tpKit.switchToServer(serverName)
-                self.serviceButton.setTitle(self.tpKit.currentService, for: .normal)
+        guard let curServerName = currentServerName.value else {
+            return
+        }
+        let actionSheet = UIAlertController(title: "Server" + " (" + curServerName + ")", message: "", preferredStyle: .alert)
+        for server in TidepoolServer.allCases {
+            actionSheet.addAction(UIAlertAction(title: server.rawValue, style: .default, handler: { Void in
+                self.configureCurrentServer(server)
             }))
         }
         self.present(actionSheet, animated: true, completion: nil)

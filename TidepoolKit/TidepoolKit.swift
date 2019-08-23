@@ -17,16 +17,25 @@ import Foundation
 
 public enum TidepoolKitError: Error {
     case unauthorized       // http error 401
-    case badRequest         // http error 400
+    case badRequest(_ badSampleIndices: [Int]?) // http error 400
     case badURL
     case badLoginResponse
     case offline
     case notLoggedIn
+    case alreadyLoggedIn
     case serviceError       // generic service error...
+    case noUploadId         // dataset uploadId is nil!
     case noDataInResponse   // service returned no data
     case badJsonInResponse  // service data was not json parseable into expected object
     case internalError      // some framework error (not service)
     case unimplemented      // temp: unfinished...
+}
+
+public enum TidepoolServer: String, RawRepresentable, CaseIterable {
+    case development = "Development"
+    case staging = "Staging"
+    case integration = "Integration"
+    case production = "Production"
 }
 
 public let TidepoolLogInChangedNotification = Notification.Name("TidepoolLogInChangedNotification")
@@ -48,8 +57,7 @@ public class TidepoolKit {
             return nil
         }
         clientLogger = logger
-        let settingsClass = TPKitSettingUserDefaults.self
-        self.apiConnect = APIConnector(settings: settingsClass)
+        self.apiConnect = APIConnector()
         TidepoolKit._sharedInstance = self
     }
     private static var _sharedInstance: TidepoolKit?
@@ -60,21 +68,31 @@ public class TidepoolKit {
     }
     
     public func isLoggedIn() -> Bool {
-        return apiConnect.sessionTokenSetting.value != nil
+        return apiConnect.session != nil
     }
     
     public func loggedInUser() -> TPUser? {
         return apiConnect.loggedInUser()
     }
     
-    /// If successful, returns a partly configured TPUser (minus profile and settings info). Login token, userId, and userName (if returned) will be retained, and TidepoolKit will move to logged in state.
+    // same as isLoggedIn but returns the session info...
+    public func currentSession() -> TPSession? {
+        return apiConnect.session
+    }
+    
+    /// If successful, returns a TPSession containing the TPUser for the account owner, and TidepoolKit will move to logged in state.
     ///
     /// Possible errors:
     /// - unauthorized: bad password or unrecognized user name
     /// - badLoginResponse:
     /// - offline:
-    public func logIn(_ email: String, password: String, completionHandler: @escaping (Result<TPUser, TidepoolKitError>) -> Void) {
-        apiConnect.login(email, password: password, completion: completionHandler)
+    public func logIn(_ email: String, password: String, server: TidepoolServer? = nil, completionHandler: @escaping (Result<TPSession, TidepoolKitError>) -> Void) {
+        apiConnect.login(email, password: password, server: server, completion: completionHandler)
+    }
+    
+    // optionally log in from a persisted TPSession...
+    public func logIn(_ session: TPSession) -> Result<TPSession, TidepoolKitError> {
+        return apiConnect.login(session)
     }
     
     public func logOut() {
@@ -90,16 +108,16 @@ public class TidepoolKit {
     /// - parameter endDate: Record date must be before or equal to endEdate
     /// - parameter objectTypes: One or more of "smbg,bolus,cbg,wizard,basal,food", or nil to fetch all these types.
     /// - parameter completion: async completion to be called when fetch completes successfully or with an error condition.
-    public func getUserData(_ startDate: Date, endDate: Date, objectTypes: String = "smbg,bolus,cbg,wizard,basal,food", _ completion: @escaping (Result<[TPDeviceData], TidepoolKitError>) -> (Void)) {
+    public func getUserData(_ user: TPUser, startDate: Date, endDate: Date, objectTypes: String = "smbg,bolus,cbg,wizard,basal,food", _ completion: @escaping (Result<[TPDeviceData], TidepoolKitError>) -> (Void)) {
         var parameters: Dictionary = ["type": objectTypes]
         parameters.updateValue(DateUtils.dateToJSON(startDate), forKey: "startDate")
         parameters.updateValue(DateUtils.dateToJSON(endDate), forKey: "endDate")
         LogInfo("startDate: \(startDate), endData: \(endDate), objectTypes: \(objectTypes)")
-        apiConnect.fetch(APIDeviceDataArray.self, parameters: parameters) {
+        apiConnect.fetch(APIDeviceDataArray.self, user: user, parameters: parameters) {
             result in
             switch result {
             case .success(let tpUserData):
-                LogInfo("TPUserDataArray fetch succeeded: \n\(tpUserData.debugDescription)")
+                LogInfo("TPUserDataArray fetch succeeded: \n\(tpUserData)")
                 completion(.success(tpUserData.userData))
             case .failure(let error):
                 LogError("APIUserDataArray fetch failed! Error: \(error)")
@@ -108,69 +126,46 @@ public class TidepoolKit {
         }
     }
     
-    public func putUserData(_ samples: [TPDeviceData], _ completion: @escaping (Result<Bool, TidepoolKitError>, [Int]?) -> (Void)) {
-        self.configureUploadId() {
-            guard self.currentUploadId() != nil else {
-                // TODO: currentUploadId should really return Result with TidepoolKitError!
-                completion(.failure(.serviceError), nil)
-                return
-            }
-            let uploadData = APIDeviceDataArray(samples)
-            self.apiConnect.upload(uploadData, httpMethod: "POST") {
-                result in
-                switch result {
-                    case .success(let failedSamples):
-                        if failedSamples == nil {
-                            completion(.success(true), nil)
-                        } else {
-                            completion(.failure(.badRequest), failedSamples)
-                        }
-                    case .failure(let error):
-                        completion(.failure(error), nil)
-                }
-            }
+    public func putUserData(_ dataset: TPDataset, samples: [TPDeviceData], _ completion: @escaping (Result<Bool, TidepoolKitError>) -> (Void)) {
+        guard let uploadId = dataset.uploadId else {
+            completion(.failure(.noUploadId))
+            return
+        }
+        let uploadData = APIDeviceDataArray(samples)
+        self.apiConnect.upload(uploadData, uploadId: uploadId, httpMethod: "POST") {
+            result in
+            completion(result)
         }
     }
 
-    public func deleteUserData(_ samples: [TPDeleteItem], _ completion: @escaping (Result<Bool, TidepoolKitError>) -> (Void)) {
-        self.configureUploadId() {
-            guard self.currentUploadId() != nil else {
-                completion(.failure(.serviceError))
-                return
-            }
-            let deleteItems = APIDeleteItemArray(samples)
-            self.apiConnect.upload(deleteItems, httpMethod: "DELETE") {
-                result in
-                switch result {
-                case .success(let failedSamples):
-                    if failedSamples == nil {
-                        completion(.success(true))
-                    } else {
-                        completion(.failure(.badRequest))
-                    }
-                case .failure(let error):
-                    completion(.failure(error))
-                }
-            }
+    public func deleteUserData(_ dataset: TPDataset, samples: [TPDeleteItem], _ completion: @escaping (Result<Bool, TidepoolKitError>) -> (Void)) {
+        guard let uploadId = dataset.uploadId else {
+            completion(.failure(.noUploadId))
+            return
+        }
+        let deleteItems = APIDeleteItemArray(samples)
+        self.apiConnect.upload(deleteItems, uploadId: uploadId, httpMethod: "DELETE") {
+            result in
+            completion(result)
         }
     }
 
-    public func getUserProfileInfo(userId: String? = nil, _ completion: @escaping (Result<TPUserProfile, TidepoolKitError>) -> (Void)) {
-        apiConnect.fetch(TPUserProfile.self) {
+    public func getUserProfileInfo(_ user: TPUser, _ completion: @escaping (Result<TPUserProfile, TidepoolKitError>) -> (Void)) {
+        apiConnect.fetch(TPUserProfile.self, user: user) {
             result in
             completion(result)
         }
     }
     
-    public func getUserSettingsInfo(_ completion: @escaping (Result<TPUserProfile, TidepoolKitError>) -> (Void)) {
-        apiConnect.fetch(TPUserProfile.self) {
+    public func getUserSettingsInfo(_ user: TPUser, _ completion: @escaping (Result<TPUserProfile, TidepoolKitError>) -> (Void)) {
+        apiConnect.fetch(TPUserProfile.self, user: user) {
             result in
             completion(result)
         }
     }
     
-    public func getAccessUsers(_ completion: @escaping (Result<APIAccessUsers, TidepoolKitError>) -> (Void)) {
-        apiConnect.fetch(APIAccessUsers.self) {
+    public func getAccessUsers(_ user: TPUser, _ completion: @escaping (Result<APIAccessUsers, TidepoolKitError>) -> (Void)) {
+        apiConnect.fetch(APIAccessUsers.self, user: user) {
             result in
             completion(result)
         }
@@ -179,42 +174,30 @@ public class TidepoolKit {
     //
     // MARK: - Tidepool service configuration
     //
-    public var currentService: String {
-        return apiConnect.currentService
-    }
-    
-    public let kSortedServerNames = [
-        "Development",
-        "Staging",
-        "Integration",
-        "Production"
-    ]
-    
-    public func switchToServer(_ serverName: String) {
-        apiConnect.switchToServer(serverName)
+    public var currentServer: TidepoolServer? {
+        return apiConnect.session?.server
     }
     
     //
-    // MARK: - Upload configuration, optional!
+    // MARK: - Upload configuration
     //
     
-    /// This will initially return nil after login, and will be set after an initial data upload, or after configureUploadId below is called. It will persist until logout is called.
-    public func currentUploadId() -> String? {
-        return apiConnect.currentUploadId.value
+    /// Call this to get a TPDataset that can be used to upload or delete data.
+    /// - parameter dataSet: Optional. The service is queried to find an existing dataset that matches this; if no existing match is found, a new dataset will be created.
+    /// - parameter completion: Called when this operation completes. If successful, a new TPDataset will returned containing a non-nil uploadId value.
+    public func getDataset(dataSet: TPDataset? = nil, user: TPUser, _ completion: @escaping (Result<TPDataset, TidepoolKitError>) -> (Void)) {
+        apiConnect.getDataset(matching: dataSet, user: user) {
+            result in
+            completion(result)
+        }
     }
 
-    /// Force current uploadId/dataset to nil. Call configureUploadId to set a new one (otherwise this will be set to default implicitly on a new upload).
-    public func resetUploadId() {
-        apiConnect.currentUploadId.value = nil
-    }
-
-    /// Call this after login or the resetUploadId call (before any uploads) to override default dataset configuration! This will have no effect if an uploadId has already been configured.
-    /// - parameter dataSet: Optional, provides ability to override the type of dataset we need. The service is queried to find an existing dataset that matches this; if no existing match is found, a new dataset will be created.
-    /// - parameter completion: Called when this operation completes. If successful, currentUploadId() will return a non-nil value.
-    /// - If the upload dataset needs to be more dynamic, this would need to be extended: e.g., to support changing it dynamically, or to support multiple upload datasets.
-    public func configureUploadId(dataSet: TPDataset? = nil, _ completion: @escaping () -> (Void)) {
-        let configDataset = dataSet ?? TPDataset()
-        apiConnect.configureUploadId(configDataset, completion)
+    // returns zero or more datasets on success.
+    public func getDatasets(user: TPUser, _ completion: @escaping (Result<[TPDataset], TidepoolKitError>) -> (Void)) {
+        apiConnect.getDatasets(user: user) {
+            result in
+            completion(result)
+        }
     }
 
     //

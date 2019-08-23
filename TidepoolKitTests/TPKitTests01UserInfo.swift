@@ -24,13 +24,12 @@ class TPKitTests01UserInfo: TPKitTestsBase {
         // Log in if necessary, and then try fetching user profile...
         NSLog("\(#function): next calling ensureLogin...")
         ensureLogin() {
-            result in
-            NSLog("\(#function): ensureLogin completed... with result: \(result)")
-            tpKit.getUserProfileInfo() {
+            session in
+            tpKit.getUserProfileInfo(session.user) {
                 result in
                 switch result {
                 case .success(let tpUserProfile):
-                    NSLog("TPUserProfile fetch succeeded: \n\(tpUserProfile.debugDescription)")
+                    NSLog("TPUserProfile fetch succeeded: \(tpUserProfile)")
                     expectation.fulfill()
                 case .failure(let error):
                     XCTFail("profile fetch failed! Error: \(error)")
@@ -48,13 +47,12 @@ class TPKitTests01UserInfo: TPKitTestsBase {
         // Log in if necessary, and then try fetching user settings...
         NSLog("\(#function): next calling ensureLogin...")
         ensureLogin() {
-            result in
-            NSLog("\(#function): ensureLogin completed... with result: \(result)")
-            tpKit.getUserSettingsInfo() {
+            session in
+            tpKit.getUserSettingsInfo(session.user) {
                 result in
                 switch result {
                 case .success(let tpUserSettings):
-                    NSLog("TPUserSettings fetch succeeded: \n\(tpUserSettings.debugDescription)")
+                    NSLog("TPUserSettings fetch succeeded: \n\(tpUserSettings)")
                     expectation.fulfill()
                 case .failure(let error):
                     XCTFail("settings fetch failed! Error: \(error)")
@@ -72,20 +70,19 @@ class TPKitTests01UserInfo: TPKitTestsBase {
         // Log in if necessary, and then try fetching user settings...
         NSLog("\(#function): next calling ensureLogin...")
         ensureLogin() {
-            result in
-            NSLog("\(#function): ensureLogin completed... with result: \(result)")
-            tpKit.getAccessUsers() {
+            session in
+            tpKit.getAccessUsers(session.user) {
                 result in
                 switch result {
                 case .success(let accessUsers):
-                    NSLog("access users fetch succeeded: \n\(accessUsers.debugDescription)")
+                    NSLog("access users fetch succeeded: \n\(accessUsers)")
                     // should have returned at least the root object... try fetching that profile (same as logged in user). TODO: try fetching all profiles...
                     XCTAssert(!accessUsers.userIds.isEmpty)
-                    tpKit.getUserProfileInfo(userId: accessUsers.userIds.first!) {
+                    tpKit.getUserProfileInfo(TPUser(accessUsers.userIds.first!)) {
                         result in
                         switch result {
                         case .success(let tpUserProfile):
-                            NSLog("profile fetch succeeded: \n\(tpUserProfile.debugDescription)")
+                            NSLog("profile fetch succeeded: \n\(tpUserProfile)")
                             expectation.fulfill()
                         case .failure(let error):
                             XCTFail("profile fetch failed! Error: \(error)")

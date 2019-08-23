@@ -22,31 +22,26 @@ import Foundation
 /// - Get/put user data of various types (cbg, carb, etc.)
 class APIConnector {
     
-    // Session token, acquired on login and saved in NSUserDefaults
-    var sessionTokenSetting: TPKitSetting
-    var loggedInUserIdSetting: TPKitSetting
-    var loggedInUserNameSetting: TPKitSetting
+    // non-nil when "loggedIn", nil when "loggedOut"
+    var session: TPSession?
     
-    // Exposed for testing only...
-    var currentServiceSetting: TPKitSetting
-    var currentUploadId: TPKitSetting
-
     // Base URL for API calls, set during initialization
+    var baseUrlString: String? {
+        didSet {
+            if let urlStr = baseUrlString {
+                self.baseUrl = URL(string: urlStr)!
+            } else {
+                self.baseUrl = nil
+            }
+        }
+    }
     var baseUrl: URL?
-    var baseUrlString: String?
 
     /// Reachability object, valid during lifetime of this APIConnector, and convenience function that uses this
     var reachability: Reachability?
 
-    init(settings: TPKitSetting.Type) {
-        self.sessionTokenSetting = settings.init(forKey: "SToken")
-        self.loggedInUserIdSetting = settings.init(forKey: "LoggedInUserId")
-        self.loggedInUserNameSetting = settings.init(forKey: "LoggedInUserName")
-        self.currentServiceSetting = settings.init(forKey: "SCurrentService")
-        self.currentUploadId = settings.init(forKey: "CurrentUploadId")
-        self.baseUrlString = kServers[currentService]!
-        self.baseUrl = URL(string: baseUrlString!)!
-        LogInfo("Using service: \(self.baseUrl!)")
+    init() {
+        LogInfo("")
         
         if let reachability = reachability {
             reachability.stopNotifier()
@@ -67,44 +62,19 @@ class APIConnector {
     private let kSessionTokenResponseId = "x-tidepool-session-token"
     
     // Dictionary of servers and their base URLs
-    private let kServers = [
-        "Development" :  "https://dev-api.tidepool.org",
-        "Staging" :      "https://stg-api.tidepool.org",
-        "Integration" :  "https://int-api.tidepool.org",
-        "Production" :   "https://api.tidepool.org"
-    ]
-    let kSortedServerNames = [
-        "Development",
-        "Staging",
-        "Integration",
-        "Production"
-    ]
-    private let kDefaultServerName = "Staging"
+    private func serverUrl(_ server: TidepoolServer) -> String {
+        switch server {
+        case .development: return "https://dev-api.tidepool.org"
+        case .staging: return "https://stg-api.tidepool.org"
+        case .integration: return "https://int-api.tidepool.org"
+        case .production: return "https://api.tidepool.org"
+        }
+    }
+    private let kDefaultServer: TidepoolServer = .staging
 
     private var user: TPUser?
     func loggedInUser() -> TPUser? {
-        let token = self.sessionTokenSetting.value
-        guard token != nil, let userId = self.loggedInUserIdSetting.value else {
-            return nil
-        }
-        if self.user == nil {
-            self.user = TPUser(userId, userName: self.loggedInUserNameSetting.value)
-        }
-        return self.user
-    }
-    
-    /// Returns kDefaultServerName if setting is nil or not supported
-    var currentService: String {
-        set(newService) {
-            currentServiceSetting.value = newService
-        }
-        get {
-            let service = currentServiceSetting.value
-            if service == nil || kServers[service!] == nil {
-                return kDefaultServerName
-            }
-            return service!
-        }
+        return self.session?.user
     }
     
     func isConnectedToNetwork() -> Bool {
@@ -116,13 +86,6 @@ class APIConnector {
         }
     }
 
-    func serviceAvailable() -> Bool {
-        if !isConnectedToNetwork() || sessionTokenSetting.value == nil {
-            return false
-        }
-        return true
-    }
-
     //
     // MARK: - Initialization
     //
@@ -131,24 +94,8 @@ class APIConnector {
         reachability?.stopNotifier()
     }
     
-    func switchToServer(_ serverName: String) {
-        LogVerbose("\(serverName)")
-        if (currentService != serverName) {
-            currentService = serverName
-            // clear out login settings...
-            self.logout()
-            // refresh connector since there is a new service...
-            self.baseUrlString = kServers[currentService]!
-            self.baseUrl = URL(string: baseUrlString!)!
-            LogInfo("Switched to using service: \(self.baseUrlString!)")
-            
-            let notification = Notification(name: Notification.Name(rawValue: "switchedToNewServer"), object: nil)
-            NotificationCenter.default.post(notification)
-        }
-    }
-    
     /// Logs in the user and obtains the session token for the session (stored internally)
-    func login(_ username: String, password: String, completion: @escaping (Result<TPUser, TidepoolKitError>) -> (Void)) {
+    func login(_ username: String, password: String, server: TidepoolServer?, completion: @escaping (Result<TPSession, TidepoolKitError>) -> (Void)) {
         
         guard isConnectedToNetwork() else {
             LogError("Login failed, network offline!")
@@ -156,8 +103,14 @@ class APIConnector {
             return
         }
         
-        // force sessionToken nil if not already nil!
-        self.sessionTokenSetting.value = nil
+        var loginServer: TidepoolServer = kDefaultServer
+        if let server = server {
+            loginServer = server
+        }
+        self.baseUrlString = serverUrl(loginServer)
+
+        // force current session nil if not already nil!
+        self.session = nil
         // Similar to email inputs in HTML5, trim the email (username) string of whitespace
         let trimmedUsername = username.trimmingCharacters(in: .whitespacesAndNewlines)
         
@@ -221,31 +174,33 @@ class APIConnector {
                 return
             }
             
-            guard let serviceUser = APIUser.fromJsonData(data) else {
-                LogError("Login response not parseable as json user!")
+            guard let serviceUser = TPUser.fromJsonData(data) else {
+                LogError("Login json response not parseable as TPUser!")
                 completion(Result.failure(.badLoginResponse))
                 return
             }
         
-            LogInfo("Login success! Returned userId = \(serviceUser.userId), userName: \(String(describing: serviceUser.userName))")
-            self.sessionTokenSetting.value = token
-            self.loggedInUserIdSetting.value = serviceUser.userId
-            self.loggedInUserNameSetting.value = serviceUser.userName
-            self.user = TPUser(serviceUser)
+            self.session = TPSession(token, user: serviceUser, server: loginServer)
+            LogInfo("Logged into \(loginServer.rawValue) server successfully! Returned userId = \(serviceUser.userId), userName: \(String(describing: serviceUser.userName))")
             NotificationCenter.default.post(name: TidepoolLogInChangedNotification, object:self)
-            completion(Result.success(self.user!))
+            completion(Result.success(self.session!))
         }
+    }
+    
+    func login(_ session: TPSession) -> Result<TPSession, TidepoolKitError> {
+        if self.session != nil {
+            return Result.failure(.alreadyLoggedIn)
+        }
+        self.baseUrlString = serverUrl(session.server)
+        return Result.success(session)
     }
     
     func logout() {
         LogVerbose("")
-        let wasLoggedIn = self.sessionTokenSetting.value != nil
-        // Clear our session token and user settings
-        self.sessionTokenSetting.value = nil
-        self.loggedInUserIdSetting.value = nil
-        self.loggedInUserNameSetting.value = nil
-        self.currentUploadId.value = nil
-        self.user = nil
+        let wasLoggedIn = self.session != nil
+        self.session = nil
+        self.baseUrlString = nil
+        // TODO: first sent logout message; make this async with optional completion!
         if wasLoggedIn {
             NotificationCenter.default.post(name: TidepoolLogInChangedNotification, object:self)
         }
@@ -257,7 +212,7 @@ class APIConnector {
     
     /// Pass type.self to enable type inference in all cases.
     /// Optional userId, to fetch profiles for other users than logged in user.
-    func fetch<T: TPFetchable>(_ type: T.Type, parameters: [String: String]? = nil, headers: [String: String]? = nil, userId: String? = nil, _ completion: @escaping (Result<T, TidepoolKitError>) -> (Void)) {
+    func fetch<T: TPFetchable>(_ type: T.Type, user: TPUser, parameters: [String: String]? = nil, headers: [String: String]? = nil, _ completion: @escaping (Result<T, TidepoolKitError>) -> (Void)) {
         
         guard isConnectedToNetwork() else {
             LogError("Operation failed, network offline!")
@@ -265,16 +220,7 @@ class APIConnector {
             return
         }
         
-        var fetchForUserId = userId
-        if userId == nil {
-            guard let user = self.loggedInUser() else {
-                LogError("Operation failed, no user logged in!")
-                completion(Result.failure(.notLoggedIn))
-                return
-            }
-            fetchForUserId = user.userId
-        }
-        let urlExtension = T.urlExtension(forUser: fetchForUserId!)
+        let urlExtension = T.urlExtension(forUser: user.userId)
         
         sendRequest("GET", urlExtension: urlExtension, parameters: parameters, headers: headers) {
             result -> Void in
@@ -325,7 +271,7 @@ class APIConnector {
     
     /// Pass type.self to enable type inference in all cases.
     /// Optional userId, to fetch profiles for other users than logged in user.
-    func post<P: TPPostable, T: TPFetchable>(_ postable: P, _ fetchType: T.Type, headers: [String: String]? = nil, userId: String? = nil, _ completion: @escaping (Result<T, TidepoolKitError>) -> (Void)) {
+    private func post<P: TPPostable, T: TPFetchable>(_ postable: P, _ fetchType: T.Type, headers: [String: String]? = nil, userId: String? = nil, _ completion: @escaping (Result<T, TidepoolKitError>) -> (Void)) {
         
         guard isConnectedToNetwork() else {
             LogError("Post failed, network offline!")
@@ -333,16 +279,14 @@ class APIConnector {
             return
         }
         
-        var fetchForUserId = userId
-        if userId == nil {
-            guard let user = self.loggedInUser() else {
-                LogError("Post failed, no user logged in!")
-                completion(Result.failure(.notLoggedIn))
-                return
-            }
-            fetchForUserId = user.userId
+        guard let sessionUser = self.session?.user else {
+            LogError("Post failed, no user logged in!")
+            completion(Result.failure(.notLoggedIn))
+            return
         }
-        let urlExtension = P.urlExtension(forUser: fetchForUserId!)
+
+        let fetchForUserId = sessionUser.userId
+        let urlExtension = P.urlExtension(forUser: fetchForUserId)
         
         guard let body = postable.postBodyData() else {
             LogError("Post failed, no data to post!")
@@ -396,7 +340,7 @@ class APIConnector {
 
     /// Pass type.self to enable type inference in all cases.
     /// - parameter httpMethod: "POST" or "DELETE"
-    func upload<T: TPUploadable>(_ uploadable: T, httpMethod: String, _ completion: @escaping (Result<[Int]?, TidepoolKitError>) -> (Void)) {
+    func upload<T: TPUploadable>(_ uploadable: T, uploadId: String, httpMethod: String, _ completion: @escaping (Result<Bool, TidepoolKitError>) -> (Void)) {
         
         guard isConnectedToNetwork() else {
             LogError("Post failed, network offline!")
@@ -404,12 +348,6 @@ class APIConnector {
             return
         }
         
-        guard let uploadId = currentUploadId.value else {
-            LogError("Upload failed, no current uploadId!")
-            // shouldn't get this far: caller of upload should check for this!
-            completion(Result.failure(.internalError))
-            return
-        }
         let urlExtension = "/v1/data_sets/" + uploadId + "/data"
         
         guard let body = uploadable.postBodyData() else {
@@ -447,11 +385,9 @@ class APIConnector {
                     } else if statusCode == 400 {
                         // Note: not all 400 errors are the result of samples that fail service validation.
                         // Note: the success at this level will be turned into an error at the calling level, this is just done here since the failure path doesn't carry data...
-                        failure = .badRequest
                         if let data = sendRequestResponse.data {
                             let badSamples = uploadable.parseErrResponse(data)
-                            completion(Result.success(badSamples))
-                            return
+                            failure = .badRequest(badSamples)
                         }
                     }
                 }
@@ -460,7 +396,7 @@ class APIConnector {
                 return
             }
             
-            completion(Result.success(nil))
+            completion(Result.success(true))
         }
     }
 
@@ -470,76 +406,59 @@ class APIConnector {
     
     /// Call this if currentUploadId is nil, before uploading data, after fetching user profile, to ensure we have a dataset id for data uploads (if so enabled)
     /// - parameter dataset: The service is queried to find an existing dataset that matches this; if no existing match is found, a new dataset will be created.
-    /// - parameter completion: Method that will be called when this async operation has completed. If successful, currentUploadId in TidepoolMobileDataController will be set; if not, it will still be nil.
-    func configureUploadId(_ configDataset: TPDataset, _ completion: @escaping () -> (Void)) {
+    /// - parameter completion: Method that will be called when this async operation has completed. If successful, the matching or new TPDataset is returned.
+    func getDataset(matching: TPDataset? = nil, user: TPUser, _ completion: @escaping (Result<TPDataset, TidepoolKitError>) -> (Void)) {
         
-        guard currentUploadId.value == nil else {
-            LogInfo("UploadId is not nil")
-            completion()
-            return
-        }
+        let configDataset = matching ?? TPDataset()
 
         // TODO: should also verify that this is a DSAUser... i.e., has a profile in the user. Something we should fetch and persist, so the TPUser object includes a persisted isDSAUser field.
         
-        // if we don't have a currentUploadId yet, first try fetching one from the server that matches the one passed in...
-        self.fetchDataset(configDataset) {
+        // First try fetching one from the server that matches the one passed in...
+        self.getDatasets(user: user) {
             result in
             switch result {
-            case .success(let dataSet):
-                LogInfo("configureUploadId fetch succeeded: \n\(dataSet.debugDescription)")
-                if let uploadId = dataSet?.uploadId {
-                    self.currentUploadId.value = uploadId
-                    completion()
+            case .success(let datasets):
+                var matchingDS: TPDataset?
+                for dataSet in datasets {
+                    if dataSet == configDataset {
+                        LogInfo("Found dataset matching configDataset (\(configDataset))")
+                        matchingDS = dataSet
+                        break
+                    }
+                }
+                if let matchingDS = matchingDS {
+                    LogInfo("configureUploadId fetch succeeded: \(matchingDS)")
+                    completion(.success(matchingDS))
                     return
                 }
-                // no uploadId found, fall through and create one...
+                // no match found, fall through and create one...
             case .failure(let error):
                 LogError("configureUploadId fetchDataset failed! Error: \(error)")
                 // network failure for fetchDataset, don't try creating a new one in case one already does exist...
-                completion()
+                completion(.failure(error))
                 return
             }
 
-            // TODO: skip create until fetch actually works!
-            //completion()
-            //return
-                
             // No matching existing dataset found, try creating a new one...
             LogInfo("Dataset for current client/version not found, try creating new dataset!")
             self.createDataset(configDataset) {
                 result in
-                switch result {
-                case .success(let dataset):
-                    LogInfo("New dataset created: \(dataset!.debugDescription)")
-                    self.currentUploadId.value = dataset?.uploadId
-                case .failure(let error):
-                    LogError("Unable to fetch existing upload dataset or create a new one! Error: \(error)")
-                }
-                completion()
+                completion(result)
             }
         }
     }
     
     /// Ask service for the existing mobile app upload id for this client and version, if one exists.
-    /// - parameter completion: Method that accepts a Result. Failure code is returned if network fetch of dataset array fails, otherwise success is returned. The success value will be nil, or an APIDataSet object if there is one matching the current client and version.
-    private func fetchDataset(_ configDataset: TPDataset, _ completion: @escaping (Result<APIDataSet?, TidepoolKitError>) -> (Void)) {
+    /// - parameter completion: Method that accepts a Result. Failure code is returned if network fetch of dataset array fails, otherwise success is returned. The success value will be an array of zero or more TPDataset objects.
+    internal func getDatasets(user: TPUser, _ completion: @escaping (Result<[TPDataset], TidepoolKitError>) -> (Void)) {
         LogInfo("Try fetching existing dataset!")
         
-        self.fetch(APIDataSetArray.self) {
+        self.fetch(APIDataSetArray.self, user: user) {
             result in
             switch result {
             case .success(let apiDataSetArray):
-                LogInfo("APIDataSetArray fetch succeeded: \n\(apiDataSetArray.debugDescription)")
-                // fetch latest client name and version values (may have been updated by framework client)
-                var result: APIDataSet?
-                for dataSet in apiDataSetArray.dataSetArray {
-                    if dataSet.matchesDataset(configDataset) {
-                        LogInfo("Found dataset matching configDataset (\(configDataset.debugDescription))")
-                        result = dataSet
-                        break
-                    }
-                }
-                completion(.success(result))
+                LogInfo("APIDataSetArray fetch succeeded: \n\(apiDataSetArray)")
+                completion(.success(apiDataSetArray.datasetArray))
             case .failure(let error):
                 LogError("APIDataSetArray fetch failed! Error: \(error)")
                 completion(.failure(error))
@@ -549,14 +468,14 @@ class APIConnector {
     
     /// Ask service to create a new upload id. Should only be called after fetchDataSet returns a nil array (no existing upload id).
     /// - parameter completion: Method that accepts an optional APIDataSet if the create succeeds, and an error result if not.
-    private func createDataset(_ configDataset: TPDataset, _ completion: @escaping (Result<APIDataSet?, TidepoolKitError>) -> (Void)) {
+    private func createDataset(_ configDataset: TPDataset, _ completion: @escaping (Result<TPDataset, TidepoolKitError>) -> (Void)) {
         LogInfo("Try creating a new dataset!")
         
-        self.post(APIDataSet(configDataset), APIDataSet.self) {
+        self.post(configDataset, TPDataset.self) {
             result in
             switch result {
             case .success(let apiDataSet):
-                NSLog("createDataset post succeeded: \n\(apiDataSet.debugDescription)")
+                NSLog("createDataset post succeeded: \n\(apiDataSet)")
                 completion(.success(apiDataSet))
             case .failure(let error):
                 NSLog("createDataset post failed! Error: \(error)")
@@ -613,6 +532,8 @@ class APIConnector {
             return
         }
         
+        
+        
         var urlString = baseUrlString! + urlExtension
         urlString = urlString.addingPercentEncoding(withAllowedCharacters: CharacterSet.urlQueryAllowed)!
 
@@ -645,9 +566,8 @@ class APIConnector {
             }
         }
         
-        
         if requiresToken {
-            guard let token = sessionTokenSetting.value else {
+            guard let token = self.session?.authenticationToken else {
                 LogError("user not logged in!")
                 completion(Result.failure(.notLoggedIn))
                 return
@@ -656,7 +576,6 @@ class APIConnector {
         }
         
         request.httpBody = body
-        
         
         if let body = body {
             if let dataStr = String(data: body, encoding: .ascii) {

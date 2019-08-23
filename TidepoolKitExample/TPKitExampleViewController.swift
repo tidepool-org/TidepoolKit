@@ -17,24 +17,28 @@ import UIKit
 import TidepoolKit
 import TidepoolKitUI
 
-class TestViewController: UIViewController {
+class TPKitExampleViewController: UIViewController {
+
+    let currentServiceSetting = TPKitExampleSetting(forKey: "testService")
 
     override func viewDidLoad() {
         super.viewDidLoad()
-        tpKit = TidepoolKit.init()
+        self.tpKit = TidepoolKit.init()
+        // Example of setting logger after init time (can also pass into init)
         tpKit.logger = TPKitLoggerExample()
         
+        // Example of accessing current TidepoolKit logger...
         if let x = tpKit.logger {
             print("logger type is \(type(of: x))")
         } else {
             print("logger is nil!")
         }
 
-        tpKitUI = TidepoolKitUI.init(tpKit: tpKit, logger: TPKitUILoggerExample()) // this will pick up the instance of TidepoolKit created in the line above!
+        self.tpKitUI = TidepoolKitUI.init(tpKit: tpKit, logger: TPKitUILoggerExample()) // this will pick up the instance of TidepoolKit created in the line above!
         
         let notificationCenter = NotificationCenter.default
-        notificationCenter.addObserver(self, selector: #selector(TestViewController.reachabilityChanged(_:)), name: ReachabilityChangedNotification, object: nil)
-        notificationCenter.addObserver(self, selector: #selector(TestViewController.reachabilityChanged(_:)), name: TidepoolLogInChangedNotification, object: nil)
+        notificationCenter.addObserver(self, selector: #selector(TPKitExampleViewController.reachabilityChanged(_:)), name: ReachabilityChangedNotification, object: nil)
+        notificationCenter.addObserver(self, selector: #selector(TPKitExampleViewController.reachabilityChanged(_:)), name: TidepoolLogInChangedNotification, object: nil)
         configureForReachability()
 
         if ProcessInfo.processInfo.environment["XCTestConfigurationFilePath"] != nil {

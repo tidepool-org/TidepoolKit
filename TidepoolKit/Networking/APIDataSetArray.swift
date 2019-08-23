@@ -16,22 +16,12 @@
 import Foundation
 
 /// Used internally...
-class APIDataSetArray: Codable, TPFetchable {
+class APIDataSetArray: TPFetchable {
     
-    let dataSetArray: [APIDataSet]
+    let datasetArray: [TPDataset]
 
-    init(_ dataSetArray: [APIDataSet]) {
-        self.dataSetArray = dataSetArray
-    }
-
-    var debugDescription: String {
-        get {
-            var result = "Data Sets: "
-            for item in dataSetArray {
-                result = result + "\n" + item.debugDescription
-            }
-            return result
-        }
+    init(_ datasetArray: [TPDataset]) {
+        self.datasetArray = datasetArray
     }
 
     //
@@ -40,11 +30,21 @@ class APIDataSetArray: Codable, TPFetchable {
 
     class func dataSetsFromJsonData(_ data: Data) -> APIDataSetArray? {
         do {
-            let decoder = JSONDecoder()
-            let decodedJson = try decoder.decode([APIDataSet].self, from: data)
-            return APIDataSetArray(decodedJson)
+            let object: Any = try JSONSerialization.jsonObject(with: data)
+            if let jsonArray = object as? [[String: Any]] {
+                var items: [TPDataset] = []
+                for jsonDict in jsonArray {
+                    LogInfo("calling createFromJson on \(jsonDict)")
+                    if let item = TPDataset(rawValue: jsonDict) {
+                        items.append(item)
+                    }
+                }
+                return APIDataSetArray(items)
+            } else {
+                LogError("Received data not json decodable!")
+            }
         } catch (let error) {
-            print("caught throw: \(error)")
+            LogError("Received data not json decodable: \(error)")
         }
         return nil
     }

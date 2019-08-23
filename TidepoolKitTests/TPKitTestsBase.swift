@@ -17,13 +17,10 @@ import XCTest
 @testable import TidepoolKit
 
 /// TODO: Set up a new test password?
-var userid: String = ""
-//var testEmail: String = "ethan+urchintests@tidepool.org"
-//var testPassword: String = "urchintests"
-//var testService: String = "Development"
-var testEmail: String = "larry+kittest@tidepool.org"
-var testPassword: String = "larry+kittest"
-var testService: String = "Staging"
+let testEmail: String = "larry+kittest@tidepool.org"
+let testPassword: String = "larry+kittest"
+let testServer: TidepoolServer = .staging
+var testDataset: TPDataset?
 
 class TPKitTestsBase: XCTestCase {
 
@@ -39,22 +36,47 @@ class TPKitTestsBase: XCTestCase {
         return TidepoolKit.init(logger: TPKitLoggerExample())!
     }
     
-    func ensureLogin(completion: @escaping (Result<TPUser, TidepoolKitError>) -> Void) {
+    func ensureLogin(completion: @escaping (TPSession) -> Void) {
         let tpKit = getTpKitSingleton()
-        tpKit.switchToServer(testService)
-        guard let user = tpKit.loggedInUser() else {
-            tpKit.logIn(testEmail, password: testPassword) {
+        guard let session = tpKit.currentSession() else {
+            tpKit.logIn(testEmail, password: testPassword, server: testServer) {
                 result in
                 switch result {
-                case .success:
-                    completion(result)
+                case .success (let session):
+                    NSLog("Logged into server creating session: \(session)")
+                    completion(session)
                 case .failure(let error):
                     XCTFail("Login failed: \(error)")
                 }
             }
             return
         }
-        completion(.success(user))
+        completion(session)
+    }
+
+    func ensureDataset(completion: @escaping (TPDataset, TPSession) -> Void) {
+        let tpKit = getTpKitSingleton()
+        ensureLogin() {
+            session in
+            // if we have a dataset already, return that!
+            if let dataset = testDataset, dataset.uploadId != nil {
+                NSLog("Using existing dataset: \(dataset)")
+                completion(dataset, session)
+                return
+            }
+            let testDataSet = TPDataset(client: TPDatasetClient(name: "org.tidepool.tidepoolkittest", version: "1.0.0"), deduplicator: TPDeduplicator(type: .dataset_delete_origin))
+            tpKit.getDataset(dataSet:testDataSet, user: session.user) {
+                result in
+                switch result {
+                case .failure(let error):
+                    XCTFail("failed to get dataset, error: \(error)")
+                case .success(let dataset):
+                    testDataset = dataset
+                    NSLog("Dataset returned from getDataset: \(dataset)")
+                    completion(dataset, session)
+                }
+            }
+        }
     }
 
 }

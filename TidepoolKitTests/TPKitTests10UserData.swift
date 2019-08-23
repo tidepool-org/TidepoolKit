@@ -18,30 +18,28 @@ import XCTest
 
 class TPKitTests10UserData: TPKitTestsBase {
 
-    func test11UploadId() {
-        let expectation = self.expectation(description: "Upload id fetch/create successful")
+    func test11GetDataset() {
+        let expectation = self.expectation(description: "Dataset fetch/create successful")
         let tpKit = getTpKitSingleton()
         NSLog("\(#function): starting with logout...")
         // next, log in, and then try configuring upload id: this will fetch a current id, or create one if a current id does not exist. Note: there is no way to force delete of an upload id, so a new account would be needed to test the create!
         NSLog("\(#function): next calling ensureLogin...")
         ensureLogin() {
-            result in
-            NSLog("\(#function): ensureLogin completed... with result: \(result)")
-            tpKit.resetUploadId()
-            XCTAssert(tpKit.currentUploadId() == nil)
+            session in
             // first test with default dataset...
-            tpKit.configureUploadId() {
-                XCTAssert(tpKit.currentUploadId() != nil)
+            tpKit.getDataset(user: session.user) {
+                result in
+                if case .failure(let error) = result {
+                     XCTFail("failed to get dataset, error: \(error)")
+                }
                 
-                // second, test with a different dataset...
-                tpKit.resetUploadId()
-                let testDataSet = TPDataset()
-                // override default name to force a one-time create, and test override logic...
-                testDataSet.clientName = "org.tidepool.tidepoolkittest"
-                // NOTE: override of deduplicator passes, and service passes down a new dataset with this deduplicator type, but subsequent queries of datasets do not return the newly created one, so this currently will always result in a new upload id being created...
-                //testDataSet.deduplicator = .device_deactivate_hash
-                tpKit.configureUploadId(dataSet:testDataSet) {
-                    XCTAssert(tpKit.currentUploadId() != nil)
+                // second, test with test dataset...
+                let testDataSet = TPDataset(client: TPDatasetClient(name: "org.tidepool.tidepoolkittest", version: "1.0.0"), deduplicator: TPDeduplicator(type: .dataset_delete_origin))
+                tpKit.getDataset(dataSet:testDataSet, user: session.user) {
+                    result in
+                    if case .failure(let error) = result {
+                        XCTFail("failed to get dataset, error: \(error)")
+                    }
                     expectation.fulfill()
                 }
             }
@@ -57,12 +55,11 @@ class TPKitTests10UserData: TPKitTestsBase {
         // first, ensure we are logged in, and then ...
         NSLog("\(#function): next calling ensureLogin...")
         ensureLogin() {
-            result in
-            NSLog("\(#function): ensureLogin completed... with result: \(result)")
+            session in
             XCTAssert(tpKit.isLoggedIn())
             let end = Date()
             let start = end.addingTimeInterval(-self.kOneWeekTimeInterval)
-            tpKit.getUserData(start, endDate: end) {
+            tpKit.getUserData(session.user, startDate: start, endDate: end) {
                 result in
                 expectation.fulfill()
                 switch result {
@@ -83,13 +80,12 @@ class TPKitTests10UserData: TPKitTestsBase {
         let tpKit = getTpKitSingleton()
         // first, ensure we are logged in, and then ...
         NSLog("\(#function): next calling ensureLogin...")
-        ensureLogin() {
-            result in
-            NSLog("\(#function): ensureLogin completed... with result: \(result)")
+        ensureDataset() {
+            dataset, session in
             XCTAssert(tpKit.isLoggedIn())
             let end = Date()
             let start = end.addingTimeInterval(-self.kOneWeekTimeInterval)
-            tpKit.getUserData(start, endDate: end) {
+            tpKit.getUserData(session.user, startDate: start, endDate: end) {
                 result in
                 switch result {
                 case .failure:
@@ -111,7 +107,7 @@ class TPKitTests10UserData: TPKitTestsBase {
                         }
                     }
                     // and delete...
-                    tpKit.deleteUserData(deleteItems) {
+                    tpKit.deleteUserData(dataset, samples: deleteItems) {
                         result in
                         expectation.fulfill()
                         switch result {
@@ -135,9 +131,8 @@ class TPKitTests10UserData: TPKitTestsBase {
         let tpKit = getTpKitSingleton()
         // first, ensure we are logged in, and then ...
         NSLog("\(#function): next calling ensureLogin...")
-        ensureLogin() {
-            result in
-            NSLog("\(#function): ensureLogin completed... with result: \(result)")
+        ensureDataset() {
+            dataset, session in
             XCTAssert(tpKit.isLoggedIn())
             var deleteItemArray: [TPDeleteItem] = []
             for _ in 1...5 {
@@ -155,7 +150,7 @@ class TPKitTests10UserData: TPKitTestsBase {
                 }
             }
             XCTAssert(deleteItemArray.count == 10)
-            tpKit.deleteUserData(deleteItemArray) {
+            tpKit.deleteUserData(dataset, samples: deleteItemArray) {
                 result in
                 expectation.fulfill()
                 switch result {
@@ -222,9 +217,8 @@ class TPKitTests10UserData: TPKitTestsBase {
         let tpKit = getTpKitSingleton()
         // first, ensure we are logged in, and then ...
         NSLog("\(#function): next calling ensureLogin...")
-        ensureLogin() {
-            result in
-            NSLog("\(#function): ensureLogin completed... with result: \(result)")
+        ensureDataset() {
+            dataset, session in
             XCTAssert(tpKit.isLoggedIn())
             let newId = UUID.init().uuidString
             let origin = TPDataOrigin(id: newId, name: "org.tidepool.tidepoolKitTest", type: .service, payload: self.TestCbgOriginPayload2)!
@@ -236,16 +230,16 @@ class TPKitTests10UserData: TPKitTestsBase {
             }
             cbgSample.origin = origin
             cbgSample.payload = payload
-            NSLog("created TPDataCbg: \(cbgSample.debugDescription)")
-            tpKit.putUserData([cbgSample]) {
-                result,arg  in
-                expectation.fulfill()
+            NSLog("created TPDataCbg: \(cbgSample)")
+            tpKit.putUserData(dataset, samples: [cbgSample]) {
+                result  in
                 switch result {
                 case .failure:
                     NSLog("\(#function) failed user data upload!")
                     XCTFail()
                 case .success:
                     NSLog("\(#function) upload succeeded!")
+                    expectation.fulfill()
                 }
             }
         }
@@ -259,7 +253,7 @@ class TPKitTests10UserData: TPKitTestsBase {
         let foodSample = TPDataFood(time: Date(), carbohydrate: net)
         foodSample?.origin = origin
         XCTAssertNotNil(foodSample, "\(#function) failed to create food sample!")
-        NSLog("created TPDataFood: \(foodSample!.debugDescription)")
+        NSLog("created TPDataFood: \(foodSample!)")
         return foodSample
     }
     
@@ -275,16 +269,15 @@ class TPKitTests10UserData: TPKitTestsBase {
         let tpKit = getTpKitSingleton()
         // first, ensure we are logged in, and then ...
         NSLog("\(#function): next calling ensureLogin...")
-        ensureLogin() {
-            result in
-            NSLog("\(#function): ensureLogin completed... with result: \(result)")
+        ensureDataset() {
+            dataset, session in
             XCTAssert(tpKit.isLoggedIn())
 
             let foodSample = self.createCarbItem(30)
             XCTAssertNotNil(foodSample, "\(#function) failed to create food sample!")
 
-            tpKit.putUserData([foodSample!]) {
-                result,arg  in
+            tpKit.putUserData(dataset, samples: [foodSample!]) {
+                result  in
                 expectation.fulfill()
                 switch result {
                 case .failure:
@@ -358,7 +351,7 @@ class TPKitTests10UserData: TPKitTestsBase {
         let newOriginId = UUID.init().uuidString
         let origin = TPDataOrigin(id: newOriginId, name: "org.tidepool.tidepoolKitTest", type: .service, payload: nil)!
         foodSample?.origin = origin
-        NSLog("created TPDataFood: \(foodSample!.debugDescription)")
+        NSLog("created TPDataFood: \(foodSample!)")
         return foodSample
     }
 
@@ -374,16 +367,15 @@ class TPKitTests10UserData: TPKitTestsBase {
         let tpKit = getTpKitSingleton()
         // first, ensure we are logged in, and then ...
         NSLog("\(#function): next calling ensureLogin...")
-        ensureLogin() {
-            result in
-            NSLog("\(#function): ensureLogin completed... with result: \(result)")
+        ensureDataset() {
+            dataset, session in
             XCTAssert(tpKit.isLoggedIn())
             
             let foodSample = self.createFoodItem()
             XCTAssertNotNil(foodSample, "\(#function) failed to create food sample!")
             
-            tpKit.putUserData([foodSample!]) {
-                result,arg  in
+            tpKit.putUserData(dataset, samples: [foodSample!]) {
+                result  in
                 expectation.fulfill()
                 switch result {
                 case .failure:

@@ -29,20 +29,13 @@ struct BGTarget: Codable {
     let high: Double
 }
 
-public class TPUserSettings: RawRepresentable {
+public class TPUserSettings: TPUserData, RawRepresentable {
     
     public let bgTargetUnits: BGUnitType?
     public let bgTargetLow: Double?
     public let bgTargetHigh: Double?
     
-    public var debugDescription: String {
-        get {
-            return TPDataType.description(self.rawValue)
-        }
-    }
-
     // MARK: - RawRepresentable
-    public typealias RawValue = [String: Any]
     
     required public init?(rawValue: RawValue) {
         var bgUnits: BGUnitType?
@@ -76,7 +69,7 @@ public class TPUserSettings: RawRepresentable {
         }
     }
     
-    public var rawValue: RawValue {
+    public override var rawValue: RawValue {
         var resultDict: [String: Any] = [:]
         if let units = bgTargetUnits {
             resultDict["units"] = ["bg" : units.rawValue]

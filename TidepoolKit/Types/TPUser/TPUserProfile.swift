@@ -44,26 +44,19 @@ public struct TPUserPatient: TPData {
     }
 }
 
-public class TPUserProfile: RawRepresentable {
+public class TPUserProfile: TPUserData, RawRepresentable {
     
     public let fullName: String?
     public let patient: TPUserPatient?
 
-    public var debugDescription: String {
-        get {
-            return TPDataType.description(self.rawValue)
-        }
-    }
-
     // MARK: - RawRepresentable
-    public typealias RawValue = [String: Any]
     
     required public init?(rawValue: RawValue) {
         self.fullName = rawValue["fullName"] as? String
         self.patient = TPUserPatient.getSelfFromDict(rawValue)
     }
     
-    public var rawValue: RawValue {
+    public override var rawValue: RawValue {
         var resultDict: [String: Any] = [:]
         resultDict["fullName"] = fullName as Any
         patient?.addSelfToDict(&resultDict)
