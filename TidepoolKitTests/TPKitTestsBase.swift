@@ -1,17 +1,10 @@
-/*
- * Copyright (c) 2019, Tidepool Project
- *
- * This program is free software; you can redistribute it and/or modify it under
- * the terms of the associated License, which is identical to the BSD 2-Clause
- * License as published by the Open Source Initiative at opensource.org.
- *
- * This program is distributed in the hope that it will be useful, but WITHOUT
- * ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS
- * FOR A PARTICULAR PURPOSE. See the License for more details.
- *
- * You should have received a copy of the License along with this program; if
- * not, you can obtain one from Tidepool Project at tidepool.org.
- */
+//
+//  TPKitTestsBase.swift
+//  TidepoolKit
+//
+//  Created by Larry Kenyon on 8/23/19.
+//  Copyright © 2019 Tidepool Project. All rights reserved.
+//
 
 import XCTest
 @testable import TidepoolKit
@@ -21,6 +14,7 @@ let testEmail: String = "larry+kittest@tidepool.org"
 let testPassword: String = "larry+kittest"
 let testServer: TidepoolServer = .staging
 var testDataset: TPDataset?
+var tidepoolKit: TidepoolKit?
 
 class TPKitTestsBase: XCTestCase {
 
@@ -32,14 +26,19 @@ class TPKitTestsBase: XCTestCase {
     }
     
     func getTpKitSingleton() -> TidepoolKit {
-        if let tpKit = TidepoolKit.sharedInstance { return tpKit }
-        return TidepoolKit.init(logger: TPKitLoggerExample())!
+        if let tpKit = tidepoolKit { return tpKit }
+        if let tpKit = TidepoolKit.init(logger: TPKitLoggerExample()) {
+            tidepoolKit = tpKit
+            return tpKit
+        }
+        XCTFail("TidepoolKit singleton unexpectedly exists!")
+        return TidepoolKit.sharedInstance
     }
     
     func ensureLogin(completion: @escaping (TPSession) -> Void) {
         let tpKit = getTpKitSingleton()
-        guard let session = tpKit.currentSession() else {
-            tpKit.logIn(testEmail, password: testPassword, server: testServer) {
+        guard let session = tpKit.currentSession else {
+            tpKit.logIn(with: testEmail, password: testPassword, server: testServer) {
                 result in
                 switch result {
                 case .success (let session):
@@ -65,7 +64,7 @@ class TPKitTestsBase: XCTestCase {
                 return
             }
             let testDataSet = TPDataset(client: TPDatasetClient(name: "org.tidepool.tidepoolkittest", version: "1.0.0"), deduplicator: TPDeduplicator(type: .dataset_delete_origin))
-            tpKit.getDataset(dataSet:testDataSet, user: session.user) {
+            tpKit.getDataset(for: session.user, matching: testDataSet) {
                 result in
                 switch result {
                 case .failure(let error):

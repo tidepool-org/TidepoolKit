@@ -1,17 +1,10 @@
-/*
- * Copyright (c) 2019, Tidepool Project
- *
- * This program is free software; you can redistribute it and/or modify it under
- * the terms of the associated License, which is identical to the BSD 2-Clause
- * License as published by the Open Source Initiative at opensource.org.
- *
- * This program is distributed in the hope that it will be useful, but WITHOUT
- * ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS
- * FOR A PARTICULAR PURPOSE. See the License for more details.
- *
- * You should have received a copy of the License along with this program; if
- * not, you can obtain one from Tidepool Project at tidepool.org.
- */
+//
+//  TPKitTests00Login.swift
+//  TidepoolKit
+//
+//  Created by Larry Kenyon on 8/23/19.
+//  Copyright © 2019 Tidepool Project. All rights reserved.
+//
 
 import XCTest
 @testable import TidepoolKit
@@ -25,7 +18,7 @@ class TPKitTests00Login: TPKitTestsBase {
         if tpKit.isLoggedIn() {
             tpKit.logOut()
         }
-        tpKit.logIn("badUserEmail@bad.com", password: testPassword, server: testServer) {
+        tpKit.logIn(with: "badUserEmail@bad.com", password: testPassword, server: testServer) {
             result in
             switch result {
             case .success:
@@ -50,7 +43,7 @@ class TPKitTests00Login: TPKitTestsBase {
         if tpKit.isLoggedIn() {
             tpKit.logOut()
         }
-        tpKit.logIn(testEmail, password: testPassword, server: testServer) {
+        tpKit.logIn(with: testEmail, password: testPassword, server: testServer) {
             result in
             switch result {
             case .success(let session):
@@ -69,7 +62,7 @@ class TPKitTests00Login: TPKitTestsBase {
         let tpKit = getTpKitSingleton()
         if !tpKit.isLoggedIn() {
             let expectation = self.expectation(description: "Login successful")
-            tpKit.logIn(testEmail, password: testPassword, server: testServer) {
+            tpKit.logIn(with: testEmail, password: testPassword, server: testServer) {
                 result in
                 expectation.fulfill()
                 switch result {
@@ -90,13 +83,13 @@ class TPKitTests00Login: TPKitTestsBase {
         let tpKit = getTpKitSingleton()
         if !tpKit.isLoggedIn() {
             let expectation = self.expectation(description: "Login successful")
-            tpKit.logIn(testEmail, password: testPassword, server: testServer) {
+            tpKit.logIn(with: testEmail, password: testPassword, server: testServer) {
                 result in
                 expectation.fulfill()
                 switch result {
                 case .success (let session):
                     tpKit.logOut()
-                    let result = tpKit.logIn(session)
+                    let result = tpKit.logIn(with: session)
                     if case .failure = result {
                         XCTFail("Login with saved session failed!")
                     }

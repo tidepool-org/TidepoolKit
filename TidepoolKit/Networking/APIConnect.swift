@@ -1,17 +1,10 @@
-/*
- * Copyright (c) 2019, Tidepool Project
- *
- * This program is free software; you can redistribute it and/or modify it under
- * the terms of the associated License, which is identical to the BSD 2-Clause
- * License as published by the Open Source Initiative at opensource.org.
- *
- * This program is distributed in the hope that it will be useful, but WITHOUT
- * ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS
- * FOR A PARTICULAR PURPOSE. See the License for more details.
- *
- * You should have received a copy of the License along with this program; if
- * not, you can obtain one from Tidepool Project at tidepool.org.
- */
+//
+//  APIConnector.swift
+//  TidepoolKit
+//
+//  Created by Larry Kenyon on 8/23/19.
+//  Copyright © 2019 Tidepool Project. All rights reserved.
+//
 
 import Foundation
 
@@ -95,7 +88,7 @@ class APIConnector {
     }
     
     /// Logs in the user and obtains the session token for the session (stored internally)
-    func login(_ username: String, password: String, server: TidepoolServer?, completion: @escaping (Result<TPSession, TidepoolKitError>) -> (Void)) {
+    func login(with username: String, password: String, server: TidepoolServer?, completion: @escaping (Result<TPSession, TidepoolKitError>) -> (Void)) {
         
         guard isConnectedToNetwork() else {
             LogError("Login failed, network offline!")
@@ -131,10 +124,12 @@ class APIConnector {
             
             // did the call happen? Typical fail case here would be offline
             guard case .success(let sendRequestResponse) = result else {
-                var failure = TidepoolKitError.badLoginResponse
+                var failure: TidepoolKitError
                 if case .failure(let error) = result {
                     LogError("Login post failed with error: \(error)!")
                     failure = error
+                } else {
+                    failure = .badLoginResponse(nil)
                 }
                 completion(Result.failure(failure))
                 return
@@ -142,12 +137,17 @@ class APIConnector {
 
             // did we get a positive http response? Look specifically for authorization error.
             guard (sendRequestResponse.isSuccess()) else {
-                var failure = TidepoolKitError.badLoginResponse
+                var failure: TidepoolKitError
                 if let statusCode = sendRequestResponse.httpResponse?.statusCode {
-                    LogError("Login post failed with http response code: \(statusCode)")
+                    let description = "Login post failed with http response code: \(statusCode)"
+                    LogError(description)
                     if statusCode == 401 {
                         failure = .unauthorized
+                    } else {
+                        failure = .badLoginResponse("description")
                     }
+                } else {
+                    failure = .badLoginResponse(nil)
                 }
                 LogError("Login post failed!")
                 completion(Result.failure(failure))
@@ -156,27 +156,31 @@ class APIConnector {
             
             // failures past this point should be rare, due to bad coding here or service is in a bad state...
             guard let httpResponse = sendRequestResponse.httpResponse else {
-                LogError("Login response not a valid http response!")
-                completion(Result.failure(.badLoginResponse))
+                let description = "Login response not a valid http response!"
+                LogError(description)
+                completion(Result.failure(.badLoginResponse(description)))
                 return
             }
             
             guard let token = httpResponse.allHeaderFields[self.kSessionTokenResponseId] as? String else {
-                LogError("Login response contained no token in header!")
-                completion(Result.failure(.badLoginResponse))
+                let description = "Login response contained no token in header!"
+                LogError(description)
+                completion(Result.failure(.badLoginResponse(description)))
                 return
             }
             LogInfo("Login returned token: \(token)")
 
             guard let data = sendRequestResponse.data else {
-                LogError("Login returned token but no data!")
-                completion(Result.failure(.badLoginResponse))
+                let description = "Login returned token but no data!"
+                LogError(description)
+                completion(Result.failure(.badLoginResponse(description)))
                 return
             }
             
             guard let serviceUser = TPUser.fromJsonData(data) else {
-                LogError("Login json response not parseable as TPUser!")
-                completion(Result.failure(.badLoginResponse))
+                let description = "Login json response not parseable as TPUser!"
+                LogError(description)
+                completion(Result.failure(.badLoginResponse(description)))
                 return
             }
         
@@ -187,11 +191,15 @@ class APIConnector {
         }
     }
     
-    func login(_ session: TPSession) -> Result<TPSession, TidepoolKitError> {
+    func login(with session: TPSession) -> Result<TPSession, TidepoolKitError> {
         if self.session != nil {
+            LogInfo("Login with existing TPSession failed: already logged in!")
             return Result.failure(.alreadyLoggedIn)
         }
+        self.session = session
         self.baseUrlString = serverUrl(session.server)
+        LogInfo("Logged in with existing TPSession!")
+        NotificationCenter.default.post(name: TidepoolLogInChangedNotification, object:self)
         return Result.success(session)
     }
     
@@ -227,22 +235,30 @@ class APIConnector {
             
             // did the call happen? Typical fail case here would be offline
             guard case .success(let sendRequestResponse) = result else {
-                var failure = TidepoolKitError.serviceError
+                var failure: TidepoolKitError
                 if case .failure(let error) = result {
                     LogError("Tidepool fetch failed with error: \(error)!")
                     failure = error
+                } else {
+                    failure = .serviceError(nil)
                 }
                 completion(Result.failure(failure))
                 return
             }
  
             guard (sendRequestResponse.isSuccess()) else {
-                var failure = TidepoolKitError.serviceError
+                var failure: TidepoolKitError
                 if let statusCode = sendRequestResponse.httpResponse?.statusCode {
                     LogError("Tidepool fetch failed with http response code: \(statusCode)")
                     if statusCode == 401 {
                         failure = .unauthorized
+                    } else if statusCode == 404 {
+                        failure = .dataNotFound
+                    } else {
+                        failure = .serviceError(statusCode)
                     }
+                } else {
+                    failure = .serviceError(nil)
                 }
                 LogError("Tidepool fetch failed!")
                 completion(Result.failure(failure))
@@ -255,7 +271,6 @@ class APIConnector {
                 completion(Result.failure(.noDataInResponse))
                 return
             }
-            
             
             guard let tpObject = T.fromJsonData(data) as? T else {
                 LogError("response not parseable as json dict!")
@@ -299,22 +314,28 @@ class APIConnector {
             
             // did the call happen? Typical fail case here would be offline
             guard case .success(let sendRequestResponse) = result else {
-                var failure = TidepoolKitError.serviceError
+                var failure: TidepoolKitError
                 if case .failure(let error) = result {
                     LogError("Tidepool fetch failed with error: \(error)!")
                     failure = error
+                } else {
+                    failure = .serviceError(nil)
                 }
                 completion(Result.failure(failure))
                 return
             }
             
             guard (sendRequestResponse.isSuccess()) else {
-                var failure = TidepoolKitError.serviceError
+                var failure: TidepoolKitError
                 if let statusCode = sendRequestResponse.httpResponse?.statusCode {
                     LogError("Tidepool post failed with http response code: \(statusCode)")
                     if statusCode == 401 {
                         failure = .unauthorized
+                    } else {
+                        failure = .serviceError(statusCode)
                     }
+                } else {
+                    failure = .serviceError(nil)
                 }
                 LogError("Tidepool post failed!")
                 completion(Result.failure(failure))
@@ -367,19 +388,22 @@ class APIConnector {
             
             // did the call happen? Typical fail case here would be offline
             guard case .success(let sendRequestResponse) = result else {
-                var failure = TidepoolKitError.serviceError
+                var failure: TidepoolKitError
                 if case .failure(let error) = result {
                     LogError("Tidepool upload failed with error: \(error)!")
                     failure = error
+                } else {
+                    failure = .serviceError(nil)
                 }
                 completion(Result.failure(failure))
                 return
             }
             
             guard (sendRequestResponse.isSuccess()) else {
-                var failure = TidepoolKitError.serviceError
+                var failure: TidepoolKitError
                  if let statusCode = sendRequestResponse.httpResponse?.statusCode {
                     LogError("Tidepool upload failed with http response code: \(statusCode)")
+                    failure = .serviceError(statusCode)
                     if statusCode == 401 {
                         failure = .unauthorized
                     } else if statusCode == 400 {
@@ -390,6 +414,8 @@ class APIConnector {
                             failure = .badRequest(badSamples)
                         }
                     }
+                 } else {
+                    failure = .serviceError(nil)
                 }
                 LogError("Tidepool upload failed!")
                 completion(Result.failure(failure))
@@ -407,10 +433,8 @@ class APIConnector {
     /// Call this if currentUploadId is nil, before uploading data, after fetching user profile, to ensure we have a dataset id for data uploads (if so enabled)
     /// - parameter dataset: The service is queried to find an existing dataset that matches this; if no existing match is found, a new dataset will be created.
     /// - parameter completion: Method that will be called when this async operation has completed. If successful, the matching or new TPDataset is returned.
-    func getDataset(matching: TPDataset? = nil, user: TPUser, _ completion: @escaping (Result<TPDataset, TidepoolKitError>) -> (Void)) {
+    func getDataset(for user: TPUser, matching configDataset: TPDataset,  _ completion: @escaping (Result<TPDataset, TidepoolKitError>) -> (Void)) {
         
-        let configDataset = matching ?? TPDataset()
-
         // TODO: should also verify that this is a DSAUser... i.e., has a profile in the user. Something we should fetch and persist, so the TPUser object includes a persisted isDSAUser field.
         
         // First try fetching one from the server that matches the one passed in...
@@ -420,7 +444,7 @@ class APIConnector {
             case .success(let datasets):
                 var matchingDS: TPDataset?
                 for dataSet in datasets {
-                    if dataSet == configDataset {
+                    if dataSet.client == configDataset.client && dataSet.deduplicator == configDataset.deduplicator {
                         LogInfo("Found dataset matching configDataset (\(configDataset))")
                         matchingDS = dataSet
                         break
@@ -531,8 +555,6 @@ class APIConnector {
             completion(Result.failure(.offline))
             return
         }
-        
-        
         
         var urlString = baseUrlString! + urlExtension
         urlString = urlString.addingPercentEncoding(withAllowedCharacters: CharacterSet.urlQueryAllowed)!

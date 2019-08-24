@@ -1,24 +1,17 @@
-/*
- * Copyright (c) 2019, Tidepool Project
- *
- * This program is free software; you can redistribute it and/or modify it under
- * the terms of the associated License, which is identical to the BSD 2-Clause
- * License as published by the Open Source Initiative at opensource.org.
- *
- * This program is distributed in the hope that it will be useful, but WITHOUT
- * ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS
- * FOR A PARTICULAR PURPOSE. See the License for more details.
- *
- * You should have received a copy of the License along with this program; if
- * not, you can obtain one from Tidepool Project at tidepool.org.
- */
+//
+//  TPKitTests10UserData.swift
+//  TidepoolKit
+//
+//  Created by Larry Kenyon on 8/23/19.
+//  Copyright © 2019 Tidepool Project. All rights reserved.
+//
 
 import XCTest
 @testable import TidepoolKit
 
 class TPKitTests10UserData: TPKitTestsBase {
 
-    func test11GetDataset() {
+    func test11_1GetDataset() {
         let expectation = self.expectation(description: "Dataset fetch/create successful")
         let tpKit = getTpKitSingleton()
         NSLog("\(#function): starting with logout...")
@@ -27,7 +20,7 @@ class TPKitTests10UserData: TPKitTestsBase {
         ensureLogin() {
             session in
             // first test with default dataset...
-            tpKit.getDataset(user: session.user) {
+            tpKit.getDataset(for: session.user, matching: TPDataset()) {
                 result in
                 if case .failure(let error) = result {
                      XCTFail("failed to get dataset, error: \(error)")
@@ -35,11 +28,33 @@ class TPKitTests10UserData: TPKitTestsBase {
                 
                 // second, test with test dataset...
                 let testDataSet = TPDataset(client: TPDatasetClient(name: "org.tidepool.tidepoolkittest", version: "1.0.0"), deduplicator: TPDeduplicator(type: .dataset_delete_origin))
-                tpKit.getDataset(dataSet:testDataSet, user: session.user) {
+                tpKit.getDataset(for: session.user, matching: testDataSet) {
                     result in
                     if case .failure(let error) = result {
                         XCTFail("failed to get dataset, error: \(error)")
                     }
+                    expectation.fulfill()
+                }
+            }
+        }
+        // Wait 20.0 seconds until expectation has been fulfilled (sometimes staging takes almost 10 seconds). If not, fail.
+        waitForExpectations(timeout: 20.0, handler: nil)
+    }
+
+    func test11_2GetDatasets() {
+        let expectation = self.expectation(description: "Dataset fetch/create successful")
+        let tpKit = getTpKitSingleton()
+        NSLog("\(#function): starting with logout...")
+        // next, log in, and then try configuring upload id: this will fetch a current id, or create one if a current id does not exist. Note: there is no way to force delete of an upload id, so a new account would be needed to test the create!
+        NSLog("\(#function): next calling ensureLogin...")
+        ensureLogin() {
+            session in
+            // first test with default dataset...
+            tpKit.getDatasets(for: session.user) {
+                result in
+                if case .failure(let error) = result {
+                    XCTFail("failed to get datasets, error: \(error)")
+                } else {
                     expectation.fulfill()
                 }
             }
@@ -59,7 +74,7 @@ class TPKitTests10UserData: TPKitTestsBase {
             XCTAssert(tpKit.isLoggedIn())
             let end = Date()
             let start = end.addingTimeInterval(-self.kOneWeekTimeInterval)
-            tpKit.getUserData(session.user, startDate: start, endDate: end) {
+            tpKit.getData(for: session.user, startDate: start, endDate: end) {
                 result in
                 expectation.fulfill()
                 switch result {
@@ -85,7 +100,7 @@ class TPKitTests10UserData: TPKitTestsBase {
             XCTAssert(tpKit.isLoggedIn())
             let end = Date()
             let start = end.addingTimeInterval(-self.kOneWeekTimeInterval)
-            tpKit.getUserData(session.user, startDate: start, endDate: end) {
+            tpKit.getData(for: session.user, startDate: start, endDate: end) {
                 result in
                 switch result {
                 case .failure:
@@ -107,7 +122,7 @@ class TPKitTests10UserData: TPKitTestsBase {
                         }
                     }
                     // and delete...
-                    tpKit.deleteUserData(dataset, samples: deleteItems) {
+                    tpKit.deleteData(samples: deleteItems, from: dataset) {
                         result in
                         expectation.fulfill()
                         switch result {
@@ -150,7 +165,7 @@ class TPKitTests10UserData: TPKitTestsBase {
                 }
             }
             XCTAssert(deleteItemArray.count == 10)
-            tpKit.deleteUserData(dataset, samples: deleteItemArray) {
+            tpKit.deleteData(samples: deleteItemArray, from: dataset) {
                 result in
                 expectation.fulfill()
                 switch result {
@@ -231,7 +246,7 @@ class TPKitTests10UserData: TPKitTestsBase {
             cbgSample.origin = origin
             cbgSample.payload = payload
             NSLog("created TPDataCbg: \(cbgSample)")
-            tpKit.putUserData(dataset, samples: [cbgSample]) {
+            tpKit.putData(samples: [cbgSample], into: dataset) {
                 result  in
                 switch result {
                 case .failure:
@@ -276,7 +291,7 @@ class TPKitTests10UserData: TPKitTestsBase {
             let foodSample = self.createCarbItem(30)
             XCTAssertNotNil(foodSample, "\(#function) failed to create food sample!")
 
-            tpKit.putUserData(dataset, samples: [foodSample!]) {
+            tpKit.putData(samples: [foodSample!], into: dataset) {
                 result  in
                 expectation.fulfill()
                 switch result {
@@ -374,7 +389,7 @@ class TPKitTests10UserData: TPKitTestsBase {
             let foodSample = self.createFoodItem()
             XCTAssertNotNil(foodSample, "\(#function) failed to create food sample!")
             
-            tpKit.putUserData(dataset, samples: [foodSample!]) {
+            tpKit.putData(samples: [foodSample!], into: dataset) {
                 result  in
                 expectation.fulfill()
                 switch result {
