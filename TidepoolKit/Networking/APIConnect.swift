@@ -203,15 +203,47 @@ class APIConnector {
         return Result.success(session)
     }
     
-    func logout() {
+    func clearSession() {
         LogVerbose("")
         let wasLoggedIn = self.session != nil
         self.session = nil
         self.baseUrlString = nil
-        // TODO: first sent logout message; make this async with optional completion!
+        // only send notification if we were logged in...
         if wasLoggedIn {
             NotificationCenter.default.post(name: TidepoolLogInChangedNotification, object:self)
         }
+    }
+    
+    func logout(completion: @escaping (Result<Bool, TidepoolKitError>) -> (Void)) {
+   
+        guard self.session != nil else {
+            LogInfo("Logout skipped, already logged out!")
+            completion(Result.success(true))
+            return
+       }
+        
+        guard isConnectedToNetwork() else {
+            LogError("Login failed, network offline!")
+            // still clear the session if offline.
+            clearSession()
+            completion(Result.failure(.offline))
+            return
+        }
+        // Set our endpoint for logout
+        let urlExtension = "/auth/logout"
+
+        sendRequest("POST", urlExtension: urlExtension, contentType: .urlEncoded, requiresToken: true) {
+            result -> Void in
+            switch result {
+            case .success:
+                completion(Result.success(true))
+            case .failure(let error):
+                completion(Result.failure(error))
+            }
+        }
+        
+        // clear retained session, so we always enter logged out state immediately, and send TidepoolLogInChangedNotification...
+        clearSession()
     }
 
     //

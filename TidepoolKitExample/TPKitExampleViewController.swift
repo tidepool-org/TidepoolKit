@@ -68,7 +68,7 @@ class TPKitExampleViewController: UIViewController {
     @IBAction func testLoginButtonHandler(_ sender: Any) {
         NSLog("\(#function)")
         if tpKit.isLoggedIn() {
-            tpKit.logOut()
+            tpKit.logOut() { _ in }
             self.configureForReachability()
             return
         }

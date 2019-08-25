@@ -16,7 +16,7 @@ class TPKitTests00Login: TPKitTestsBase {
         let expectation = self.expectation(description: "Login fails")
         let tpKit = getTpKitSingleton()
         if tpKit.isLoggedIn() {
-            tpKit.logOut()
+            tpKit.logOut() { _ in }
         }
         tpKit.logIn(with: "badUserEmail@bad.com", password: testPassword, server: testServer) {
             result in
@@ -41,7 +41,7 @@ class TPKitTests00Login: TPKitTestsBase {
         let expectation = self.expectation(description: "Login successful")
         let tpKit = getTpKitSingleton()
         if tpKit.isLoggedIn() {
-            tpKit.logOut()
+            tpKit.logOut() { _ in }
         }
         tpKit.logIn(with: testEmail, password: testPassword, server: testServer) {
             result in
@@ -60,46 +60,50 @@ class TPKitTests00Login: TPKitTestsBase {
     
     func test03Logout() {
         let tpKit = getTpKitSingleton()
-        if !tpKit.isLoggedIn() {
-            let expectation = self.expectation(description: "Login successful")
-            tpKit.logIn(with: testEmail, password: testPassword, server: testServer) {
+        let expectation = self.expectation(description: "logIn/logOut successful")
+        func doLogOut() {
+            tpKit.logOut() {
                 result in
-                expectation.fulfill()
                 switch result {
                 case .success:
-                    tpKit.logOut()
+                    expectation.fulfill()
+                    break
                 case .failure(let error):
-                    XCTFail("Login failed: \(error)")
+                    XCTFail("LogOut failed: \(error)")
+                    break
+                }
+            }
+        }
+        if !tpKit.isLoggedIn() {
+            tpKit.logIn(with: testEmail, password: testPassword, server: testServer) {
+                result in
+                switch result {
+                case .success:
+                     doLogOut()
+                case .failure(let error):
+                    XCTFail("LogIn failed: \(error)")
                 }
             }
         } else {
-            tpKit.logOut()
-            return
+            doLogOut()
         }
         waitForExpectations(timeout: 20.0, handler: nil)
     }
+
     
     func test04LoginWithSavedSession() {
         let tpKit = getTpKitSingleton()
-        if !tpKit.isLoggedIn() {
-            let expectation = self.expectation(description: "Login successful")
-            tpKit.logIn(with: testEmail, password: testPassword, server: testServer) {
-                result in
+        let expectation = self.expectation(description: "Login with saved session successful")
+        ensureLogin() {
+            session in
+            let session = tpKit.currentSession!
+            tpKit.clearSession()
+            let result = tpKit.logIn(with: session)
+            if case .failure = result {
+                XCTFail("Login with saved session failed!")
+            } else {
                 expectation.fulfill()
-                switch result {
-                case .success (let session):
-                    tpKit.logOut()
-                    let result = tpKit.logIn(with: session)
-                    if case .failure = result {
-                        XCTFail("Login with saved session failed!")
-                    }
-                case .failure(let error):
-                    XCTFail("Initial login failed: \(error)")
-                }
             }
-        } else {
-            tpKit.logOut()
-            return
         }
         waitForExpectations(timeout: 20.0, handler: nil)
     }
