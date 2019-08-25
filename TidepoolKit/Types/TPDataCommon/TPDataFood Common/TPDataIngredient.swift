@@ -75,18 +75,10 @@ public struct TPDataIngredient: TPData {
     
     public var rawValue: RawValue {
         var resultDict: [String: Any] = [:]
-        if let amount = amount {
-            resultDict["amount"] = amount.rawValue
-        }
-        if let brand = brand {
-            resultDict["brand"] = brand as Any
-        }
-        if let code = code {
-            resultDict["code"] = code as Any
-        }
-        if let name = name {
-            resultDict["name"] = name as Any
-        }
+        amount?.addSelfToDict(&resultDict)
+        resultDict["brand"] = brand
+        resultDict["code"] = code
+        resultDict["name"] = name
         nutrition?.addSelfToDict(&resultDict)
         if let ingredients = ingredients {
             var rawIngredients: [RawValue] = []

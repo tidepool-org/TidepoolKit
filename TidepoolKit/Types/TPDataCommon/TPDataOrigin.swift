@@ -44,25 +44,17 @@ public struct TPDataOrigin: TPData {
         }
         self.version = rawValue["version"] as? String
         self.payload = TPDataPayload.getSelfFromDict(rawValue)
-        if id == nil && name == nil && type == nil && version == nil && payload == nil {
+        guard !self.rawValue.isEmpty else {
             return nil
         }
     }
     
     public var rawValue: RawValue {
         var originDict: [String: Any] = [:]
-        if let id = id {
-            originDict["id"] = id as Any
-        }
-        if let name = name {
-            originDict["name"] = name as Any
-        }
-        if let type = type {
-            originDict["type"] = type.rawValue as Any
-        }
-        if let version = version {
-            originDict["version"] = version as Any
-        }
+        originDict["id"] = id
+        originDict["name"] = name
+        originDict["type"] = type?.rawValue
+        originDict["version"] = version
         // Note: the following is equivalent to originDict[TPDataPayload.typeName] = payload?.rawValue, or originDict["payload"] = payload?.rawValue
         payload?.addSelfToDict(&originDict)
         return originDict

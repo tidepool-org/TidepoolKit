@@ -253,11 +253,8 @@ public class TidepoolKit {
         apiConnect.fetch(APIAccessUsers.self, user: user) {
             result in
             switch result {
-            case .success(let userIdArray):
-                let users = userIdArray.userIds.map {
-                    TPUser($0)
-                }
-                completion(.success(users))
+            case .success(let accessUsers):
+                completion(.success(accessUsers.users))
                 break
             case .failure(let error):
                 completion(.failure(error))

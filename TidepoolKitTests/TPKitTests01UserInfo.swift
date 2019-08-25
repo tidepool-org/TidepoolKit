@@ -79,7 +79,7 @@ class TPKitTests01UserInfo: TPKitTestsBase {
                         result in
                         switch result {
                         case .success(let tpUserProfile):
-                            NSLog("profile fetch succeeded: \n\(tpUserProfile)")
+                            NSLog("profile fetch succeeded: \(tpUserProfile)")
                             expectation.fulfill()
                         case .failure(let error):
                             XCTFail("profile fetch failed! Error: \(error)")

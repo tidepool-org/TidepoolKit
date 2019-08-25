@@ -10,24 +10,25 @@ import Foundation
 
 public class APIAccessUsers: TPFetchable {
     
-    public let userIds: [String]
+    public let users: [TPUser]
         
     //
     // MARK: - methods private to framework!
     //
 
-    init(_ userIds: [String]) {
-        self.userIds = userIds
+    init(_ users: [TPUser]) {
+        self.users = users
     }
 
     class func accessUsersFromJsonData(_ data: Data) -> APIAccessUsers? {
         do {
             if let jsonDict = try JSONSerialization.jsonObject(with: data, options: []) as? NSDictionary {
-                var users: [String] = []
+                var users: [TPUser] = []
                 for key in jsonDict.keyEnumerator() {
                     if let keyStr = key as? String {
-                        users.append(keyStr)
-                        print("adding key: \(keyStr)")
+                        let user = TPUser(keyStr)
+                        users.append(user)
+                        print("adding user: \(user)")
                     }
                 }
                 return APIAccessUsers(users)
