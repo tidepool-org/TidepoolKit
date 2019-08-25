@@ -458,9 +458,11 @@ class APIConnector {
                 // no match found, fall through and create one...
             case .failure(let error):
                 LogError("configureUploadId fetchDataset failed! Error: \(error)")
-                // network failure for fetchDataset, don't try creating a new one in case one already does exist...
-                completion(.failure(error))
-                return
+                // network failure for fetchDataset, don't try creating a new one in case one already does exist, unless it was a 404 data not found case...
+                guard case .dataNotFound = error else {
+                    completion(.failure(error))
+                    return
+                }
             }
 
             // No matching existing dataset found, try creating a new one...
