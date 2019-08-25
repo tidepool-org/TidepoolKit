@@ -371,13 +371,21 @@ class TPKitTests10UserData: TPKitTestsBase {
     }
 
     func test17CreateFoodDataItem() {
-        let foodSample = createFoodItem()
-        XCTAssertNotNil(foodSample, "\(#function) failed to create food sample!")
-        let asDict = foodSample!.rawValue
-        NSLog("serialized as dictionary: \(asDict)")
+        let food = createFoodItem()
+        XCTAssertNotNil(food, "\(#function) failed to create food sample!")
+        let food1 = food!
+        let food1Dict = food1.rawValue
+        NSLog("serialized as dictionary: \(food1Dict)")
+        // test round trip serialization
+        let food2 = TPDataFood(rawValue: food1Dict)!
+        XCTAssertTrue(stringAnyDictDiff(a1: food1Dict, a2: food2.rawValue))
+        // test copy...
+        let food3 = TPDataFood(time: food2.time!, name: food2.name, brand: food2.brand, code: food2.code, meal: food2.meal, mealOther: food2.mealOther, amount: food2.amount, nutrition: food2.nutrition, ingredients: food2.ingredients)
+        food3!.origin = food1.origin
+        XCTAssertTrue(stringAnyDictDiff(a1: food1Dict, a2: food3!.rawValue))
     }
 
-    func test18PostFoodDataItem() {
+    func test18_1_PostFoodDataItem() {
         let expectation = self.expectation(description: "Post of user carb data successful")
         let tpKit = getTpKitSingleton()
         // first, ensure we are logged in, and then ...
@@ -405,5 +413,57 @@ class TPKitTests10UserData: TPKitTestsBase {
         waitForExpectations(timeout: 20.0, handler: nil)
     }
 
+    func test18_1_RoundTripFoodDataItem() {
+        let expectation = self.expectation(description: "Post/Get/Compare of user carb data successful")
+        let tpKit = getTpKitSingleton()
+        // first, ensure we are logged in, and then ...
+        NSLog("\(#function): next calling ensureLogin...")
+        ensureDataset() {
+            dataset, session in
+            XCTAssert(tpKit.isLoggedIn())
+            
+            let foodSample = self.createFoodItem()
+            XCTAssertNotNil(foodSample, "\(#function) failed to create food sample!")
+            
+            tpKit.putData(samples: [foodSample!], into: dataset) {
+                result  in
+                switch result {
+                case .failure:
+                    NSLog("\(#function) failed user data upload!")
+                    XCTFail()
+                case .success:
+                    NSLog("\(#function) upload succeeded!")
+                    let end = Date()
+                    let start = end.addingTimeInterval(-60) // check samples in last minute...
+                    tpKit.getData(for: session.user, startDate: start, endDate: end, objectTypes: "food") {
+                        result in
+                        expectation.fulfill()
+                        switch result {
+                        case .failure:
+                            NSLog("\(#function) failed user data food fetch!")
+                            XCTFail()
+                        case .success(let userDataArray):
+                            NSLog("\(#function) fetched \(userDataArray.count) items!")
+                            let referenceFoodDict = foodSample!.rawValue
+                            var foundSameItem = false
+                            for item in userDataArray {
+                                if let fetchedFood = item as? TPDataFood {
+                                    var fetchedFoodRawValue = fetchedFood.rawValue
+                                    fetchedFoodRawValue["id"] = nil
+                                    if self.stringAnyDictDiff(a1: referenceFoodDict, a2: fetchedFoodRawValue) {
+                                        foundSameItem = true
+                                        break
+                                    }
+                                }
+                            }
+                            XCTAssertTrue(foundSameItem, "Same food item not found!")
+                        }
+                    }
+                }
+            }
+        }
+        // Wait 20.0 seconds until expectation has been fulfilled (sometimes staging takes almost 10 seconds). If not, fail.
+        waitForExpectations(timeout: 20.0, handler: nil)
+    }
 
 }
