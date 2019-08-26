@@ -214,7 +214,47 @@ class APIConnector {
         }
     }
     
-    func logout(completion: @escaping (Result<Bool, TidepoolKitError>) -> (Void)) {
+    func refreshToken(_ completion: @escaping (_ result: Result<Bool, TidepoolKitError>) -> (Void)) {
+        
+        // Set our endpoint for token refresh (same as login)
+        let urlExtension = "/auth/login"
+        
+        sendRequest("GET", urlExtension: urlExtension, contentType: .urlEncoded, requiresToken: true) {
+            result -> Void in
+            
+            // did the call happen? Fail cases here are .offline or .notLoggedIn
+            guard case .success(let sendRequestResponse) = result else {
+                var failure: TidepoolKitError
+                if case .failure(let error) = result {
+                    LogError("Refresh failed, with error: \(error)!")
+                    failure = error
+                } else {
+                    failure = .serviceError(nil)
+                }
+                completion(Result.failure(failure))
+                return
+            }
+            // did the server send back a 200?
+            guard (sendRequestResponse.isSuccess()) else {
+                var failure: TidepoolKitError
+                if let statusCode = sendRequestResponse.httpResponse?.statusCode {
+                    LogError("Refresh failed with http response code: \(statusCode)")
+                    if statusCode == 401 {
+                        failure = .unauthorized
+                    } else {
+                        failure = .serviceError(statusCode)
+                    }
+                } else {
+                    failure = .serviceError(nil)
+                }
+                LogError("Refresh failed, with service error!")
+                completion(Result.failure(failure))
+                return
+            }
+        }
+     }
+    
+    func logout(_ completion: @escaping (Result<Bool, TidepoolKitError>) -> (Void)) {
    
         guard self.session != nil else {
             LogInfo("Logout skipped, already logged out!")
