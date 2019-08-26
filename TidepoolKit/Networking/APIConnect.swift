@@ -202,10 +202,7 @@ class APIConnector {
             guard error == nil else {
                 let error = error!
                 LogError("Refresh failed, with error: \(error)!")
-                if case .unauthorized = error {
-                    // log out if auth token is not valid!
-                    self.clearSession()
-                }
+                // Note: sendRequest will clear the session on .unauthorized errors!
                 completion(Result.failure(error))
                 return
             }
@@ -616,6 +613,8 @@ class APIConnector {
                     if let statusCode = statusCode {
                         if statusCode == 401 {
                             errorResult = .unauthorized
+                            // Clear our session here. This will change subsequent errors to .notLoggedIn, and the app will not make network requests!
+                            self.clearSession()
                         } else if statusCode == 404 {
                             errorResult = .dataNotFound
                         } else {

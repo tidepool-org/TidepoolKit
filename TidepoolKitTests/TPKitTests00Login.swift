@@ -128,6 +128,7 @@ class TPKitTests00Login: TPKitTestsBase {
                             case .failure(let error):
                                 if case .unauthorized = error {
                                     NSLog("Correctly failed to refresh token, error: \(error)")
+                                    XCTAssert(tpKit.currentSession == nil)
                                     expectation.fulfill()
                                 } else {
                                     XCTFail("refresh correctly failed, but with unexpected error: \(error)")

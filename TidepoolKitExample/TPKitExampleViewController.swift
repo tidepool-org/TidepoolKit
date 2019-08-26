@@ -16,6 +16,12 @@ class TPKitExampleViewController: UIViewController {
 
     override func viewDidLoad() {
         super.viewDidLoad()
+        if ProcessInfo.processInfo.environment["XCTestConfigurationFilePath"] != nil {
+            // Code only executes when tests are running
+            NSLog("Testing... exit from TestTableViewController viewDidLoad before completion!")
+            return
+        }
+
         self.tpKit = TidepoolKit.init()
         // Example of setting logger after init time (can also pass into init)
         tpKit.logger = TPKitLoggerExample()
@@ -34,11 +40,6 @@ class TPKitExampleViewController: UIViewController {
         notificationCenter.addObserver(self, selector: #selector(TPKitExampleViewController.reachabilityChanged(_:)), name: TidepoolLogInChangedNotification, object: nil)
         configureForReachability()
 
-        if ProcessInfo.processInfo.environment["XCTestConfigurationFilePath"] != nil {
-            // Code only executes when tests are running
-            NSLog("Testing... exit from TestTableViewController viewDidLoad before completion!")
-            return
-        }
     }
     private var tpKit: TidepoolKit!
     private var tpKitUI: TidepoolKitUI!

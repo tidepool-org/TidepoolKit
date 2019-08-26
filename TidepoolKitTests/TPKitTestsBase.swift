@@ -25,7 +25,18 @@ class TPKitTestsBase: XCTestCase {
     override func tearDown() {
     }
     
+    var isRunningOnDevice: Bool = {
+        #if targetEnvironment(simulator)
+        return false
+        #else
+        return true
+        #endif
+    }()
+    
     func getTpKitSingleton() -> TidepoolKit {
+        if isRunningOnDevice {
+            NSLog("Testing on device in context of example app!")
+        }
         if let tpKit = tidepoolKit { return tpKit }
         if let tpKit = TidepoolKit.init(logger: TPKitLoggerExample()) {
             tidepoolKit = tpKit
