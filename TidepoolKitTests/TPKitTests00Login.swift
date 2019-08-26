@@ -61,7 +61,8 @@ class TPKitTests00Login: TPKitTestsBase {
     func test03Logout() {
         let tpKit = getTpKitSingleton()
         let expectation = self.expectation(description: "logIn/logOut successful")
-        func doLogOut() {
+        ensureLogin() {
+            session in
             tpKit.logOut() {
                 result in
                 switch result {
@@ -73,19 +74,6 @@ class TPKitTests00Login: TPKitTestsBase {
                     break
                 }
             }
-        }
-        if !tpKit.isLoggedIn() {
-            tpKit.logIn(with: testEmail, password: testPassword, server: testServer) {
-                result in
-                switch result {
-                case .success:
-                     doLogOut()
-                case .failure(let error):
-                    XCTFail("LogIn failed: \(error)")
-                }
-            }
-        } else {
-            doLogOut()
         }
         waitForExpectations(timeout: 20.0, handler: nil)
     }

@@ -90,12 +90,10 @@ class APIConnector {
     /// Logs in the user and obtains the session token for the session (stored internally)
     func login(with username: String, password: String, server: TidepoolServer?, completion: @escaping (Result<TPSession, TidepoolKitError>) -> (Void)) {
         
-        guard isConnectedToNetwork() else {
-            LogError("Login failed, network offline!")
-            completion(Result.failure(.offline))
-            return
+        if let error = isOfflineError() {
+            completion(Result.failure(error))
         }
-        
+
         var loginServer: TidepoolServer = kDefaultServer
         if let server = server {
             loginServer = server
@@ -120,42 +118,17 @@ class APIConnector {
         
         // Send the request and deal with the response as JSON
         sendRequest("POST", urlExtension: urlExtension, contentType: .urlEncoded, headers:headers, requiresToken: false) {
-            result -> Void in
+            sendResponse, statusCode, error in
             
-            // did the call happen? Typical fail case here would be offline
-            guard case .success(let sendRequestResponse) = result else {
-                var failure: TidepoolKitError
-                if case .failure(let error) = result {
-                    LogError("Login post failed with error: \(error)!")
-                    failure = error
-                } else {
-                    failure = .badLoginResponse(nil)
-                }
-                completion(Result.failure(failure))
-                return
-            }
-
-            // did we get a positive http response? Look specifically for authorization error.
-            guard (sendRequestResponse.isSuccess()) else {
-                var failure: TidepoolKitError
-                if let statusCode = sendRequestResponse.httpResponse?.statusCode {
-                    let description = "Login post failed with http response code: \(statusCode)"
-                    LogError(description)
-                    if statusCode == 401 {
-                        failure = .unauthorized
-                    } else {
-                        failure = .badLoginResponse("description")
-                    }
-                } else {
-                    failure = .badLoginResponse(nil)
-                }
-                LogError("Login post failed!")
-                completion(Result.failure(failure))
+            guard error == nil else {
+                let error = error!
+                LogError("Login post failed with error: \(error)!")
+                completion(Result.failure(error))
                 return
             }
             
             // failures past this point should be rare, due to bad coding here or service is in a bad state...
-            guard let httpResponse = sendRequestResponse.httpResponse else {
+            guard let httpResponse = sendResponse.httpResponse else {
                 let description = "Login response not a valid http response!"
                 LogError(description)
                 completion(Result.failure(.badLoginResponse(description)))
@@ -170,7 +143,7 @@ class APIConnector {
             }
             LogInfo("Login returned token: \(token)")
 
-            guard let data = sendRequestResponse.data else {
+            guard let data = sendResponse.data else {
                 let description = "Login returned token but no data!"
                 LogError(description)
                 completion(Result.failure(.badLoginResponse(description)))
@@ -216,70 +189,59 @@ class APIConnector {
     
     func refreshToken(_ completion: @escaping (_ result: Result<Bool, TidepoolKitError>) -> (Void)) {
         
+        if let error = isOfflineOrUnauthorizedError() {
+            completion(Result.failure(error))
+        }
+
         // Set our endpoint for token refresh (same as login)
         let urlExtension = "/auth/login"
         
-        sendRequest("GET", urlExtension: urlExtension, contentType: .urlEncoded, requiresToken: true) {
-            result -> Void in
+        sendRequest("GET", urlExtension: urlExtension, contentType: .urlEncoded) {
+            sendResponse, statusCode, error in
             
-            // did the call happen? Fail cases here are .offline or .notLoggedIn
-            guard case .success(let sendRequestResponse) = result else {
-                var failure: TidepoolKitError
-                if case .failure(let error) = result {
-                    LogError("Refresh failed, with error: \(error)!")
-                    failure = error
-                } else {
-                    failure = .serviceError(nil)
+            guard error == nil else {
+                let error = error!
+                LogError("Refresh failed, with error: \(error)!")
+                if case .unauthorized = error {
+                    // log out if auth token is not valid!
+                    self.clearSession()
                 }
-                completion(Result.failure(failure))
+                completion(Result.failure(error))
                 return
             }
-            // did the server send back a 200?
-            guard (sendRequestResponse.isSuccess()) else {
-                var failure: TidepoolKitError
-                if let statusCode = sendRequestResponse.httpResponse?.statusCode {
-                    LogError("Refresh failed with http response code: \(statusCode)")
-                    if statusCode == 401 {
-                        failure = .unauthorized
-                    } else {
-                        failure = .serviceError(statusCode)
-                    }
-                } else {
-                    failure = .serviceError(nil)
-                }
-                LogError("Refresh failed, with service error!")
-                completion(Result.failure(failure))
-                return
-            }
+            
+            completion(Result.success(true))
         }
      }
     
     func logout(_ completion: @escaping (Result<Bool, TidepoolKitError>) -> (Void)) {
    
-        guard self.session != nil else {
+        guard self.session?.authenticationToken != nil else {
             LogInfo("Logout skipped, already logged out!")
             completion(Result.success(true))
             return
        }
         
-        guard isConnectedToNetwork() else {
-            LogError("Login failed, network offline!")
+        if let error = isOfflineError() {
             // still clear the session if offline.
             clearSession()
-            completion(Result.failure(.offline))
-            return
+            completion(Result.failure(error))
         }
+
         // Set our endpoint for logout
         let urlExtension = "/auth/logout"
 
-        sendRequest("POST", urlExtension: urlExtension, contentType: .urlEncoded, requiresToken: true) {
-            result -> Void in
-            switch result {
-            case .success:
-                completion(Result.success(true))
-            case .failure(let error):
+        sendRequest("POST", urlExtension: urlExtension, contentType: .urlEncoded) {
+            sendResponse, statusCode, error in
+            
+            guard error == nil else {
+                let error = error!
+                LogError("Tidepool fetch failed with error: \(error)!")
                 completion(Result.failure(error))
+                return
             }
+            
+            completion(Result.success(true))
         }
         
         // clear retained session, so we always enter logged out state immediately, and send TidepoolLogInChangedNotification...
@@ -294,51 +256,24 @@ class APIConnector {
     /// Optional userId, to fetch profiles for other users than logged in user.
     func fetch<T: TPFetchable>(_ type: T.Type, user: TPUser, parameters: [String: String]? = nil, headers: [String: String]? = nil, _ completion: @escaping (Result<T, TidepoolKitError>) -> (Void)) {
         
-        guard isConnectedToNetwork() else {
-            LogError("Operation failed, network offline!")
-            completion(Result.failure(.offline))
-            return
+        if let error = isOfflineOrUnauthorizedError() {
+            completion(Result.failure(error))
         }
-        
+
         let urlExtension = T.urlExtension(forUser: user.userId)
         
         sendRequest("GET", urlExtension: urlExtension, parameters: parameters, headers: headers) {
-            result -> Void in
+            sendResponse, statusCode, error in
             
-            // did the call happen? Typical fail case here would be offline
-            guard case .success(let sendRequestResponse) = result else {
-                var failure: TidepoolKitError
-                if case .failure(let error) = result {
-                    LogError("Tidepool fetch failed with error: \(error)!")
-                    failure = error
-                } else {
-                    failure = .serviceError(nil)
-                }
-                completion(Result.failure(failure))
-                return
-            }
- 
-            guard (sendRequestResponse.isSuccess()) else {
-                var failure: TidepoolKitError
-                if let statusCode = sendRequestResponse.httpResponse?.statusCode {
-                    LogError("Tidepool fetch failed with http response code: \(statusCode)")
-                    if statusCode == 401 {
-                        failure = .unauthorized
-                    } else if statusCode == 404 {
-                        failure = .dataNotFound
-                    } else {
-                        failure = .serviceError(statusCode)
-                    }
-                } else {
-                    failure = .serviceError(nil)
-                }
-                LogError("Tidepool fetch failed!")
-                completion(Result.failure(failure))
+            guard error == nil else {
+                let error = error!
+                LogError("Tidepool fetch failed with error: \(error)!")
+                completion(Result.failure(error))
                 return
             }
 
             // failures past this point should be rare, due to bad coding here or service is in a bad state...
-           guard let data = sendRequestResponse.data else {
+           guard let data = sendResponse.data else {
                 LogError("Tidepool fetch returned no data!")
                 completion(Result.failure(.noDataInResponse))
                 return
@@ -360,12 +295,10 @@ class APIConnector {
     /// Optional userId, to fetch profiles for other users than logged in user.
     private func post<P: TPPostable, T: TPFetchable>(_ postable: P, _ fetchType: T.Type, headers: [String: String]? = nil, userId: String? = nil, _ completion: @escaping (Result<T, TidepoolKitError>) -> (Void)) {
         
-        guard isConnectedToNetwork() else {
-            LogError("Post failed, network offline!")
-            completion(Result.failure(.offline))
-            return
+        if let error = isOfflineOrUnauthorizedError() {
+            completion(Result.failure(error))
         }
-        
+
         guard let sessionUser = self.session?.user else {
             LogError("Post failed, no user logged in!")
             completion(Result.failure(.notLoggedIn))
@@ -382,40 +315,17 @@ class APIConnector {
         }
         
         sendRequest("POST", urlExtension: urlExtension,  contentType: .json, headers: headers, body: body) {
-            result -> Void in
+            sendResponse, statusCode, error in
             
-            // did the call happen? Typical fail case here would be offline
-            guard case .success(let sendRequestResponse) = result else {
-                var failure: TidepoolKitError
-                if case .failure(let error) = result {
-                    LogError("Tidepool fetch failed with error: \(error)!")
-                    failure = error
-                } else {
-                    failure = .serviceError(nil)
-                }
-                completion(Result.failure(failure))
-                return
-            }
-            
-            guard (sendRequestResponse.isSuccess()) else {
-                var failure: TidepoolKitError
-                if let statusCode = sendRequestResponse.httpResponse?.statusCode {
-                    LogError("Tidepool post failed with http response code: \(statusCode)")
-                    if statusCode == 401 {
-                        failure = .unauthorized
-                    } else {
-                        failure = .serviceError(statusCode)
-                    }
-                } else {
-                    failure = .serviceError(nil)
-                }
-                LogError("Tidepool post failed!")
-                completion(Result.failure(failure))
+            guard error == nil else {
+                let error = error!
+                LogError("Tidepool post failed with error: \(error)!")
+                completion(Result.failure(error))
                 return
             }
             
             // failures past this point should be rare, due to bad coding here or service is in a bad state...
-            guard let data = sendRequestResponse.data else {
+            guard let data = sendResponse.data else {
                 LogError("Tidepool post returned no data!")
                 completion(Result.failure(.noDataInResponse))
                 return
@@ -435,10 +345,8 @@ class APIConnector {
     /// - parameter httpMethod: "POST" or "DELETE"
     func upload<T: TPUploadable>(_ uploadable: T, uploadId: String, httpMethod: String, _ completion: @escaping (Result<Bool, TidepoolKitError>) -> (Void)) {
         
-        guard isConnectedToNetwork() else {
-            LogError("Post failed, network offline!")
-            completion(Result.failure(.offline))
-            return
+        if let error = isOfflineOrUnauthorizedError() {
+            completion(Result.failure(error))
         }
         
         let urlExtension = "/v1/data_sets/" + uploadId + "/data"
@@ -456,41 +364,19 @@ class APIConnector {
         }
         
         sendRequest(httpMethod, urlExtension: urlExtension,  contentType: .json, body: body) {
-            result -> Void in
+            sendResponse, statusCode, error in
             
-            // did the call happen? Typical fail case here would be offline
-            guard case .success(let sendRequestResponse) = result else {
-                var failure: TidepoolKitError
-                if case .failure(let error) = result {
-                    LogError("Tidepool upload failed with error: \(error)!")
-                    failure = error
-                } else {
-                    failure = .serviceError(nil)
-                }
-                completion(Result.failure(failure))
-                return
-            }
-            
-            guard (sendRequestResponse.isSuccess()) else {
-                var failure: TidepoolKitError
-                 if let statusCode = sendRequestResponse.httpResponse?.statusCode {
-                    LogError("Tidepool upload failed with http response code: \(statusCode)")
-                    failure = .serviceError(statusCode)
-                    if statusCode == 401 {
-                        failure = .unauthorized
-                    } else if statusCode == 400 {
-                        // Note: not all 400 errors are the result of samples that fail service validation.
-                        // Note: the success at this level will be turned into an error at the calling level, this is just done here since the failure path doesn't carry data...
-                        if let data = sendRequestResponse.data {
-                            let badSamples = uploadable.parseErrResponse(data)
-                            failure = .badRequest(badSamples)
-                        }
+            guard error == nil else {
+                let error = error!
+                LogError("Tidepool upload failed with error: \(error)!")
+                var adjustedError = error
+                if let statusCode = statusCode, statusCode == 400 {
+                    if let data = sendResponse.data {
+                        let badSamples = uploadable.parseErrResponse(data)
+                        adjustedError = .badRequest(badSamples)
                     }
-                 } else {
-                    failure = .serviceError(nil)
                 }
-                LogError("Tidepool upload failed!")
-                completion(Result.failure(failure))
+                completion(Result.failure(adjustedError))
                 return
             }
             
@@ -587,7 +473,25 @@ class APIConnector {
     // MARK: - Lower-level networking methods
     //
     
-    class SendRequestResponse {
+    private func isOfflineError() -> TidepoolKitError? {
+        guard isConnectedToNetwork() else {
+            LogError("network offline!")
+            return .offline
+        }
+        return nil
+    }
+    
+    private func isOfflineOrUnauthorizedError() -> TidepoolKitError? {
+        if let error = isOfflineError() {
+            return error
+        }
+        guard self.session?.authenticationToken != nil else {
+            return .notLoggedIn
+        }
+        return nil
+    }
+    
+    private class SendRequestResponse {
         let request: URLRequest?
         var response: URLResponse?
         var data: Data?
@@ -615,6 +519,13 @@ class APIConnector {
             }
             return false
         }
+        
+        func sendRequestError(_ error: TidepoolKitError?) -> TidepoolKitError {
+            if error == nil {
+                return .serviceError(nil)
+            }
+            return error!
+        }
     }
     
     enum ContentType {
@@ -622,13 +533,8 @@ class APIConnector {
         case urlEncoded
     }
     
-    func sendRequest(_ method: String, urlExtension: String, contentType: ContentType? = nil, parameters: [String: String]? = nil, headers: [String: String]? = nil, requiresToken: Bool = true, body: Data? = nil, completion: @escaping (Result<SendRequestResponse, TidepoolKitError>) -> Void) {
-        
-        guard isConnectedToNetwork() else {
-            LogError("Not connected to network")
-            completion(Result.failure(.offline))
-            return
-        }
+    // Assumes onLine, and authorized (unless requiresToken = false is passed). Call isOfflineOrUnauthorizedError() to check before calling this method!
+    private func sendRequest(_ method: String, urlExtension: String, contentType: ContentType? = nil, parameters: [String: String]? = nil, headers: [String: String]? = nil, requiresToken: Bool = true, body: Data? = nil, completion: @escaping (SendRequestResponse, Int?, TidepoolKitError?) -> Void) {
         
         var urlString = baseUrlString! + urlExtension
         urlString = urlString.addingPercentEncoding(withAllowedCharacters: CharacterSet.urlQueryAllowed)!
@@ -664,8 +570,9 @@ class APIConnector {
         
         if requiresToken {
             guard let token = self.session?.authenticationToken else {
+                // should not get this if caller already checked!!! Send an empty response back...
                 LogError("user not logged in!")
-                completion(Result.failure(.notLoggedIn))
+                completion(SendRequestResponse(), nil, .notLoggedIn)
                 return
             }
             request.setValue("\(token)", forHTTPHeaderField: kSessionTokenHeaderId)
@@ -702,7 +609,21 @@ class APIConnector {
                 }
                 
                 sendResponse.error = error as NSError?
-                completion(Result.success(sendResponse))
+                var errorResult: TidepoolKitError? = nil
+                let statusCode: Int? = sendResponse.httpResponse?.statusCode
+                if !sendResponse.isSuccess() {
+                    errorResult = .serviceError(nil)
+                    if let statusCode = statusCode {
+                        if statusCode == 401 {
+                            errorResult = .unauthorized
+                        } else if statusCode == 404 {
+                            errorResult = .dataNotFound
+                        } else {
+                            errorResult = .serviceError(statusCode)
+                        }
+                    }
+                }
+                completion(sendResponse, statusCode, errorResult)
             })
             return
         }
