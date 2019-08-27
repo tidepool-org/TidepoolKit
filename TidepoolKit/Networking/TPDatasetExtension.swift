@@ -27,6 +27,7 @@ extension TPDataset: TPPostable, TPFetchable, Equatable {
     //
     // MARK: - Postable
     //
+    
     func postBodyData() -> Data? {
         do {
             let postBody = try JSONSerialization.data(withJSONObject: self.rawValue)
@@ -37,7 +38,10 @@ extension TPDataset: TPPostable, TPFetchable, Equatable {
         }
     }
     
-    // Used by API to extend baseurl for a post request
+    //
+    // MARK: - Postable, Fetchable
+    //
+
     class func urlExtension(forUser userId: String) -> String {
         let urlExtension = "/v1/users/" + userId + "/data_sets"
         return urlExtension
@@ -46,22 +50,16 @@ extension TPDataset: TPPostable, TPFetchable, Equatable {
     //
     // MARK: - Fetchable
     //
-    static func fromJsonData(_ data: Data) -> TPFetchable? {
-        var dataset: TPDataset? = nil
-        do {
-            let object: Any = try JSONSerialization.jsonObject(with: data)
-            if let dict = object as? [String: Any] {
-                LogInfo("parsing \(dict)")
-                if let jsonDict = dict["data"] as? [String: Any]{
-                    dataset = TPDataset(rawValue: jsonDict)
-                }
-            } else {
-                LogError("Received data not json decodable!")
-            }
-        } catch (let error) {
-            LogError("Received data not json decodable: \(error)")
+    
+    class func fromJsonData(_ data: Data) -> TPFetchable? {
+        guard let dict = dictFromJsonData(data) else {
+            return nil
         }
-        return dataset
+        guard let jsonDict = dict["data"] as? [String: Any] else {
+            LogError("no 'data' object in json dict \(dict)")
+            return nil
+        }
+        return TPDataset(rawValue: jsonDict)
     }
     
 }

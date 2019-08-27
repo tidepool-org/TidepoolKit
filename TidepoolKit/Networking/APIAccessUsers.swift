@@ -20,24 +20,6 @@ public class APIAccessUsers: TPFetchable {
         self.users = users
     }
 
-    class func accessUsersFromJsonData(_ data: Data) -> APIAccessUsers? {
-        do {
-            if let jsonDict = try JSONSerialization.jsonObject(with: data, options: []) as? NSDictionary {
-                var users: [TPUser] = []
-                for key in jsonDict.keyEnumerator() {
-                    if let keyStr = key as? String {
-                        let user = TPUser(keyStr)
-                        users.append(user)
-                        print("adding user: \(user)")
-                    }
-                }
-                return APIAccessUsers(users)
-            }
-        } catch {
-        }
-        return nil
-    }
-
     //
     // MARK: - TPFetchable protocol conformance methods
     //
@@ -47,8 +29,19 @@ public class APIAccessUsers: TPFetchable {
         return urlExtension
     }
     
-    static func fromJsonData(_ data: Data) -> TPFetchable? {
-        return APIAccessUsers.accessUsersFromJsonData(data)
+    class func fromJsonData(_ data: Data) -> TPFetchable? {
+        guard let jsonDict = try? JSONSerialization.jsonObject(with: data, options: []) as? NSDictionary else {
+            return nil
+        }
+        var users: [TPUser] = []
+        for key in jsonDict.keyEnumerator() {
+            if let keyStr = key as? String {
+                let user = TPUser(keyStr)
+                users.append(user)
+                print("adding user: \(user)")
+            }
+        }
+        return APIAccessUsers(users)
     }
 }
 

@@ -38,6 +38,32 @@ protocol TPFetchable {
     static func fromJsonData(_ data: Data) -> TPFetchable?
 }
 
+extension TPFetchable {
+    static func dictFromJsonData(_ data: Data) -> [String: Any]? {
+        guard let json: Any = try? JSONSerialization.jsonObject(with: data) else {
+            LogError("Fetched data not json decodable!")
+            return nil
+        }
+        guard let jsonDict = json as? [String: Any] else {
+            LogError("Fetched json not a [String: Any]: \(json)!")
+            return nil
+        }
+        return jsonDict
+    }
+
+    static func dictArrayFromJsonData(_ data: Data) -> [[String: Any]]? {
+        guard let json: Any = try? JSONSerialization.jsonObject(with: data) else {
+            LogError("Fetched data not json decodable!")
+            return nil
+        }
+        guard let jsonDictArray = json as? [[String: Any]] else {
+            LogError("Fetched json not a [[String: Any]]: \(json)!")
+            return nil
+        }
+        return jsonDictArray
+    }
+}
+
 // Private to framework...
 protocol TPPostable: TPFetchable {
     
@@ -80,13 +106,11 @@ extension TPUploadable {
             LogError("TPUploadable.postBodyData() invalid json object: \(postBodyDictArray)!")
             return nil
         }
-        do {
-            let postBody = try JSONSerialization.data(withJSONObject: postBodyDictArray)
-            return postBody
-        } catch {
+        guard let postBody = try? JSONSerialization.data(withJSONObject: postBodyDictArray) else {
             LogError("TPUploadable.postBodyData() unable to serialize array \(postBodyDictArray)!")
             return nil
         }
+        return postBody
     }
 
 }

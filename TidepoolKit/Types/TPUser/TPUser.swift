@@ -44,15 +44,17 @@ public class TPUser: TPUserData, RawRepresentable {
     //
     
     class func fromJsonData(_ data: Data) -> TPUser? {
-        do {
-            let object: Any = try JSONSerialization.jsonObject(with: data)
-            if let jsonArray = object as? [String: Any] {
-                return TPUser(rawValue: jsonArray)
-            }
-        } catch (let error) {
-            LogError("Received data not json decodable: \(error)")
+        guard let json: Any = try? JSONSerialization.jsonObject(with: data) else {
+            LogError("Fetched data not json decodable!")
+            return nil
         }
-        return nil
+        
+        guard let jsonDict = json as? [String: Any] else {
+            LogError("Fetched json not a [String: Any]: \(json)!")
+            return nil
+        }
+        
+        return TPUser(rawValue: jsonDict)        
     }
 
 }

@@ -12,24 +12,6 @@ import Foundation
 extension TPUserSettings: TPFetchable {
  
     //
-    // MARK: - methods private to framework!
-    //
-
-    class func settingsFromJsonData(_ data: Data) -> TPUserSettings? {
-        do {
-            let object: Any = try JSONSerialization.jsonObject(with: data)
-            if let jsonDict = object as? [String: Any] {
-                return TPUserSettings(rawValue: jsonDict)
-            } else {
-                LogError("Profile data not json decodable!")
-            }
-        } catch (let error) {
-            LogError("Profile data not json decodable: \(error)")
-        }
-        return nil
-    }
-
-    //
     // MARK: - TPFetchable protocol conformance methods
     //
     
@@ -38,8 +20,11 @@ extension TPUserSettings: TPFetchable {
         return urlExtension
     }
     
-    static func fromJsonData(_ data: Data) -> TPFetchable? {
-        return TPUserSettings.settingsFromJsonData(data)
+    class func fromJsonData(_ data: Data) -> TPFetchable? {
+        guard let jsonDict = dictFromJsonData(data) else {
+            return nil
+        }
+        return TPUserSettings(rawValue: jsonDict)
     }
 
 }

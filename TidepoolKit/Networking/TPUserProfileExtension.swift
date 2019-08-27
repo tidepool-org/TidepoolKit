@@ -10,21 +10,6 @@ import Foundation
 
 extension TPUserProfile: TPFetchable {
     
-    class func profileFromJsonData(_ data: Data) -> TPUserProfile? {
-        do {
-            let object: Any = try JSONSerialization.jsonObject(with: data)
-            if let jsonDict = object as? [String: Any] {
-                return TPUserProfile(rawValue: jsonDict)
-            } else {
-                LogError("Profile data not json decodable!")
-            }
-        } catch (let error) {
-            LogError("Profile data not json decodable: \(error)")
-        }
-        return nil
-    }
-
-
     //
     // MARK: - TPFetchable protocol conformance methods
     //
@@ -34,8 +19,11 @@ extension TPUserProfile: TPFetchable {
         return urlExtension
     }
     
-    static func fromJsonData(_ data: Data) -> TPFetchable? {
-        return TPUserProfile.profileFromJsonData(data)
+    class func fromJsonData(_ data: Data) -> TPFetchable? {
+        guard let jsonDict = dictFromJsonData(data) else {
+            return nil
+        }
+        return TPUserProfile(rawValue: jsonDict)
     }
     
 

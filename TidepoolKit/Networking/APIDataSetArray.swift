@@ -18,31 +18,6 @@ class APIDataSetArray: TPFetchable {
     }
 
     //
-    // MARK: - methods private to framework!
-    //
-
-    class func dataSetsFromJsonData(_ data: Data) -> APIDataSetArray? {
-        do {
-            let object: Any = try JSONSerialization.jsonObject(with: data)
-            if let jsonArray = object as? [[String: Any]] {
-                var items: [TPDataset] = []
-                for jsonDict in jsonArray {
-                    LogInfo("calling createFromJson on \(jsonDict)")
-                    if let item = TPDataset(rawValue: jsonDict) {
-                        items.append(item)
-                    }
-                }
-                return APIDataSetArray(items)
-            } else {
-                LogError("Received data not json decodable!")
-            }
-        } catch (let error) {
-            LogError("Received data not json decodable: \(error)")
-        }
-        return nil
-    }
-    
-    //
     // MARK: - TPFetchable protocol conformance methods
     //
     
@@ -51,8 +26,18 @@ class APIDataSetArray: TPFetchable {
         return urlExtension
     }
     
-    static func fromJsonData(_ data: Data) -> TPFetchable? {
-        return APIDataSetArray.dataSetsFromJsonData(data)
+    class func fromJsonData(_ data: Data) -> TPFetchable? {
+        guard let jsonDictArray = dictArrayFromJsonData(data) else {
+            return nil
+        }
+        var items: [TPDataset] = []
+        for jsonDict in jsonDictArray {
+            LogInfo("calling createFromJson on \(jsonDict)")
+            if let item = TPDataset(rawValue: jsonDict) {
+                items.append(item)
+            }
+        }
+        return APIDataSetArray(items)
     }
 
 }

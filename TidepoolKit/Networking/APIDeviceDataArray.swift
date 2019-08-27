@@ -17,27 +17,6 @@ class APIDeviceDataArray: TPFetchable, TPUploadable {
         self.userData = userData
     }
     
-    class func userDataFromJsonData(_ data: Data) -> APIDeviceDataArray? {
-        do {
-            let object: Any = try JSONSerialization.jsonObject(with: data)
-            if let jsonArray = object as? [[String: Any]] {
-                var items: [TPDeviceData] = []
-                for jsonDict in jsonArray {
-                    LogInfo("APIDeviceDataArray.userDataFromJsonData calling createFromJson on \(jsonDict)")
-                    if let item = TPDeviceData.createFromJson(jsonDict) {
-                        items.append(item)
-                    }
-                }
-                return APIDeviceDataArray(items)
-            } else {
-                LogError("Received data not json decodable!")
-            }
-        } catch (let error) {
-            LogError("Received data not json decodable: \(error)")
-        }
-        return nil
-    }
-    
     //
     // MARK: - TPFetchable protocol conformance methods
     //
@@ -47,8 +26,18 @@ class APIDeviceDataArray: TPFetchable, TPUploadable {
         return urlExtension
     }
     
-    static func fromJsonData(_ data: Data) -> TPFetchable? {
-        return APIDeviceDataArray.userDataFromJsonData(data)
+    class func fromJsonData(_ data: Data) -> TPFetchable? {
+        guard let jsonDictArray = dictArrayFromJsonData(data) else {
+            return nil
+        }
+        var items: [TPDeviceData] = []
+        for jsonDict in jsonDictArray {
+            LogInfo("APIDeviceDataArray.userDataFromJsonData calling createFromJson on \(jsonDict)")
+            if let item = TPDeviceData.createFromJson(jsonDict) {
+                items.append(item)
+            }
+        }
+        return APIDeviceDataArray(items)
     }
     
     //
@@ -92,17 +81,13 @@ class APIDeviceDataArray: TPFetchable, TPUploadable {
             rejectedSamples.append(index)
         }
         
-        var responseDict: [String: Any] = [:]
-        do {
-            let json = try JSONSerialization.jsonObject(with: response)
-            if let jsonDict = json as? [String: Any] {
-                responseDict = jsonDict
-            } else {
-                LogError("Response message not a dictionary!")
-                return nil
-            }
-        } catch {
-            LogError("Unable to parse upload response message as dictionary!")
+        guard let json = try? JSONSerialization.jsonObject(with: response) else {
+            LogError("Unable to parse upload response message as json!")
+            return nil
+        }
+        
+        guard let responseDict = json as? [String: Any] else {
+            LogError("Response json not a dictionary: \(json)")
             return nil
         }
         
