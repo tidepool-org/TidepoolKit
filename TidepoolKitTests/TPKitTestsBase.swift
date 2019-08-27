@@ -37,12 +37,10 @@ class TPKitTestsBase: XCTestCase {
         if isRunningOnDevice {
             NSLog("Testing on device in context of example app!")
         }
-        if let tpKit = tidepoolKit { return tpKit }
-        if let tpKit = TidepoolKit.init(logger: TPKitLoggerExample()) {
-            tidepoolKit = tpKit
-            return tpKit
+        if tidepoolKit == nil {
+            tidepoolKit = TidepoolKit.init(logger: TPKitLoggerExample())
         }
-        XCTFail("TidepoolKit singleton unexpectedly exists!")
+        return tidepoolKit!
     }
     
     func ensureLogin(completion: @escaping (TPSession) -> Void) {
