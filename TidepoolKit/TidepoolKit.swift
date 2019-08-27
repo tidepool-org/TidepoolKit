@@ -42,38 +42,15 @@ public let TidepoolLogInChangedNotification = Notification.Name("TidepoolLogInCh
 public class TidepoolKit {
     
     /**
-     Returns the TidepoolKit singleton, creating it if necessary.
-     
-     This object represents the Tidepool service, and is used for all service interaction. It is modal, either in a "logged out" state (initially and after a logout call), or a "logged in" state:  isLoggedIn may be called to check this state.
-     
-     The service may be available or not: e.g., network connectivity may be checked with the isConnectedToNetwork call.
-     
-     When logged in, a TPSession object is retained, with an authorization token and logged in TPUser object.
-     */
-    public static var sharedInstance: TidepoolKit {
-        get {
-            return TidepoolKit._sharedInstance ?? TidepoolKit()!
-        }
-    }
-    
-    /**
      Initialize the framework singleton.
      
-     Only allows one initialization: this call will fail if an instance has already been created.
-     
      - parameter logger: Optional TPKitLogging object that will be called for logging. If nil, no logging will be done.
-     - returns: initialized TidepoolKit object, or nil if one already exists (use TidepoolKit.sharedInstance to get it).
+     - returns: initialized TidepoolKit object.
      */
-    public init?(logger: TPKitLogging? = nil) {
-        // only allow one initialization, either implicitly via a first sharedInstance call, or via this call...
-        if TidepoolKit._sharedInstance != nil {
-            return nil
-        }
+    public init(logger: TPKitLogging? = nil) {
         clientLogger = logger
         self.apiConnect = APIConnector()
-        TidepoolKit._sharedInstance = self
     }
-    private static var _sharedInstance: TidepoolKit?
     private let apiConnect: APIConnector
     
     /**

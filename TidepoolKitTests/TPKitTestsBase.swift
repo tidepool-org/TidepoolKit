@@ -43,7 +43,6 @@ class TPKitTestsBase: XCTestCase {
             return tpKit
         }
         XCTFail("TidepoolKit singleton unexpectedly exists!")
-        return TidepoolKit.sharedInstance
     }
     
     func ensureLogin(completion: @escaping (TPSession) -> Void) {
