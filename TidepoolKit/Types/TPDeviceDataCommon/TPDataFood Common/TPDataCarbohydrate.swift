@@ -23,10 +23,10 @@ public struct TPDataCarbohydrate: TPData {
         self.sugars = sugars
         self.total = total
         // validate
-        if !TPDataType.isValidDoubleOrNil(dietaryFiber, min: 0.0, max: 1000.0) { return nil }
-        if !TPDataType.isValidDouble(net, min: 0.0, max: 1000.0) { return nil }
-        if !TPDataType.isValidDoubleOrNil(sugars, min: 0.0, max: 1000.0) { return nil }
-        if !TPDataType.isValidDoubleOrNil(total, min: 0.0, max: 1000.0) { return nil }
+        if !isValidDoubleOrNil(dietaryFiber, min: 0.0, max: 1000.0) { return nil }
+        if !isValidDouble(net, min: 0.0, max: 1000.0) { return nil }
+        if !isValidDoubleOrNil(sugars, min: 0.0, max: 1000.0) { return nil }
+        if !isValidDoubleOrNil(total, min: 0.0, max: 1000.0) { return nil }
     }
     
     // MARK: - RawRepresentable

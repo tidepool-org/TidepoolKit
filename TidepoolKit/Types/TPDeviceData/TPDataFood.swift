@@ -61,10 +61,10 @@ public class TPDataFood: TPDeviceData, TPData {
         self.ingredients = ingredients
         super.init(time: time)
         // validate...
-        if !TPDataType.validateString(self.name, maxLen: 100) { return nil }
-        if !TPDataType.validateString(self.brand, maxLen: 100) { return nil }
-        if !TPDataType.validateString(self.code, maxLen: 100) { return nil }
-        if !TPDataType.validateString(self.mealOther, maxLen: 100) { return nil }
+        if !validateString(self.name, maxLen: 100) { return nil }
+        if !validateString(self.brand, maxLen: 100) { return nil }
+        if !validateString(self.code, maxLen: 100) { return nil }
+        if !validateString(self.mealOther, maxLen: 100) { return nil }
         if mealOther != nil && self.meal != .other { return nil }
         if amount != nil && self.amount == nil { return nil }
         if nutrition != nil && self.nutrition == nil { return nil }

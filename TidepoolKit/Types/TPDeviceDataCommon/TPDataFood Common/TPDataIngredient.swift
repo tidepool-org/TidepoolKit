@@ -30,9 +30,9 @@ public struct TPDataIngredient: TPData {
             self.ingredients = nil
         }
         // validate
-        guard TPDataType.validateString(code, maxLen: 100) else { return nil }
-        guard TPDataType.validateString(brand, maxLen: 100) else { return nil }
-        guard TPDataType.validateString(name, maxLen: 100) else { return nil }
+        guard validateString(code, maxLen: 100) else { return nil }
+        guard validateString(brand, maxLen: 100) else { return nil }
+        guard validateString(name, maxLen: 100) else { return nil }
         if ingredients != nil && self.ingredients == nil {
             LogError("Err: Ingredients array invalid!")
             return nil

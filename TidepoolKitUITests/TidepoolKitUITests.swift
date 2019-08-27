@@ -7,7 +7,7 @@
 //
 
 import XCTest
-@testable import TidepoolKitUI
+import TidepoolKitUI
 
 class TidepoolKitUITests: XCTestCase {
 

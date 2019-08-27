@@ -7,7 +7,7 @@
 //
 
 import XCTest
-@testable import TidepoolKit
+import TidepoolKit
 
 /// TODO: Set up a new test password?
 let testEmail: String = "larry+kittest@tidepool.org"

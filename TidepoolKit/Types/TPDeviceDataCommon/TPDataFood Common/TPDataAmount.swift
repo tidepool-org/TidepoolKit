@@ -17,8 +17,8 @@ public struct TPDataAmount: TPData {
     public init?(value: Double, units: String) {
         self.value = value
         self.units = units
-        if !TPDataType.isValidDouble(value, min: 0.0) { return nil }
-        if !TPDataType.validateString(units, maxLen: 100) { return nil }
+        if !isValidDouble(value, min: 0.0) { return nil }
+        if !validateString(units, maxLen: 100) { return nil }
     }
 
     // MARK: - RawRepresentable

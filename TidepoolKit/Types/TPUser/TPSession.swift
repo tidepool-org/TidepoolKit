@@ -11,9 +11,9 @@ import Foundation
 /// Login will return a TPSession. It may be persisted by the client (as RawRepresentable), and used again.
 public class TPSession: TPUserData, RawRepresentable {
     
-    let authenticationToken: String
-    let user: TPUser
-    let server: TidepoolServer
+    public let authenticationToken: String
+    public let user: TPUser
+    public let server: TidepoolServer
     
     init(_ token: String, user: TPUser, server: TidepoolServer) {
         self.authenticationToken = token

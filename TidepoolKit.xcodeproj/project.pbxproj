@@ -32,6 +32,7 @@
 		48A28BCC2307118600438382 /* APIDeleteItemArray.swift in Sources */ = {isa = PBXBuildFile; fileRef = 48A28BCB2307118500438382 /* APIDeleteItemArray.swift */; };
 		48A628F423144EDC004C0C1E /* TidepoolKit.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 48F7135222E9FCB900FC2C89 /* TidepoolKit.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
 		48A628F623144EDC004C0C1E /* TidepoolKitUI.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 48F713A622EA00CF00FC2C89 /* TidepoolKitUI.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
+		48A628FB231585F3004C0C1E /* TPPatient.swift in Sources */ = {isa = PBXBuildFile; fileRef = 48A628FA231585F3004C0C1E /* TPPatient.swift */; };
 		48D6BE412310195900FFA9C0 /* LoginViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 48F713D922EA029C00FC2C89 /* LoginViewController.swift */; };
 		48D6BE432310875100FFA9C0 /* TPUserData.swift in Sources */ = {isa = PBXBuildFile; fileRef = 48D6BE422310875100FFA9C0 /* TPUserData.swift */; };
 		48F7135C22E9FCB900FC2C89 /* TidepoolKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 48F7135222E9FCB900FC2C89 /* TidepoolKit.framework */; };
@@ -159,6 +160,7 @@
 		481E4B5322F0B54200B128E8 /* TPKitTests01UserInfo.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TPKitTests01UserInfo.swift; sourceTree = "<group>"; };
 		48A28BC8230704C800438382 /* TPDeleteItem.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TPDeleteItem.swift; sourceTree = "<group>"; };
 		48A28BCB2307118500438382 /* APIDeleteItemArray.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = APIDeleteItemArray.swift; sourceTree = "<group>"; };
+		48A628FA231585F3004C0C1E /* TPPatient.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = TPPatient.swift; path = "TPUser Common/TPPatient.swift"; sourceTree = "<group>"; };
 		48D6BE422310875100FFA9C0 /* TPUserData.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TPUserData.swift; sourceTree = "<group>"; };
 		48F7135222E9FCB900FC2C89 /* TidepoolKit.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = TidepoolKit.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		48F7135522E9FCB900FC2C89 /* TidepoolKit.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = TidepoolKit.h; sourceTree = "<group>"; };
@@ -304,6 +306,7 @@
 				480CD24F230EE9930022D14D /* TPDatasetClient.swift */,
 				480CD251230EE9BB0022D14D /* TPDeduplicator.swift */,
 				48D6BE422310875100FFA9C0 /* TPUserData.swift */,
+				48A628FA231585F3004C0C1E /* TPPatient.swift */,
 			);
 			path = TPUser;
 			sourceTree = "<group>";
@@ -365,14 +368,14 @@
 		48F7137422E9FEE200FC2C89 /* Types */ = {
 			isa = PBXGroup;
 			children = (
-				48F7137622E9FEE200FC2C89 /* TPDataCommon */,
 				481E4B4622F0899300B128E8 /* TPUser */,
 				4812E80122EE50660058AF41 /* TPDeviceData */,
+				48F7137622E9FEE200FC2C89 /* TPDeviceDataCommon */,
 			);
 			path = Types;
 			sourceTree = "<group>";
 		};
-		48F7137622E9FEE200FC2C89 /* TPDataCommon */ = {
+		48F7137622E9FEE200FC2C89 /* TPDeviceDataCommon */ = {
 			isa = PBXGroup;
 			children = (
 				48F7137822E9FEE200FC2C89 /* TPData.swift */,
@@ -383,7 +386,7 @@
 				4812E7FF22EE4FFC0058AF41 /* TPDataType.swift */,
 				4812E80622EF56200058AF41 /* TPDataFood Common */,
 			);
-			path = TPDataCommon;
+			path = TPDeviceDataCommon;
 			sourceTree = "<group>";
 		};
 		48F7137F22E9FEE200FC2C89 /* Networking */ = {
@@ -702,6 +705,7 @@
 				48F7139022E9FEE200FC2C89 /* TPData.swift in Sources */,
 				48F713F222EA7F5C00FC2C89 /* TPDataLocation.swift in Sources */,
 				48F7138F22E9FEE200FC2C89 /* TPDataOrigin.swift in Sources */,
+				48A628FB231585F3004C0C1E /* TPPatient.swift in Sources */,
 				48F713EB22EA7C7300FC2C89 /* TPDataNutrition.swift in Sources */,
 				48F7139222E9FEE200FC2C89 /* DateUtils.swift in Sources */,
 				48F7139122E9FEE200FC2C89 /* TPDataCbg.swift in Sources */,

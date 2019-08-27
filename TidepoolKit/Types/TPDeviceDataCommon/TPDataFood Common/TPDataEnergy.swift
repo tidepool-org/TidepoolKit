@@ -53,7 +53,7 @@ public struct TPDataEnergy : TPData {
     public init?(value: Double, units: EnergyUnits) {
         self.units = units
         self.value = value
-        if TPDataType.validateDouble(value, min: units.min(), max:  units.max()) == nil {
+        if validateDouble(value, min: units.min(), max:  units.max()) == nil {
             return nil
         }
     }

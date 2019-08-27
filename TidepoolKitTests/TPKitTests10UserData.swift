@@ -7,7 +7,7 @@
 //
 
 import XCTest
-@testable import TidepoolKit
+import TidepoolKit
 
 class TPKitTests10UserData: TPKitTestsBase {
 

@@ -18,13 +18,14 @@ public class TPDeviceData: RawRepresentable, CustomStringConvertible {
     public var location: Location? = nil
     public var tags: [String]? = nil     // set of tag (string; 1 <= len <= 100); 1 <= len <= 100; duplicates not allowed; returns ordered alphabetically
     public var notes: [String]? = nil     // array of note (string; 1 <= len <= 1000; NOT the same as messages); optional; 1 <= len <= 100; retains order
-    public var associations: [Association]? = nil    // 1 <= len <= 100
+    public var associations: [TPDataAssociation]?   // 1 <= len <= 100
 
     public init?(time: Date? = nil) {
         self.id = nil
         self.time = time
         self.origin = nil
         self.payload = nil
+        self.associations = nil
     }
     
     public var description: String {
@@ -47,6 +48,17 @@ public class TPDeviceData: RawRepresentable, CustomStringConvertible {
         self.id = rawValue["id"] as? String
         self.origin = TPDataOrigin.getSelfFromDict(rawValue)
         self.payload = TPDataPayload.getSelfFromDict(rawValue)
+        if let associations = rawValue["associations"] as? [[String: Any]] {
+            var assocArray: [TPDataAssociation] = []
+            for item in associations {
+                if let association = TPDataAssociation(rawValue: item) {
+                    assocArray.append(association)
+                }
+            }
+            if !assocArray.isEmpty {
+                self.associations = assocArray
+            }
+        }
     }
 
     public var rawValue: RawValue {
@@ -62,6 +74,13 @@ public class TPDeviceData: RawRepresentable, CustomStringConvertible {
         }
         self.origin?.addSelfToDict(&result)
         self.payload?.addSelfToDict(&result)
+        if let associations = self.associations {
+            var assocArrayRaw: [[String: Any]] = []
+            for item in associations {
+                assocArrayRaw.append(item.rawValue)
+            }
+            result["associations"] = assocArrayRaw
+        }
         return result
     }
 

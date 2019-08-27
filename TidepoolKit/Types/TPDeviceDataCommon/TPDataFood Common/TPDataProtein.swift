@@ -1,5 +1,5 @@
 //
-//  TPDataFat.swift
+//  TPDataProtein.swift
 //  TidepoolKit
 //
 //  Created by Larry Kenyon on 8/23/19.
@@ -8,22 +8,22 @@
 
 import Foundation
 
-public struct TPDataFat: TPData {
-    public static var tpType: TPDataType { return .fat }
+public struct TPDataProtein: TPData {
+    public static var tpType: TPDataType { return .protein }
 
     public let total: Double
     public let units = "grams"
-    
+
     public init?(total: Double) {
         self.total = total
-        if !TPDataType.isValidDouble(total, min: 0.0, max: 1000.0) {
+        if validateDouble(total, min: 0.0, max: 1000.0) == nil {
             return nil
         }
     }
     
     // MARK: - RawRepresentable
     public typealias RawValue = [String: Any]
-    
+
     public init?(rawValue: RawValue) {
         guard let total = rawValue["total"] as? Double else {
             return nil
@@ -42,6 +42,5 @@ public struct TPDataFat: TPData {
         resultDict["units"] = units
         return resultDict
     }
-
+    
 }
-
