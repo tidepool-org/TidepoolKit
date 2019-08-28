@@ -79,8 +79,8 @@ public class TPDataCbg: TPDeviceData, TPData {
         // start with common data
         var result = self.baseRawValue(type(of: self).tpType)
         // add in type-specific data...
-        result["units"] = units.rawValue as Any?
-        result["value"] = value as Any?
+        result["units"] = units.rawValue
+        result["value"] = value
         return result
     }
     

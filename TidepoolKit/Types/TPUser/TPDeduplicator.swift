@@ -49,8 +49,8 @@ public struct TPDeduplicator: RawRepresentable, Equatable {
     
     public var rawValue: [String : Any] {
         var result = [String: Any]()
-        result["name"] = self.type.rawValue as Any
-        result["version"] = self.version as Any
+        result["name"] = self.type.rawValue
+        result["version"] = self.version
         return result
     }
     

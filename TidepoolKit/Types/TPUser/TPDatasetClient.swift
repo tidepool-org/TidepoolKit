@@ -48,8 +48,8 @@ public struct TPDatasetClient: Equatable {
     
     public var rawValue: [String : Any] {
         var result = [String: Any]()
-        result["name"] = self.name as Any
-        result["version"] = self.version as Any
+        result["name"] = self.name
+        result["version"] = self.version
         return result
     }
 

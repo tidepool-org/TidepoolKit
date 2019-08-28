@@ -38,7 +38,7 @@ public struct TPDataFat: TPData {
     
     public var rawValue: RawValue {
         var resultDict: [String: Any] = [:]
-        resultDict["total"] = total as Any
+        resultDict["total"] = total
         resultDict["units"] = units
         return resultDict
     }

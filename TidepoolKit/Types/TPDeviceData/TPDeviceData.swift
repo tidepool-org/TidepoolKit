@@ -67,10 +67,10 @@ public class TPDeviceData: RawRepresentable, CustomStringConvertible {
     
     func baseRawValue(_ tpType: TPDataType) -> RawValue {
         var result = [String: Any]()
-        result["type"] = tpType.rawValue as Any?
+        result["type"] = tpType.rawValue
         result["id"] = self.id
         if let time = time {
-            result["time"] = DateUtils.dateToJSON(time) as Any?
+            result["time"] = DateUtils.dateToJSON(time)
         }
         self.origin?.addSelfToDict(&result)
         self.payload?.addSelfToDict(&result)

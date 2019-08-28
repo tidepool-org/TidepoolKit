@@ -54,7 +54,7 @@ public class TPSession: TPUserData, RawRepresentable {
     
     public override var rawValue: [String : Any] {
         var result = [String: Any]()
-        result["authenticationToken"] = authenticationToken as Any
+        result["authenticationToken"] = authenticationToken
         result["user"] = user.rawValue
         result["server"] = server.rawValue
         return result

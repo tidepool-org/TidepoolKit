@@ -34,8 +34,8 @@ public class TPUser: TPUserData, RawRepresentable {
     
     public override var rawValue: [String : Any] {
         var result = [String: Any]()
-        result["userid"] = userId as Any
-        result["username"] = userName as Any
+        result["userid"] = userId
+        result["username"] = userName
         return result
     }
 

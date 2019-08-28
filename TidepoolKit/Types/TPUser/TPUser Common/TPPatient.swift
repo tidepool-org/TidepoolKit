@@ -29,10 +29,10 @@ public struct TPUserPatient: TPData {
     
     public var rawValue: RawValue {
         var resultDict: [String: Any] = [:]
-        resultDict["biologicalSex"] = self.biologicalSex as Any
-        resultDict["birthday"] = self.birthday as Any
-        resultDict["diagnosisDate"] = self.diagnosisDate as Any
-        resultDict["diagnosisType"] = self.diagnosisType as Any
+        resultDict["biologicalSex"] = self.biologicalSex
+        resultDict["birthday"] = self.birthday
+        resultDict["diagnosisDate"] = self.diagnosisDate
+        resultDict["diagnosisType"] = self.diagnosisType
         return resultDict
     }
 }

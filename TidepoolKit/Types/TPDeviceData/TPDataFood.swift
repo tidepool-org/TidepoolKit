@@ -116,9 +116,9 @@ public class TPDataFood: TPDeviceData, TPData {
         var result = self.baseRawValue(type(of: self).tpType)
         // add in type-specific data...
         // TODO: finish!
-        result["name"] = name as Any?
-        result["brand"] = brand as Any?
-        result["code"] = code as Any?
+        result["name"] = name
+        result["brand"] = brand
+        result["code"] = code
         result["nutrition"] = nutrition?.rawValue
         if let ingredients = ingredients {
             var rawIngredients: [RawValue] = []
