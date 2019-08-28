@@ -14,16 +14,24 @@ public enum TPDataType: String, Codable {
     case food = "food"
     case basal = "basal"
     // common types
-    case amount = "amount"
+    case origin = "origin"
+    case payload = "payload"
     case association = "association"
+    case location = "location"
+    // location related
+    case latitude = "latitude"
+    case longitude = "longitude"
+    case verticalAccuracy = "verticalAccuracy"
+    case horizontalAccuracy = "horizontalAccuracy"
+    case elevation = "elevation"
+    case gps = "gps"
+    // food related
+    case amount = "amount"
     case carbohydrate = "carbohydrate"
     case energy = "energy"
     case fat = "fat"
     case ingredient = "ingredient"
-    case location = "location"
     case nutrition = "nutrition"
-    case origin = "origin"
-    case payload = "payload"
     case protein = "protein"
     // user types
     case patient = "patient"

@@ -34,6 +34,11 @@
 		48A628F623144EDC004C0C1E /* TidepoolKitUI.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 48F713A622EA00CF00FC2C89 /* TidepoolKitUI.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
 		48A628FB231585F3004C0C1E /* TPPatient.swift in Sources */ = {isa = PBXBuildFile; fileRef = 48A628FA231585F3004C0C1E /* TPPatient.swift */; };
 		48A628FD2316D86F004C0C1E /* TPKitExampleSessionSetting.swift in Sources */ = {isa = PBXBuildFile; fileRef = 48A628FC2316D86F004C0C1E /* TPKitExampleSessionSetting.swift */; };
+		48A629002316FF93004C0C1E /* TPDataLongitude.swift in Sources */ = {isa = PBXBuildFile; fileRef = 48A628FF2316FF93004C0C1E /* TPDataLongitude.swift */; };
+		48A629022316FFAA004C0C1E /* TPDataLatitude.swift in Sources */ = {isa = PBXBuildFile; fileRef = 48A629012316FFAA004C0C1E /* TPDataLatitude.swift */; };
+		48A629042316FFC5004C0C1E /* TPDataElevation.swift in Sources */ = {isa = PBXBuildFile; fileRef = 48A629032316FFC5004C0C1E /* TPDataElevation.swift */; };
+		48A629062316FFDF004C0C1E /* TPDataLocationAccuracy.swift in Sources */ = {isa = PBXBuildFile; fileRef = 48A629052316FFDF004C0C1E /* TPDataLocationAccuracy.swift */; };
+		48A6290A23170007004C0C1E /* TPDataGPS.swift in Sources */ = {isa = PBXBuildFile; fileRef = 48A6290923170007004C0C1E /* TPDataGPS.swift */; };
 		48D6BE412310195900FFA9C0 /* LoginViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 48F713D922EA029C00FC2C89 /* LoginViewController.swift */; };
 		48D6BE432310875100FFA9C0 /* TPUserData.swift in Sources */ = {isa = PBXBuildFile; fileRef = 48D6BE422310875100FFA9C0 /* TPUserData.swift */; };
 		48F7135C22E9FCB900FC2C89 /* TidepoolKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 48F7135222E9FCB900FC2C89 /* TidepoolKit.framework */; };
@@ -163,6 +168,11 @@
 		48A28BCB2307118500438382 /* APIDeleteItemArray.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = APIDeleteItemArray.swift; sourceTree = "<group>"; };
 		48A628FA231585F3004C0C1E /* TPPatient.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = TPPatient.swift; path = "TPUser Common/TPPatient.swift"; sourceTree = "<group>"; };
 		48A628FC2316D86F004C0C1E /* TPKitExampleSessionSetting.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TPKitExampleSessionSetting.swift; sourceTree = "<group>"; };
+		48A628FF2316FF93004C0C1E /* TPDataLongitude.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TPDataLongitude.swift; sourceTree = "<group>"; };
+		48A629012316FFAA004C0C1E /* TPDataLatitude.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TPDataLatitude.swift; sourceTree = "<group>"; };
+		48A629032316FFC5004C0C1E /* TPDataElevation.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TPDataElevation.swift; sourceTree = "<group>"; };
+		48A629052316FFDF004C0C1E /* TPDataLocationAccuracy.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TPDataLocationAccuracy.swift; sourceTree = "<group>"; };
+		48A6290923170007004C0C1E /* TPDataGPS.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TPDataGPS.swift; sourceTree = "<group>"; };
 		48D6BE422310875100FFA9C0 /* TPUserData.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TPUserData.swift; sourceTree = "<group>"; };
 		48F7135222E9FCB900FC2C89 /* TidepoolKit.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = TidepoolKit.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		48F7135522E9FCB900FC2C89 /* TidepoolKit.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = TidepoolKit.h; sourceTree = "<group>"; };
@@ -313,6 +323,19 @@
 			path = TPUser;
 			sourceTree = "<group>";
 		};
+		48A628FE2316FF6A004C0C1E /* TPDataLocation */ = {
+			isa = PBXGroup;
+			children = (
+				48F713EE22EA7F5C00FC2C89 /* TPDataLocation.swift */,
+				48A628FF2316FF93004C0C1E /* TPDataLongitude.swift */,
+				48A629012316FFAA004C0C1E /* TPDataLatitude.swift */,
+				48A629032316FFC5004C0C1E /* TPDataElevation.swift */,
+				48A629052316FFDF004C0C1E /* TPDataLocationAccuracy.swift */,
+				48A6290923170007004C0C1E /* TPDataGPS.swift */,
+			);
+			path = TPDataLocation;
+			sourceTree = "<group>";
+		};
 		48F7134822E9FCB900FC2C89 = {
 			isa = PBXGroup;
 			children = (
@@ -382,7 +405,7 @@
 			children = (
 				48F7137822E9FEE200FC2C89 /* TPData.swift */,
 				48F713ED22EA7F5C00FC2C89 /* TPDataAssociation.swift */,
-				48F713EE22EA7F5C00FC2C89 /* TPDataLocation.swift */,
+				48A628FE2316FF6A004C0C1E /* TPDataLocation */,
 				48F7137722E9FEE200FC2C89 /* TPDataOrigin.swift */,
 				4812E80422EE50F60058AF41 /* TPDataPayload.swift */,
 				4812E7FF22EE4FFC0058AF41 /* TPDataType.swift */,
@@ -693,6 +716,7 @@
 				4812E80522EE50F60058AF41 /* TPDataPayload.swift in Sources */,
 				48F7138E22E9FEE200FC2C89 /* TPDataFood.swift in Sources */,
 				480CD255230F05830022D14D /* TPDatasetExtension.swift in Sources */,
+				48A629062316FFDF004C0C1E /* TPDataLocationAccuracy.swift in Sources */,
 				48F7139B22E9FEE200FC2C89 /* APIObjectMeta.swift in Sources */,
 				48F713E322EA2F2000FC2C89 /* TPDataCarbohydrate.swift in Sources */,
 				48D6BE432310875100FFA9C0 /* TPUserData.swift in Sources */,
@@ -704,9 +728,13 @@
 				48F7139622E9FEE200FC2C89 /* APIDeviceDataArray.swift in Sources */,
 				4812E80322EE507A0058AF41 /* TPDeviceData.swift in Sources */,
 				4812E80022EE4FFC0058AF41 /* TPDataType.swift in Sources */,
+				48A6290A23170007004C0C1E /* TPDataGPS.swift in Sources */,
+				48A629042316FFC5004C0C1E /* TPDataElevation.swift in Sources */,
+				48A629002316FF93004C0C1E /* TPDataLongitude.swift in Sources */,
 				48F7139C22E9FEE200FC2C89 /* APIConnect.swift in Sources */,
 				48F7139022E9FEE200FC2C89 /* TPData.swift in Sources */,
 				48F713F222EA7F5C00FC2C89 /* TPDataLocation.swift in Sources */,
+				48A629022316FFAA004C0C1E /* TPDataLatitude.swift in Sources */,
 				48F7138F22E9FEE200FC2C89 /* TPDataOrigin.swift in Sources */,
 				48A628FB231585F3004C0C1E /* TPPatient.swift in Sources */,
 				48F713EB22EA7C7300FC2C89 /* TPDataNutrition.swift in Sources */,

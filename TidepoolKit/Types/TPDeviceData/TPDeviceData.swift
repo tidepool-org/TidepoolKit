@@ -15,7 +15,8 @@ public class TPDeviceData: RawRepresentable, CustomStringConvertible {
     public var time: Date?
     public var origin: TPDataOrigin?
     public var payload: TPDataPayload?
-    public var location: Location? = nil
+    public var location: TPDataLocation?
+    // TODO!
     public var tags: [String]? = nil     // set of tag (string; 1 <= len <= 100); 1 <= len <= 100; duplicates not allowed; returns ordered alphabetically
     public var notes: [String]? = nil     // array of note (string; 1 <= len <= 1000; NOT the same as messages); optional; 1 <= len <= 100; retains order
     public var associations: [TPDataAssociation]?   // 1 <= len <= 100
@@ -26,6 +27,7 @@ public class TPDeviceData: RawRepresentable, CustomStringConvertible {
         self.origin = nil
         self.payload = nil
         self.associations = nil
+        self.location = nil
     }
     
     public var description: String {
@@ -59,6 +61,7 @@ public class TPDeviceData: RawRepresentable, CustomStringConvertible {
                 self.associations = assocArray
             }
         }
+        self.location = TPDataLocation.getSelfFromDict(rawValue)
     }
 
     public var rawValue: RawValue {
@@ -66,22 +69,23 @@ public class TPDeviceData: RawRepresentable, CustomStringConvertible {
     }
     
     func baseRawValue(_ tpType: TPDataType) -> RawValue {
-        var result = [String: Any]()
-        result["type"] = tpType.rawValue
-        result["id"] = self.id
+        var dict = [String: Any]()
+        dict["type"] = tpType.rawValue
+        dict["id"] = self.id
         if let time = time {
-            result["time"] = DateUtils.dateToJSON(time)
+            dict["time"] = DateUtils.dateToJSON(time)
         }
-        self.origin?.addSelfToDict(&result)
-        self.payload?.addSelfToDict(&result)
+        self.origin?.addSelfToDict(&dict)
+        self.payload?.addSelfToDict(&dict)
         if let associations = self.associations {
             var assocArrayRaw: [[String: Any]] = []
             for item in associations {
                 assocArrayRaw.append(item.rawValue)
             }
-            result["associations"] = assocArrayRaw
+            dict["associations"] = assocArrayRaw
         }
-        return result
+        self.location?.addSelfToDict(&dict)
+        return dict
     }
 
     /// Parses json to create a specific TPSampleData subclass item.
