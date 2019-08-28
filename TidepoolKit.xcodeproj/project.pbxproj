@@ -33,6 +33,7 @@
 		48A628F423144EDC004C0C1E /* TidepoolKit.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 48F7135222E9FCB900FC2C89 /* TidepoolKit.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
 		48A628F623144EDC004C0C1E /* TidepoolKitUI.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 48F713A622EA00CF00FC2C89 /* TidepoolKitUI.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
 		48A628FB231585F3004C0C1E /* TPPatient.swift in Sources */ = {isa = PBXBuildFile; fileRef = 48A628FA231585F3004C0C1E /* TPPatient.swift */; };
+		48A628FD2316D86F004C0C1E /* TPKitExampleSessionSetting.swift in Sources */ = {isa = PBXBuildFile; fileRef = 48A628FC2316D86F004C0C1E /* TPKitExampleSessionSetting.swift */; };
 		48D6BE412310195900FFA9C0 /* LoginViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 48F713D922EA029C00FC2C89 /* LoginViewController.swift */; };
 		48D6BE432310875100FFA9C0 /* TPUserData.swift in Sources */ = {isa = PBXBuildFile; fileRef = 48D6BE422310875100FFA9C0 /* TPUserData.swift */; };
 		48F7135C22E9FCB900FC2C89 /* TidepoolKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 48F7135222E9FCB900FC2C89 /* TidepoolKit.framework */; };
@@ -161,6 +162,7 @@
 		48A28BC8230704C800438382 /* TPDeleteItem.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TPDeleteItem.swift; sourceTree = "<group>"; };
 		48A28BCB2307118500438382 /* APIDeleteItemArray.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = APIDeleteItemArray.swift; sourceTree = "<group>"; };
 		48A628FA231585F3004C0C1E /* TPPatient.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = TPPatient.swift; path = "TPUser Common/TPPatient.swift"; sourceTree = "<group>"; };
+		48A628FC2316D86F004C0C1E /* TPKitExampleSessionSetting.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TPKitExampleSessionSetting.swift; sourceTree = "<group>"; };
 		48D6BE422310875100FFA9C0 /* TPUserData.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TPUserData.swift; sourceTree = "<group>"; };
 		48F7135222E9FCB900FC2C89 /* TidepoolKit.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = TidepoolKit.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		48F7135522E9FCB900FC2C89 /* TidepoolKit.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = TidepoolKit.h; sourceTree = "<group>"; };
@@ -435,6 +437,7 @@
 				A98D92982302369900ED810A /* Default-568h@2x.png */,
 				48F713C322EA00EC00FC2C89 /* AppDelegate.swift */,
 				48F7138922E9FEE200FC2C89 /* TPKitExampleSetting.swift */,
+				48A628FC2316D86F004C0C1E /* TPKitExampleSessionSetting.swift */,
 				48F713DD22EA02C300FC2C89 /* TPKitExampleViewController.swift */,
 				48F713CA22EA00EC00FC2C89 /* Assets.xcassets */,
 				48F713CC22EA00EC00FC2C89 /* LaunchScreen.storyboard */,
@@ -767,6 +770,7 @@
 			files = (
 				48F713C422EA00EC00FC2C89 /* AppDelegate.swift in Sources */,
 				480CD245230A3E760022D14D /* TPKitUILoggerExample.swift in Sources */,
+				48A628FD2316D86F004C0C1E /* TPKitExampleSessionSetting.swift in Sources */,
 				48F713DE22EA02C300FC2C89 /* TPKitExampleViewController.swift in Sources */,
 				480CD253230EEFFC0022D14D /* TPKitExampleSetting.swift in Sources */,
 				480CD23A230A2DFA0022D14D /* TPKitLoggerExample.swift in Sources */,

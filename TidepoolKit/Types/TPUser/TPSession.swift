@@ -39,7 +39,12 @@ public class TPSession: TPUserData, RawRepresentable {
             LogError("TPSession server string is invalid!")
             return nil
         }
-        guard let user = TPUser(rawValue: rawValue) else {
+        guard let userRaw = rawValue["user"] as? [String: Any] else {
+            LogError("TPSession rawValue is missing user dict!")
+            return nil
+        }
+        guard let user = TPUser(rawValue: userRaw) else {
+            LogError("TPSession rawValue is missing valid user!")
             return nil
         }
         self.authenticationToken = token
@@ -51,6 +56,7 @@ public class TPSession: TPUserData, RawRepresentable {
         var result = [String: Any]()
         result["authenticationToken"] = authenticationToken as Any
         result["user"] = user.rawValue
+        result["server"] = server.rawValue
         return result
     }
 

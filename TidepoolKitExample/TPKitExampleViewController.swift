@@ -10,10 +10,11 @@ import UIKit
 import TidepoolKit
 import TidepoolKitUI
 
-class TPKitExampleViewController: UIViewController {
-
+class TPKitExampleViewController: UIViewController, LoginSignupDelegate {
+    
     let currentServiceSetting = TPKitExampleSetting(forKey: "testService")
-
+    let savedSession = TPKitExampleSessionSetting(forKey: "testSession")
+    
     override func viewDidLoad() {
         super.viewDidLoad()
         if ProcessInfo.processInfo.environment["XCTestConfigurationFilePath"] != nil {
@@ -34,6 +35,22 @@ class TPKitExampleViewController: UIViewController {
         }
 
         self.tpKitUI = TidepoolKitUI.init(tpKit: tpKit, logger: TPKitUILoggerExample()) // pass the instance of TidepoolKit created in the line above!
+        
+        if let session = savedSession.restore() {
+            if case .success = self.tpKit.logIn(with: session) {
+                tpKit.refreshSession { [ weak self ]
+                    result in
+                    guard let self = self else {
+                        return
+                    }
+                    // if refresh resulted in logged out state, adjust UI
+                    if !self.tpKit.isLoggedIn() {
+                        self.savedSession.save(nil)
+                        self.configureForReachability()
+                    }
+                }
+            }
+        }
         
         let notificationCenter = NotificationCenter.default
         notificationCenter.addObserver(self, selector: #selector(TPKitExampleViewController.reachabilityChanged(_:)), name: ReachabilityChangedNotification, object: nil)
@@ -65,28 +82,45 @@ class TPKitExampleViewController: UIViewController {
     
     @IBOutlet weak var logInButton: UIButton!
     @IBOutlet weak var loggedInLabel: UILabel!
-    private var presentingLoginUI = false
+    private var loginVC: UIViewController?
     @IBAction func testLoginButtonHandler(_ sender: Any) {
         NSLog("\(#function)")
         if tpKit.isLoggedIn() {
             tpKit.logOut() { _ in }
+            savedSession.save(nil)
             self.configureForReachability()
             return
         }
         
-        guard !presentingLoginUI else {
+        guard loginVC == nil else {
             NSLog("Already presenting UI!")
             return
         }
-        let loginVC = tpKitUI.logInViewController()
-        presentingLoginUI = true
-        self.navigationController?.present(loginVC, animated: true) {
+        self.loginVC = tpKitUI.logInViewController(loginSignupDelegate: self)
+        self.navigationController?.present(self.loginVC!, animated: true) {
             () -> Void in
-            self.presentingLoginUI = false
+            self.configureForReachability()
             return
         }
     }
     
+    //
+    // MARK: - LoginSignupDelegate
+    //
+    func loginSignupComplete(_ session: TPSession) {
+        guard let loginViewController = loginVC else {
+            return
+        }
+        
+        loginViewController.dismiss(animated: true) {
+            self.loginVC = nil
+            if let session = self.tpKit.currentSession {
+                self.savedSession.save(session)
+            }
+            self.configureForReachability()
+        }
+    }
+
 
 }
 
