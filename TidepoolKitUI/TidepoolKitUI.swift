@@ -19,10 +19,11 @@ public class TidepoolKitUI {
         self.tpKit = tpKit
     }
     
-    public func logInViewController(loginSignupDelegate: LoginSignupDelegate? = nil) -> UIViewController {
+    public func logInViewController(loginSignupDelegate: LoginSignupDelegate? = nil, defaultServer: TidepoolServer = .production) -> UIViewController {
         let loginViewController = UIStoryboard(name: "LoginSignup", bundle: Bundle(for: LoginViewController.self)).instantiateInitialViewController() as! LoginViewController
         loginViewController.loginSignupDelegate = loginSignupDelegate
         loginViewController.tpKit = self.tpKit
+        loginViewController.currentServer = defaultServer
         return loginViewController
     }
 

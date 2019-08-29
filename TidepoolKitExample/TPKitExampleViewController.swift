@@ -12,7 +12,7 @@ import TidepoolKitUI
 
 class TPKitExampleViewController: UIViewController, LoginSignupDelegate {
     
-    let currentServiceSetting = TPKitExampleSetting(forKey: "testService")
+    let lastServerSetting = TPKitExampleSetting(forKey: "testServer")
     let savedSession = TPKitExampleSessionSetting(forKey: "testSession")
     
     override func viewDidLoad() {
@@ -96,7 +96,16 @@ class TPKitExampleViewController: UIViewController, LoginSignupDelegate {
             NSLog("Already presenting UI!")
             return
         }
-        self.loginVC = tpKitUI.logInViewController(loginSignupDelegate: self)
+        var defaultServer: TidepoolServer = .staging
+        NSLog("start with defaultServer = \(TidepoolServer.staging.rawValue)")
+        if let serverName = self.lastServerSetting.value {
+            NSLog("found lastServerSetting == \(serverName)")
+            if let server = TidepoolServer(rawValue: serverName) {
+                NSLog("changing to defaultServer == \(server.rawValue)")
+                defaultServer = server
+            }
+        }
+        self.loginVC = tpKitUI.logInViewController(loginSignupDelegate: self, defaultServer: defaultServer)
         self.navigationController?.present(self.loginVC!, animated: true) {
             () -> Void in
             self.configureForReachability()
@@ -112,10 +121,15 @@ class TPKitExampleViewController: UIViewController, LoginSignupDelegate {
             return
         }
         
+        NSLog("loginSignupComplete returned with session: \(session)")
+            
         loginViewController.dismiss(animated: true) {
             self.loginVC = nil
             if let session = self.tpKit.currentSession {
+                NSLog("TidepoolKit current session is: \(session)")
                 self.savedSession.save(session)
+                NSLog("saving lastServer as \(session.server.rawValue)")
+                self.lastServerSetting.value = session.server.rawValue
             }
             self.configureForReachability()
         }

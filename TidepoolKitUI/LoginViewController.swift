@@ -21,7 +21,8 @@ class LoginViewController: UIViewController {
 
     var loginSignupDelegate: LoginSignupDelegate?
     var tpKit: TidepoolKit!
-
+    var currentServer: TidepoolServer = .production
+    
     @IBOutlet weak var inputContainerView: UIView!
     
     @IBOutlet weak var emailTextField: UITextField!
@@ -31,9 +32,6 @@ class LoginViewController: UIViewController {
     @IBOutlet weak var serviceButton: UIButton!
     @IBOutlet weak var loginIndicator: UIActivityIndicatorView!
     @IBOutlet weak var networkOfflineLabel: UILabel!
-    
-    private var currentServerName = TPKitUISetting(forKey: "tpKitUIcurrentServer")
-    private var currentServer: TidepoolServer?
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -148,20 +146,14 @@ class LoginViewController: UIViewController {
     
     private func configureCurrentServer(_ server: TidepoolServer? = nil) {
         if let server = server {
-            self.currentServerName.value = server.rawValue
-        } else if currentServerName.value == nil {
-            currentServerName.value = TidepoolServer.allCases[0].rawValue
+            self.currentServer = server
         }
-        let serverName = currentServerName.value!
-        self.currentServer = TidepoolServer(rawValue: serverName)!
+        let serverName = currentServer.rawValue
         self.serviceButton.setTitle(serverName, for: .normal)
     }
     
     @IBAction func selectServiceButtonHandler(_ sender: Any) {
-        guard let curServerName = currentServerName.value else {
-            return
-        }
-        let actionSheet = UIAlertController(title: "Server" + " (" + curServerName + ")", message: "", preferredStyle: .alert)
+        let actionSheet = UIAlertController(title: "Server" + " (" + currentServer.rawValue + ")", message: "", preferredStyle: .alert)
         for server in TidepoolServer.allCases {
             actionSheet.addAction(UIAlertAction(title: server.rawValue, style: .default, handler: { Void in
                 self.configureCurrentServer(server)
