@@ -30,7 +30,6 @@ public class TPDataCbg: TPDeviceData, TPData {
     // MARK: - TPData protocol
     //
     public static var tpType: TPDataType { return .cbg }
-    
 
     //
     // MARK: - Type specific data
@@ -47,7 +46,7 @@ public class TPDataCbg: TPDeviceData, TPData {
             return nil
         }
         // TPSampleData fields
-        super.init(time: time)
+        super.init(.cbg, time: time)
     }
     
     //
@@ -77,11 +76,11 @@ public class TPDataCbg: TPDeviceData, TPData {
     
     override public var rawValue: RawValue {
         // start with common data
-        var result = self.baseRawValue(type(of: self).tpType)
+        var dict = super.rawValue
         // add in type-specific data...
-        result["units"] = units.rawValue
-        result["value"] = value
-        return result
+        dict["units"] = units.rawValue
+        dict["value"] = value
+        return dict
     }
     
 }

@@ -29,6 +29,10 @@
 		483529DF23181A2C00C3D4DB /* TPKitTests13UserData_Bolus.swift in Sources */ = {isa = PBXBuildFile; fileRef = 483529DC23181A2C00C3D4DB /* TPKitTests13UserData_Bolus.swift */; };
 		483529E023181A2C00C3D4DB /* TPKitTests12UserData_Food.swift in Sources */ = {isa = PBXBuildFile; fileRef = 483529DD23181A2C00C3D4DB /* TPKitTests12UserData_Food.swift */; };
 		483529E123181A2C00C3D4DB /* TPKitTests11UserData_Cbg.swift in Sources */ = {isa = PBXBuildFile; fileRef = 483529DE23181A2C00C3D4DB /* TPKitTests11UserData_Cbg.swift */; };
+		483529E323197DAA00C3D4DB /* TPDataBolus.swift in Sources */ = {isa = PBXBuildFile; fileRef = 483529E223197DAA00C3D4DB /* TPDataBolus.swift */; };
+		483529E62319830200C3D4DB /* TPDataBolusNormal.swift in Sources */ = {isa = PBXBuildFile; fileRef = 483529E52319830200C3D4DB /* TPDataBolusNormal.swift */; };
+		483529E823199E8500C3D4DB /* TPDataBolusExtended.swift in Sources */ = {isa = PBXBuildFile; fileRef = 483529E723199E8500C3D4DB /* TPDataBolusExtended.swift */; };
+		483529EA23199E9900C3D4DB /* TPDataBolusCombination.swift in Sources */ = {isa = PBXBuildFile; fileRef = 483529E923199E9900C3D4DB /* TPDataBolusCombination.swift */; };
 		48A28BC9230704C800438382 /* TPDeleteItem.swift in Sources */ = {isa = PBXBuildFile; fileRef = 48A28BC8230704C800438382 /* TPDeleteItem.swift */; };
 		48A28BCC2307118600438382 /* APIDeleteItemArray.swift in Sources */ = {isa = PBXBuildFile; fileRef = 48A28BCB2307118500438382 /* APIDeleteItemArray.swift */; };
 		48A628F423144EDC004C0C1E /* TidepoolKit.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 48F7135222E9FCB900FC2C89 /* TidepoolKit.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
@@ -168,6 +172,10 @@
 		483529DC23181A2C00C3D4DB /* TPKitTests13UserData_Bolus.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TPKitTests13UserData_Bolus.swift; sourceTree = "<group>"; };
 		483529DD23181A2C00C3D4DB /* TPKitTests12UserData_Food.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TPKitTests12UserData_Food.swift; sourceTree = "<group>"; };
 		483529DE23181A2C00C3D4DB /* TPKitTests11UserData_Cbg.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TPKitTests11UserData_Cbg.swift; sourceTree = "<group>"; };
+		483529E223197DAA00C3D4DB /* TPDataBolus.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TPDataBolus.swift; sourceTree = "<group>"; };
+		483529E52319830200C3D4DB /* TPDataBolusNormal.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TPDataBolusNormal.swift; sourceTree = "<group>"; };
+		483529E723199E8500C3D4DB /* TPDataBolusExtended.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TPDataBolusExtended.swift; sourceTree = "<group>"; };
+		483529E923199E9900C3D4DB /* TPDataBolusCombination.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TPDataBolusCombination.swift; sourceTree = "<group>"; };
 		48A28BC8230704C800438382 /* TPDeleteItem.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TPDeleteItem.swift; sourceTree = "<group>"; };
 		48A28BCB2307118500438382 /* APIDeleteItemArray.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = APIDeleteItemArray.swift; sourceTree = "<group>"; };
 		48A628FA231585F3004C0C1E /* TPPatient.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = TPPatient.swift; path = "TPUser Common/TPPatient.swift"; sourceTree = "<group>"; };
@@ -293,6 +301,7 @@
 				48F7137922E9FEE200FC2C89 /* TPDataCbg.swift */,
 				48F7137522E9FEE200FC2C89 /* TPDataFood.swift */,
 				48A28BC8230704C800438382 /* TPDeleteItem.swift */,
+				483529E4231982E300C3D4DB /* TPDataBolus */,
 			);
 			path = TPDeviceData;
 			sourceTree = "<group>";
@@ -325,6 +334,17 @@
 				48A628FA231585F3004C0C1E /* TPPatient.swift */,
 			);
 			path = TPUser;
+			sourceTree = "<group>";
+		};
+		483529E4231982E300C3D4DB /* TPDataBolus */ = {
+			isa = PBXGroup;
+			children = (
+				483529E223197DAA00C3D4DB /* TPDataBolus.swift */,
+				483529E52319830200C3D4DB /* TPDataBolusNormal.swift */,
+				483529E723199E8500C3D4DB /* TPDataBolusExtended.swift */,
+				483529E923199E9900C3D4DB /* TPDataBolusCombination.swift */,
+			);
+			path = TPDataBolus;
 			sourceTree = "<group>";
 		};
 		48A628FE2316FF6A004C0C1E /* TPDataLocation */ = {
@@ -733,6 +753,7 @@
 				48F7138B22E9FEE200FC2C89 /* TidepoolKit.swift in Sources */,
 				48F7139622E9FEE200FC2C89 /* APIDeviceDataArray.swift in Sources */,
 				4812E80322EE507A0058AF41 /* TPDeviceData.swift in Sources */,
+				483529E62319830200C3D4DB /* TPDataBolusNormal.swift in Sources */,
 				4812E80022EE4FFC0058AF41 /* TPDataType.swift in Sources */,
 				48A6290A23170007004C0C1E /* TPDataGPS.swift in Sources */,
 				48A629042316FFC5004C0C1E /* TPDataElevation.swift in Sources */,
@@ -755,14 +776,17 @@
 				48F7139322E9FEE200FC2C89 /* TPUser.swift in Sources */,
 				481E4B4922F08C7500B128E8 /* TPUserProfile.swift in Sources */,
 				48F7139722E9FEE200FC2C89 /* APIDataSetArray.swift in Sources */,
+				483529E823199E8500C3D4DB /* TPDataBolusExtended.swift in Sources */,
 				48F7138C22E9FEE200FC2C89 /* TPKitConstants.swift in Sources */,
 				480CD23E230A3BB90022D14D /* TPKitLogging.swift in Sources */,
 				48F7139522E9FEE200FC2C89 /* TPDataBasal.swift in Sources */,
+				483529EA23199E9900C3D4DB /* TPDataBolusCombination.swift in Sources */,
 				48F713EA22EA7C7300FC2C89 /* TPDataFat.swift in Sources */,
 				48A28BCC2307118600438382 /* APIDeleteItemArray.swift in Sources */,
 				48A28BC9230704C800438382 /* TPDeleteItem.swift in Sources */,
 				48F7138A22E9FEE200FC2C89 /* Reachability.swift in Sources */,
 				48F713F322EA7F5C00FC2C89 /* TPDataAmount.swift in Sources */,
+				483529E323197DAA00C3D4DB /* TPDataBolus.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

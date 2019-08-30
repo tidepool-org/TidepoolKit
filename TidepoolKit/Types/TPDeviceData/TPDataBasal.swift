@@ -15,12 +15,11 @@ public struct Suppressed {
 }
 
 public class TPDataBasal: TPDeviceData, TPData {
-    
     //
     // MARK: - TPData protocol
     //
     public static var tpType: TPDataType { return .basal }
-    
+
     //
     // MARK: - Type specific data
     //
@@ -34,7 +33,7 @@ public class TPDataBasal: TPDeviceData, TPData {
         self.rate = rate
         self.duration = duration
         // TPSampleData fields
-        super.init(time: time)
+        super.init(.basal, time: time)
     }
 
     //
@@ -49,10 +48,10 @@ public class TPDataBasal: TPDeviceData, TPData {
 
     override public var rawValue: RawValue {
         // start with common data
-        let result = self.baseRawValue(type(of: self).tpType)
+        let dict = super.rawValue
         // add in type-specific data...
         // TODO: finish!
-        return result
+        return dict
     }
 }
 

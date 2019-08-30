@@ -10,7 +10,8 @@ import Foundation
 
 // Note: This is meant to specify any optional data types that are commonly expected to be in all TPData types contained in the first level of a TPSampleData object, and that can be uploaded/downloaded together to/from the Tidepool service. These fields would be added after initialization, and validated when set...
 public class TPDeviceData: RawRepresentable, CustomStringConvertible {
-    
+    public let type: TPDataType
+
     public var id: String?
     public var time: Date?
     public var origin: TPDataOrigin?
@@ -21,7 +22,8 @@ public class TPDeviceData: RawRepresentable, CustomStringConvertible {
     public var notes: [String]? = nil     // array of note (string; 1 <= len <= 1000; NOT the same as messages); optional; 1 <= len <= 100; retains order
     public var associations: [TPDataAssociation]?   // 1 <= len <= 100
 
-    public init?(time: Date? = nil) {
+    public init?(_ type: TPDataType, time: Date? = nil) {
+        self.type = type
         self.id = nil
         self.time = time
         self.origin = nil
@@ -42,7 +44,10 @@ public class TPDeviceData: RawRepresentable, CustomStringConvertible {
     public typealias RawValue = [String: Any]
 
     required public init?(rawValue: RawValue) {
-        // optionals...
+        guard let type = TPDeviceData.typeFromJson(rawValue) else {
+            return nil
+        }
+        self.type = type
         self.time = DateUtils.dateFromJSON(rawValue["time"] as? String)
         if self.time == nil {
             return nil
@@ -65,12 +70,8 @@ public class TPDeviceData: RawRepresentable, CustomStringConvertible {
     }
 
     public var rawValue: RawValue {
-        fatalError()
-    }
-    
-    func baseRawValue(_ tpType: TPDataType) -> RawValue {
         var dict = [String: Any]()
-        dict["type"] = tpType.rawValue
+        dict["type"] = type.rawValue
         dict["id"] = self.id
         if let time = time {
             dict["time"] = DateUtils.dateToJSON(time)
@@ -88,22 +89,27 @@ public class TPDeviceData: RawRepresentable, CustomStringConvertible {
         return dict
     }
 
-    /// Parses json to create a specific TPSampleData subclass item.
-    class func createFromJson(_ jsonDict: [String: Any]) -> TPDeviceData? {
-        
+    class func typeFromJson(_ jsonDict: [String: Any]) -> TPDataType? {
         // parse thru dictionary to create tpItem!
         guard let type = jsonDict["type"] as? String else {
             LogError("item has no type field!")
             return nil
         }
-        
-        // Based on type field, call type-specific init to create the object...
-        var tpData: TPDeviceData? = nil
         guard let tpType = TPDataType(rawValue: type) else {
             LogError("Type \(type) not supported!")
             return nil
         }
-        
+        return tpType
+    }
+    
+    /// Parses json to create a specific TPDeviceData subclass item.
+    class func createFromJson(_ jsonDict: [String: Any]) -> TPDeviceData? {
+        guard let tpType = typeFromJson(jsonDict) else {
+            return nil
+        }
+        // parse thru dictionary to create tpItem!
+        // Based on type field, call type-specific init to create the object...
+        var tpData: TPDeviceData? = nil
         switch tpType {
         case .cbg:
             LogInfo("TPDataCommon.createFromJson found cbg item!")
@@ -116,8 +122,12 @@ public class TPDeviceData: RawRepresentable, CustomStringConvertible {
             LogInfo("TPDataCommon.createFromJson ignored basal item!")
             //tpData = TPDataBasal.createBasalFromJson(jsonDict, id: id, time: time)
             break
+        case .bolus:
+            // TODO!
+            LogInfo("TPDataCommon.createFromJson found bolus item!")
+            tpData = TPDataBolus.createBolusFromJson(jsonDict)
         default:
-            LogInfo("TPDataCommon.createFromJson ignored \(type) item!")
+            LogInfo("TPDataCommon.createFromJson ignored \(tpType.rawValue) item!")
             break
         }
         return tpData

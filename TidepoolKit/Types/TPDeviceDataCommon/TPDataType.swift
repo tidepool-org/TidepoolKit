@@ -13,6 +13,7 @@ public enum TPDataType: String, Codable {
     case cbg = "cbg"
     case food = "food"
     case basal = "basal"
+    case bolus = "bolus"
     // common types
     case origin = "origin"
     case payload = "payload"

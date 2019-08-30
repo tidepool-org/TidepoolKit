@@ -46,7 +46,7 @@ public class TPDataFood: TPDeviceData, TPData {
         self.amount = nil
         self.nutrition = TPDataNutrition(carbohydrate: TPDataCarbohydrate(net: carbohydrate))
         self.ingredients = nil
-        super.init(time: time)
+        super.init(.food, time: time)
 	}
 
     //
@@ -59,7 +59,7 @@ public class TPDataFood: TPDeviceData, TPData {
         self.amount = amount
         self.nutrition = nutrition
         self.ingredients = ingredients
-        super.init(time: time)
+        super.init(.food, time: time)
         // validate...
         if !validateString(self.name, maxLen: 100) { return nil }
         if !validateString(self.brand, maxLen: 100) { return nil }
@@ -113,23 +113,23 @@ public class TPDataFood: TPDeviceData, TPData {
     
     override public var rawValue: RawValue {
         // start with common data
-        var result = self.baseRawValue(type(of: self).tpType)
+        var dict = super.rawValue
         // add in type-specific data...
         // TODO: finish!
-        result["name"] = name
-        result["brand"] = brand
-        result["code"] = code
-        result["nutrition"] = nutrition?.rawValue
+        dict["name"] = name
+        dict["brand"] = brand
+        dict["code"] = code
+        dict["nutrition"] = nutrition?.rawValue
         if let ingredients = ingredients {
             var rawIngredients: [RawValue] = []
             for item in ingredients {
                 rawIngredients.append(item.rawValue)
             }
             if !rawIngredients.isEmpty {
-                result["ingredients"] = rawIngredients
+                dict["ingredients"] = rawIngredients
             }
         }
-        return result
+        return dict
     }
     
 }
