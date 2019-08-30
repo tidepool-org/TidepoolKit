@@ -44,10 +44,14 @@ class TPKitExampleViewController: UIViewController, LoginSignupDelegate {
                         return
                     }
                     // if refresh resulted in logged out state, adjust UI
-                    if !self.tpKit.isLoggedIn() {
+                    guard let session = self.tpKit.currentSession else {
+                        NSLog("TidepoolKit refreshSession failed, clearing saved session!")
                         self.savedSession.save(nil)
                         self.configureForReachability()
+                        return
                     }
+                    NSLog("TidepoolKit refreshed session is: \(session)")
+                    self.savedSession.save(session)
                 }
             }
         }

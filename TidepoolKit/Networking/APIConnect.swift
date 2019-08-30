@@ -158,7 +158,7 @@ class APIConnector {
             }
         
             self.session = TPSession(token, user: serviceUser, server: loginServer)
-            LogInfo("Logged into \(loginServer.rawValue) server successfully! Returned userId = \(serviceUser.userId), userName: \(String(describing: serviceUser.userName))")
+            LogInfo("Logged into \(loginServer.rawValue) server successfully! Returned userId = \(serviceUser.userId), userName: \(String(describing: serviceUser.userEmail))")
             NotificationCenter.default.post(name: TidepoolLogInChangedNotification, object:self)
             completion(Result.success(self.session!))
         }
@@ -187,15 +187,21 @@ class APIConnector {
         }
     }
     
-    func refreshToken(_ completion: @escaping (_ result: Result<Bool, TidepoolKitError>) -> (Void)) {
+    func refreshToken(_ completion: @escaping (_ result: Result<TPSession, TidepoolKitError>) -> (Void)) {
         
-        if let error = isOfflineOrUnauthorizedError() {
-            completion(Result.failure(error))
+        let error = isOfflineOrUnauthorizedError()
+        guard error == nil else {
+            completion(Result.failure(error!))
+            return
         }
-
+        
+        guard let loginServer = self.session?.server else {
+            completion(Result.failure(.internalError))
+            return
+        }
+        
         // Set our endpoint for token refresh (same as login)
         let urlExtension = "/auth/login"
-        
         sendRequest("GET", urlExtension: urlExtension, contentType: .urlEncoded) {
             sendResponse, statusCode, error in
             
@@ -207,7 +213,52 @@ class APIConnector {
                 return
             }
             
-            completion(Result.success(true))
+            guard let httpResponse = sendResponse.httpResponse else {
+                let description = "Login response not a valid http response!"
+                LogError(description)
+                completion(Result.failure(.badLoginResponse(description)))
+                return
+            }
+
+            guard let token = httpResponse.allHeaderFields[self.kSessionTokenResponseId] as? String else {
+                let description = "Login response contained no token in header!"
+                LogError(description)
+                completion(Result.failure(.badLoginResponse(description)))
+                return
+            }
+            LogInfo("Login returned token: \(token)")
+
+            // Refresh the login user as well (email may have changed)
+            let urlExtension = "/auth/user"
+            self.sendRequest("GET", urlExtension: urlExtension, contentType: .urlEncoded) {
+                sendResponse, statusCode, error in
+                
+                guard error == nil else {
+                    let error = error!
+                    LogError("Login user refresh failed, with error: \(error)!")
+                    // Note: the session will remain valid assuming error was not 401
+                    completion(Result.failure(error))
+                    return
+                }
+                
+                guard let data = sendResponse.data else {
+                    let description = "Login user refresh returned no data!"
+                    LogError(description)
+                    completion(Result.failure(.badLoginResponse(description)))
+                    return
+                }
+                
+                guard let serviceUser = TPUser.fromJsonData(data) else {
+                    let description = "Login json response not parseable as TPUser!"
+                    LogError(description)
+                    completion(Result.failure(.badLoginResponse(description)))
+                    return
+                }
+            
+                self.session = TPSession(token, user: serviceUser, server: loginServer)
+                LogInfo("Refreshed session and login user successfully! Returned userId = \(serviceUser.userId), userEmail: \(String(describing: serviceUser.userEmail))")
+                completion(Result.success(self.session!))
+            }
         }
      }
     
@@ -253,8 +304,10 @@ class APIConnector {
     /// Optional userId, to fetch profiles for other users than logged in user.
     func fetch<T: TPFetchable>(_ type: T.Type, user: TPUser, parameters: [String: String]? = nil, headers: [String: String]? = nil, _ completion: @escaping (Result<T, TidepoolKitError>) -> (Void)) {
         
-        if let error = isOfflineOrUnauthorizedError() {
-            completion(Result.failure(error))
+        let error = isOfflineOrUnauthorizedError()
+        guard error == nil else {
+            completion(Result.failure(error!))
+            return
         }
 
         let urlExtension = T.urlExtension(forUser: user.userId)
@@ -292,8 +345,10 @@ class APIConnector {
     /// Optional userId, to fetch profiles for other users than logged in user.
     private func post<P: TPPostable, T: TPFetchable>(_ postable: P, _ fetchType: T.Type, headers: [String: String]? = nil, userId: String? = nil, _ completion: @escaping (Result<T, TidepoolKitError>) -> (Void)) {
         
-        if let error = isOfflineOrUnauthorizedError() {
-            completion(Result.failure(error))
+        let error = isOfflineOrUnauthorizedError()
+        guard error == nil else {
+            completion(Result.failure(error!))
+            return
         }
 
         guard let sessionUser = self.session?.user else {
@@ -342,10 +397,12 @@ class APIConnector {
     /// - parameter httpMethod: "POST" or "DELETE"
     func upload<T: TPUploadable>(_ uploadable: T, uploadId: String, httpMethod: String, _ completion: @escaping (Result<Bool, TidepoolKitError>) -> (Void)) {
         
-        if let error = isOfflineOrUnauthorizedError() {
-            completion(Result.failure(error))
+        let error = isOfflineOrUnauthorizedError()
+        guard error == nil else {
+            completion(Result.failure(error!))
+            return
         }
-        
+
         let urlExtension = "/v1/data_sets/" + uploadId + "/data"
         
         guard let body = uploadable.postBodyData() else {

@@ -26,6 +26,9 @@
 		481E4B4A22F08C7500B128E8 /* TPUserSettings.swift in Sources */ = {isa = PBXBuildFile; fileRef = 481E4B4822F08C7500B128E8 /* TPUserSettings.swift */; };
 		481E4B4E22F0AA8700B128E8 /* TPKitTestsBase.swift in Sources */ = {isa = PBXBuildFile; fileRef = 481E4B4D22F0AA8700B128E8 /* TPKitTestsBase.swift */; };
 		481E4B5422F0B54200B128E8 /* TPKitTests01UserInfo.swift in Sources */ = {isa = PBXBuildFile; fileRef = 481E4B5322F0B54200B128E8 /* TPKitTests01UserInfo.swift */; };
+		483529DF23181A2C00C3D4DB /* TPKitTests13UserData_Bolus.swift in Sources */ = {isa = PBXBuildFile; fileRef = 483529DC23181A2C00C3D4DB /* TPKitTests13UserData_Bolus.swift */; };
+		483529E023181A2C00C3D4DB /* TPKitTests12UserData_Food.swift in Sources */ = {isa = PBXBuildFile; fileRef = 483529DD23181A2C00C3D4DB /* TPKitTests12UserData_Food.swift */; };
+		483529E123181A2C00C3D4DB /* TPKitTests11UserData_Cbg.swift in Sources */ = {isa = PBXBuildFile; fileRef = 483529DE23181A2C00C3D4DB /* TPKitTests11UserData_Cbg.swift */; };
 		48A28BC9230704C800438382 /* TPDeleteItem.swift in Sources */ = {isa = PBXBuildFile; fileRef = 48A28BC8230704C800438382 /* TPDeleteItem.swift */; };
 		48A28BCC2307118600438382 /* APIDeleteItemArray.swift in Sources */ = {isa = PBXBuildFile; fileRef = 48A28BCB2307118500438382 /* APIDeleteItemArray.swift */; };
 		48A628F423144EDC004C0C1E /* TidepoolKit.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 48F7135222E9FCB900FC2C89 /* TidepoolKit.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
@@ -162,6 +165,9 @@
 		481E4B4822F08C7500B128E8 /* TPUserSettings.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TPUserSettings.swift; sourceTree = "<group>"; };
 		481E4B4D22F0AA8700B128E8 /* TPKitTestsBase.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TPKitTestsBase.swift; sourceTree = "<group>"; };
 		481E4B5322F0B54200B128E8 /* TPKitTests01UserInfo.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TPKitTests01UserInfo.swift; sourceTree = "<group>"; };
+		483529DC23181A2C00C3D4DB /* TPKitTests13UserData_Bolus.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TPKitTests13UserData_Bolus.swift; sourceTree = "<group>"; };
+		483529DD23181A2C00C3D4DB /* TPKitTests12UserData_Food.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TPKitTests12UserData_Food.swift; sourceTree = "<group>"; };
+		483529DE23181A2C00C3D4DB /* TPKitTests11UserData_Cbg.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TPKitTests11UserData_Cbg.swift; sourceTree = "<group>"; };
 		48A28BC8230704C800438382 /* TPDeleteItem.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TPDeleteItem.swift; sourceTree = "<group>"; };
 		48A28BCB2307118500438382 /* APIDeleteItemArray.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = APIDeleteItemArray.swift; sourceTree = "<group>"; };
 		48A628FA231585F3004C0C1E /* TPPatient.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = TPPatient.swift; path = "TPUser Common/TPPatient.swift"; sourceTree = "<group>"; };
@@ -383,6 +389,9 @@
 				48F7136C22E9FEB600FC2C89 /* TPKitTests00Login.swift */,
 				481E4B5322F0B54200B128E8 /* TPKitTests01UserInfo.swift */,
 				48F7136D22E9FEB600FC2C89 /* TPKitTests10UserData.swift */,
+				483529DE23181A2C00C3D4DB /* TPKitTests11UserData_Cbg.swift */,
+				483529DD23181A2C00C3D4DB /* TPKitTests12UserData_Food.swift */,
+				483529DC23181A2C00C3D4DB /* TPKitTests13UserData_Bolus.swift */,
 				481E4B4D22F0AA8700B128E8 /* TPKitTestsBase.swift */,
 			);
 			path = TidepoolKitTests;
@@ -765,7 +774,10 @@
 				48F7136E22E9FEB600FC2C89 /* TPKitTests00Login.swift in Sources */,
 				48F7136F22E9FEB600FC2C89 /* TPKitTests10UserData.swift in Sources */,
 				480CD239230A2DFA0022D14D /* TPKitLoggerExample.swift in Sources */,
+				483529DF23181A2C00C3D4DB /* TPKitTests13UserData_Bolus.swift in Sources */,
 				481E4B5422F0B54200B128E8 /* TPKitTests01UserInfo.swift in Sources */,
+				483529E123181A2C00C3D4DB /* TPKitTests11UserData_Cbg.swift in Sources */,
+				483529E023181A2C00C3D4DB /* TPKitTests12UserData_Food.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

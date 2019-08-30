@@ -12,7 +12,7 @@ import TidepoolKit
 class TPKitTests01UserInfo: TPKitTestsBase {
 
     func test01UserProfileFetch() {
-        let expectation = self.expectation(description: "Profile fetch successful")
+        let expectation = self.expectation(description: "user profile fetch completed")
         let tpKit = getTpKitSingleton()
         // Log in if necessary, and then try fetching user profile...
         NSLog("\(#function): next calling ensureLogin...")
@@ -20,10 +20,10 @@ class TPKitTests01UserInfo: TPKitTestsBase {
             session in
             tpKit.getProfileInfo(for: session.user) {
                 result in
+                expectation.fulfill()
                 switch result {
                 case .success(let tpUserProfile):
                     NSLog("TPUserProfile fetch succeeded: \(tpUserProfile)")
-                    expectation.fulfill()
                 case .failure(let error):
                     XCTFail("profile fetch failed! Error: \(error)")
                 }
@@ -35,7 +35,7 @@ class TPKitTests01UserInfo: TPKitTestsBase {
     }
     
     func test02UserSettingsFetch() {
-        let expectation = self.expectation(description: "User settings fetch successful")
+        let expectation = self.expectation(description: "user settings fetch completed")
         let tpKit = getTpKitSingleton()
         // Log in if necessary, and then try fetching user settings...
         NSLog("\(#function): next calling ensureLogin...")
@@ -43,6 +43,7 @@ class TPKitTests01UserInfo: TPKitTestsBase {
             session in
             tpKit.getSettingsInfo(for: session.user) {
                 result in
+                expectation.fulfill()
                 switch result {
                 case .success(let tpUserSettings):
                     if let settings = tpUserSettings {
@@ -50,7 +51,6 @@ class TPKitTests01UserInfo: TPKitTestsBase {
                     } else {
                         NSLog("TPUserSettings fetch found no settings for this user!")
                     }
-                    expectation.fulfill()
                 case .failure(let error):
                     XCTFail("settings fetch failed! Error: \(error)")
                 }
@@ -62,7 +62,7 @@ class TPKitTests01UserInfo: TPKitTestsBase {
     }
 
     func test03AccessUsersFetch() {
-        let expectation = self.expectation(description: "Access users fetch successful")
+        let expectation = self.expectation(description: "access users fetch, and fetch of one user profile complete")
         let tpKit = getTpKitSingleton()
         // Log in if necessary, and then try fetching user settings...
         NSLog("\(#function): next calling ensureLogin...")
@@ -77,10 +77,10 @@ class TPKitTests01UserInfo: TPKitTestsBase {
                     XCTAssert(!accessUsers.isEmpty)
                     tpKit.getProfileInfo(for: accessUsers.last!) {
                         result in
+                        expectation.fulfill()
                         switch result {
                         case .success(let tpUserProfile):
                             NSLog("profile fetch succeeded: \(tpUserProfile)")
-                            expectation.fulfill()
                         case .failure(let error):
                             XCTFail("profile fetch failed! Error: \(error)")
                         }

@@ -137,7 +137,7 @@ public class TidepoolKit {
     }
     
     /**
-     Calls the service to refresh the auth token for the current session. This should be called after a login with session: if offline, this might be tried later when network connectivity is restored.
+     Calls the service to refresh the auth token, and user email for the current session. This should be called after a login with session: if offline, this might be tried later when network connectivity is restored.
      
      - note: If result is .unauthorized, this will change the logged-in state of TidepoolKit to logged out.
      - note: Possible errors:
@@ -146,9 +146,9 @@ public class TidepoolKit {
      - .unauthorized: auth token not valid (e.g., expired, 401 status)
 
      - parameter completion: This completion handler takes a Result parameter:
-     - parameter result: Result.success with a true value (server returned a 200 status), or Result.failure with an error value.
+     - parameter result: Result.success with the refreshed TPSession and TPUser (server returned a 200 status), or Result.failure with an error value.
      */
-    public func refreshSession(completion: @escaping (_ result: Result<Bool, TidepoolKitError>) -> (Void)) {
+    public func refreshSession(completion: @escaping (_ result: Result<TPSession, TidepoolKitError>) -> (Void)) {
         apiConnect.refreshToken(completion)
     }
     

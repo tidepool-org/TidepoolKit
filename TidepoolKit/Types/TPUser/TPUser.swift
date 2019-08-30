@@ -13,11 +13,11 @@ public class TPUser: TPUserData, RawRepresentable {
     
     // fields from user login...
     public let userId: String
-    public let userName: String?  // email...
+    public let userEmail: String?  // email...
     
     public init(_ userId: String, userName: String? = nil) {
         self.userId = userId
-        self.userName = userName
+        self.userEmail = userName
     }
     
     //
@@ -28,14 +28,14 @@ public class TPUser: TPUserData, RawRepresentable {
         guard let userId = rawValue["userid"] as? String else {
             return nil
         }
-        self.userName = rawValue["username"] as? String
+        self.userEmail = rawValue["username"] as? String
         self.userId = userId
      }
     
     public override var rawValue: [String : Any] {
         var result = [String: Any]()
         result["userid"] = userId
-        result["username"] = userName
+        result["username"] = userEmail
         return result
     }
 
