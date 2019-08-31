@@ -11,7 +11,100 @@ import TidepoolKit
 
 class TPKitTests13UserData_Bolus: TPKitTestsBase {
 
+    func dateFromStr(_ str: String) -> Date {
+        let dateFormatter = DateFormatter()
+        dateFormatter.dateFormat = "yyyy-MM-dd'T'HH:mm:ss.SSS'Z'"
+        dateFormatter.timeZone = TimeZone(identifier: "GMT")
+        guard let result = dateFormatter.date(from: str) else {
+            XCTFail("unable to parse date string: \(str)")
+            return Date()
+        }
+        return result
+    }
+    
+    func createNormalBolusItem(_ normal: Double) -> TPDataBolus {
+        let newId = UUID.init().uuidString
+        let origin = TPDataOrigin(id: newId, name: "org.tidepool.tidepoolKitTest", type: .service, payload: nil)!
+        let normalSample = TPDataBolusNormal(time: Date(), normal: normal)
+        normalSample?.origin = origin
+        XCTAssertNotNil(normalSample, "\(#function) failed to create normal bolus sample!")
+        NSLog("created TPDataBolusNormal: \(normalSample!)")
+        return normalSample!
+    }
+    
+    func createExtendedBolusItem(_ extended: Double, duration: TimeInterval) -> TPDataBolus {
+        let newId = UUID.init().uuidString
+        let origin = TPDataOrigin(id: newId, name: "org.tidepool.tidepoolKitTest", type: .service, payload: nil)!
+        let extendedSample = TPDataBolusExtended(time: Date(), extended: extended, duration: duration)
+        extendedSample?.origin = origin
+        XCTAssertNotNil(extendedSample, "\(#function) failed to create extended bolus sample!")
+        NSLog("created TPDataBolusExtended: \(extendedSample!)")
+        return extendedSample!
+    }
+
+    func createCombinationBolusItem(normal: Double, expectedNormal: Double? = nil, extended: Double, expectedExtended: Double? = nil, duration: TimeInterval, expectedDuration: TimeInterval? = nil) -> TPDataBolus {
+        let newId = UUID.init().uuidString
+        let origin = TPDataOrigin(id: newId, name: "org.tidepool.tidepoolKitTest", type: .service, payload: nil)!
+        let combinationSample = TPDataBolusCombination(time: Date(), normal: normal, expectedNormal: expectedNormal, extended: extended, expectedExtended: expectedExtended, duration: duration, expectedDuration: expectedDuration)
+        combinationSample?.origin = origin
+        XCTAssertNotNil(combinationSample, "\(#function) failed to create combination bolus sample!")
+        NSLog("created TPDataBolusCombination: \(combinationSample!)")
+        return combinationSample!
+    }
+
+    func checkSerializeAndInitFromRaw(_ sample: TPDataBolus, subType: TPBolusSubType) {
+        let asDict = sample.rawValue
+        NSLog("serialized as dictionary: \(asDict)")
+        var fromRaw: TPDataBolus?
+        switch subType {
+        case .normal:
+            fromRaw = TPDataBolusNormal(rawValue: asDict)
+        case .extended:
+            fromRaw = TPDataBolusExtended(rawValue: asDict)
+        case .combination:
+            fromRaw = TPDataBolusCombination(rawValue: asDict)
+        }
+        XCTAssertNotNil(fromRaw)
+        XCTAssertTrue(stringAnyDictDiff(a1: asDict, a2: fromRaw!.rawValue))
+    }
+
+    func test11CreateAndUploadBolusDataItems() {
+        
+        let normalSample: TPDataBolus = createNormalBolusItem(2.55)
+        checkSerializeAndInitFromRaw(normalSample, subType: .normal)
+        
+        let extendedSample = createExtendedBolusItem(4.0, duration: 60*4)
+        checkSerializeAndInitFromRaw(extendedSample, subType: .extended)
+
+        let combinationSample = createCombinationBolusItem(normal: 1.5, expectedNormal: 4.5, extended: 0.0, expectedExtended: 2.0, duration: 0, expectedDuration: 60*6)
+        checkSerializeAndInitFromRaw(combinationSample, subType: .combination)
+        
+        let expectation = self.expectation(description: "post of bolus sample data completed")
+        let tpKit = getTpKitSingleton()
+        // first, ensure we are logged in, and then ...
+        NSLog("\(#function): next calling ensureLogin/Dataset...")
+        ensureDataset() {
+            dataset, session in
+            XCTAssert(tpKit.isLoggedIn())
+            
+            tpKit.putData(samples: [normalSample, extendedSample, combinationSample], into: dataset) {
+                result  in
+                expectation.fulfill()
+                switch result {
+                case .failure:
+                    NSLog("\(#function) failed user data upload!")
+                    XCTFail()
+                case .success:
+                    NSLog("\(#function) upload succeeded!")
+                }
+            }
+        }
+        waitForExpectations(timeout: 20.0, handler: nil)
+    }
+
     let kOneWeekTimeInterval: TimeInterval = 60*60*24*7
+    let kOneDayTimeInterval: TimeInterval = 60*60*24
+    let kOnehourTimeInterval: TimeInterval = 60*60
     func test12GetDeviceData_Bolus() {
         let expectation = self.expectation(description: "Fetch of bolus data complete")
         let tpKit = getTpKitSingleton()
@@ -20,9 +113,15 @@ class TPKitTests13UserData_Bolus: TPKitTestsBase {
         ensureLogin() {
             session in
             XCTAssert(tpKit.isLoggedIn())
-            //let end = Date()
-            //let start = end.addingTimeInterval(-self.kOneWeekTimeInterval)
-            tpKit.getData(for: session.user, startDate: .distantPast, endDate: .distantFuture, objectTypes: "bolus") {
+            // last hour:
+            let end = Date()
+            let start = end.addingTimeInterval(-self.kOnehourTimeInterval)
+            // around a particular date
+            //let dateStr = "2017-04-21T03:28:30.000Z"
+            //let itemDate = self.dateFromStr(dateStr)
+            //let end =  itemDate.addingTimeInterval(self.kOnehourTimeInterval)
+            //let start = itemDate.addingTimeInterval(-self.kOnehourTimeInterval)
+            tpKit.getData(for: session.user, startDate: start, endDate: end, objectTypes: "bolus") {
                 result in
                 expectation.fulfill()
                 switch result {
@@ -31,6 +130,10 @@ class TPKitTests13UserData_Bolus: TPKitTestsBase {
                     XCTFail()
                 case .success(let userDataArray):
                     NSLog("\(#function) fetched \(userDataArray.count) items!")
+                    for i in 0..<userDataArray.count {
+                        NSLog("item \(i):")
+                        NSLog("\(userDataArray[i])")
+                    }
                 }
             }
         }
