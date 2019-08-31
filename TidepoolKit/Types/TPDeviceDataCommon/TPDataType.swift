@@ -14,6 +14,8 @@ public enum TPDataType: String, Codable {
     case food = "food"
     case basal = "basal"
     case bolus = "bolus"
+    // other specific to sample types
+    case suppressed = "suppressed"
     // common types
     case origin = "origin"
     case payload = "payload"

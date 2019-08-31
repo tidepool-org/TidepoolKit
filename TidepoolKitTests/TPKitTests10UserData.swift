@@ -63,7 +63,6 @@ class TPKitTests10UserData: TPKitTestsBase {
         waitForExpectations(timeout: 20.0, handler: nil)
     }
 
-    let kOneWeekTimeInterval: TimeInterval = 60*60*24*7
     func test12GetUserData() {
         let expectation = self.expectation(description: "user data fetch completed")
         let tpKit = getTpKitSingleton()

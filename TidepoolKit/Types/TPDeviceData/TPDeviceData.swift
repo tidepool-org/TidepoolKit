@@ -118,12 +118,10 @@ public class TPDeviceData: RawRepresentable, CustomStringConvertible {
             LogInfo("TPDataCommon.createFromJson found food item!")
             tpData = TPDataFood(rawValue: jsonDict)
         case .basal:
-            // TODO!
             LogInfo("TPDataCommon.createFromJson ignored basal item!")
-            //tpData = TPDataBasal.createBasalFromJson(jsonDict, id: id, time: time)
+            tpData = TPDataBasal.createBasalFromJson(jsonDict)
             break
         case .bolus:
-            // TODO!
             LogInfo("TPDataCommon.createFromJson found bolus item!")
             tpData = TPDataBolus.createBolusFromJson(jsonDict)
         default:

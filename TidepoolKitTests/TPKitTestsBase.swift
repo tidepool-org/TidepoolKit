@@ -18,6 +18,10 @@ var tidepoolKit: TidepoolKit?
 
 class TPKitTestsBase: XCTestCase {
 
+    let kOneWeekTimeInterval: TimeInterval = 60*60*24*7
+    let kOneDayTimeInterval: TimeInterval = 60*60*24
+    let kOnehourTimeInterval: TimeInterval = 60*60
+
     override func setUp() {
         super.setUp()
     }

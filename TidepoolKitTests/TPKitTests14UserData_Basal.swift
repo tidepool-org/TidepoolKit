@@ -1,16 +1,16 @@
 //
-//  TPKitTests13UserData_Bolus.swift
-//  TidepoolKit
+//  TPKitTests14UserData_Basal.swift
+//  TidepoolKitTests
 //
-//  Created by Larry Kenyon on 8/23/19.
+//  Created by Larry Kenyon on 8/31/19.
 //  Copyright © 2019 Tidepool Project. All rights reserved.
 //
 
 import XCTest
 import TidepoolKit
 
-class TPKitTests13UserData_Bolus: TPKitTestsBase {
-
+class TPKitTests14UserData_Basal: TPKitTestsBase {
+    
     func dateFromStr(_ str: String) -> Date {
         let dateFormatter = DateFormatter()
         dateFormatter.dateFormat = "yyyy-MM-dd'T'HH:mm:ss.SSS'Z'"
@@ -22,64 +22,70 @@ class TPKitTests13UserData_Bolus: TPKitTestsBase {
         return result
     }
     
-    func createNormalBolusItem(_ normal: Double) -> TPDataBolus {
+    func createAutoBasalItem(_ rate: Double) -> TPDataBasal {
         let newId = UUID.init().uuidString
         let origin = TPDataOrigin(id: newId, name: "org.tidepool.tidepoolKitTest", type: .service, payload: nil)!
-        let normalSample = TPDataBolusNormal(time: Date(), normal: normal)
-        normalSample?.origin = origin
-        XCTAssertNotNil(normalSample, "\(#function) failed to create normal bolus sample!")
-        NSLog("created TPDataBolusNormal: \(normalSample!)")
-        return normalSample!
+        let sample = TPDataBasalAutomated(time: Date(), rate: rate, scheduleName: "test auto", duration: kOneDayTimeInterval, expectedDuration: kOneDayTimeInterval)
+        sample?.origin = origin
+        XCTAssertNotNil(sample, "\(#function) failed to create automated basal sample!")
+        NSLog("created TPDataBasalAutomated: \(sample!)")
+        return sample!
     }
     
-    func createExtendedBolusItem(_ extended: Double, duration: TimeInterval) -> TPDataBolus {
+    func createSchedBasalItem(_ rate: Double) -> TPDataBasal {
         let newId = UUID.init().uuidString
         let origin = TPDataOrigin(id: newId, name: "org.tidepool.tidepoolKitTest", type: .service, payload: nil)!
-        let extendedSample = TPDataBolusExtended(time: Date(), extended: extended, duration: duration)
-        extendedSample?.origin = origin
-        XCTAssertNotNil(extendedSample, "\(#function) failed to create extended bolus sample!")
-        NSLog("created TPDataBolusExtended: \(extendedSample!)")
-        return extendedSample!
+        let sample = TPDataBasalScheduled(time: Date(), rate: rate, scheduleName: "test schedule", duration: kOneDayTimeInterval, expectedDuration: kOneDayTimeInterval)
+        sample?.origin = origin
+        XCTAssertNotNil(sample, "\(#function) failed to create scheduled basal sample!")
+        NSLog("created TPDataBasalScheduled: \(sample!)")
+        return sample!
     }
 
-    func createCombinationBolusItem(normal: Double, expectedNormal: Double? = nil, extended: Double, expectedExtended: Double? = nil, duration: TimeInterval, expectedDuration: TimeInterval? = nil) -> TPDataBolus {
+    func createTempBasalItem(_ rate: Double) -> TPDataBasal {
         let newId = UUID.init().uuidString
         let origin = TPDataOrigin(id: newId, name: "org.tidepool.tidepoolKitTest", type: .service, payload: nil)!
-        let combinationSample = TPDataBolusCombination(time: Date(), normal: normal, expectedNormal: expectedNormal, extended: extended, expectedExtended: expectedExtended, duration: duration, expectedDuration: expectedDuration)
-        combinationSample?.origin = origin
-        XCTAssertNotNil(combinationSample, "\(#function) failed to create combination bolus sample!")
-        NSLog("created TPDataBolusCombination: \(combinationSample!)")
-        return combinationSample!
+        //let suppressed = TPDataSuppressed(
+        let sample = TPDataBasalTemporary(time: Date(), duration: kOneDayTimeInterval, expectedDuration: kOneDayTimeInterval, rate: rate)
+        sample?.origin = origin
+        XCTAssertNotNil(sample, "\(#function) failed to create temporary basal sample!")
+        NSLog("created TPDataBasalTemporary: \(sample!)")
+        return sample!
     }
-
-    func checkSerializeAndInitFromRaw(_ sample: TPDataBolus, subType: TPBolusSubType) {
+    
+    func checkSerializeAndInitFromRaw(_ sample: TPDataBasal, deliveryType: TPBasalDeliveryType) {
         let asDict = sample.rawValue
         NSLog("serialized as dictionary: \(asDict)")
-        var fromRaw: TPDataBolus?
-        switch subType {
-        case .normal:
-            fromRaw = TPDataBolusNormal(rawValue: asDict)
-        case .extended:
-            fromRaw = TPDataBolusExtended(rawValue: asDict)
-        case .combination:
-            fromRaw = TPDataBolusCombination(rawValue: asDict)
+        var fromRaw: TPDataBasal?
+        switch deliveryType {
+        case .automated:
+            fromRaw = TPDataBasalAutomated(rawValue: asDict)
+        case .scheduled:
+            fromRaw = TPDataBasalScheduled(rawValue: asDict)
+        case .temp:
+            fromRaw = TPDataBasalTemporary(rawValue: asDict)
+        case .suspend:
+            fromRaw = TPDataBasalSuppressed(rawValue: asDict)
         }
         XCTAssertNotNil(fromRaw)
-        XCTAssertTrue(stringAnyDictDiff(a1: asDict, a2: fromRaw!.rawValue))
+        let valuesAreEqualivalent = stringAnyDictDiff(a1: asDict, a2: fromRaw!.rawValue)
+        if !valuesAreEqualivalent {
+            XCTFail("a1 and a2 differ!")
+        }
     }
+    
+    func test11CreateAndUploadBasalDataItems() {
+        
+        let autoSample: TPDataBasal = createAutoBasalItem(2.55)
+        checkSerializeAndInitFromRaw(autoSample, deliveryType: .automated)
+        
+        let schedSample: TPDataBasal = createSchedBasalItem(1.50)
+        checkSerializeAndInitFromRaw(schedSample, deliveryType: .scheduled)
+        
+        let tempSample: TPDataBasal = createTempBasalItem(0.55)
+        checkSerializeAndInitFromRaw(autoSample, deliveryType: .temp)
 
-    func test11CreateAndUploadBolusDataItems() {
-        
-        let normalSample: TPDataBolus = createNormalBolusItem(2.55)
-        checkSerializeAndInitFromRaw(normalSample, subType: .normal)
-        
-        let extendedSample = createExtendedBolusItem(4.0, duration: 60*4)
-        checkSerializeAndInitFromRaw(extendedSample, subType: .extended)
-
-        let combinationSample = createCombinationBolusItem(normal: 1.5, expectedNormal: 4.5, extended: 0.0, expectedExtended: 2.0, duration: 0, expectedDuration: 60*6)
-        checkSerializeAndInitFromRaw(combinationSample, subType: .combination)
-        
-        let expectation = self.expectation(description: "post of bolus sample data completed")
+        let expectation = self.expectation(description: "post of basal sample data completed")
         let tpKit = getTpKitSingleton()
         // first, ensure we are logged in, and then ...
         NSLog("\(#function): next calling ensureLogin/Dataset...")
@@ -87,7 +93,7 @@ class TPKitTests13UserData_Bolus: TPKitTestsBase {
             dataset, session in
             XCTAssert(tpKit.isLoggedIn())
             
-            tpKit.putData(samples: [normalSample, extendedSample, combinationSample], into: dataset) {
+            tpKit.putData(samples: [autoSample, schedSample, tempSample], into: dataset) {
                 result  in
                 expectation.fulfill()
                 switch result {
@@ -101,9 +107,9 @@ class TPKitTests13UserData_Bolus: TPKitTestsBase {
         }
         waitForExpectations(timeout: 20.0, handler: nil)
     }
-
-    func test12GetDeviceData_Bolus() {
-        let expectation = self.expectation(description: "Fetch of bolus data complete")
+    
+    func test12GetDeviceData_Basal() {
+        let expectation = self.expectation(description: "Fetch of basal data complete")
         let tpKit = getTpKitSingleton()
         // first, ensure we are logged in, and then ...
         NSLog("\(#function): next calling ensureLogin...")
@@ -118,7 +124,7 @@ class TPKitTests13UserData_Bolus: TPKitTestsBase {
             //let itemDate = self.dateFromStr(dateStr)
             //let end =  itemDate.addingTimeInterval(self.kOnehourTimeInterval)
             //let start = itemDate.addingTimeInterval(-self.kOnehourTimeInterval)
-            tpKit.getData(for: session.user, startDate: start, endDate: end, objectTypes: "bolus") {
+            tpKit.getData(for: session.user, startDate: start, endDate: end, objectTypes: "basal") {
                 result in
                 expectation.fulfill()
                 switch result {
@@ -137,5 +143,5 @@ class TPKitTests13UserData_Bolus: TPKitTestsBase {
         // Wait 20.0 seconds until expectation has been fulfilled (sometimes staging takes almost 10 seconds). If not, fail.
         waitForExpectations(timeout: 20.0, handler: nil)
     }
-
+    
 }
