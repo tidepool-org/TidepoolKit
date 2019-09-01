@@ -24,6 +24,7 @@ public struct TPDeduplicator: RawRepresentable, Equatable {
         self.version = version
     }
     
+    // just compare on type but not version!
     public static func == (lhs: TPDeduplicator, rhs: TPDeduplicator) -> Bool {
         return lhs.type == rhs.type
     }

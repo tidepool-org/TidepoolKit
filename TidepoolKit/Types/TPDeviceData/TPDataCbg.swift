@@ -38,12 +38,11 @@ public class TPDataCbg: TPDeviceData, TPData {
     public let units: TPCbgUnit
 
     /// Only values acceptable to the Tidepool service are allowed in creating a TPDataCbg item.
-    public init?(time: Date, value: Double, units: TPCbgUnit) {
+    public init(time: Date, value: Double, units: TPCbgUnit) {
         self.value = value
         self.units = units
-        guard self.units.inRange(self.value) else {
+        if !self.units.inRange(self.value) {
             LogError("TPDataCbg init: value \(value) \(units.rawValue) out of range!")
-            return nil
         }
         // TPSampleData fields
         super.init(.cbg, time: time)

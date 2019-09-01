@@ -114,8 +114,8 @@ class TPKitTests12UserData_Food: TPKitTestsBase {
         // add in origin...
         let newOriginId = UUID.init().uuidString
         let origin = TPDataOrigin(id: newOriginId, name: "org.tidepool.tidepoolKitTest", type: .service, payload: nil)!
-        foodSample?.origin = origin
-        NSLog("created TPDataFood: \(foodSample!)")
+        foodSample.origin = origin
+        NSLog("created TPDataFood: \(foodSample)")
         return foodSample
     }
 
@@ -130,8 +130,8 @@ class TPKitTests12UserData_Food: TPKitTestsBase {
         XCTAssertTrue(stringAnyDictDiff(a1: food1Dict, a2: food2.rawValue))
         // test copy...
         let food3 = TPDataFood(time: food2.time!, name: food2.name, brand: food2.brand, code: food2.code, meal: food2.meal, mealOther: food2.mealOther, amount: food2.amount, nutrition: food2.nutrition, ingredients: food2.ingredients)
-        food3!.origin = food1.origin
-        XCTAssertTrue(stringAnyDictDiff(a1: food1Dict, a2: food3!.rawValue))
+        food3.origin = food1.origin
+        XCTAssertTrue(stringAnyDictDiff(a1: food1Dict, a2: food3.rawValue))
     }
 
     func test18_1_PostFoodDataItem() {

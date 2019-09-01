@@ -19,7 +19,7 @@ public class TPDataBolusExtended: TPDataBolus {
     public let duration: TimeInterval
     public let expectedDuration: TimeInterval?
 
-    public init?(time: Date, extended: Double, expectedExtended: Double? = nil, duration: TimeInterval, expectedDuration: TimeInterval? = nil) {
+    public init(time: Date, extended: Double, expectedExtended: Double? = nil, duration: TimeInterval, expectedDuration: TimeInterval? = nil) {
         self.extended = extended
         self.expectedExtended = expectedExtended
         self.duration = duration

@@ -26,8 +26,9 @@ public struct TPDatasetClient: Equatable {
         }
     }
 
+    // just compare on type and not version!
     public static func == (lhs: TPDatasetClient, rhs: TPDatasetClient) -> Bool {
-        return lhs.name == rhs.name && lhs.version == rhs.version
+        return lhs.name == rhs.name
     }
 
     //

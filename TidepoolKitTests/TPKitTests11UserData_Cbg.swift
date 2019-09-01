@@ -69,11 +69,7 @@ class TPKitTests11UserData_Cbg: TPKitTestsBase {
             let newId = UUID.init().uuidString
             let origin = TPDataOrigin(id: newId, name: "org.tidepool.tidepoolKitTest", type: .service, payload: self.TestCbgOriginPayload2)!
             let payload = self.TestCbgPayload2
-            guard let cbgSample = TPDataCbg(time: Date(), value: 90, units: .milligramsPerDeciliter) else {
-                NSLog("\(#function) failed to create cbg sample!")
-                XCTFail()
-                return
-            }
+            let cbgSample = TPDataCbg(time: Date(), value: 90, units: .milligramsPerDeciliter)
             cbgSample.origin = origin
             cbgSample.payload = payload
             NSLog("created TPDataCbg: \(cbgSample)")

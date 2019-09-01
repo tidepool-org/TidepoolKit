@@ -20,7 +20,7 @@ class TPKitTestsBase: XCTestCase {
 
     let kOneWeekTimeInterval: TimeInterval = 60*60*24*7
     let kOneDayTimeInterval: TimeInterval = 60*60*24
-    let kOnehourTimeInterval: TimeInterval = 60*60
+    let kOneHourTimeInterval: TimeInterval = 60*60
 
     override func setUp() {
         super.setUp()
@@ -151,4 +151,49 @@ class TPKitTestsBase: XCTestCase {
         return result
     }
 
+    // utility delete...
+    func deleteTestItems(_ start: Date, end: Date, completion: @escaping (_ result: Result<Bool, TidepoolKitError>) -> (Void)) {
+        let tpKit = getTpKitSingleton()
+        // first, ensure we are logged in, and then ...
+        ensureDataset() {
+            dataset, session in
+            XCTAssert(tpKit.isLoggedIn())
+            tpKit.getData(for: session.user, startDate: start, endDate: end) {
+                result in
+                switch result {
+                case .failure(let error):
+                    NSLog("\(#function) failed user data fetch!")
+                    completion(.failure(error))
+                case .success(let userDataArray):
+                    let itemCount = userDataArray.count
+                    NSLog("\(#function) fetched \(itemCount) items!")
+                    guard itemCount > 0 else {
+                        NSLog("\(#function) no data to delete!")
+                        completion(.success(true))
+                        return
+                    }
+                    // convert existing TPDeviceData items into TPDeleteItems
+                    var deleteItems: [TPDeleteItem] = []
+                    for item in userDataArray {
+                        if let deleteItem = TPDeleteItem(item) {
+                            deleteItems.append(deleteItem)
+                        }
+                    }
+                    // and delete...
+                    tpKit.deleteData(samples: deleteItems, from: dataset) {
+                        result in
+                        switch result {
+                        case .failure:
+                            NSLog("\(#function) failed delete user data!")
+                            XCTFail()
+                        case .success:
+                            NSLog("\(#function) delete succeeded!")
+                        }
+                        completion(result)
+                    }
+                }
+            }
+        }
+
+    }
 }

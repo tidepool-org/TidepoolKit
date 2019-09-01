@@ -25,34 +25,68 @@ class TPKitTests14UserData_Basal: TPKitTestsBase {
     func createAutoBasalItem(_ rate: Double) -> TPDataBasal {
         let newId = UUID.init().uuidString
         let origin = TPDataOrigin(id: newId, name: "org.tidepool.tidepoolKitTest", type: .service, payload: nil)!
-        let sample = TPDataBasalAutomated(time: Date(), rate: rate, scheduleName: "test auto", duration: kOneDayTimeInterval, expectedDuration: kOneDayTimeInterval)
-        sample?.origin = origin
-        XCTAssertNotNil(sample, "\(#function) failed to create automated basal sample!")
-        NSLog("created TPDataBasalAutomated: \(sample!)")
-        return sample!
+        let scheduleName = "test schedule"
+        let duration = kOneDayTimeInterval
+        let expectedDuration = kOneDayTimeInterval
+        let sample = TPDataBasalAutomated(time: Date(), rate: rate, scheduleName: scheduleName, duration: duration, expectedDuration: expectedDuration)
+        sample.origin = origin
+        XCTAssert(sample.deliveryType == .automated)
+        XCTAssert(sample.rate == rate)
+        XCTAssert(sample.scheduleName == scheduleName)
+        XCTAssert(sample.duration == duration)
+        XCTAssert(sample.expectedDuration == expectedDuration)
+        NSLog("created TPDataBasalAutomated: \(sample)")
+        return sample
     }
     
     func createSchedBasalItem(_ rate: Double) -> TPDataBasal {
         let newId = UUID.init().uuidString
         let origin = TPDataOrigin(id: newId, name: "org.tidepool.tidepoolKitTest", type: .service, payload: nil)!
-        let sample = TPDataBasalScheduled(time: Date(), rate: rate, scheduleName: "test schedule", duration: kOneDayTimeInterval, expectedDuration: kOneDayTimeInterval)
-        sample?.origin = origin
-        XCTAssertNotNil(sample, "\(#function) failed to create scheduled basal sample!")
-        NSLog("created TPDataBasalScheduled: \(sample!)")
-        return sample!
+        let scheduleName = "test schedule"
+        let duration = kOneDayTimeInterval
+        let expectedDuration = kOneDayTimeInterval
+        let sample = TPDataBasalScheduled(time: Date(), rate: rate, scheduleName: scheduleName, duration: duration, expectedDuration: expectedDuration)
+        sample.origin = origin
+        XCTAssert(sample.deliveryType == .scheduled)
+        XCTAssert(sample.rate == rate)
+        XCTAssert(sample.scheduleName == scheduleName)
+        XCTAssert(sample.duration == duration)
+        XCTAssert(sample.expectedDuration == expectedDuration)
+        NSLog("created TPDataBasalScheduled: \(sample)")
+        return sample
     }
 
     func createTempBasalItem(_ rate: Double) -> TPDataBasal {
         let newId = UUID.init().uuidString
         let origin = TPDataOrigin(id: newId, name: "org.tidepool.tidepoolKitTest", type: .service, payload: nil)!
-        //let suppressed = TPDataSuppressed(
-        let sample = TPDataBasalTemporary(time: Date(), duration: kOneDayTimeInterval, expectedDuration: kOneDayTimeInterval, rate: rate)
-        sample?.origin = origin
-        XCTAssertNotNil(sample, "\(#function) failed to create temporary basal sample!")
-        NSLog("created TPDataBasalTemporary: \(sample!)")
-        return sample!
+        let duration = kOneDayTimeInterval
+        let expectedDuration = kOneDayTimeInterval
+        let suppressed = TPDataSuppressed(.scheduled, rate: 0.25, scheduleName: "Standard")
+        let sample = TPDataBasalTemporary(time: Date(), duration: duration, expectedDuration: expectedDuration, rate: rate, suppressed: suppressed)
+        sample.origin = origin
+        XCTAssert(sample.deliveryType == .temp)
+        XCTAssert(sample.rate == rate)
+        XCTAssert(sample.duration == duration)
+        XCTAssert(sample.expectedDuration == expectedDuration)
+        NSLog("created TPDataBasalTemporary: \(sample)")
+        return sample
     }
     
+    func createSuspendBasalItem(_ deliveryType: TPBasalDeliveryType, rate: Double) -> TPDataBasal {
+        let newId = UUID.init().uuidString
+        let origin = TPDataOrigin(id: newId, name: "org.tidepool.tidepoolKitTest", type: .service, payload: nil)!
+        let duration = kOneHourTimeInterval
+        let expectedDuration = kOneDayTimeInterval
+        let suppressed = TPDataSuppressed(deliveryType, rate: 0.25, scheduleName: "Standard")
+        let sample = TPDataBasalSuppressed(time: Date(), duration: duration, expectedDuration: expectedDuration, suppressed: suppressed)
+        XCTAssertNotNil(sample, "\(#function) failed to create temporary basal sample!")
+        XCTAssert(sample.deliveryType == .suspend)
+        XCTAssert(sample.duration == duration)
+        XCTAssert(sample.expectedDuration == expectedDuration)
+        NSLog("created TPDataBasalSuppressed: \(sample)")
+        return sample
+    }
+
     func checkSerializeAndInitFromRaw(_ sample: TPDataBasal, deliveryType: TPBasalDeliveryType) {
         let asDict = sample.rawValue
         NSLog("serialized as dictionary: \(asDict)")
@@ -74,7 +108,21 @@ class TPKitTests14UserData_Basal: TPKitTestsBase {
         }
     }
     
-    func test11CreateAndUploadBasalDataItems() {
+    func test11CreateAndSerializeBasalDataItems() {
+        let autoSample: TPDataBasal = createAutoBasalItem(2.55)
+        checkSerializeAndInitFromRaw(autoSample, deliveryType: .automated)
+        
+        let schedSample: TPDataBasal = createSchedBasalItem(1.50)
+        checkSerializeAndInitFromRaw(schedSample, deliveryType: .scheduled)
+        
+        let tempSample: TPDataBasal = createTempBasalItem(0.55)
+        checkSerializeAndInitFromRaw(tempSample, deliveryType: .temp)
+        
+        let suspendSample: TPDataBasal = createSuspendBasalItem(.scheduled, rate: 0.25)
+        checkSerializeAndInitFromRaw(suspendSample, deliveryType: .suspend)
+    }
+
+    func test12CreateAndUploadBasalDataItems() {
         
         let autoSample: TPDataBasal = createAutoBasalItem(2.55)
         checkSerializeAndInitFromRaw(autoSample, deliveryType: .automated)
@@ -83,7 +131,10 @@ class TPKitTests14UserData_Basal: TPKitTestsBase {
         checkSerializeAndInitFromRaw(schedSample, deliveryType: .scheduled)
         
         let tempSample: TPDataBasal = createTempBasalItem(0.55)
-        checkSerializeAndInitFromRaw(autoSample, deliveryType: .temp)
+        checkSerializeAndInitFromRaw(tempSample, deliveryType: .temp)
+
+        let suspendSample: TPDataBasal = createSuspendBasalItem(.scheduled, rate: 0.25)
+        checkSerializeAndInitFromRaw(suspendSample, deliveryType: .suspend)
 
         let expectation = self.expectation(description: "post of basal sample data completed")
         let tpKit = getTpKitSingleton()
@@ -93,7 +144,7 @@ class TPKitTests14UserData_Basal: TPKitTestsBase {
             dataset, session in
             XCTAssert(tpKit.isLoggedIn())
             
-            tpKit.putData(samples: [autoSample, schedSample, tempSample], into: dataset) {
+            tpKit.putData(samples: [autoSample, schedSample, tempSample, suspendSample], into: dataset) {
                 result  in
                 expectation.fulfill()
                 switch result {
@@ -108,7 +159,7 @@ class TPKitTests14UserData_Basal: TPKitTestsBase {
         waitForExpectations(timeout: 20.0, handler: nil)
     }
     
-    func test12GetDeviceData_Basal() {
+    func test13GetDeviceData_Basal() {
         let expectation = self.expectation(description: "Fetch of basal data complete")
         let tpKit = getTpKitSingleton()
         // first, ensure we are logged in, and then ...
@@ -118,7 +169,7 @@ class TPKitTests14UserData_Basal: TPKitTestsBase {
             XCTAssert(tpKit.isLoggedIn())
             // last hour:
             let end = Date()
-            let start = end.addingTimeInterval(-self.kOnehourTimeInterval)
+            let start = end.addingTimeInterval(-self.kOneHourTimeInterval)
             // around a particular date
             //let dateStr = "2017-04-21T03:28:30.000Z"
             //let itemDate = self.dateFromStr(dateStr)
@@ -144,4 +195,116 @@ class TPKitTests14UserData_Basal: TPKitTestsBase {
         waitForExpectations(timeout: 20.0, handler: nil)
     }
     
+    func test14TestBasalExample() {
+        
+        let tpKit = getTpKitSingleton()
+        let expectation = self.expectation(description: "post of basal example data completed")
+        let intialItemTime = self.dateFromStr("2016-10-07T07:00:00.000Z")
+        let firstTempTime = self.dateFromStr("2016-10-07T07:25:00.000Z")
+        let secondTempTime = self.dateFromStr("2016-10-07T08:00:00.000Z")
+        let thirdTempTime = self.dateFromStr("2016-10-07T10:00:00.000Z")
+
+        // first, delete any existing data from previous test run...
+        self.deleteTestItems(intialItemTime.addingTimeInterval(-1), end: intialItemTime.addingTimeInterval(kOneDayTimeInterval)) {
+            result in
+            
+            // let's say a user programs a temp basal at 12:25 a.m. to run for three hours, until 3:25 a.m. Then the scheduled basal will look almost the same (as a 24 hours one), except the duration will be different since the scheduled segment will have only run for the twenty-five minutes from midnight to 12:25 a.m.
+            let item1: TPDataBasal = TPDataBasalScheduled(time: intialItemTime, rate: 0.25, scheduleName: "Standard", duration: 1500.0) // 25 minutes from 12:00 a.m. to 12:25 a.m.
+            item1.clockDriftOffset = 0
+            item1.conversionOffset = 0
+            item1.deviceId = "DevId0987654321"
+            item1.deviceTime = "2016-10-07T00:00:00"
+            item1.timeZoneOffset = -420
+            
+            // The three-hour temp basal will cross schedule boundaries at 1 a.m. and 3 a.m., and so it will end up being divided into three segment intervals with a suppressed to match the segment of the schedule that would have been in effect at that time if the temp had not been programmed.
+            // First temp interval:
+            let item2: TPDataBasal = TPDataBasalTemporary(time: firstTempTime, duration: 2100.0, expectedDuration: nil, rate: 0.125, percent: 0.5, suppressed: TPDataSuppressed(.scheduled, rate: 0.25, scheduleName: "Standard")) // 35 minutes from 12:25 a.m. to 1:00 a.m.
+            item2.clockDriftOffset = 0
+            item2.conversionOffset = 0
+            item2.deviceId = "DevId0987654321"
+            item2.deviceTime = "2016-10-07T00:25:00"
+            item2.timeZoneOffset = -420
+
+            // Second temp interval:
+             let item3: TPDataBasal = TPDataBasalTemporary(time: secondTempTime, duration: 7200.0, expectedDuration: nil, rate: 0.1, percent: 0.5, suppressed: TPDataSuppressed(.scheduled, rate: 0.2, scheduleName: "Standard")) // 2 hours from 1:00 a.m. to 3:00 a.m.
+            item3.clockDriftOffset = 0
+            item3.conversionOffset = 0
+            item3.deviceId = "DevId0987654321"
+            item3.deviceTime = "2016-10-07T01:00:00"
+            item3.timeZoneOffset = -420
+
+            // Third temp interval:
+            let item4: TPDataBasal = TPDataBasalTemporary(time: thirdTempTime, duration: 1500.0, expectedDuration: nil, rate: 0.125, percent: 0.5, suppressed: TPDataSuppressed(.scheduled, rate: 0.25, scheduleName: "Standard")) // 25 minutes from 3:00 a.m. to 3:25 a.m.
+            item4.clockDriftOffset = 0
+            item4.conversionOffset = 0
+            item4.deviceId = "DevId0987654321"
+            item4.deviceTime = "2016-10-07T03:00:00"
+            item4.timeZoneOffset = -420
+
+            
+             // first, ensure we are logged in, and then ...
+            NSLog("\(#function): next calling ensureLogin/Dataset...")
+            guard let dataset = testDataset, let _ = tpKit.currentSession else {
+                XCTFail("no session and/or dataset!")
+                return
+            }
+            
+            tpKit.putData(samples: [item1, item2, item3, item4], into: dataset) {
+                result  in
+                expectation.fulfill()
+                switch result {
+                case .failure:
+                    NSLog("\(#function) failed user data upload!")
+                    XCTFail()
+                case .success:
+                    NSLog("\(#function) upload succeeded!")
+                }
+            }
+        }
+        
+        waitForExpectations(timeout: 20.0, handler: nil)
+    }
+
+    func test15TestNestedSuppressExample() {
+        
+        let tpKit = getTpKitSingleton()
+        let expectation = self.expectation(description: "post of basal nest suppressed completed")
+        let intialItemTime = self.dateFromStr("2016-10-10T06:00:00.000Z")
+        
+        // first, delete any existing data from previous test run...
+        self.deleteTestItems(intialItemTime.addingTimeInterval(-1), end: intialItemTime.addingTimeInterval(1)) {
+            result in
+            
+            // let's say a user programs a temp basal at 12:25 a.m. to run for three hours, until 3:25 a.m. Then the scheduled basal will look almost the same (as a 24 hours one), except the duration will be different since the scheduled segment will have only run for the twenty-five minutes from midnight to 12:25 a.m.
+            let item1: TPDataBasal = TPDataBasalSuppressed(time: intialItemTime, duration: 41400.0,  suppressed: TPDataSuppressed(.temp, rate: 0.6, percent: 0.5, scheduleName: nil, suppressed: TPData2ndLevelSuppressed(.scheduled, rate: 1.2, scheduleName: "Very Active")))
+            item1.clockDriftOffset = 0
+            item1.conversionOffset = 0
+            item1.deviceId = "DevId0987654321"
+            item1.deviceTime = "2016-10-09T23:00:00"
+            item1.timeZoneOffset = -420
+            item1.guid = "58812f26-e734-4b9a-9162-02bfee2a1dce"
+            
+            // first, ensure we are logged in, and then ...
+            NSLog("\(#function): next calling ensureLogin/Dataset...")
+            guard let dataset = testDataset, let _ = tpKit.currentSession else {
+                XCTFail("no session and/or dataset!")
+                return
+            }
+            
+            tpKit.putData(samples: [item1], into: dataset) {
+                result  in
+                expectation.fulfill()
+                switch result {
+                case .failure:
+                    NSLog("\(#function) failed user data upload!")
+                    XCTFail()
+                case .success:
+                    NSLog("\(#function) upload succeeded!")
+                }
+            }
+        }
+        
+        waitForExpectations(timeout: 20.0, handler: nil)
+    }
+
 }

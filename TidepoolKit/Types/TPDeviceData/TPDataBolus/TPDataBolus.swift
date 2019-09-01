@@ -29,7 +29,7 @@ public class TPDataBolus: TPDeviceData, TPData {
     // MARK: - Type specific data
     //
     
-    public init?(time: Date, subType: TPBolusSubType) {
+    public init(time: Date, subType: TPBolusSubType) {
         self.subType = subType
         // TODO: formulation, etc...
         createdUserId = nil

@@ -54,6 +54,7 @@
 		48A6290D23174F72004C0C1E /* TPKitExampleSetting.swift in Sources */ = {isa = PBXBuildFile; fileRef = 48A6290C23174F72004C0C1E /* TPKitExampleSetting.swift */; };
 		48D6BE412310195900FFA9C0 /* LoginViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 48F713D922EA029C00FC2C89 /* LoginViewController.swift */; };
 		48D6BE432310875100FFA9C0 /* TPUserData.swift in Sources */ = {isa = PBXBuildFile; fileRef = 48D6BE422310875100FFA9C0 /* TPUserData.swift */; };
+		48DFE68E231C466D00562E2B /* TPData2ndLevelSuppressed.swift in Sources */ = {isa = PBXBuildFile; fileRef = 48DFE68D231C466D00562E2B /* TPData2ndLevelSuppressed.swift */; };
 		48F7135C22E9FCB900FC2C89 /* TidepoolKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 48F7135222E9FCB900FC2C89 /* TidepoolKit.framework */; };
 		48F7136322E9FCB900FC2C89 /* TidepoolKit.h in Headers */ = {isa = PBXBuildFile; fileRef = 48F7135522E9FCB900FC2C89 /* TidepoolKit.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		48F7136E22E9FEB600FC2C89 /* TPKitTests00Login.swift in Sources */ = {isa = PBXBuildFile; fileRef = 48F7136C22E9FEB600FC2C89 /* TPKitTests00Login.swift */; };
@@ -201,6 +202,7 @@
 		48A6290923170007004C0C1E /* TPDataGPS.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TPDataGPS.swift; sourceTree = "<group>"; };
 		48A6290C23174F72004C0C1E /* TPKitExampleSetting.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TPKitExampleSetting.swift; sourceTree = "<group>"; };
 		48D6BE422310875100FFA9C0 /* TPUserData.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TPUserData.swift; sourceTree = "<group>"; };
+		48DFE68D231C466D00562E2B /* TPData2ndLevelSuppressed.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TPData2ndLevelSuppressed.swift; sourceTree = "<group>"; };
 		48F7135222E9FCB900FC2C89 /* TidepoolKit.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = TidepoolKit.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		48F7135522E9FCB900FC2C89 /* TidepoolKit.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = TidepoolKit.h; sourceTree = "<group>"; };
 		48F7135622E9FCB900FC2C89 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
@@ -369,6 +371,7 @@
 			isa = PBXGroup;
 			children = (
 				482566C6231B020400BB0BE6 /* TPDataSuppressed.swift */,
+				48DFE68D231C466D00562E2B /* TPData2ndLevelSuppressed.swift */,
 			);
 			path = TPDataBasalCommon;
 			sourceTree = "<group>";
@@ -798,6 +801,7 @@
 				482566C7231B020400BB0BE6 /* TPDataSuppressed.swift in Sources */,
 				48A629042316FFC5004C0C1E /* TPDataElevation.swift in Sources */,
 				482566C1231AF78D00BB0BE6 /* TPBasalTemporary.swift in Sources */,
+				48DFE68E231C466D00562E2B /* TPData2ndLevelSuppressed.swift in Sources */,
 				48A629002316FF93004C0C1E /* TPDataLongitude.swift in Sources */,
 				48F7139C22E9FEE200FC2C89 /* APIConnect.swift in Sources */,
 				48F7139022E9FEE200FC2C89 /* TPData.swift in Sources */,

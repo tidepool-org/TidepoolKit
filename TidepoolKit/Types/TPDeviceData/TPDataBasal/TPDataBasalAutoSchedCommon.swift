@@ -16,10 +16,10 @@ public class TPDataBasalAutoSchedCommon: TPDataBasal {
     public let rate: Double
     public var scheduleName: String?
     
-    public init?(time: Date, deliveryType: TPBasalDeliveryType, rate: Double, scheduleName: String? = nil, duration: TimeInterval, expectedDuration: TimeInterval? = nil) {
+    public init(time: Date, deliveryType: TPBasalDeliveryType, rate: Double, scheduleName: String? = nil, duration: TimeInterval, expectedDuration: TimeInterval? = nil) {
         self.rate = rate
         self.scheduleName = scheduleName
-        super.init(time: time, deliveryType: .automated, duration: duration, expectedDuration: expectedDuration)
+        super.init(time: time, deliveryType: deliveryType, duration: duration, expectedDuration: expectedDuration)
     }
     
     //

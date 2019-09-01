@@ -29,7 +29,7 @@ public class TPDataBasal: TPDeviceData, TPData {
     public let duration: TimeInterval
     public let expectedDuration: TimeInterval?
 
-    public init?(time: Date, deliveryType: TPBasalDeliveryType, duration: TimeInterval, expectedDuration: TimeInterval? = nil) {
+    public init(time: Date, deliveryType: TPBasalDeliveryType, duration: TimeInterval, expectedDuration: TimeInterval? = nil) {
         self.deliveryType = deliveryType
         self.duration = duration
         self.expectedDuration = expectedDuration

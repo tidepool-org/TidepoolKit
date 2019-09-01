@@ -26,30 +26,27 @@ class TPKitTests13UserData_Bolus: TPKitTestsBase {
         let newId = UUID.init().uuidString
         let origin = TPDataOrigin(id: newId, name: "org.tidepool.tidepoolKitTest", type: .service, payload: nil)!
         let normalSample = TPDataBolusNormal(time: Date(), normal: normal)
-        normalSample?.origin = origin
-        XCTAssertNotNil(normalSample, "\(#function) failed to create normal bolus sample!")
-        NSLog("created TPDataBolusNormal: \(normalSample!)")
-        return normalSample!
+        normalSample.origin = origin
+        NSLog("created TPDataBolusNormal: \(normalSample)")
+        return normalSample
     }
     
     func createExtendedBolusItem(_ extended: Double, duration: TimeInterval) -> TPDataBolus {
         let newId = UUID.init().uuidString
         let origin = TPDataOrigin(id: newId, name: "org.tidepool.tidepoolKitTest", type: .service, payload: nil)!
         let extendedSample = TPDataBolusExtended(time: Date(), extended: extended, duration: duration)
-        extendedSample?.origin = origin
-        XCTAssertNotNil(extendedSample, "\(#function) failed to create extended bolus sample!")
-        NSLog("created TPDataBolusExtended: \(extendedSample!)")
-        return extendedSample!
+        extendedSample.origin = origin
+        NSLog("created TPDataBolusExtended: \(extendedSample)")
+        return extendedSample
     }
 
     func createCombinationBolusItem(normal: Double, expectedNormal: Double? = nil, extended: Double, expectedExtended: Double? = nil, duration: TimeInterval, expectedDuration: TimeInterval? = nil) -> TPDataBolus {
         let newId = UUID.init().uuidString
         let origin = TPDataOrigin(id: newId, name: "org.tidepool.tidepoolKitTest", type: .service, payload: nil)!
         let combinationSample = TPDataBolusCombination(time: Date(), normal: normal, expectedNormal: expectedNormal, extended: extended, expectedExtended: expectedExtended, duration: duration, expectedDuration: expectedDuration)
-        combinationSample?.origin = origin
-        XCTAssertNotNil(combinationSample, "\(#function) failed to create combination bolus sample!")
-        NSLog("created TPDataBolusCombination: \(combinationSample!)")
-        return combinationSample!
+        combinationSample.origin = origin
+        NSLog("created TPDataBolusCombination: \(combinationSample)")
+        return combinationSample
     }
 
     func checkSerializeAndInitFromRaw(_ sample: TPDataBolus, subType: TPBolusSubType) {
@@ -112,7 +109,7 @@ class TPKitTests13UserData_Bolus: TPKitTestsBase {
             XCTAssert(tpKit.isLoggedIn())
             // last hour:
             let end = Date()
-            let start = end.addingTimeInterval(-self.kOnehourTimeInterval)
+            let start = end.addingTimeInterval(-self.kOneHourTimeInterval)
             // around a particular date
             //let dateStr = "2017-04-21T03:28:30.000Z"
             //let itemDate = self.dateFromStr(dateStr)

@@ -10,7 +10,7 @@ import Foundation
 
 public class TPDataBasalAutomated: TPDataBasalAutoSchedCommon {
     
-    public init?(time: Date, rate: Double, scheduleName: String? = nil, duration: TimeInterval, expectedDuration: TimeInterval? = nil) {
+    public init(time: Date, rate: Double, scheduleName: String? = nil, duration: TimeInterval, expectedDuration: TimeInterval? = nil) {
         
         super.init(time: time, deliveryType: .automated, rate: rate, scheduleName: scheduleName, duration: duration, expectedDuration: expectedDuration)
     }

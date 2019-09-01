@@ -1,29 +1,28 @@
 //
-//  TPDataSuppressed.swift
+//  TPData2ndLevelSuppressed.swift
 //  TidepoolKit
 //
-//  Created by Larry Kenyon on 8/31/19.
+//  Created by Larry Kenyon on 9/1/19.
 //  Copyright © 2019 Tidepool Project. All rights reserved.
 //
 
 import Foundation
 
-public struct TPDataSuppressed: TPData {
+/// This is the same as TPDataSuppressed except that it cannot contain yet another suppressed field.
+public struct TPData2ndLevelSuppressed: TPData {
     public static var tpType: TPDataType { return .suppressed }
-
+    
     public var deliveryType: TPBasalDeliveryType
     public var rate: Double
     public var percent: Double?
     public var scheduleName: String?
-    public var suppressed: TPData2ndLevelSuppressed?
-
-    public init(_ deliveryType: TPBasalDeliveryType, rate: Double, percent: Double? = nil, scheduleName: String? = nil, suppressed: TPData2ndLevelSuppressed? = nil) {
+    
+    public init(_ deliveryType: TPBasalDeliveryType, rate: Double, percent: Double? = nil, scheduleName: String? = nil) {
         self.deliveryType = deliveryType
         self.rate = rate
         self.percent = percent
         self.scheduleName = scheduleName
-        self.suppressed = suppressed
-   }
+    }
     
     // MARK: - RawRepresentable
     public typealias RawValue = [String: Any]
@@ -49,8 +48,7 @@ public struct TPDataSuppressed: TPData {
             self.percent = nil
         }
         self.scheduleName = rawValue["scheduleName"] as? String
-        self.suppressed = TPData2ndLevelSuppressed.getSelfFromDict(rawValue)
-    }
+     }
     
     public var rawValue: RawValue {
         var dict: [String: Any] = [:]
@@ -59,8 +57,7 @@ public struct TPDataSuppressed: TPData {
         dict["rate"] = self.rate
         dict["percent"] = self.percent
         dict["scheduleName"] = self.scheduleName
-        self.suppressed?.addSelfToDict(&dict)
         return dict
     }
-
+    
 }

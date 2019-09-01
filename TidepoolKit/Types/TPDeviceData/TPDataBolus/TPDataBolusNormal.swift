@@ -17,7 +17,7 @@ public class TPDataBolusNormal: TPDataBolus {
     public let normal: Double
     public let expectedNormal: Double?
 
-    public init?(time: Date, normal: Double, expectedNormal: Double? = nil) {
+    public init(time: Date, normal: Double, expectedNormal: Double? = nil) {
         self.normal = normal
         self.expectedNormal = expectedNormal
         // TPDeviceData fields

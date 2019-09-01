@@ -16,7 +16,7 @@ public class TPDataBasalSuppressed: TPDataBasal {
     //
     public var suppressed: TPDataSuppressed?
     
-    public init?(time: Date, duration: TimeInterval, expectedDuration: TimeInterval? = nil, suppressed: TPDataSuppressed? = nil) {
+    public init(time: Date, duration: TimeInterval, expectedDuration: TimeInterval? = nil, suppressed: TPDataSuppressed? = nil) {
         self.suppressed = suppressed
         super.init(time: time, deliveryType: .suspend, duration: duration, expectedDuration: expectedDuration)
     }

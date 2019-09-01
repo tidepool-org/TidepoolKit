@@ -11,25 +11,38 @@ import Foundation
 // Note: This is meant to specify any optional data types that are commonly expected to be in all TPData types contained in the first level of a TPSampleData object, and that can be uploaded/downloaded together to/from the Tidepool service. These fields would be added after initialization, and validated when set...
 public class TPDeviceData: RawRepresentable, CustomStringConvertible {
     public let type: TPDataType
-
-    public var id: String?
     public var time: Date?
+
+    public var associations: [TPDataAssociation]?
+    public var clockDriftOffset: Int?     // milliseconds (ToDo: convert to/from TimeInterval?)
+    public var conversionOffset: Int?
+    public var deviceId: String?
+    public var deviceTime: String?        // ToDo: convert to/from Date?
+    public var guid: String?
+    public var id: String?
+    public var location: TPDataLocation?
     public var origin: TPDataOrigin?
     public var payload: TPDataPayload?
-    public var location: TPDataLocation?
-    // TODO!
-    public var tags: [String]? = nil     // set of tag (string; 1 <= len <= 100); 1 <= len <= 100; duplicates not allowed; returns ordered alphabetically
-    public var notes: [String]? = nil     // array of note (string; 1 <= len <= 1000; NOT the same as messages); optional; 1 <= len <= 100; retains order
-    public var associations: [TPDataAssociation]?   // 1 <= len <= 100
+    public var notes: [String]? = nil     // ToDo: array of note (string; 1 <= len <= 1000; NOT the same as messages); optional; 1 <= len <= 100; retains order
+    public var tags: [String]? = nil      // ToDo: set of tag (string; 1 <= len <= 100); 1 <= len <= 100; duplicates not allowed; returns ordered alphabetically
+    public var timeZone: String?          // ToDo: convert to/from TimeZone?
+    public var timeZoneOffset: Int?       // minutes (ToDo: convert to/from TimeInterval?)
 
-    public init?(_ type: TPDataType, time: Date? = nil) {
+    public init(_ type: TPDataType, time: Date? = nil) {
         self.type = type
-        self.id = nil
         self.time = time
+        self.associations = nil
+        self.clockDriftOffset = nil
+        self.conversionOffset = nil
+        self.deviceId = nil
+        self.deviceTime = nil
+        self.guid = nil
+        self.id = nil
+        self.location = nil
         self.origin = nil
         self.payload = nil
-        self.associations = nil
-        self.location = nil
+        self.timeZone = nil
+        self.timeZoneOffset = nil
     }
     
     public var description: String {
@@ -52,9 +65,6 @@ public class TPDeviceData: RawRepresentable, CustomStringConvertible {
         if self.time == nil {
             return nil
         }
-        self.id = rawValue["id"] as? String
-        self.origin = TPDataOrigin.getSelfFromDict(rawValue)
-        self.payload = TPDataPayload.getSelfFromDict(rawValue)
         if let associations = rawValue["associations"] as? [[String: Any]] {
             var assocArray: [TPDataAssociation] = []
             for item in associations {
@@ -66,18 +76,25 @@ public class TPDeviceData: RawRepresentable, CustomStringConvertible {
                 self.associations = assocArray
             }
         }
+        self.clockDriftOffset = rawValue["clockDriftOffset"] as? Int
+        self.conversionOffset = rawValue["conversionOffset"] as? Int
+        self.deviceId = rawValue["deviceId"] as? String
+        self.deviceTime = rawValue["deviceTime"] as? String
+        self.guid = rawValue["guid"] as? String
+        self.id = rawValue["id"] as? String
         self.location = TPDataLocation.getSelfFromDict(rawValue)
+        self.origin = TPDataOrigin.getSelfFromDict(rawValue)
+        self.payload = TPDataPayload.getSelfFromDict(rawValue)
+        self.timeZone = rawValue["timezone"] as? String
+        self.timeZoneOffset = rawValue["timezoneOffset"] as? Int
     }
 
     public var rawValue: RawValue {
         var dict = [String: Any]()
         dict["type"] = type.rawValue
-        dict["id"] = self.id
-        if let time = time {
+         if let time = time {
             dict["time"] = DateUtils.dateToJSON(time)
         }
-        self.origin?.addSelfToDict(&dict)
-        self.payload?.addSelfToDict(&dict)
         if let associations = self.associations {
             var assocArrayRaw: [[String: Any]] = []
             for item in associations {
@@ -85,7 +102,17 @@ public class TPDeviceData: RawRepresentable, CustomStringConvertible {
             }
             dict["associations"] = assocArrayRaw
         }
+        dict["clockDriftOffset"] = self.clockDriftOffset
+        dict["conversionOffset"] = self.conversionOffset
+        dict["deviceId"] = self.deviceId
+        dict["deviceTime"] = self.deviceTime
+        dict["guid"] = self.guid
+        dict["id"] = self.id
         self.location?.addSelfToDict(&dict)
+        self.origin?.addSelfToDict(&dict)
+        self.payload?.addSelfToDict(&dict)
+        dict["timezone"] = self.timeZone
+        dict["timezoneOffset"] = self.timeZoneOffset
         return dict
     }
 
