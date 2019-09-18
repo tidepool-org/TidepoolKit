@@ -116,5 +116,58 @@ class TPKitTests11UserData_Cbg: TPKitTestsBase {
         waitForExpectations(timeout: 20.0, handler: nil)
     }
 
+    func test15PostCbgDataItemWithReject() {
+        let expectation = self.expectation(description: "post of user cbg data with service rejection")
+        let tpKit = getTpKitSingleton()
+        // first, ensure we are logged in, and then ...
+        NSLog("\(#function): next calling ensureLogin...")
+        ensureDataset() {
+            dataset, session in
+            XCTAssert(tpKit.isLoggedIn())
+            let newId = UUID.init().uuidString
+            let origin = TPDataOrigin(id: newId, name: "org.tidepool.tidepoolKitTest", type: .service, payload: self.TestCbgOriginPayload2)!
+            let payload = self.TestCbgPayload2
+            let cbgSample = TPDataCbg(time: Date(), value: 90, units: .milligramsPerDeciliter)
+            cbgSample.origin = origin
+            cbgSample.payload = payload
+            NSLog("created TPDataCbg: \(cbgSample)")
+            // now create a similar cbg item that is out of bounds...
+            let cbgSample2 = TPDataCbg(time: Date().addingTimeInterval(-5), value: 1100, units: .milligramsPerDeciliter)
+            tpKit.putData(samples: [cbgSample, cbgSample2], into: dataset) {
+                result  in
+                expectation.fulfill()
+                switch result {
+                case .failure (let error):
+                    NSLog("\(#function) failed user data upload!")
+                    switch error {
+                    case .badRequest(let badSampleIndexArray, let response):
+                        guard let badSampleIndexArray = badSampleIndexArray else {
+                            XCTFail("expected bad sample array, got nil!")
+                            return
+                        }
+                        guard badSampleIndexArray.count == 1 else {
+                            XCTFail("expected bad sample array to have exactly 1 entry: \(badSampleIndexArray)")
+                            return
+                        }
+                        guard badSampleIndexArray.first! == 1 else {
+                            XCTFail("expected bad sample array item to be sample 1: \(badSampleIndexArray)")
+                            return
+                        }
+                        NSLog("Received expected bad sample array: \(badSampleIndexArray)")
+                        if let dataStr = String(data: response, encoding: .ascii) {
+                            NSLog("parsed from response data: \(dataStr)")
+                        }
+                    default:
+                        XCTFail("expected .badRequest error, got \(error)")
+                    }
+                case .success:
+                    NSLog("\(#function) upload succeeded!")
+                    XCTFail("expected upload failure!")
+                }
+            }
+        }
+        // Wait 20.0 seconds until expectation has been fulfilled (sometimes staging takes almost 10 seconds). If not, fail.
+        waitForExpectations(timeout: 20.0, handler: nil)
+    }
 
 }

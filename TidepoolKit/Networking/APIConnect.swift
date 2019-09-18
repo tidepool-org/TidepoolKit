@@ -499,7 +499,7 @@ class APIConnector: NSObject, URLSessionDelegate, URLSessionTaskDelegate, URLSes
                 if let statusCode = statusCode, statusCode == 400 {
                     if let data = sendResponse.data {
                         let badSamples = uploadable.parseErrResponse(data)
-                        adjustedError = .badRequest(badSamples)
+                        adjustedError = .badRequest(badSamples, response: data)
                     }
                 }
                 completion(Result.failure(adjustedError))

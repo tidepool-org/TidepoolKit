@@ -13,7 +13,7 @@ import Foundation
  */
 public enum TidepoolKitError: Error {
     case unauthorized                               // http error 401
-    case badRequest(_ badSampleIndices: [Int]?)     // http error 400
+    case badRequest(_ badSampleIndices: [Int]?, response: Data) // http error 400
     case dataNotFound                               // http error 404 (may be turned into a successful nil object return)
     case badLoginResponse(_ description: String?)   // login failures other than .unauthorized
     case offline                                    // network unavailable
@@ -304,7 +304,7 @@ public class TidepoolKit {
      - parameter dataset: The dataset that the data belong to: typically one per data source.
      - parameter samples: The device data to be uploaded; these may be a mix of different typea (e.g., carb, cbg, etc.).
      - parameter completion: This completion handler takes a Result parameter:
-     - parameter result: Result.success with true boolean, or Result.failure with an error value. If the error code is .badRequest, an array of integer indices of the samples rejected by the service will be included with the error.
+     - parameter result: Result.success with true boolean, or Result.failure with an error value. If the error code is .badRequest, an array of integer indices of the samples rejected by the service as well as the full response data will be included with the error.
      */
     public func putData(samples: [TPDeviceData], into dataset: TPDataset, _ completion: @escaping (_ result: Result<Bool, TidepoolKitError>) -> (Void)) {
         guard let uploadId = dataset.uploadId else {
