@@ -341,9 +341,15 @@ public class TidepoolKit {
     }
     
 }
-
 // global logging object
 var clientLogger: TPKitLogging?
+
+public protocol URLSessionSource {
+    func defaultURLSession() -> URLSession
+    func backgroundURLSession() -> URLSession?
+    func ensureBackgroundSession(_ delegate: URLSessionDelegate) -> URLSession
+    func invalidateBackgroundSession()
+}
 
 extension TidepoolKit {
     
@@ -360,4 +366,28 @@ extension TidepoolKit {
     func clearSession() {
         apiConnect.clearSession()
     }
+    
+    /**
+     Allows test software to pass in a mock URLSession and mock the service, enabling service error cases to be tested.
+     
+     - note: A mock session can be injected with this method for one or more calls, and then nil passed to revert to using the real service.
+     - note: Only a small subset of URLSession functionality is used and would be needed to be overridden in order to insert test points.
+     - parameter urlSessionSource: Protocol object providing access to standard and background URLSession objects. Passing nil will revert service to using the standard session objects.
+     */
+    func configureSessionSource(_ urlSessionSource: URLSessionSource?) {
+        apiConnect.configureSessionSource(urlSessionSource)
+    }
+
+    /**
+     Allows test software to pass in a mock Reachability object and control online/offline status, enabling service error cases to be tested.
+     
+     - note: A mock reachability object can be injected with this method for one or more calls, and then nil passed to revert to using the real reachability object.
+     - note: Only the isReachable call needs to be overridden to determine whether TidepoolKit considers the service to online or not.
+     - note: TidepoolKit provides for reachability notifications, but these are not used by the test service, so can be ignored for testing purposes.
+     - parameter reachability: Object of a class implementing the ReachabilitySource protocol.
+     */
+    func configureReachability(_ reachability: ReachabilitySource?) {
+        apiConnect.configureReachability(reachability)
+    }
+
 }

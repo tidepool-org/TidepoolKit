@@ -7,7 +7,7 @@
 //
 
 import XCTest
-import TidepoolKit
+@testable import TidepoolKit
 
 /// TODO: Set up a new test password?
 let testEmail: String = "larry+kittest@tidepool.org"
@@ -58,6 +58,7 @@ class TPKitTestsBase: XCTestCase {
                     completion(session)
                 case .failure(let error):
                     XCTFail("Login failed: \(error)")
+                    //completion(nil)
                 }
             }
             return
@@ -196,4 +197,25 @@ class TPKitTestsBase: XCTestCase {
         }
 
     }
+    
+    func configureOffline(_ offline: Bool) {
+        let mockReachability = offline ? ReachabilityMock() : nil
+        let tpKit = getTpKitSingleton()
+        tpKit.configureReachability(mockReachability) // defaults to not reachable...
+    }
+    
+    func checkForOfflineResult<T>(_ result: Result<T, TidepoolKitError>, fetchType: String) {
+        switch result {
+        case .success:
+            XCTFail("Expected \(fetchType) to fail with offline error!")
+        case .failure(let error):
+            switch error {
+            case .offline:
+                NSLog("Test passed, expected offline error received!")
+            default:
+                XCTFail("expected offline error, not \(error)!")
+            }
+        }
+    }
+
 }

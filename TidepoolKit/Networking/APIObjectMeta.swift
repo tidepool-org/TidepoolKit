@@ -8,24 +8,6 @@
 
 import Foundation
 
-func jsonToObject<T: Decodable>(_ data: Data) -> T? {
-    let decoder = JSONDecoder()
-    do {
-        return try decoder.decode(T.self, from: data)
-    } catch {
-        return nil
-    }
-}
-
-func objectToJson<T: Encodable>(_ object: T) -> Data? {
-    let encoder = JSONEncoder()
-    do {
-        return try encoder.encode(object)
-    } catch {
-        return nil
-    }
-}
-
 // Private to framework...
 protocol TPFetchable {
     

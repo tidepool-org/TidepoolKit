@@ -89,5 +89,32 @@ class TPKitTests11UserData_Cbg: TPKitTestsBase {
         waitForExpectations(timeout: 20.0, handler: nil)
     }
 
+    func test14aPostCbgDataItemOffline() {
+        let expectation = self.expectation(description: "post of user cbg failed with offline")
+        let tpKit = getTpKitSingleton()
+        // first, ensure we are logged in, and then ...
+        NSLog("\(#function): next calling ensureLogin...")
+        ensureDataset() {
+            dataset, session in
+            XCTAssert(tpKit.isLoggedIn())
+            let newId = UUID.init().uuidString
+            let origin = TPDataOrigin(id: newId, name: "org.tidepool.tidepoolKitTest", type: .service, payload: self.TestCbgOriginPayload2)!
+            let payload = self.TestCbgPayload2
+            let cbgSample = TPDataCbg(time: Date(), value: 90, units: .milligramsPerDeciliter)
+            cbgSample.origin = origin
+            cbgSample.payload = payload
+            NSLog("created TPDataCbg: \(cbgSample)")
+            self.configureOffline(true)
+            tpKit.putData(samples: [cbgSample], into: dataset) {
+                result  in
+                expectation.fulfill()
+                self.configureOffline(false)
+                self.checkForOfflineResult(result, fetchType: "cbg data post")
+            }
+        }
+        // Wait 20.0 seconds until expectation has been fulfilled (sometimes staging takes almost 10 seconds). If not, fail.
+        waitForExpectations(timeout: 20.0, handler: nil)
+    }
+
 
 }

@@ -29,7 +29,7 @@ public struct TPDataLongitude: TPData {
         guard let value = rawValue["value"] as? Double else {
             return nil
         }
-        guard let unitsStr = rawValue["value"] as? String else {
+        guard let unitsStr = rawValue["units"] as? String else {
             return nil
         }
         guard unitsStr == self.units else {

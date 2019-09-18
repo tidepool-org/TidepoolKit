@@ -171,10 +171,10 @@ class TPKitTests14UserData_Basal: TPKitTestsBase {
             let end = Date()
             let start = end.addingTimeInterval(-self.kOneHourTimeInterval)
             // around a particular date
-            //let dateStr = "2017-04-21T03:28:30.000Z"
+            //let dateStr = "2019-01-21T03:28:30.000Z"
             //let itemDate = self.dateFromStr(dateStr)
-            //let end =  itemDate.addingTimeInterval(self.kOnehourTimeInterval)
-            //let start = itemDate.addingTimeInterval(-self.kOnehourTimeInterval)
+            //let end =  itemDate.addingTimeInterval(self.kOneDayTimeInterval)
+            //let start = itemDate.addingTimeInterval(-self.kOneDayTimeInterval)
             tpKit.getData(for: session.user, startDate: start, endDate: end, objectTypes: "basal") {
                 result in
                 expectation.fulfill()
@@ -283,6 +283,54 @@ class TPKitTests14UserData_Basal: TPKitTestsBase {
             item1.deviceTime = "2016-10-09T23:00:00"
             item1.timeZoneOffset = -420
             item1.guid = "58812f26-e734-4b9a-9162-02bfee2a1dce"
+            
+            // first, ensure we are logged in, and then ...
+            NSLog("\(#function): next calling ensureLogin/Dataset...")
+            guard let dataset = testDataset, let _ = tpKit.currentSession else {
+                XCTFail("no session and/or dataset!")
+                return
+            }
+            
+            tpKit.putData(samples: [item1], into: dataset) {
+                result  in
+                expectation.fulfill()
+                switch result {
+                case .failure:
+                    NSLog("\(#function) failed user data upload!")
+                    XCTFail()
+                case .success:
+                    NSLog("\(#function) upload succeeded!")
+                }
+            }
+        }
+        
+        waitForExpectations(timeout: 20.0, handler: nil)
+    }
+
+    func test16Test2017Example() {
+        
+        let tpKit = getTpKitSingleton()
+        let expectation = self.expectation(description: "post of basal test 2017 example completed")
+        let intialItemTime = self.dateFromStr("2017-04-22T03:13:27.000Z")
+        
+        // first, delete any existing data from previous test run...
+        self.deleteTestItems(intialItemTime.addingTimeInterval(-1), end: intialItemTime.addingTimeInterval(1)) {
+            result in
+            
+            // let's say a user programs a temp basal at 12:25 a.m. to run for three hours, until 3:25 a.m. Then the scheduled basal will look almost the same (as a 24 hours one), except the duration will be different since the scheduled segment will have only run for the twenty-five minutes from midnight to 12:25 a.m.
+            let item1: TPDataBasal = TPDataBasalScheduled(time: intialItemTime, rate: 0.6, scheduleName: "standard", duration: 889.0)
+            item1.clockDriftOffset = 0
+            item1.conversionOffset = 0
+            item1.deviceId = "MedT-723-359329"
+            item1.deviceTime = "2017-04-21T20:13:27"
+            item1.timeZoneOffset = -420
+            item1.guid = "ef242f7d-c40c-4424-9980-7d54d0e609a9"
+            var payloadData: [String: Any] = [:]
+            let indices: [Int] = [3222]
+            payloadData["logIndices"] = indices
+            item1.payload = TPDataPayload(payloadData)
+            // createdUserId: "b3aaa9d541", modifiedUserId: "b3aaa9d541"
+            NSLog("created test 2017 basal item: \(item1)")
             
             // first, ensure we are logged in, and then ...
             NSLog("\(#function): next calling ensureLogin/Dataset...")

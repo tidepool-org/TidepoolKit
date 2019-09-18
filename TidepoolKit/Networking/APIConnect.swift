@@ -8,12 +8,67 @@
 
 import Foundation
 
+class DefaultURLSessionSource: URLSessionSource {
+    func defaultURLSession() -> URLSession {
+        return .shared
+    }
+    
+    func backgroundURLSession() -> URLSession? {
+        LogVerbose("")
+        return uploadSession
+    }
+    
+    func ensureBackgroundSession(_ delegate: URLSessionDelegate) -> URLSession {
+        if let uploadSession = self.uploadSession {
+            return uploadSession
+        }
+        let configuration = URLSessionConfiguration.background(withIdentifier: self.backgroundUploadSessionIdentifier)
+        configuration.timeoutIntervalForResource = 60 // 60 seconds
+        let newUploadSession = URLSession(configuration: configuration, delegate: delegate, delegateQueue: nil)
+        newUploadSession.delegateQueue.maxConcurrentOperationCount = 1 // keep it simple...
+        self.uploadSession = newUploadSession
+        LogVerbose("Created upload session...")
+        return newUploadSession
+    }
+    
+    func invalidateBackgroundSession() {
+        self.uploadSession = nil
+    }
+    
+    private var uploadSession: URLSession?
+    private let backgroundUploadSessionIdentifier = "UploadSessionId"
+}
+
+public protocol ReachabilitySource {
+    func serviceIsReachable() -> Bool
+    func configureNotifier(_ on: Bool) -> Bool
+}
+
+extension Reachability: ReachabilitySource {
+    public func serviceIsReachable() -> Bool {
+        return self.isReachable
+    }
+    public func configureNotifier(_ on: Bool) -> Bool {
+        if on {
+            do {
+                try self.startNotifier()
+                return true
+            } catch {
+                return false
+            }
+        } else {
+            self.stopNotifier()
+            return true
+        }
+    }
+}
+
 /// A singleton instance of APIConnector has the main responsibility of communicating to the Tidepool service:
 /// - Given a username and password, login.
 /// - Can refresh connection.
 /// - Provides online/offline status.
 /// - Get/put user data of various types (cbg, carb, etc.)
-class APIConnector {
+class APIConnector: NSObject, URLSessionDelegate, URLSessionTaskDelegate, URLSessionDataDelegate {
     
     // non-nil when "loggedIn", nil when "loggedOut"
     var session: TPSession?
@@ -31,22 +86,37 @@ class APIConnector {
     var baseUrl: URL?
 
     /// Reachability object, valid during lifetime of this APIConnector, and convenience function that uses this
-    var reachability: Reachability?
-
-    init() {
+    var reachability: ReachabilitySource?
+    var urlSessionSource: URLSessionSource
+    
+    override init() {
         LogInfo("")
         
-        if let reachability = reachability {
-            reachability.stopNotifier()
-        }
-        self.reachability = Reachability()
         
-        // Register for ReachabilityChangedNotification to monitor reachability changes
-        do {
-            try reachability?.startNotifier()
-        } catch {
-            LogError("Unable to start notifier!")
+        self.urlSessionSource = DefaultURLSessionSource()
+        super.init()
+        _ = self.ensureUploadSession()
+        self.configureReachability()
+    }
+    
+    func configureReachability(_ reachability: ReachabilitySource? = nil) {
+        _ = self.reachability?.configureNotifier(false)
+        self.reachability = reachability
+        if self.reachability == nil {
+            guard let defaultReachability = Reachability() else {
+                LogError("Unable to create reachability object!")
+                return
+            }
+            self.reachability = defaultReachability
+            // Register for ReachabilityChangedNotification to monitor reachability changes
+            if !defaultReachability.configureNotifier(true) {
+                LogError("Unable to start reachability notifier!")
+            }
         }
+    }
+    
+    func configureSessionSource(_ urlSessionSource: URLSessionSource? = nil) {
+        self.urlSessionSource = urlSessionSource ?? DefaultURLSessionSource()
     }
     
     // MARK: - Constants
@@ -72,7 +142,7 @@ class APIConnector {
     
     func isConnectedToNetwork() -> Bool {
         if let reachability = reachability {
-            return reachability.isReachable
+            return reachability.serviceIsReachable()
         } else {
             LogError("Reachability object not configured!")
             return true
@@ -84,7 +154,7 @@ class APIConnector {
     //
     
     deinit {
-        reachability?.stopNotifier()
+        _ = reachability?.configureNotifier(false)
     }
     
     /// Logs in the user and obtains the session token for the session (stored internally)
@@ -92,6 +162,7 @@ class APIConnector {
         
         if let error = isOfflineError() {
             completion(Result.failure(error))
+            return
         }
 
         var loginServer: TidepoolServer = kDefaultServer
@@ -274,6 +345,7 @@ class APIConnector {
             // still clear the session if offline.
             clearSession()
             completion(Result.failure(error))
+            return
         }
 
         // Set our endpoint for logout
@@ -417,7 +489,7 @@ class APIConnector {
             return
         }
         
-        sendRequest(httpMethod, urlExtension: urlExtension,  contentType: .json, body: body) {
+        sendBackgroundRequest(httpMethod, urlExtension: urlExtension, body: body) {
             sendResponse, statusCode, error in
             
             guard error == nil else {
@@ -607,7 +679,6 @@ class APIConnector {
         LogVerbose("url: \(url)")
 
         var request = URLRequest(url: url)
-        let sendResponse = SendRequestResponse(request: request)
         request.httpMethod = method
         
         if let contentType = contentType {
@@ -646,47 +717,214 @@ class APIConnector {
             LogVerbose("sendRequest \(method) url: \(urlStr)")
         }
 
-        let task = URLSession.shared.dataTask(with: request as URLRequest) {
+        let task = urlSessionSource.defaultURLSession().dataTask(with: request as URLRequest) {
             (data, response, error) -> Void in
-            DispatchQueue.main.async(execute: {
-                sendResponse.response = response
-                sendResponse.data = data
-  
-                if let urlStr = request.url?.absoluteString {
-                    LogVerbose("sendRequest \(method) url: \(urlStr)")
-                }
-
-                if let data = data {
-                    if let dataStr = String(data: data, encoding: .ascii) {
-                        LogVerbose("response as ascii: \(dataStr)")
-                    }
-                }
-                
-                sendResponse.error = error as NSError?
-                var errorResult: TidepoolKitError? = nil
-                let statusCode: Int? = sendResponse.httpResponse?.statusCode
-                if !sendResponse.isSuccess() {
-                    errorResult = .serviceError(nil)
-                    if let statusCode = statusCode {
-                        if statusCode == 401 {
-                            errorResult = .unauthorized
-                            // Clear our session here. This will change subsequent errors to .notLoggedIn, and the app will not make network requests!
-                            self.clearSession()
-                        } else if statusCode == 404 {
-                            errorResult = .dataNotFound
-                        } else {
-                            errorResult = .serviceError(statusCode)
-                        }
-                    }
-                }
-                completion(sendResponse, statusCode, errorResult)
-            })
-            return
+            self.dispatchSendRequestResponse(request: request, data: data, response: response, error: error, completion: completion)
         }
         LogVerbose("task.resume...")
         task.resume()
     }
     
+    private func dispatchSendRequestResponse(request: URLRequest, data: Data?, response: URLResponse?, error: Error?, completion: @escaping (SendRequestResponse, Int?, TidepoolKitError?) -> Void) {
+        DispatchQueue.main.async(execute: {
+            let sendResponse = SendRequestResponse(request: request)
+            sendResponse.response = response
+            sendResponse.data = data
+            
+            if let urlStr = request.url?.absoluteString {
+                LogVerbose("sendRequest completed: \(urlStr)")
+            }
+            
+            if let data = data {
+                if let dataStr = String(data: data, encoding: .ascii) {
+                    LogVerbose("response as ascii: \(dataStr)")
+                }
+            }
+            
+            sendResponse.error = error as NSError?
+            var errorResult: TidepoolKitError? = nil
+            let statusCode: Int? = sendResponse.httpResponse?.statusCode
+            if !sendResponse.isSuccess() {
+                errorResult = .serviceError(nil)
+                if let statusCode = statusCode {
+                    if statusCode == 401 {
+                        errorResult = .unauthorized
+                        // Clear our session here. This will change subsequent errors to .notLoggedIn, and the app will not make network requests!
+                        self.clearSession()
+                    } else if statusCode == 404 {
+                        errorResult = .dataNotFound
+                    } else {
+                        errorResult = .serviceError(statusCode)
+                    }
+                }
+            }
+            completion(sendResponse, statusCode, errorResult)
+        })
+    }
+    
+    //
+    // MARK: - Background upload support
+    //
+    
+    /*
+     TODO: current design follows that of the HealthKit uploaded used by Tidepool Mobile. A background URLSession is created here and used for upload requests. Data is pushed into a file to minimize use of RAM, though this may be an anachronism. Since shared data structures are used to track the request, calls are assumed to be synchronized. If this is not true, this should probably use an operation queue for synchronization.
+     
+        For testing purposes, it may be useful to pass in a URLSession to use. This could short-circuit the call to the service, and be used to inject errors or different data for test purposes.
+    */
+    
+    // Assumes onLine, and authorized. Call isOfflineOrUnauthorizedError() to check before calling this method!
+    private func sendBackgroundRequest(_ method: String, urlExtension: String, body: Data, completion: @escaping (SendRequestResponse, Int?, TidepoolKitError?) -> Void) {
+        
+        let urlString = baseUrlString! + urlExtension
+        let url = URL(string: urlString)!
+        var request = URLRequest(url: url)
+        request.httpMethod = method
+        
+        let contentTypeStr = "application/json"
+        request.setValue(contentTypeStr, forHTTPHeaderField: "Content-Type")
+        
+        guard let token = self.session?.authenticationToken else {
+            // send an empty response back...
+            LogError("user not logged in!")
+            completion(SendRequestResponse(), nil, .notLoggedIn)
+            return
+        }
+        request.setValue("\(token)", forHTTPHeaderField: kSessionTokenHeaderId)
+        request.setValue(self.userAgentString(), forHTTPHeaderField: "User-Agent")
+        
+        // create a unique descriptor for this upload, and use it to identify the task as well as file we use to upload...
+        let uploadDescriptor = self.nextUploadDescriptor()
+        guard let fileUrl = savePostBodyForUpload(sampleData: body, identifier: uploadDescriptor) else {
+            LogError("unable to save data to file!")
+            completion(SendRequestResponse(), nil, .internalError)
+            return
+        }
+        // save the request info for when task completes...
+        let requestInfo = TPRequestInfo(completion: completion, request: request, responseData: nil)
+        self.requestsInProgress[uploadDescriptor] = requestInfo
+        
+        let uploadSession = ensureUploadSession()
+        let uploadTask = uploadSession.uploadTask(with: request, fromFile: fileUrl)
+        uploadTask.taskDescription = uploadDescriptor
+        LogInfo("((self.mode.rawValue)) Created upload task: \(uploadTask.taskIdentifier)")
+        uploadTask.resume()
+        return
+    }
+    
+    // TODO: investigate use of cache file space for this; if the file disappears before the upload, the upload will fail, but how can this case be tested? Is it still necessary to save data to a file for background upload?
+    private func savePostBodyForUpload(sampleData: Data, identifier: String) -> URL? {
+        LogVerbose("identifier: \(identifier)")
+        let cachesDirectory = FileManager.default.urls(for: .cachesDirectory, in: .userDomainMask).first!
+        let postBodyURL = cachesDirectory.appendingPathComponent(identifier)
+        do {
+            try sampleData.write(to: postBodyURL, options: .atomic)
+        } catch {
+            return nil
+        }
+        return postBodyURL
+    }
+    
+    private struct TPRequestInfo {
+        var completion: (SendRequestResponse, Int?, TidepoolKitError?) -> Void
+        var request: URLRequest
+        var responseData: Data? = nil
+    }
+    
+    private var requestsInProgress: [String: TPRequestInfo] = [:]
+    private func nextUploadDescriptor() -> String {
+        let result = "\(uploadSamplesDescriptor)-\(uploadCounter)"
+        uploadCounter += 1
+        return result
+    }
+    private let uploadSamplesDescriptor = "UploadTask"
+    private var uploadCounter = 0
+
+    private func ensureUploadSession() -> URLSession {
+        LogVerbose("")
+        if let urlSession = urlSessionSource.backgroundURLSession() {
+            return urlSession
+        }
+
+        if !requestsInProgress.isEmpty {
+            LogError("requestsInProgress dictionary is not empty while session is nil!")
+            requestsInProgress = [:]
+        }
+        
+        return urlSessionSource.ensureBackgroundSession(self)
+    }
+
+    // TODO: unused... provide a public api for cancel?
+//    private func cancelTasks() {
+//        LogVerbose("")
+//        if let session = self.uploadSession {
+//            session.getTasksWithCompletionHandler { (dataTasks, uploadTasks, downloadTasks) -> Void in
+//                LogInfo("Canceling \(uploadTasks.count) tasks")
+//                for uploadTask in uploadTasks {
+//                    LogInfo("Canceling task: \(uploadTask.taskIdentifier)")
+//                    uploadTask.cancel()
+//                }
+//            }
+//        }
+//    }
+    
+    //
+    // MARK: - URLSessionDataDelegate
+    //
+    
+    // Retain last upload response data for error message debugging...
+    func urlSession(_ session: URLSession, dataTask: URLSessionDataTask, didReceive data: Data) {
+         guard let uploadDescriptor = dataTask.taskDescription else {
+            LogError("Upload task with no descriptor completed!")
+            return
+        }
+        LogVerbose("saving data returned by upload task: \(uploadDescriptor)")
+        // update the requestInfo with the response data
+        if var requestInfo = requestsInProgress[uploadDescriptor] {
+            requestInfo.responseData = data
+            requestsInProgress[uploadDescriptor] = requestInfo
+        }
+    }
+    
+    //
+    // MARK: - URLSessionTaskDelegate
+    //
+    func urlSession(_ session: URLSession, task: URLSessionTask, didCompleteWithError error: Error?) {
+        guard let uploadDescriptor = task.taskDescription else {
+            LogError("Upload task with no descriptor completed!")
+            return
+        }
+        LogVerbose("upload task ended: \(uploadDescriptor)")
+        
+        guard let requestInfo = requestsInProgress[uploadDescriptor] else {
+            LogError("Upload task '\(uploadDescriptor)' has no matching request!")
+            return
+        }
+        
+        let request = requestInfo.request
+        let completion = requestInfo.completion
+        let data = requestInfo.responseData
+        requestsInProgress[uploadDescriptor] = nil
+        
+        let response = task.response as? HTTPURLResponse // may be nil
+        self.dispatchSendRequestResponse(request: request, data: data ?? nil, response: response, error: error, completion: completion)
+    }
+    
+    //
+    // MARK: - URLSessionDelegate
+    //
+    func urlSession(_ session: URLSession, didBecomeInvalidWithError error: Error?) {
+        DispatchQueue.main.async {
+            LogInfo("Upload session became invalid!")
+            self.urlSessionSource.invalidateBackgroundSession()
+            _ = self.urlSessionSource.ensureBackgroundSession(self)
+        }
+    }
+
+    //
+    // MARK: - Misc
+    //
+    
+    // TODO: remove? Provide external api for setting user agent string?
     // User-agent string, based on that from Alamofire, but common regardless of whether Alamofire library is used
     private func userAgentString() -> String {
         if _userAgentString == nil {

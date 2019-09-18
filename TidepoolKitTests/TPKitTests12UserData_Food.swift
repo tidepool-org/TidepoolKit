@@ -115,6 +115,18 @@ class TPKitTests12UserData_Food: TPKitTestsBase {
         let newOriginId = UUID.init().uuidString
         let origin = TPDataOrigin(id: newOriginId, name: "org.tidepool.tidepoolKitTest", type: .service, payload: nil)!
         foodSample.origin = origin
+        // add in location...
+        let latitude = TPDataLatitude(43.0745000)
+        let longitude = TPDataLongitude(-73.1547300)
+        let elevation = TPDataElevation(value: 50.0, units: .meters)
+        let hAccuracy = TPDataHorizontalAccuracy(value: 1.0, units: .meters)
+        let vAccuracy = TPDataVerticalAccuracy(value: 1.0, units: .meters)
+        let gps = TPDataGPS(latitude: latitude, longitude: longitude, elevation: elevation, floor: nil, horizontalAccuracy: hAccuracy, verticalAccuracy: vAccuracy)
+        let location = TPDataLocation(name: "Arlington, Vermont", gps: gps)
+        foodSample.location = location
+        // add in association
+        let association = TPDataAssociation(type: .url, url: "http://food-and-drink-pictures.blogspot.com/2010/04/chocolate-chip-cookies-with-milk.html", reason: "testing")
+        foodSample.associations = [association!]
         NSLog("created TPDataFood: \(foodSample)")
         return foodSample
     }
@@ -131,6 +143,8 @@ class TPKitTests12UserData_Food: TPKitTestsBase {
         // test copy...
         let food3 = TPDataFood(time: food2.time!, name: food2.name, brand: food2.brand, code: food2.code, meal: food2.meal, mealOther: food2.mealOther, amount: food2.amount, nutrition: food2.nutrition, ingredients: food2.ingredients)
         food3.origin = food1.origin
+        food3.location = food1.location
+        food3.associations = food1.associations
         XCTAssertTrue(stringAnyDictDiff(a1: food1Dict, a2: food3.rawValue))
     }
 

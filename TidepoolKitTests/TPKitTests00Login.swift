@@ -9,14 +9,15 @@
 import XCTest
 @testable import TidepoolKit
 
-
 class TPKitTests00Login: TPKitTestsBase {
 
     func test01LoginBadUser() {
-        let expectation = self.expectation(description: "Login call completes")
+        let expectation = self.expectation(description: "Login call fails with unauthorized")
         let tpKit = getTpKitSingleton()
         if tpKit.isLoggedIn() {
-            tpKit.logOut() { _ in }
+            tpKit.logOut() {
+                _ in
+            }
         }
         tpKit.logIn(with: "badUserEmail@bad.com", password: testPassword, server: testServer) {
             result in
@@ -145,5 +146,22 @@ class TPKitTests00Login: TPKitTestsBase {
         waitForExpectations(timeout: 20.0, handler: nil)
     }
 
+    func test10LoginErrorNotReachable() {
+        let expectation = self.expectation(description: "Login call fails with offline error")
+        let tpKit = getTpKitSingleton()
+        self.configureOffline(true)
+        if tpKit.isLoggedIn() {
+            tpKit.logOut() { _ in }
+        }
+        tpKit.logIn(with: "badUserEmail@bad.com", password: testPassword, server: testServer) {
+            result in
+            expectation.fulfill()
+            // be sure to restore reachability...
+            self.configureOffline(false)
+            self.checkForOfflineResult(result, fetchType: "login")
+        }
+        // Wait 5.0 seconds until expectation has been fulfilled. If not, fail.
+        waitForExpectations(timeout: 5.0, handler: nil)
+    }
 
 }

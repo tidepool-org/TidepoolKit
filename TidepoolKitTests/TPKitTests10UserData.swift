@@ -42,6 +42,27 @@ class TPKitTests10UserData: TPKitTestsBase {
         waitForExpectations(timeout: 20.0, handler: nil)
     }
 
+    func test11_1aGetDatasetOffline() {
+        let expectation = self.expectation(description: "dataset fetches/creates failed with offline")
+        let tpKit = getTpKitSingleton()
+        NSLog("\(#function): starting with logout...")
+        // next, log in, and then try configuring upload id: this will fetch a current id, or create one if a current id does not exist. Note: there is no way to force delete of an upload id, so a new account would be needed to test the create!
+        NSLog("\(#function): next calling ensureLogin...")
+        ensureLogin() {
+            session in
+            self.configureOffline(true)
+            // test with default dataset...
+            tpKit.getDataset(for: session.user, matching: TPDataset()) {
+                result in
+                expectation.fulfill()
+                self.configureOffline(false)
+                self.checkForOfflineResult(result, fetchType: "dataset fetch")
+            }
+        }
+        // Wait 20.0 seconds until expectation has been fulfilled (sometimes staging takes almost 10 seconds). If not, fail.
+        waitForExpectations(timeout: 20.0, handler: nil)
+    }
+
     func test11_2GetDatasets() {
         let expectation = self.expectation(description: "datasets fetch completed")
         let tpKit = getTpKitSingleton()
@@ -57,6 +78,25 @@ class TPKitTests10UserData: TPKitTestsBase {
                if case .failure(let error) = result {
                     XCTFail("failed to get datasets, error: \(error)")
                 }
+            }
+        }
+        // Wait 20.0 seconds until expectation has been fulfilled (sometimes staging takes almost 10 seconds). If not, fail.
+        waitForExpectations(timeout: 20.0, handler: nil)
+    }
+
+    func test11_2GetDatasetsOffline() {
+        let expectation = self.expectation(description: "datasets fetch failed with offline")
+        let tpKit = getTpKitSingleton()
+        NSLog("\(#function): next calling ensureLogin...")
+        ensureLogin() {
+            session in
+            self.configureOffline(true)
+            // test with default dataset...
+            tpKit.getDatasets(for: session.user) {
+                result in
+                expectation.fulfill()
+                self.configureOffline(false)
+                self.checkForOfflineResult(result, fetchType: "datasets fetch")
             }
         }
         // Wait 20.0 seconds until expectation has been fulfilled (sometimes staging takes almost 10 seconds). If not, fail.
@@ -83,6 +123,28 @@ class TPKitTests10UserData: TPKitTestsBase {
                 case .success(let userDataArray):
                     NSLog("\(#function) fetched \(userDataArray.count) items!")
                 }
+            }
+        }
+        // Wait 20.0 seconds until expectation has been fulfilled (sometimes staging takes almost 10 seconds). If not, fail.
+        waitForExpectations(timeout: 20.0, handler: nil)
+    }
+
+    func test12aGetUserDataOffline() {
+        let expectation = self.expectation(description: "user data fetch failed with offline")
+        let tpKit = getTpKitSingleton()
+        // first, ensure we are logged in, and then ...
+        NSLog("\(#function): next calling ensureLogin...")
+        ensureLogin() {
+            session in
+            self.configureOffline(true)
+            XCTAssert(tpKit.isLoggedIn())
+            let end = Date()
+            let start = end.addingTimeInterval(-self.kOneWeekTimeInterval)
+            tpKit.getData(for: session.user, startDate: start, endDate: end) {
+                result in
+                expectation.fulfill()
+                self.configureOffline(false)
+                self.checkForOfflineResult(result, fetchType: "user data fetch")
             }
         }
         // Wait 20.0 seconds until expectation has been fulfilled (sometimes staging takes almost 10 seconds). If not, fail.
@@ -181,5 +243,31 @@ class TPKitTests10UserData: TPKitTestsBase {
         waitForExpectations(timeout: 20.0, handler: nil)
     }
 
+    func test13_2a_DeleteUserDataOffline() {
+        let expectation = self.expectation(description: "user data delete call failed with offline")
+        let tpKit = getTpKitSingleton()
+        // first, ensure we are logged in, and then ...
+        NSLog("\(#function): next calling ensureLogin...")
+        ensureDataset() {
+            dataset, session in
+            XCTAssert(tpKit.isLoggedIn())
+            var deleteItemArray: [TPDeleteItem] = []
+            for _ in 1...5 {
+                let id = UUID().uuidString
+                if let deleteItem = TPDeleteItem(originId: id) {
+                    deleteItemArray.append(deleteItem)
+                }
+            }
+            self.configureOffline(true)
+            tpKit.deleteData(samples: deleteItemArray, from: dataset) {
+                result in
+                expectation.fulfill()
+                self.configureOffline(false)
+                self.checkForOfflineResult(result, fetchType: "delete user data")
+            }
+        }
+        // Wait 20.0 seconds until expectation has been fulfilled. If not, fail.
+        waitForExpectations(timeout: 20.0, handler: nil)
+    }
 
 }

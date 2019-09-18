@@ -40,6 +40,8 @@
 		483529E62319830200C3D4DB /* TPDataBolusNormal.swift in Sources */ = {isa = PBXBuildFile; fileRef = 483529E52319830200C3D4DB /* TPDataBolusNormal.swift */; };
 		483529E823199E8500C3D4DB /* TPDataBolusExtended.swift in Sources */ = {isa = PBXBuildFile; fileRef = 483529E723199E8500C3D4DB /* TPDataBolusExtended.swift */; };
 		483529EA23199E9900C3D4DB /* TPDataBolusCombination.swift in Sources */ = {isa = PBXBuildFile; fileRef = 483529E923199E9900C3D4DB /* TPDataBolusCombination.swift */; };
+		488FC5D52330244A004F1692 /* TPKitTestsMockService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 488FC5D42330244A004F1692 /* TPKitTestsMockService.swift */; };
+		488FC5D723317DD1004F1692 /* TPKitTestsMockReachability.swift in Sources */ = {isa = PBXBuildFile; fileRef = 488FC5D623317DD1004F1692 /* TPKitTestsMockReachability.swift */; };
 		48A28BC9230704C800438382 /* TPDeleteItem.swift in Sources */ = {isa = PBXBuildFile; fileRef = 48A28BC8230704C800438382 /* TPDeleteItem.swift */; };
 		48A28BCC2307118600438382 /* APIDeleteItemArray.swift in Sources */ = {isa = PBXBuildFile; fileRef = 48A28BCB2307118500438382 /* APIDeleteItemArray.swift */; };
 		48A628F423144EDC004C0C1E /* TidepoolKit.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 48F7135222E9FCB900FC2C89 /* TidepoolKit.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
@@ -191,6 +193,8 @@
 		483529E52319830200C3D4DB /* TPDataBolusNormal.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TPDataBolusNormal.swift; sourceTree = "<group>"; };
 		483529E723199E8500C3D4DB /* TPDataBolusExtended.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TPDataBolusExtended.swift; sourceTree = "<group>"; };
 		483529E923199E9900C3D4DB /* TPDataBolusCombination.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TPDataBolusCombination.swift; sourceTree = "<group>"; };
+		488FC5D42330244A004F1692 /* TPKitTestsMockService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TPKitTestsMockService.swift; sourceTree = "<group>"; };
+		488FC5D623317DD1004F1692 /* TPKitTestsMockReachability.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TPKitTestsMockReachability.swift; sourceTree = "<group>"; };
 		48A28BC8230704C800438382 /* TPDeleteItem.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TPDeleteItem.swift; sourceTree = "<group>"; };
 		48A28BCB2307118500438382 /* APIDeleteItemArray.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = APIDeleteItemArray.swift; sourceTree = "<group>"; };
 		48A628FA231585F3004C0C1E /* TPPatient.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = TPPatient.swift; path = "TPUser Common/TPPatient.swift"; sourceTree = "<group>"; };
@@ -454,6 +458,8 @@
 				483529DC23181A2C00C3D4DB /* TPKitTests13UserData_Bolus.swift */,
 				482566CA231B141D00BB0BE6 /* TPKitTests14UserData_Basal.swift */,
 				481E4B4D22F0AA8700B128E8 /* TPKitTestsBase.swift */,
+				488FC5D42330244A004F1692 /* TPKitTestsMockService.swift */,
+				488FC5D623317DD1004F1692 /* TPKitTestsMockReachability.swift */,
 			);
 			path = TidepoolKitTests;
 			sourceTree = "<group>";
@@ -841,10 +847,12 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				488FC5D723317DD1004F1692 /* TPKitTestsMockReachability.swift in Sources */,
 				481E4B4E22F0AA8700B128E8 /* TPKitTestsBase.swift in Sources */,
 				482566CB231B141D00BB0BE6 /* TPKitTests14UserData_Basal.swift in Sources */,
 				48F7136E22E9FEB600FC2C89 /* TPKitTests00Login.swift in Sources */,
 				48F7136F22E9FEB600FC2C89 /* TPKitTests10UserData.swift in Sources */,
+				488FC5D52330244A004F1692 /* TPKitTestsMockService.swift in Sources */,
 				480CD239230A2DFA0022D14D /* TPKitLoggerExample.swift in Sources */,
 				483529DF23181A2C00C3D4DB /* TPKitTests13UserData_Bolus.swift in Sources */,
 				481E4B5422F0B54200B128E8 /* TPKitTests01UserInfo.swift in Sources */,

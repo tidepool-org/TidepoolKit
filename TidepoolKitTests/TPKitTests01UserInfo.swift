@@ -10,7 +10,7 @@ import XCTest
 import TidepoolKit
 
 class TPKitTests01UserInfo: TPKitTestsBase {
-
+    
     func test01UserProfileFetch() {
         let expectation = self.expectation(description: "user profile fetch completed")
         let tpKit = getTpKitSingleton()
@@ -33,6 +33,28 @@ class TPKitTests01UserInfo: TPKitTestsBase {
         waitForExpectations(timeout: 20.0, handler: nil)
         
     }
+    
+    func test01aUserProfileOfflineFetch() {
+        let expectation = self.expectation(description: "user profile fetch failed with offline")
+        let tpKit = getTpKitSingleton()
+        // Log in if necessary, and then try fetching user profile...
+        NSLog("\(#function): next calling ensureLogin...")
+        ensureLogin() {
+            session in
+            self.configureOffline(true)
+            tpKit.getProfileInfo(for: session.user) {
+                result in
+                expectation.fulfill()
+                // be sure to restore reachability...
+                self.configureOffline(false)
+                self.checkForOfflineResult(result, fetchType: "user profile fetch")
+            }
+        }
+        // Wait 20.0 seconds until expectation has been fulfilled (sometimes staging takes almost 10 seconds). If not, fail.
+        waitForExpectations(timeout: 20.0, handler: nil)
+        
+    }
+
     
     func test02UserSettingsFetch() {
         let expectation = self.expectation(description: "user settings fetch completed")
@@ -58,7 +80,26 @@ class TPKitTests01UserInfo: TPKitTestsBase {
         }
         // Wait 20.0 seconds until expectation has been fulfilled (sometimes staging takes almost 10 seconds). If not, fail.
         waitForExpectations(timeout: 20.0, handler: nil)
-        
+    }
+
+    func test02aUserSettingsOfflineFetch() {
+        let expectation = self.expectation(description: "user settings fetch failed with offline")
+        let tpKit = getTpKitSingleton()
+        // Log in if necessary, and then try fetching user settings...
+        NSLog("\(#function): next calling ensureLogin...")
+        ensureLogin() {
+            session in
+            self.configureOffline(true)
+            tpKit.getSettingsInfo(for: session.user) {
+                result in
+                expectation.fulfill()
+                // be sure to restore reachability...
+                self.configureOffline(false)
+                self.checkForOfflineResult(result, fetchType: "user settings fetch")
+            }
+        }
+        // Wait 20.0 seconds until expectation has been fulfilled (sometimes staging takes almost 10 seconds). If not, fail.
+        waitForExpectations(timeout: 20.0, handler: nil)
     }
 
     func test03AccessUsersFetch() {
@@ -93,6 +134,26 @@ class TPKitTests01UserInfo: TPKitTestsBase {
         // Wait 20.0 seconds until expectation has been fulfilled (sometimes staging takes almost 10 seconds). If not, fail.
         waitForExpectations(timeout: 20.0, handler: nil)
         
+    }
+
+    func test03aAccessUsersOfflineFetch() {
+        let expectation = self.expectation(description: "access users fetch failed with offline")
+        let tpKit = getTpKitSingleton()
+        // Log in if necessary, and then try fetching user settings...
+        NSLog("\(#function): next calling ensureLogin...")
+        ensureLogin() {
+            session in
+            self.configureOffline(true)
+            tpKit.getAccessUsers(for: session.user) {
+                result in
+                expectation.fulfill()
+                // be sure to restore reachability...
+                self.configureOffline(false)
+                self.checkForOfflineResult(result, fetchType: "access users fetch")
+            }
+        }
+        // Wait 20.0 seconds until expectation has been fulfilled (sometimes staging takes almost 10 seconds). If not, fail.
+        waitForExpectations(timeout: 20.0, handler: nil)
     }
 
     
