@@ -40,6 +40,7 @@
 		483529E62319830200C3D4DB /* TPDataBolusNormal.swift in Sources */ = {isa = PBXBuildFile; fileRef = 483529E52319830200C3D4DB /* TPDataBolusNormal.swift */; };
 		483529E823199E8500C3D4DB /* TPDataBolusExtended.swift in Sources */ = {isa = PBXBuildFile; fileRef = 483529E723199E8500C3D4DB /* TPDataBolusExtended.swift */; };
 		483529EA23199E9900C3D4DB /* TPDataBolusCombination.swift in Sources */ = {isa = PBXBuildFile; fileRef = 483529E923199E9900C3D4DB /* TPDataBolusCombination.swift */; };
+		484C8EA7233848EE001C391D /* TPKitTestsMock_00Login.swift in Sources */ = {isa = PBXBuildFile; fileRef = 484C8EA6233848EE001C391D /* TPKitTestsMock_00Login.swift */; };
 		488FC5D52330244A004F1692 /* TPKitTestsMockService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 488FC5D42330244A004F1692 /* TPKitTestsMockService.swift */; };
 		488FC5D723317DD1004F1692 /* TPKitTestsMockReachability.swift in Sources */ = {isa = PBXBuildFile; fileRef = 488FC5D623317DD1004F1692 /* TPKitTestsMockReachability.swift */; };
 		48A28BC9230704C800438382 /* TPDeleteItem.swift in Sources */ = {isa = PBXBuildFile; fileRef = 48A28BC8230704C800438382 /* TPDeleteItem.swift */; };
@@ -193,6 +194,7 @@
 		483529E52319830200C3D4DB /* TPDataBolusNormal.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TPDataBolusNormal.swift; sourceTree = "<group>"; };
 		483529E723199E8500C3D4DB /* TPDataBolusExtended.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TPDataBolusExtended.swift; sourceTree = "<group>"; };
 		483529E923199E9900C3D4DB /* TPDataBolusCombination.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TPDataBolusCombination.swift; sourceTree = "<group>"; };
+		484C8EA6233848EE001C391D /* TPKitTestsMock_00Login.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TPKitTestsMock_00Login.swift; sourceTree = "<group>"; };
 		488FC5D42330244A004F1692 /* TPKitTestsMockService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TPKitTestsMockService.swift; sourceTree = "<group>"; };
 		488FC5D623317DD1004F1692 /* TPKitTestsMockReachability.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TPKitTestsMockReachability.swift; sourceTree = "<group>"; };
 		48A28BC8230704C800438382 /* TPDeleteItem.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TPDeleteItem.swift; sourceTree = "<group>"; };
@@ -460,6 +462,7 @@
 				481E4B4D22F0AA8700B128E8 /* TPKitTestsBase.swift */,
 				488FC5D42330244A004F1692 /* TPKitTestsMockService.swift */,
 				488FC5D623317DD1004F1692 /* TPKitTestsMockReachability.swift */,
+				484C8EA6233848EE001C391D /* TPKitTestsMock_00Login.swift */,
 			);
 			path = TidepoolKitTests;
 			sourceTree = "<group>";
@@ -851,6 +854,7 @@
 				481E4B4E22F0AA8700B128E8 /* TPKitTestsBase.swift in Sources */,
 				482566CB231B141D00BB0BE6 /* TPKitTests14UserData_Basal.swift in Sources */,
 				48F7136E22E9FEB600FC2C89 /* TPKitTests00Login.swift in Sources */,
+				484C8EA7233848EE001C391D /* TPKitTestsMock_00Login.swift in Sources */,
 				48F7136F22E9FEB600FC2C89 /* TPKitTests10UserData.swift in Sources */,
 				488FC5D52330244A004F1692 /* TPKitTestsMockService.swift in Sources */,
 				480CD239230A2DFA0022D14D /* TPKitLoggerExample.swift in Sources */,

@@ -45,11 +45,12 @@ public class TidepoolKit {
      Initialize the framework singleton.
      
      - parameter logger: Optional TPKitLogging object that will be called for logging. If nil, no logging will be done.
+     - parameter queue: Optional dispatch queue to use for completion handling; main queue will be used as a default (rather than a random networking queue). Immediate completions will always be on the current thread.
      - returns: initialized TidepoolKit object.
      */
-    public init(logger: TPKitLogging? = nil) {
+    public init(logger: TPKitLogging? = nil,  queue: DispatchQueue = DispatchQueue.main) {
         clientLogger = logger
-        self.apiConnect = APIConnector()
+        self.apiConnect = APIConnector(queue: queue)
     }
     private let apiConnect: APIConnector
     
@@ -344,17 +345,9 @@ public class TidepoolKit {
 // global logging object
 var clientLogger: TPKitLogging?
 
-public protocol URLSessionSource {
-    func defaultURLSession() -> URLSession
-    func backgroundURLSession() -> URLSession?
-    func ensureBackgroundSession(_ delegate: URLSessionDelegate) -> URLSession
-    func invalidateBackgroundSession()
-}
-
 extension TidepoolKit {
-    
     //
-    // MARK: - Non-public extentions for testing
+    // MARK: - Non-public extensions for testing
     //
     
     /**
@@ -368,16 +361,19 @@ extension TidepoolKit {
     }
     
     /**
-     Allows test software to pass in a mock URLSession and mock the service, enabling service error cases to be tested.
+     Allows test software to pass in a mock TidepoolNetworkInterface and mock the service, enabling service error cases to be tested.
      
-     - note: A mock session can be injected with this method for one or more calls, and then nil passed to revert to using the real service.
-     - note: Only a small subset of URLSession functionality is used and would be needed to be overridden in order to insert test points.
-     - parameter urlSessionSource: Protocol object providing access to standard and background URLSession objects. Passing nil will revert service to using the standard session objects.
+     - note: A mock interface can be injected with this method for one or more calls, and then nil passed to revert to using the real service.
+     - parameter networkInterface: Protocol object providing an api to networking. Passing nil will revert service to using the standard network interface. Alternatively, currentNetworkInterface() can be used to save the current interface, and configureNetworkInterface() used to restore it after briefly interjecting a mock interface for a particular call.
      */
-    func configureSessionSource(_ urlSessionSource: URLSessionSource?) {
-        apiConnect.configureSessionSource(urlSessionSource)
+    func configureNetworkInterface(_ networkInterface: TidepoolNetworkInterface?) {
+        apiConnect.configureNetworkInterface(networkInterface)
     }
 
+    func currentNetworkInterface() -> TidepoolNetworkInterface {
+        return apiConnect.networkRequestHandler
+    }
+    
     /**
      Allows test software to pass in a mock Reachability object and control online/offline status, enabling service error cases to be tested.
      

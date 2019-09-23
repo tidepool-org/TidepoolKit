@@ -79,6 +79,7 @@ class TPKitTests14UserData_Basal: TPKitTestsBase {
         let expectedDuration = kOneDayTimeInterval
         let suppressed = TPDataSuppressed(deliveryType, rate: 0.25, scheduleName: "Standard")
         let sample = TPDataBasalSuppressed(time: Date(), duration: duration, expectedDuration: expectedDuration, suppressed: suppressed)
+        sample.origin = origin
         XCTAssertNotNil(sample, "\(#function) failed to create temporary basal sample!")
         XCTAssert(sample.deliveryType == .suspend)
         XCTAssert(sample.duration == duration)
