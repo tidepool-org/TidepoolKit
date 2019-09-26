@@ -137,10 +137,15 @@ class LoginViewController: UIViewController {
         // login button
         if (emailTextField.text != "" && passwordTextField.text != "" && connected) {
             loginButton.isEnabled = true
-            loginButton.setTitleColor(UIColor.black, for:UIControl.State())
+            if #available(iOSApplicationExtension 13.0, *) {
+                loginButton.setTitleColor(UIColor.label, for:UIControl.State())
+            } else {
+                // Fallback on earlier versions
+                loginButton.setTitleColor(UIColor.black, for:UIControl.State())
+            }
         } else {
             loginButton.isEnabled = false
-            loginButton.setTitleColor(UIColor.lightGray, for:UIControl.State())
+            loginButton.setTitleColor(UIColor.gray, for:UIControl.State())
         }
     }
     

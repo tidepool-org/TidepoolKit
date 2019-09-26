@@ -1,11 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="14490.70" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES" initialViewController="PjX-QO-gXs">
-    <device id="retina4_0" orientation="portrait">
-        <adaptation id="fullscreen"/>
-    </device>
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="14868" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES" initialViewController="PjX-QO-gXs">
+    <device id="retina4_0" orientation="portrait" appearance="dark"/>
     <dependencies>
         <deployment identifier="iOS"/>
-        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="14490.49"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="14824"/>
         <capability name="Safe area layout guides" minToolsVersion="9.0"/>
         <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
     </dependencies>
@@ -27,7 +25,7 @@
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
                             <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="IIv-vS-ZOc" userLabel="Scene">
-                                <rect key="frame" x="15" y="20" width="290" height="548"/>
+                                <rect key="frame" x="15" y="0.0" width="290" height="568"/>
                                 <subviews>
                                     <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="NUO-Rp-J28" userLabel="LoginViewContainer" customClass="UIControl">
                                         <rect key="frame" x="0.0" y="20" width="290" height="320"/>
@@ -38,6 +36,7 @@
                                                     <textView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" text="Log in to a Tidepool DSA account to enable TidepoolKit framework testing:         " textAlignment="natural" translatesAutoresizingMaskIntoConstraints="NO" id="iqw-Ta-JGf">
                                                         <rect key="frame" x="0.0" y="0.0" width="243" height="121.5"/>
                                                         <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
+                                                        <color key="textColor" systemColor="labelColor" cocoaTouchSystemColor="darkTextColor"/>
                                                         <fontDescription key="fontDescription" name="OpenSans" family="Open Sans" pointSize="17"/>
                                                         <textInputTraits key="textInputTraits" autocapitalizationType="sentences"/>
                                                     </textView>
@@ -56,7 +55,7 @@
                                                     <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Wrong email or password!" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="13h-oP-QhS" userLabel="errorFeedbackLabel">
                                                         <rect key="frame" x="35.5" y="1.5" width="219" height="14.5"/>
                                                         <fontDescription key="fontDescription" type="system" pointSize="12"/>
-                                                        <color key="textColor" red="0.0" green="0.0" blue="0.0" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                                                        <nil key="textColor"/>
                                                         <nil key="highlightedColor"/>
                                                     </label>
                                                     <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="IwI-vH-ldP" userLabel="InputContainerView">
@@ -64,7 +63,6 @@
                                                         <subviews>
                                                             <textField opaque="NO" clipsSubviews="YES" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="center" borderStyle="line" placeholder="Email" textAlignment="center" adjustsFontSizeToFit="NO" minimumFontSize="18" translatesAutoresizingMaskIntoConstraints="NO" id="kss-iC-sO7" userLabel="emailTextField">
                                                                 <rect key="frame" x="0.0" y="0.0" width="243" height="47.5"/>
-                                                                <color key="backgroundColor" red="1" green="1" blue="1" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                                                                 <constraints>
                                                                     <constraint firstAttribute="height" constant="47.5" id="Gyj-fN-9uV"/>
                                                                 </constraints>
@@ -77,7 +75,7 @@
                                                             </textField>
                                                             <textField opaque="NO" clipsSubviews="YES" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="center" borderStyle="line" placeholder="Password" textAlignment="center" adjustsFontSizeToFit="NO" minimumFontSize="17" translatesAutoresizingMaskIntoConstraints="NO" id="hEU-Bk-XZd" userLabel="passwordTextField">
                                                                 <rect key="frame" x="0.0" y="62.5" width="243" height="47.5"/>
-                                                                <color key="backgroundColor" red="1" green="1" blue="1" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                                                                <color key="backgroundColor" systemColor="systemBackgroundColor" cocoaTouchSystemColor="whiteColor"/>
                                                                 <fontDescription key="fontDescription" name="OpenSans" family="Open Sans" pointSize="18"/>
                                                                 <textInputTraits key="textInputTraits" autocorrectionType="no" spellCheckingType="no" returnKeyType="go" secureTextEntry="YES"/>
                                                                 <connections>
@@ -88,13 +86,13 @@
                                                                 <rect key="frame" x="16" y="140.5" width="103" height="33"/>
                                                                 <fontDescription key="fontDescription" name="OpenSans" family="Open Sans" pointSize="18"/>
                                                                 <state key="normal" title="Staging">
-                                                                    <color key="titleColor" white="0.0" alpha="1" colorSpace="calibratedWhite"/>
+                                                                    <color key="titleColor" systemColor="labelColor" cocoaTouchSystemColor="darkTextColor"/>
                                                                 </state>
                                                                 <connections>
                                                                     <action selector="selectServiceButtonHandler:" destination="PjX-QO-gXs" eventType="touchUpInside" id="FAi-hd-Iry"/>
                                                                 </connections>
                                                             </button>
-                                                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="la3-12-QqC" userLabel="loginButton">
+                                                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" reversesTitleShadowWhenHighlighted="YES" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="la3-12-QqC" userLabel="loginButton">
                                                                 <rect key="frame" x="129" y="134" width="114" height="46"/>
                                                                 <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
                                                                 <constraints>
@@ -104,14 +102,14 @@
                                                                 <fontDescription key="fontDescription" type="system" pointSize="18"/>
                                                                 <color key="tintColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
                                                                 <state key="normal" title="Login">
-                                                                    <color key="titleColor" cocoaTouchSystemColor="darkTextColor"/>
+                                                                    <color key="titleColor" systemColor="labelColor" cocoaTouchSystemColor="darkTextColor"/>
                                                                 </state>
                                                                 <connections>
                                                                     <action selector="login_button_tapped:" destination="PjX-QO-gXs" eventType="touchUpInside" id="WF6-uV-gLD"/>
                                                                 </connections>
                                                             </button>
                                                         </subviews>
-                                                        <color key="backgroundColor" red="0.0" green="0.0" blue="0.0" alpha="0.0" colorSpace="custom" customColorSpace="sRGB"/>
+                                                        <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                                         <constraints>
                                                             <constraint firstItem="hEU-Bk-XZd" firstAttribute="top" secondItem="kss-iC-sO7" secondAttribute="bottom" constant="15" id="DIq-4C-E4L"/>
                                                             <constraint firstItem="kss-iC-sO7" firstAttribute="top" secondItem="IwI-vH-ldP" secondAttribute="top" id="Qh2-Sh-ZKL"/>
@@ -166,7 +164,7 @@
                                                 </variation>
                                             </view>
                                         </subviews>
-                                        <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                        <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                         <constraints>
                                             <constraint firstItem="HVW-Gx-656" firstAttribute="leading" secondItem="NUO-Rp-J28" secondAttribute="leading" id="5vG-ke-gCt"/>
                                             <constraint firstAttribute="bottom" secondItem="HVW-Gx-656" secondAttribute="bottom" priority="750" id="BlC-iO-dJC"/>
@@ -209,7 +207,7 @@
                                         </constraints>
                                     </view>
                                 </subviews>
-                                <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                 <constraints>
                                     <constraint firstAttribute="leading" secondItem="NUO-Rp-J28" secondAttribute="leading" id="02o-XM-Nhy"/>
                                     <constraint firstItem="cCx-Xk-R3d" firstAttribute="trailing" secondItem="NUO-Rp-J28" secondAttribute="trailing" id="6ia-AE-ZIV"/>
@@ -220,7 +218,7 @@
                                 </constraints>
                             </view>
                         </subviews>
-                        <color key="backgroundColor" red="1" green="1" blue="1" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                        <color key="backgroundColor" systemColor="systemBackgroundColor" cocoaTouchSystemColor="whiteColor"/>
                         <constraints>
                             <constraint firstItem="eKc-5a-g6B" firstAttribute="bottom" secondItem="IIv-vS-ZOc" secondAttribute="bottom" id="Gs4-uO-tfV"/>
                             <constraint firstItem="eKc-5a-g6B" firstAttribute="leading" secondItem="IIv-vS-ZOc" secondAttribute="leading" constant="-15" id="Mmg-qR-uFJ"/>
