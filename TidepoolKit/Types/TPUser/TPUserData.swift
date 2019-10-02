@@ -10,19 +10,16 @@ import Foundation
 
 public class TPUserData: CustomStringConvertible {
     
-    //
-    // MARK: - CustomStringConvertible
-    //
-    
+    // CustomStringConvertible conformance
+
     public var description: String {
         get {
             return TPDataType.description(self.rawValue)
         }
     }
 
-    //
-    // MARK: - RawRepresentable
-    //
+    // RawRepresentable protocol conformance
+
     public typealias RawValue = [String: Any]
     
     // override!

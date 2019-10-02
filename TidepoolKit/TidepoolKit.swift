@@ -68,9 +68,7 @@ public class TidepoolKit {
         }
     }
 
-    //
     // MARK: - Login/session/connectivity
-    //
 
     /**
      Returns true if the Internet is available; this does not indicate whether the Tidepool service is available however.
@@ -166,9 +164,7 @@ public class TidepoolKit {
         apiConnect.logout(completion)
     }
     
-    //
     // MARK: - User methods
-    //
 
     /**
       Queries the service for all user data records of mixed types that have a date within the range specified (startDate < record date <= endDate).
@@ -256,9 +252,7 @@ public class TidepoolKit {
         }
     }
     
-    //
     // MARK: - Datasets
-    //
     
     /**
      Queries the service to find an existing dataset that matches the dataset; if the service returns an array of datasets with no existing match, a new dataset will be created.
@@ -344,10 +338,10 @@ public class TidepoolKit {
 // global logging object
 var clientLogger: TPKitLogging?
 
+// MARK: - Non-public extension for testing
+
 extension TidepoolKit {
-    //
-    // MARK: - Non-public extensions for testing
-    //
+
     
     /**
      Clears the TPSession currently retained, if any. Subsequent calls requiring an authorization token will fail with a .notLoggedIn error.

@@ -20,10 +20,8 @@ public class TPUser: TPUserData, RawRepresentable {
         self.userEmail = userName
     }
     
-    //
-    // MARK: - RawRepresentable
-    //
-    
+    // RawRepresentable protocol conformance
+
     public required init?(rawValue: [String : Any]) {
         guard let userId = rawValue["userid"] as? String else {
             return nil

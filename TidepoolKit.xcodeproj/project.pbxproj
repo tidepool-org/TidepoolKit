@@ -252,7 +252,6 @@
 		48F713D822EA029C00FC2C89 /* TidepoolKitUI.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TidepoolKitUI.swift; sourceTree = "<group>"; };
 		48F713D922EA029C00FC2C89 /* LoginViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = LoginViewController.swift; sourceTree = "<group>"; };
 		48F713DD22EA02C300FC2C89 /* TPKitExampleViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TPKitExampleViewController.swift; sourceTree = "<group>"; };
-		48F713DF22EA041000FC2C89 /* TidepoolKit.playground */ = {isa = PBXFileReference; lastKnownFileType = file.playground; path = TidepoolKit.playground; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.swift; };
 		48F713E222EA2F2000FC2C89 /* TPDataCarbohydrate.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TPDataCarbohydrate.swift; sourceTree = "<group>"; };
 		48F713E422EA7C7300FC2C89 /* TPDataEnergy.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TPDataEnergy.swift; sourceTree = "<group>"; };
 		48F713E522EA7C7300FC2C89 /* TPDataProtein.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TPDataProtein.swift; sourceTree = "<group>"; };
@@ -412,7 +411,6 @@
 		48F7134822E9FCB900FC2C89 = {
 			isa = PBXGroup;
 			children = (
-				48F713DF22EA041000FC2C89 /* TidepoolKit.playground */,
 				480CD237230A2DCB0022D14D /* TidepoolKitCommon */,
 				48F7135422E9FCB900FC2C89 /* TidepoolKit */,
 				48F7135F22E9FCB900FC2C89 /* TidepoolKitTests */,

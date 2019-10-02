@@ -10,10 +10,6 @@ import Foundation
 
 public class TPDataBolusExtended: TPDataBolus {
     
-    //
-    // MARK: - Type specific data
-    //
-    
     public let extended: Double
     public let expectedExtended: Double?
     public let duration: TimeInterval
@@ -28,9 +24,8 @@ public class TPDataBolusExtended: TPDataBolus {
         super.init(time: time, subType: .extended)
     }
     
-    //
-    // MARK: - RawRepresentable
-    //
+    // RawRepresentable protocol conformance
+
     required public init?(rawValue: RawValue) {
         guard let extended = rawValue["extended"] as? NSNumber else {
             LogError("TPDataBolusNormal:init(rawValue) no extended found!")

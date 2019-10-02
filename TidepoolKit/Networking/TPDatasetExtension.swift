@@ -8,10 +8,8 @@
 
 import Foundation
 
-extension TPDataset: TPPostable, TPFetchable, Equatable {
-    //
-    // MARK: - Equatable
-    //
+extension TPDataset: Equatable {
+    
     public static func == (lhs: TPDataset, rhs: TPDataset) -> Bool {
         guard lhs.client == rhs.client else {
             LogInfo("client mismatch")
@@ -24,33 +22,28 @@ extension TPDataset: TPPostable, TPFetchable, Equatable {
         return true
    }
     
-    //
-    // MARK: - Postable
-    //
+}
     
+extension TPDataset: TPPostable, TPFetchable {
+    
+    // Postable
     func postBodyData() -> Data? {
         do {
             let postBody = try JSONSerialization.data(withJSONObject: self.rawValue)
             return postBody
         } catch {
-            LogError("TPUploadable.postBodyData() unable to serialize \(self)!")
+            LogError("TPDataset.postBodyData() unable to serialize \(self)!")
             return nil
         }
     }
     
-    //
-    // MARK: - Postable, Fetchable
-    //
-
+    // Postable, Fetchable
     class func urlExtension(forUser userId: String) -> String {
         let urlExtension = "/v1/users/" + userId + "/data_sets"
         return urlExtension
     }
 
-    //
-    // MARK: - Fetchable
-    //
-    
+    // Fetchable
     class func fromJsonData(_ data: Data) -> TPFetchable? {
         guard let dict = dictFromJsonData(data) else {
             return nil

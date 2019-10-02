@@ -16,14 +16,9 @@ public enum TPBasalDeliveryType: String, Encodable {
 }
 
 public class TPDataBasal: TPDeviceData, TPData {
-    //
-    // MARK: - TPData protocol
-    //
+     
+    // TPData protocol conformance
     public static var tpType: TPDataType { return .basal }
-
-    //
-    // MARK: - Type specific data
-    //
 
     public var deliveryType: TPBasalDeliveryType
     public let duration: TimeInterval
@@ -37,9 +32,8 @@ public class TPDataBasal: TPDeviceData, TPData {
         super.init(.basal, time: time)
     }
 
-    //
-    // MARK: - RawRepresentable
-    //
+    // RawRepresentable protocol conformance
+
     public typealias RawValue = [String: Any]
 
     required public init?(rawValue: RawValue) {

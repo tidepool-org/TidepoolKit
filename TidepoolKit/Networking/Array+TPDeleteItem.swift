@@ -9,11 +9,7 @@
 import Foundation
 
 extension Array: TPUploadable where Element == TPDeleteItem {
-    
-    //
-    // MARK: - TPUploadable
-    //
-   
+
     func postBodyData() -> Data? {
         return self.postBodyData(self)
     }

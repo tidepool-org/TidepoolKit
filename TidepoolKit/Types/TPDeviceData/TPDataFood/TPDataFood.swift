@@ -12,9 +12,7 @@ import HealthKit
 
 public class TPDataFood: TPDeviceData, TPData {
     
-    //
-    // MARK: - TPData protocol
-    //
+    // TPData protocol
     public static var tpType: TPDataType { return .food }
     
 	public enum Meal: String {
@@ -25,9 +23,6 @@ public class TPDataFood: TPDeviceData, TPData {
         case other = "other"
 	}
 
-    //
-    // type specific data
-    //
     public let name: String? 		// 0 < len <= 100]
 	public let brand: String?       //  0 < len <= 100]
 	public let code: String?        //  0 < len <= 100; UPC or other]
@@ -49,7 +44,6 @@ public class TPDataFood: TPDeviceData, TPData {
         super.init(.food, time: time)
 	}
 
-    //
     public init(time: Date, name: String? = nil, brand: String? = nil, code: String? = nil, meal: Meal? = nil, mealOther: String? = nil, amount: TPDataAmount? = nil, nutrition: TPDataNutrition? = nil, ingredients: [TPDataIngredient]? = nil) {
         self.name = name
         self.brand = brand
@@ -62,9 +56,8 @@ public class TPDataFood: TPDeviceData, TPData {
         super.init(.food, time: time)
     }
 
-    //
-    // MARK: - RawRepresentable
-    //
+    // RawRepresentable protocol conformance
+
     public typealias RawValue = [String: Any]
 
     required public init?(rawValue: RawValue) {

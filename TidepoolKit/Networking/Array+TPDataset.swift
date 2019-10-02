@@ -11,10 +11,6 @@ import Foundation
 /// Used internally...
 extension Array: TPFetchable where Element == TPDataset {
 
-    //
-    // MARK: - TPFetchable protocol conformance methods
-    //
-    
     static func urlExtension(forUser userId: String) -> String {
         let urlExtension = "/v1/users/" + userId + "/data_sets?client.name=org.tidepool.mobile&size=1"
         return urlExtension

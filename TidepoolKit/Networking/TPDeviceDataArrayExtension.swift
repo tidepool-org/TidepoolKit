@@ -9,11 +9,7 @@
 import Foundation
 
 /// TPDeviceDataArray objects are created for either uploading/deleting, or as a result of a download. This is basically a factory object used to convert between service json data and TPDeviceData objects.
-extension TPDeviceDataArray: TPFetchable, TPUploadable {
-    
-    //
-    // MARK: - TPFetchable protocol conformance methods
-    //
+extension TPDeviceDataArray: TPFetchable {
     
     class func urlExtension(forUser userId: String) -> String {
         let urlExtension = "/data/" + userId
@@ -33,11 +29,10 @@ extension TPDeviceDataArray: TPFetchable, TPUploadable {
         }
         return TPDeviceDataArray(items)
     }
-    
-    //
-    // MARK: TPUploadable
-    //
-    
+}
+
+extension TPDeviceDataArray: TPUploadable {
+
     func postBodyData() -> Data? {
         return postBodyData(userData)
     }

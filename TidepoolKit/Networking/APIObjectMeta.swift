@@ -8,19 +8,14 @@
 
 import Foundation
 
-// Private to framework...
+// Private to framework. Used by API to extend baseurl for a get request.
 protocol TPFetchable {
-    
-    //
-    // MARK: - TPFetchable protocol conformance methods
-    //
-
-    // Used by API to extend baseurl for a get request
     static func urlExtension(forUser userId: String) -> String
     static func fromJsonData(_ data: Data) -> TPFetchable?
 }
 
 extension TPFetchable {
+    
     static func dictFromJsonData(_ data: Data) -> [String: Any]? {
         guard let json: Any = try? JSONSerialization.jsonObject(with: data) else {
             LogError("Fetched data not json decodable!")
@@ -46,31 +41,22 @@ extension TPFetchable {
     }
 }
 
-// Private to framework...
+// Private to framework. TPPostable objects are TPFetchable and also take a body.
 protocol TPPostable: TPFetchable {
-    
-    //
-    // MARK: - TPPostable protocol conformance methods
-    //
     
     // TPPostable objects also take a body...
     func postBodyData() -> Data?
 }
 
-// Private to framework...
+// Private to framework. TPUploadable objects take a body, and can optionally parse an error response.
 protocol TPUploadable {
-    
-    //
-    // MARK: - TPUploadable protocol conformance methods
-    //
-    
-    // TPUploadable objects take a body...
     func postBodyData() -> Data?
     // And can parse 400 error responses into an array of indices indicating which upload samples were rejected...
     func parseErrResponse(_ response: Data) -> [Int]?
 }
 
 extension TPUploadable {
+    
     func postBodyData<T: RawRepresentable>(_ items: [T]) -> Data? {
         guard !items.isEmpty else {
             LogError("TPUploadable.postBodyData() array is empty!")

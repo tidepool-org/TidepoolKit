@@ -51,9 +51,8 @@ public class TPDeviceData: RawRepresentable, CustomStringConvertible {
         }
     }
     
-    //
-    // MARK: - RawRepresentable
-    //
+    // RawRepresentable protocol conformance
+
     public typealias RawValue = [String: Any]
 
     required public init?(rawValue: RawValue) {

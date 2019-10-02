@@ -16,14 +16,12 @@ public enum TPCbgUnit: String, Encodable {
 
 public class TPDataCbg: TPDeviceData, TPData {
     
-    //
-    // MARK: - TPData protocol
-    //
+    // TPData protocol
+    
     public static var tpType: TPDataType { return .cbg }
 
-    //
-    // MARK: - Type specific data
-    //
+    // Type specific data
+    
     public let value: Double
     public let units: TPCbgUnit
 
@@ -35,9 +33,8 @@ public class TPDataCbg: TPDeviceData, TPData {
         super.init(.cbg, time: time)
     }
     
-    //
-    // MARK: - RawRepresentable
-    //
+    // RawRepresentable protocol conformance
+    
     public typealias RawValue = [String: Any]
 
     required public init?(rawValue: RawValue) {

@@ -25,9 +25,7 @@ public class TPDataBasalTemporary: TPDataBasal {
         super.init(time: time, deliveryType: .temp, duration: duration, expectedDuration: expectedDuration)
     }
     
-    //
-    // MARK: - RawRepresentable
-    //
+    // RawRepresentable protocol conformance
 
     required public init?(rawValue: RawValue) {
         guard let rate = rawValue["rate"] as? NSNumber else {

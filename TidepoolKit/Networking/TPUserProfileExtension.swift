@@ -10,10 +10,6 @@ import Foundation
 
 extension TPUserProfile: TPFetchable {
     
-    //
-    // MARK: - TPFetchable protocol conformance methods
-    //
-    
     class func urlExtension(forUser userId: String) -> String {
         let urlExtension = "/metadata/" + userId + "/profile"
         return urlExtension
@@ -25,7 +21,6 @@ extension TPUserProfile: TPFetchable {
         }
         return TPUserProfile(rawValue: jsonDict)
     }
-    
 
 }
 

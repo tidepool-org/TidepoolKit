@@ -22,9 +22,7 @@ public class TPSession: TPUserData, RawRepresentable {
         super.init()
     }
 
-    //
-    // MARK: - RawRepresentable
-    //
+    // RawRepresentable protocol conformance
 
     public required init?(rawValue: [String : Any]) {
         guard let token = rawValue["authenticationToken"] as? String else {

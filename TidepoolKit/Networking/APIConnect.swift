@@ -50,16 +50,7 @@ class APIConnector {
     var apiQueue: DispatchQueue
     
     // Base URL for API calls, set during initialization
-    var baseUrlString: String? {
-        didSet {
-            if let urlStr = baseUrlString {
-                self.baseUrl = URL(string: urlStr)!
-            } else {
-                self.baseUrl = nil
-            }
-        }
-    }
-    var baseUrl: URL?
+    var baseUrlString: String?
 
     /// Reachability object, valid during lifetime of this APIConnector, and convenience function that uses this
     var reachability: ReachabilitySource?
@@ -105,10 +96,14 @@ class APIConnector {
     // Dictionary of servers and their base URLs
     private func serverUrl(_ server: TidepoolServer) -> String {
         switch server {
-        case .development: return "https://dev-api.tidepool.org"
-        case .staging: return "https://stg-api.tidepool.org"
-        case .integration: return "https://int-api.tidepool.org"
-        case .production: return "https://api.tidepool.org"
+        case .development:
+            return "https://dev-api.tidepool.org"
+        case .staging:
+            return "https://stg-api.tidepool.org"
+        case .integration:
+            return "https://int-api.tidepool.org"
+        case .production:
+            return "https://api.tidepool.org"
         }
     }
     private let kDefaultServer: TidepoolServer = .staging

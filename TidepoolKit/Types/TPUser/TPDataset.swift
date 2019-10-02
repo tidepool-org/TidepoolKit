@@ -35,10 +35,8 @@ public class TPDataset: TPUserData, RawRepresentable {
         self.uploadId = uploadId
     }
     
-    //
-    // MARK: - RawRepresentable
-    //
-    
+    // RawRepresentable protocol conformance
+
     public required init?(rawValue: [String : Any]) {
         self.uploadId = rawValue["uploadId"] as? String
         guard let deduplicatorDict = rawValue["deduplicator"] as? [String : Any] else {

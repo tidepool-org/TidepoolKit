@@ -10,10 +10,6 @@ import Foundation
 
 public class TPDataBolusNormal: TPDataBolus {
     
-    //
-    // MARK: - Type specific data
-    //
-    
     public let normal: Double
     public let expectedNormal: Double?
 
@@ -24,9 +20,8 @@ public class TPDataBolusNormal: TPDataBolus {
         super.init(time: time, subType: .normal)
     }
     
-    //
-    // MARK: - RawRepresentable
-    //
+    // RawRepresentable protocol conformance
+
     required public init?(rawValue: RawValue) {
         guard let normal = rawValue["normal"] as? NSNumber else {
             LogError("TPDataBolusNormal:init(rawValue) no normal found!")

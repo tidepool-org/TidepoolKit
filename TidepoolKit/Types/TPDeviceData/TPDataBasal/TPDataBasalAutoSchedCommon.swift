@@ -10,9 +10,6 @@ import Foundation
 
 public class TPDataBasalAutoSchedCommon: TPDataBasal {
     
-    //
-    // MARK: - Type specific data
-    //
     public let rate: Double
     public var scheduleName: String?
     
@@ -22,10 +19,8 @@ public class TPDataBasalAutoSchedCommon: TPDataBasal {
         super.init(time: time, deliveryType: deliveryType, duration: duration, expectedDuration: expectedDuration)
     }
     
-    //
-    // MARK: - RawRepresentable
-    //
-    
+    // RawRepresentable protocol conformance
+
     required public init?(rawValue: RawValue) {
         guard let rate = rawValue["rate"] as? NSNumber else {
             return nil

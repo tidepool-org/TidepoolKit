@@ -11,9 +11,6 @@ import Foundation
 
 public class TPDataBasalSuppressed: TPDataBasal {
     
-    //
-    // MARK: - Type specific data
-    //
     public var suppressed: TPDataSuppressed?
     
     public init(time: Date, duration: TimeInterval, expectedDuration: TimeInterval? = nil, suppressed: TPDataSuppressed? = nil) {
@@ -21,10 +18,8 @@ public class TPDataBasalSuppressed: TPDataBasal {
         super.init(time: time, deliveryType: .suspend, duration: duration, expectedDuration: expectedDuration)
     }
     
-    //
-    // MARK: - RawRepresentable
-    //
-    
+    // RawRepresentable protocol conformance
+
     required public init?(rawValue: RawValue) {
         self.suppressed = TPDataSuppressed.getSelfFromDict(rawValue)
         // base properties in superclasses...

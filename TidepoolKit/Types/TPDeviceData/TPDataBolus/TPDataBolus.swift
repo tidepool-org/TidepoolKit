@@ -16,18 +16,12 @@ public enum TPBolusSubType: String, Encodable {
 
 public class TPDataBolus: TPDeviceData, TPData {
     
-    //
-    // MARK: - TPData protocol
-    //
+    // TPData protocol conformance
     public static var tpType: TPDataType { return .basal }
+    
     public let subType: TPBolusSubType
-
     public var createdUserId: String?
     public var createdTime: Date?
-    
-    //
-    // MARK: - Type specific data
-    //
     
     public init(time: Date, subType: TPBolusSubType) {
         self.subType = subType
@@ -42,9 +36,8 @@ public class TPDataBolus: TPDeviceData, TPData {
         super.init(.bolus, time: time)
     }
     
-    //
-    // MARK: - RawRepresentable
-    //
+    // RawRepresentable protocol conformance
+
     public typealias RawValue = [String: Any]
     
     required public init?(rawValue: RawValue) {

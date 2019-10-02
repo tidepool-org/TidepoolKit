@@ -10,10 +10,6 @@ import Foundation
 
 extension TPAccessUsers: TPFetchable {
     
-    //
-    // MARK: - TPFetchable protocol conformance methods
-    //
-    
     class func urlExtension(forUser userId: String) -> String {
         let urlExtension = "/access/groups/" + userId
         return urlExtension

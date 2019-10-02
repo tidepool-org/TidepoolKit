@@ -48,6 +48,5 @@ class DateUtils {
         }
         return Static.instance
     }
-
     
 }
