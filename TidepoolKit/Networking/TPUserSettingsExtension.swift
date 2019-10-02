@@ -11,7 +11,7 @@ import Foundation
 /// This is a service-aligned class, Codable. It is private to the framework.
 extension TPUserSettings: TPFetchable {
  
-    class func urlExtension(forUser userId: String) -> String {
+    class func urlPath(forUser userId: String) -> String {
         let urlExtension = "/metadata/" + userId + "/settings"
         return urlExtension
     }

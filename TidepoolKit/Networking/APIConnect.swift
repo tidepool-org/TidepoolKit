@@ -9,6 +9,7 @@
 import Foundation
 
 typealias NetworkRequestCompletionHandler = (Data?, URLResponse?, Error?) -> Void
+
 protocol TidepoolNetworkInterface {
     func sendStandardRequest(_ request: URLRequest, completion: @escaping NetworkRequestCompletionHandler)
     func sendBackgroundRequest(_ request: URLRequest, body: Data, completion: @escaping NetworkRequestCompletionHandler)
@@ -348,7 +349,7 @@ class APIConnector {
             return
         }
 
-        let urlExtension = T.urlExtension(forUser: user.userId)
+        let urlExtension = T.urlPath(forUser: user.userId)
         
         sendRequest("GET", urlExtension: urlExtension, parameters: parameters, headers: headers) {
             sendResponse, error in
@@ -395,7 +396,7 @@ class APIConnector {
         }
 
         let fetchForUserId = sessionUser.userId
-        let urlExtension = P.urlExtension(forUser: fetchForUserId)
+        let urlExtension = P.urlPath(forUser: fetchForUserId)
         
         guard let body = postable.postBodyData() else {
             LogError("Post failed, no data to post!")

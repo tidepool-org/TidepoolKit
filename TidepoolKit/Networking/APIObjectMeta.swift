@@ -11,7 +11,7 @@ import Foundation
 // Private to framework. Used by API to extend baseurl for a get request.
 protocol TPFetchable {
     
-    static func urlExtension(forUser userId: String) -> String
+    static func urlPath(forUser userId: String) -> String
     static func fromJsonData(_ data: Data) -> TPFetchable?
 }
 

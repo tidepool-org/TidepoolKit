@@ -42,6 +42,7 @@
 		483529EA23199E9900C3D4DB /* TPDataBolusCombination.swift in Sources */ = {isa = PBXBuildFile; fileRef = 483529E923199E9900C3D4DB /* TPDataBolusCombination.swift */; };
 		484C8EA7233848EE001C391D /* TPKitTestsMock_00Login.swift in Sources */ = {isa = PBXBuildFile; fileRef = 484C8EA6233848EE001C391D /* TPKitTestsMock_00Login.swift */; };
 		48541F1E23441A3C0077C75A /* TPAccessUsers.swift in Sources */ = {isa = PBXBuildFile; fileRef = 48541F1D23441A3C0077C75A /* TPAccessUsers.swift */; };
+		48541F2023451A020077C75A /* TPCommonEnums.swift in Sources */ = {isa = PBXBuildFile; fileRef = 48541F1F23451A020077C75A /* TPCommonEnums.swift */; };
 		488FC5D52330244A004F1692 /* TPKitTestsMockService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 488FC5D42330244A004F1692 /* TPKitTestsMockService.swift */; };
 		488FC5D723317DD1004F1692 /* TPKitTestsMockReachability.swift in Sources */ = {isa = PBXBuildFile; fileRef = 488FC5D623317DD1004F1692 /* TPKitTestsMockReachability.swift */; };
 		48A28BC9230704C800438382 /* TPDeleteItem.swift in Sources */ = {isa = PBXBuildFile; fileRef = 48A28BC8230704C800438382 /* TPDeleteItem.swift */; };
@@ -197,6 +198,7 @@
 		483529E923199E9900C3D4DB /* TPDataBolusCombination.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TPDataBolusCombination.swift; sourceTree = "<group>"; };
 		484C8EA6233848EE001C391D /* TPKitTestsMock_00Login.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TPKitTestsMock_00Login.swift; sourceTree = "<group>"; };
 		48541F1D23441A3C0077C75A /* TPAccessUsers.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TPAccessUsers.swift; sourceTree = "<group>"; };
+		48541F1F23451A020077C75A /* TPCommonEnums.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TPCommonEnums.swift; sourceTree = "<group>"; };
 		488FC5D42330244A004F1692 /* TPKitTestsMockService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TPKitTestsMockService.swift; sourceTree = "<group>"; };
 		488FC5D623317DD1004F1692 /* TPKitTestsMockReachability.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TPKitTestsMockReachability.swift; sourceTree = "<group>"; };
 		48A28BC8230704C800438382 /* TPDeleteItem.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TPDeleteItem.swift; sourceTree = "<group>"; };
@@ -481,6 +483,7 @@
 		48F7137622E9FEE200FC2C89 /* TPDeviceDataCommon */ = {
 			isa = PBXGroup;
 			children = (
+				48541F1F23451A020077C75A /* TPCommonEnums.swift */,
 				48F7137822E9FEE200FC2C89 /* TPData.swift */,
 				48F713ED22EA7F5C00FC2C89 /* TPDataAssociation.swift */,
 				48F7137722E9FEE200FC2C89 /* TPDataOrigin.swift */,
@@ -793,6 +796,7 @@
 				482566C9231B0C2B00BB0BE6 /* TPDataBasalAutoSchedCommon.swift in Sources */,
 				482566C4231AF7C600BB0BE6 /* TPDataBasalSuppressed.swift in Sources */,
 				48F7138E22E9FEE200FC2C89 /* TPDataFood.swift in Sources */,
+				48541F2023451A020077C75A /* TPCommonEnums.swift in Sources */,
 				480CD255230F05830022D14D /* TPDatasetExtension.swift in Sources */,
 				48A629062316FFDF004C0C1E /* TPDataLocationAccuracy.swift in Sources */,
 				48F7139B22E9FEE200FC2C89 /* APIObjectMeta.swift in Sources */,

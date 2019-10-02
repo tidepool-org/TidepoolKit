@@ -38,7 +38,7 @@ extension TPDataset: TPPostable, TPFetchable {
     }
     
     // Postable, Fetchable
-    class func urlExtension(forUser userId: String) -> String {
+    class func urlPath(forUser userId: String) -> String {
         let urlExtension = "/v1/users/" + userId + "/data_sets"
         return urlExtension
     }

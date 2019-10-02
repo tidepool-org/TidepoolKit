@@ -10,7 +10,7 @@ import Foundation
 
 extension TPUserProfile: TPFetchable {
     
-    class func urlExtension(forUser userId: String) -> String {
+    class func urlPath(forUser userId: String) -> String {
         let urlExtension = "/metadata/" + userId + "/profile"
         return urlExtension
     }

@@ -15,33 +15,6 @@ public enum EnergyUnits: String {
     case kilojoules = "kilojoules"
     
     static let kKilojoulesPerKilocalorie = 4.1858
-    static let kKilocaloriesMaximum = 10000.0
-    static let kKilocaloriesMinimum = 0.0
-    static let kCaloriesMaximum     = kKilocaloriesMaximum * 1000.0
-    static let kCaloriesMinimum     = kKilocaloriesMinimum * 1000.0
-    static let kJoulesMaximum       = kKilojoulesMaximum * 1000.0
-    static let kJoulesMinimum       = kKilojoulesMinimum * 1000.0
-    static let kKilojoulesMaximum   = kKilocaloriesMaximum * kKilojoulesPerKilocalorie
-    static let kKilojoulesMinimum   = kKilocaloriesMinimum * kKilojoulesPerKilocalorie
-    
-    func min() -> Double {
-        switch self {
-        case .calories: return EnergyUnits.kCaloriesMinimum
-        case .kilocalories: return EnergyUnits.kKilocaloriesMinimum
-        case .joules: return EnergyUnits.kJoulesMinimum
-        case .kilojoules: return EnergyUnits.kKilojoulesMinimum
-        }
-    }
-    
-    func max() -> Double {
-        switch self {
-        case .calories: return EnergyUnits.kCaloriesMaximum
-        case .kilocalories: return EnergyUnits.kKilocaloriesMaximum
-        case .joules: return EnergyUnits.kJoulesMaximum
-        case .kilojoules: return EnergyUnits.kKilojoulesMaximum
-        }
-    }
-
 }
 
 public struct TPDataEnergy : TPData {

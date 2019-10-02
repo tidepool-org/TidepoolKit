@@ -11,7 +11,7 @@ import Foundation
 /// Used internally...
 extension Array: TPFetchable where Element == TPDataset {
 
-    static func urlExtension(forUser userId: String) -> String {
+    static func urlPath(forUser userId: String) -> String {
         let urlExtension = "/v1/users/" + userId + "/data_sets?client.name=org.tidepool.mobile&size=1"
         return urlExtension
     }

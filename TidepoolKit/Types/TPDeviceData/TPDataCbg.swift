@@ -9,11 +9,6 @@
 import Foundation
 import HealthKit
 
-public enum TPCbgUnit: String, Encodable {
-    case milligramsPerDeciliter = "mg/dL"
-    case millimolesPerLiter = "mmol/L"
-}
-
 public class TPDataCbg: TPDeviceData, TPData {
     
     // TPData protocol

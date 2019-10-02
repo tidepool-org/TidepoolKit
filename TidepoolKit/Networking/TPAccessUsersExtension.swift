@@ -10,7 +10,7 @@ import Foundation
 
 extension TPAccessUsers: TPFetchable {
     
-    class func urlExtension(forUser userId: String) -> String {
+    class func urlPath(forUser userId: String) -> String {
         let urlExtension = "/access/groups/" + userId
         return urlExtension
     }
@@ -21,8 +21,8 @@ extension TPAccessUsers: TPFetchable {
         }
         var users: [TPUser] = []
         for key in jsonDict.keyEnumerator() {
-            if let keyStr = key as? String {
-                let user = TPUser(keyStr)
+            if let userId = key as? String {
+                let user = TPUser(userId)
                 users.append(user)
             }
         }
