@@ -51,13 +51,13 @@ public struct TPData2ndLevelSuppressed: TPData {
      }
     
     public var rawValue: RawValue {
-        var dict: [String: Any] = [:]
-        dict["type"] = TPDataType.basal.rawValue
-        dict["deliveryType"] = self.deliveryType.rawValue
-        dict["rate"] = self.rate
-        dict["percent"] = self.percent
-        dict["scheduleName"] = self.scheduleName
-        return dict
+        var rawValue: [String: Any] = [:]
+        rawValue["type"] = TPDataType.basal.rawValue
+        rawValue["deliveryType"] = self.deliveryType.rawValue
+        rawValue["rate"] = self.rate
+        rawValue["percent"] = self.percent
+        rawValue["scheduleName"] = self.scheduleName
+        return rawValue
     }
     
 }

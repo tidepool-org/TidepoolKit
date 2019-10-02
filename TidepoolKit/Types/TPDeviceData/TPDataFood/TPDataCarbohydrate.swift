@@ -40,13 +40,13 @@ public struct TPDataCarbohydrate: TPData {
     }
     
     public var rawValue: RawValue {
-        var resultDict: [String: Any] = [:]
-        resultDict["dietaryFiber"] = dietaryFiber
-        resultDict["net"] = net
-        resultDict["sugars"] = sugars
-        resultDict["total"] = total
-        resultDict["units"] = units
-        return resultDict
+        var rawValue: [String: Any] = [:]
+        rawValue["dietaryFiber"] = dietaryFiber
+        rawValue["net"] = net
+        rawValue["sugars"] = sugars
+        rawValue["total"] = total
+        rawValue["units"] = units
+        return rawValue
     }
     
 }

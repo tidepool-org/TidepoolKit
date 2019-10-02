@@ -55,11 +55,11 @@ public class TPDataCbg: TPDeviceData, TPData {
     
     override public var rawValue: RawValue {
         // start with common data
-        var dict = super.rawValue
+        var rawValue = super.rawValue
         // add in type-specific data...
-        dict["units"] = units.rawValue
-        dict["value"] = value
-        return dict
+        rawValue["units"] = units.rawValue
+        rawValue["value"] = value
+        return rawValue
     }
     
 }

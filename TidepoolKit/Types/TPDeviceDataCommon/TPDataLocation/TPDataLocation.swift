@@ -29,10 +29,10 @@ public struct TPDataLocation: TPData {
     }
     
     public var rawValue: RawValue {
-        var dict: [String: Any] = [:]
-        dict["name"] = name
-        gps?.addSelfToDict(&dict)
-        return dict
+        var rawValue: [String: Any] = [:]
+        rawValue["name"] = name
+        gps?.addSelfToDict(&rawValue)
+        return rawValue
     }
 } 
 

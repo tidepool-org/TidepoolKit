@@ -34,10 +34,10 @@ public struct TPDataProtein: TPData {
     }
     
     public var rawValue: RawValue {
-        var resultDict: [String: Any] = [:]
-        resultDict["total"] = total
-        resultDict["units"] = units
-        return resultDict
+        var rawValue: [String: Any] = [:]
+        rawValue["total"] = total
+        rawValue["units"] = units
+        return rawValue
     }
     
 }

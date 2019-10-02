@@ -59,13 +59,13 @@ public class TPDataBasal: TPDeviceData, TPData {
     }
 
     override public var rawValue: RawValue {
-        var dict = super.rawValue
-        dict["deliveryType"] = self.deliveryType.rawValue
-        dict["duration"] = Int(self.duration * 1000.0) // convert to integer milliseconds!
+        var rawValue = super.rawValue
+        rawValue["deliveryType"] = self.deliveryType.rawValue
+        rawValue["duration"] = Int(self.duration * 1000.0) // convert to integer milliseconds!
         if let expectedDuration = self.expectedDuration {
-            dict["expectedDuration"] = Int(expectedDuration * 1000.0)
+            rawValue["expectedDuration"] = Int(expectedDuration * 1000.0)
         }
-        return dict
+        return rawValue
     }
     
     class func createBasalFromJson(_ jsonDict: [String: Any]) -> TPDataBasal? {

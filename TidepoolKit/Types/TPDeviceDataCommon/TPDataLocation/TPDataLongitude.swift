@@ -38,10 +38,10 @@ public struct TPDataLongitude: TPData {
     }
     
     public var rawValue: RawValue {
-        var dict: [String: Any] = [:]
-        dict["value"] = value
-        dict["units"] = units
-        return dict
+        var rawValue: [String: Any] = [:]
+        rawValue["value"] = value
+        rawValue["units"] = units
+        return rawValue
     }
     
 }

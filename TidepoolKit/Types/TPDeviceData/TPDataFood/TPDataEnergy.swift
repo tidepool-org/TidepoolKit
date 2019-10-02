@@ -73,10 +73,10 @@ public struct TPDataEnergy : TPData {
     }
     
     public var rawValue: RawValue {
-        var resultDict: [String: Any] = [:]
-        resultDict["value"] = value
-        resultDict["units"] = units.rawValue
-        return resultDict
+        var rawValue: [String: Any] = [:]
+        rawValue["value"] = value
+        rawValue["units"] = units.rawValue
+        return rawValue
     }
 
 }

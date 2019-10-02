@@ -50,13 +50,13 @@ public class TPDataBolusExtended: TPDataBolus {
     }
     
     override public var rawValue: RawValue {
-        var dict = super.rawValue
-        dict["extended"] = self.extended
-        dict["expectedExtended"] = self.expectedExtended
-        dict["duration"] = Int(self.duration * 1000.0) // convert to integer milliseconds!
+        var rawValue = super.rawValue
+        rawValue["extended"] = self.extended
+        rawValue["expectedExtended"] = self.expectedExtended
+        rawValue["duration"] = Int(self.duration * 1000.0) // convert to integer milliseconds!
         if let expectedDuration = self.expectedDuration {
-            dict["expectedDuration"] = Int(expectedDuration * 1000.0)
+            rawValue["expectedDuration"] = Int(expectedDuration * 1000.0)
         }
-        return dict
+        return rawValue
     }
 }

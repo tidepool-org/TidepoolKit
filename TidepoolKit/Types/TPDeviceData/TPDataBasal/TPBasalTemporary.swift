@@ -41,12 +41,12 @@ public class TPDataBasalTemporary: TPDataBasal {
     
     override public var rawValue: RawValue {
         // start with common data
-        var dict = super.rawValue
+        var rawValue = super.rawValue
         // add in type-specific data...
-        dict["rate"] = self.rate
-        dict["percent"] = self.percent
-        self.suppressed?.addSelfToDict(&dict)
-        return dict
+        rawValue["rate"] = self.rate
+        rawValue["percent"] = self.percent
+        self.suppressed?.addSelfToDict(&rawValue)
+        return rawValue
     }
 
     

@@ -47,12 +47,12 @@ public struct TPDataAssociation: TPData {
     }
     
     public var rawValue: RawValue {
-        var associationDict: [String: Any] = [:]
-        associationDict["type"] = type.rawValue
-        associationDict["url"] = url
-        associationDict["id"] = id
-        associationDict["reason"] = reason
-        return associationDict
+        var rawValue: [String: Any] = [:]
+        rawValue["type"] = type.rawValue
+        rawValue["url"] = url
+        rawValue["id"] = id
+        rawValue["reason"] = reason
+        return rawValue
     }
 
 }

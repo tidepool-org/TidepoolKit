@@ -46,15 +46,15 @@ public struct TPDataGPS: TPData {
     }
     
     public var rawValue: RawValue {
-        var dict: [String: Any] = [:]
-        latitude?.addSelfToDict(&dict)
-        longitude?.addSelfToDict(&dict)
-        elevation?.addSelfToDict(&dict)
-        dict["floor"] = floor
-        horizontalAccuracy?.addSelfToDict(&dict)
-        verticalAccuracy?.addSelfToDict(&dict)
-        origin?.addSelfToDict(&dict)
-        return dict
+        var rawValue: [String: Any] = [:]
+        latitude?.addSelfToDict(&rawValue)
+        longitude?.addSelfToDict(&rawValue)
+        elevation?.addSelfToDict(&rawValue)
+        rawValue["floor"] = floor
+        horizontalAccuracy?.addSelfToDict(&rawValue)
+        verticalAccuracy?.addSelfToDict(&rawValue)
+        origin?.addSelfToDict(&rawValue)
+        return rawValue
     }
 
 }

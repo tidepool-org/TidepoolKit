@@ -47,10 +47,10 @@ public class TPDataBolus: TPDeviceData, TPData {
     }
     
     override public var rawValue: RawValue {
-        var dict = super.rawValue
-        dict["subType"] = self.subType.rawValue
+        var rawValue = super.rawValue
+        rawValue["subType"] = self.subType.rawValue
         // TODO: finish!
-        return dict
+        return rawValue
     }
         
     class func createBolusFromJson(_ jsonDict: [String: Any]) -> TPDataBolus? {

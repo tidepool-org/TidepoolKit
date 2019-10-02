@@ -37,9 +37,9 @@ public class TPDataBolusNormal: TPDataBolus {
     }
     
     override public var rawValue: RawValue {
-        var dict = super.rawValue
-        dict["normal"] = self.normal
-        dict["expectedNormal"] = self.expectedNormal
-        return dict
+        var rawValue = super.rawValue
+        rawValue["normal"] = self.normal
+        rawValue["expectedNormal"] = self.expectedNormal
+        return rawValue
     }
 }

@@ -26,9 +26,9 @@ public class TPDataBasalSuppressed: TPDataBasal {
     }
     
     override public var rawValue: RawValue {
-        var dict = super.rawValue
-        self.suppressed?.addSelfToDict(&dict)
-        return dict
+        var rawValue = super.rawValue
+        self.suppressed?.addSelfToDict(&rawValue)
+        return rawValue
     }
     
     

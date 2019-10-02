@@ -91,21 +91,21 @@ public class TPDataFood: TPDeviceData, TPData {
     }
     
     override public var rawValue: RawValue {
-        var dict = super.rawValue
-        dict["name"] = name
-        dict["brand"] = brand
-        dict["code"] = code
-        dict["nutrition"] = nutrition?.rawValue
+        var rawValue = super.rawValue
+        rawValue["name"] = name
+        rawValue["brand"] = brand
+        rawValue["code"] = code
+        rawValue["nutrition"] = nutrition?.rawValue
         if let ingredients = ingredients {
             var rawIngredients: [RawValue] = []
             for item in ingredients {
                 rawIngredients.append(item.rawValue)
             }
             if !rawIngredients.isEmpty {
-                dict["ingredients"] = rawIngredients
+                rawValue["ingredients"] = rawIngredients
             }
         }
-        return dict
+        return rawValue
     }
     
 }

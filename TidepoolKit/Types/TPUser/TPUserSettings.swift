@@ -63,9 +63,9 @@ public class TPUserSettings: TPUserData, RawRepresentable {
     }
     
     public override var rawValue: RawValue {
-        var resultDict: [String: Any] = [:]
+        var rawValue: [String: Any] = [:]
         if let units = bgTargetUnits {
-            resultDict["units"] = ["bg" : units.rawValue]
+            rawValue["units"] = ["bg" : units.rawValue]
         }
         var targetDict = [String: Double]()
         if let low = bgTargetLow {
@@ -75,9 +75,9 @@ public class TPUserSettings: TPUserData, RawRepresentable {
             targetDict["high"] = high
         }
         if !targetDict.isEmpty {
-            resultDict["bgTarget"] = targetDict
+            rawValue["bgTarget"] = targetDict
         }
-        return resultDict
+        return rawValue
     }
 }
 

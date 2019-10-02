@@ -32,9 +32,9 @@ public class TPDataBasalAutoSchedCommon: TPDataBasal {
     }
     
     override public var rawValue: RawValue {
-        var dict = super.rawValue
-        dict["rate"] = self.rate
-        dict["scheduleName"] = self.scheduleName
-        return dict
+        var rawValue = super.rawValue
+        rawValue["rate"] = self.rate
+        rawValue["scheduleName"] = self.scheduleName
+        return rawValue
     }
 }

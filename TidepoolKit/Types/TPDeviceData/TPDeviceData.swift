@@ -89,30 +89,30 @@ public class TPDeviceData: RawRepresentable, CustomStringConvertible {
     }
 
     public var rawValue: RawValue {
-        var dict = [String: Any]()
-        dict["type"] = type.rawValue
+        var rawValue = [String: Any]()
+        rawValue["type"] = type.rawValue
          if let time = time {
-            dict["time"] = DateUtils.dateToJSON(time)
+            rawValue["time"] = DateUtils.dateToJSON(time)
         }
         if let associations = self.associations {
             var assocArrayRaw: [[String: Any]] = []
             for item in associations {
                 assocArrayRaw.append(item.rawValue)
             }
-            dict["associations"] = assocArrayRaw
+            rawValue["associations"] = assocArrayRaw
         }
-        dict["clockDriftOffset"] = self.clockDriftOffset
-        dict["conversionOffset"] = self.conversionOffset
-        dict["deviceId"] = self.deviceId
-        dict["deviceTime"] = self.deviceTime
-        dict["guid"] = self.guid
-        dict["id"] = self.id
-        self.location?.addSelfToDict(&dict)
-        self.origin?.addSelfToDict(&dict)
-        self.payload?.addSelfToDict(&dict)
-        dict["timezone"] = self.timeZone
-        dict["timezoneOffset"] = self.timeZoneOffset
-        return dict
+        rawValue["clockDriftOffset"] = self.clockDriftOffset
+        rawValue["conversionOffset"] = self.conversionOffset
+        rawValue["deviceId"] = self.deviceId
+        rawValue["deviceTime"] = self.deviceTime
+        rawValue["guid"] = self.guid
+        rawValue["id"] = self.id
+        self.location?.addSelfToDict(&rawValue)
+        self.origin?.addSelfToDict(&rawValue)
+        self.payload?.addSelfToDict(&rawValue)
+        rawValue["timezone"] = self.timeZone
+        rawValue["timezoneOffset"] = self.timeZoneOffset
+        return rawValue
     }
 
     class func typeFromJson(_ jsonDict: [String: Any]) -> TPDataType? {

@@ -37,12 +37,12 @@ public struct TPDataNutrition: TPData {
     }
     
     public var rawValue: RawValue {
-        var resultDict: [String: Any] = [:]
-        energy?.addSelfToDict(&resultDict)
-        carbohydrate?.addSelfToDict(&resultDict)
-        fat?.addSelfToDict(&resultDict)
-        protein?.addSelfToDict(&resultDict)
-        return resultDict
+        var rawValue: [String: Any] = [:]
+        energy?.addSelfToDict(&rawValue)
+        carbohydrate?.addSelfToDict(&rawValue)
+        fat?.addSelfToDict(&rawValue)
+        protein?.addSelfToDict(&rawValue)
+        return rawValue
     }
     
 }

@@ -21,10 +21,10 @@ public class TPUserProfile: TPUserData, RawRepresentable {
     }
     
     public override var rawValue: RawValue {
-        var resultDict: [String: Any] = [:]
-        resultDict["fullName"] = fullName
-        patient?.addSelfToDict(&resultDict)
-        return resultDict
+        var rawValue: [String: Any] = [:]
+        rawValue["fullName"] = fullName
+        patient?.addSelfToDict(&rawValue)
+        return rawValue
     }
 }
 

@@ -50,14 +50,14 @@ public struct TPDataOrigin: TPData {
     }
     
     public var rawValue: RawValue {
-        var originDict: [String: Any] = [:]
-        originDict["id"] = id
-        originDict["name"] = name
-        originDict["type"] = type?.rawValue
-        originDict["version"] = version
+        var rawValue: [String: Any] = [:]
+        rawValue["id"] = id
+        rawValue["name"] = name
+        rawValue["type"] = type?.rawValue
+        rawValue["version"] = version
         // Note: the following is equivalent to originDict[TPDataPayload.typeName] = payload?.rawValue, or originDict["payload"] = payload?.rawValue
-        payload?.addSelfToDict(&originDict)
-        return originDict
+        payload?.addSelfToDict(&rawValue)
+        return rawValue
     }
     
 }

@@ -42,9 +42,9 @@ public struct TPDataElevation: TPData {
     }
     
     public var rawValue: RawValue {
-        var dict: [String: Any] = [:]
-        dict["value"] = value
-        dict["units"] = units.rawValue
-        return dict
+        var rawValue: [String: Any] = [:]
+        rawValue["value"] = value
+        rawValue["units"] = units.rawValue
+        return rawValue
     }
 }
