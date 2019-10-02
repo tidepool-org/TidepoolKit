@@ -17,15 +17,11 @@ public class TPDataBasalTemporary: TPDataBasal {
     public let percent: Double?
     public var suppressed: TPDataSuppressed?
 
+    // Suppressed field for temp bolus must have delivery type == 'scheduled'
     public init(time: Date, duration: TimeInterval, expectedDuration: TimeInterval? = nil, rate: Double, percent: Double? = nil, suppressed: TPDataSuppressed? = nil) {
         self.rate = rate
         self.percent = percent
         self.suppressed = suppressed
-        if suppressed != nil {
-            if suppressed?.deliveryType != .scheduled {
-                LogError("Suppressed field for temp bolus must have delivery type == 'scheduled'!")
-            }
-        }
         super.init(time: time, deliveryType: .temp, duration: duration, expectedDuration: expectedDuration)
     }
     

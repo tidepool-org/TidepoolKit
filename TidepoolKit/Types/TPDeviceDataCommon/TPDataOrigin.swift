@@ -23,7 +23,7 @@ public struct TPDataOrigin: TPData {
     public let version: String?
     public let payload: TPDataPayload?
 
-    public init?(id: String? = nil, name: String? = nil, type: OriginType? = nil, version: String? = nil, payload: TPDataPayload? = nil) {
+    public init(id: String? = nil, name: String? = nil, type: OriginType? = nil, version: String? = nil, payload: TPDataPayload? = nil) {
         self.id = id
         self.name = name
         self.type = type

@@ -13,11 +13,11 @@ class TPKitTests12UserData_Food: TPKitTestsBase {
 
     func createCarbItem(_ net: Double) -> TPDataFood? {
         let newId = UUID.init().uuidString
-        let origin = TPDataOrigin(id: newId, name: "org.tidepool.tidepoolKitTest", type: .service, payload: nil)!
+        let origin = TPDataOrigin(id: newId, name: "org.tidepool.tidepoolKitTest", type: .service, payload: nil)
         let foodSample = TPDataFood(time: Date(), carbohydrate: net)
-        foodSample?.origin = origin
+        foodSample.origin = origin
         XCTAssertNotNil(foodSample, "\(#function) failed to create food sample!")
-        NSLog("created TPDataFood: \(foodSample!)")
+        NSLog("created TPDataFood: \(foodSample)")
         return foodSample
     }
     
@@ -64,37 +64,37 @@ class TPKitTests12UserData_Food: TPKitTestsBase {
                 ingredients: [
                     TPDataIngredient(
                         ingredients: [
-                            TPDataIngredient(name: "oats")!,
-                            TPDataIngredient(name: "oat flour")!,
-                            TPDataIngredient(name: "oat fiber")!],
-                        name: "Gluten Free Oat Blend")!,
-                    TPDataIngredient(name: "Palm Fruit Oil")!,
+                            TPDataIngredient(name: "oats"),
+                            TPDataIngredient(name: "oat flour"),
+                            TPDataIngredient(name: "oat fiber")],
+                        name: "Gluten Free Oat Blend"),
+                    TPDataIngredient(name: "Palm Fruit Oil"),
                     TPDataIngredient(
                         ingredients: [
-                            TPDataIngredient(name: "dry roasted peanuts")!],
-                        name: "Peanut Butter")!,
+                            TPDataIngredient(name: "dry roasted peanuts")],
+                        name: "Peanut Butter"),
                     TPDataIngredient(
                         ingredients: [
-                            TPDataIngredient(name: "cane sugar")!,
-                            TPDataIngredient(name: "unsweetened chocolate")!,
-                            TPDataIngredient(name: "cocoa butter")!],
-                        name: "Semi-sweet Chocolate Chunks")!,
-                    TPDataIngredient(name: "Organic Coconut Sugar")!,
-                    TPDataIngredient(name: "Organic Coconut Nectar")!,
-                    TPDataIngredient(name: "Organic Coconut White Rice Flour")!,
-                    TPDataIngredient(name: "Dates")!,
-                    TPDataIngredient(name: "Arrowroot Flour")!,
-                    TPDataIngredient(name: "Dry Roasted Peanuts")!,
-                    TPDataIngredient(name: "Water")!,
-                    TPDataIngredient(name: "Flaxseed")!,
-                    TPDataIngredient(name: "Organic Gum Acacia")!,
-                    TPDataIngredient(name: "Sunflower Lecithin")!,
-                    TPDataIngredient(name: "Sea Salt")!,
-                    TPDataIngredient(name: "Baking Soda")!
+                            TPDataIngredient(name: "cane sugar"),
+                            TPDataIngredient(name: "unsweetened chocolate"),
+                            TPDataIngredient(name: "cocoa butter")],
+                        name: "Semi-sweet Chocolate Chunks"),
+                    TPDataIngredient(name: "Organic Coconut Sugar"),
+                    TPDataIngredient(name: "Organic Coconut Nectar"),
+                    TPDataIngredient(name: "Organic Coconut White Rice Flour"),
+                    TPDataIngredient(name: "Dates"),
+                    TPDataIngredient(name: "Arrowroot Flour"),
+                    TPDataIngredient(name: "Dry Roasted Peanuts"),
+                    TPDataIngredient(name: "Water"),
+                    TPDataIngredient(name: "Flaxseed"),
+                    TPDataIngredient(name: "Organic Gum Acacia"),
+                    TPDataIngredient(name: "Sunflower Lecithin"),
+                    TPDataIngredient(name: "Sea Salt"),
+                    TPDataIngredient(name: "Baking Soda")
               ],
                 name: "Peanut Butter Chocolate Chip Cookies",
                 nutrition: TPDataNutrition(energy: TPDataEnergy(value: 120*count, units: .calories), carbohydrate: TPDataCarbohydrate(net: 14*count, dietaryFiber: 2*count, sugars: 6*count, total: 14*count), fat: TPDataFat(total: 7*count), protein: TPDataProtein(total: 2*count)))
-        return result!
+        return result
     }
     
     func createFoodItem() -> TPDataFood? {
@@ -108,12 +108,12 @@ class TPKitTests12UserData_Food: TPKitTestsBase {
         let cookies = createCookieIngredient(count: 2)
         let ingredients = [
             cookies,
-            TPDataIngredient(amount: TPDataAmount(value: 1, units: "pint"), name: "milk")!]
-        let foodSample = TPDataFood(time: Date(), name: "cookies and milk", meal: .other, mealOther: "brunch", nutrition: nutrition!, ingredients: ingredients)
+            TPDataIngredient(amount: TPDataAmount(value: 1, units: "pint"), name: "milk")]
+        let foodSample = TPDataFood(time: Date(), name: "cookies and milk", meal: .other, mealOther: "brunch", nutrition: nutrition, ingredients: ingredients)
         XCTAssertNotNil(foodSample, "\(#function) failed to create food sample!")
         // add in origin...
         let newOriginId = UUID.init().uuidString
-        let origin = TPDataOrigin(id: newOriginId, name: "org.tidepool.tidepoolKitTest", type: .service, payload: nil)!
+        let origin = TPDataOrigin(id: newOriginId, name: "org.tidepool.tidepoolKitTest", type: .service, payload: nil)
         foodSample.origin = origin
         // add in location...
         let latitude = TPDataLatitude(43.0745000)
@@ -126,7 +126,7 @@ class TPKitTests12UserData_Food: TPKitTestsBase {
         foodSample.location = location
         // add in association
         let association = TPDataAssociation(type: .url, url: "http://food-and-drink-pictures.blogspot.com/2010/04/chocolate-chip-cookies-with-milk.html", reason: "testing")
-        foodSample.associations = [association!]
+        foodSample.associations = [association]
         NSLog("created TPDataFood: \(foodSample)")
         return foodSample
     }

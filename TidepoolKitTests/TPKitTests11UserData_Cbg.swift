@@ -67,7 +67,7 @@ class TPKitTests11UserData_Cbg: TPKitTestsBase {
             dataset, session in
             XCTAssert(tpKit.isLoggedIn())
             let newId = UUID.init().uuidString
-            let origin = TPDataOrigin(id: newId, name: "org.tidepool.tidepoolKitTest", type: .service, payload: self.TestCbgOriginPayload2)!
+            let origin = TPDataOrigin(id: newId, name: "org.tidepool.tidepoolKitTest", type: .service, payload: self.TestCbgOriginPayload2)
             let payload = self.TestCbgPayload2
             let cbgSample = TPDataCbg(time: Date(), value: 90, units: .milligramsPerDeciliter)
             cbgSample.origin = origin
@@ -98,7 +98,7 @@ class TPKitTests11UserData_Cbg: TPKitTestsBase {
             dataset, session in
             XCTAssert(tpKit.isLoggedIn())
             let newId = UUID.init().uuidString
-            let origin = TPDataOrigin(id: newId, name: "org.tidepool.tidepoolKitTest", type: .service, payload: self.TestCbgOriginPayload2)!
+            let origin = TPDataOrigin(id: newId, name: "org.tidepool.tidepoolKitTest", type: .service, payload: self.TestCbgOriginPayload2)
             let payload = self.TestCbgPayload2
             let cbgSample = TPDataCbg(time: Date(), value: 90, units: .milligramsPerDeciliter)
             cbgSample.origin = origin
@@ -125,7 +125,7 @@ class TPKitTests11UserData_Cbg: TPKitTestsBase {
             dataset, session in
             XCTAssert(tpKit.isLoggedIn())
             let newId = UUID.init().uuidString
-            let origin = TPDataOrigin(id: newId, name: "org.tidepool.tidepoolKitTest", type: .service, payload: self.TestCbgOriginPayload2)!
+            let origin = TPDataOrigin(id: newId, name: "org.tidepool.tidepoolKitTest", type: .service, payload: self.TestCbgOriginPayload2)
             let payload = self.TestCbgPayload2
             let cbgSample = TPDataCbg(time: Date(), value: 90, units: .milligramsPerDeciliter)
             cbgSample.origin = origin

@@ -18,29 +18,13 @@ public struct TPDataIngredient: TPData {
 	public let name: String?	// len <= 100
 	public let nutrition: TPDataNutrition?
     
-    public init?(amount: TPDataAmount? = nil, brand: String? = nil, code: String? = nil, ingredients: [TPDataIngredient]? = nil, name: String? = nil, nutrition: TPDataNutrition? = nil) {
+    public init(amount: TPDataAmount? = nil, brand: String? = nil, code: String? = nil, ingredients: [TPDataIngredient]? = nil, name: String? = nil, nutrition: TPDataNutrition? = nil) {
         self.amount = amount
         self.nutrition = nutrition
         self.code = code
         self.brand = brand
         self.name = name
-        if let ingredients = ingredients, ingredients.count < 100, !ingredients.isEmpty {
-            self.ingredients = ingredients
-        } else {
-            self.ingredients = nil
-        }
-        // validate
-        guard validateString(code, maxLen: 100) else { return nil }
-        guard validateString(brand, maxLen: 100) else { return nil }
-        guard validateString(name, maxLen: 100) else { return nil }
-        if ingredients != nil && self.ingredients == nil {
-            LogError("Err: Ingredients array invalid!")
-            return nil
-        }
-        if amount == nil && brand == nil && code == nil && ingredients == nil && name == nil && nutrition == nil {
-            LogError("Err: Ingredient contains no data!")
-            return nil
-        }
+        self.ingredients = ingredients
     }
     
     // MARK: - RawRepresentable

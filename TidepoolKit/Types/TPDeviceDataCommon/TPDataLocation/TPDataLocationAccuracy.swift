@@ -11,19 +11,6 @@ import Foundation
 public enum LocationAccuracyUnits: String, Codable {
     case feet = "feet"
     case meters = "meters"
-    
-    // service syntax check
-    func inRange(_ value: Double) -> Bool {
-        let kMetersMax: Double = 1000.0
-        let kMetersMin: Double = 0.0
-        let kMetersPerFoot: Double = 0.3048
-        switch self {
-        case .feet:
-            return value >= kMetersMin/kMetersPerFoot && value <= kMetersMax/kMetersPerFoot
-        case .meters:
-            return value >= kMetersMin && value <= kMetersMax
-        }
-    }
 }
 
 public struct TPDataHorizontalAccuracy: TPData {
@@ -33,14 +20,9 @@ public struct TPDataHorizontalAccuracy: TPData {
     public let value: Double
     public let units: LocationAccuracyUnits
     
-    public init?(value: Double, units: LocationAccuracyUnits) {
+    public init(value: Double, units: LocationAccuracyUnits) {
         self.value = value
         self.units = units
-        // validation...
-        guard self.units.inRange(self.value) else {
-            LogError("TPDataHorizontalAccuracy init: value \(value) \(units.rawValue) out of range!")
-            return nil
-        }
     }
     
     // MARK: - RawRepresentable
@@ -75,14 +57,9 @@ public struct TPDataVerticalAccuracy: TPData {
     public let value: Double
     public let units: LocationAccuracyUnits
     
-    public init?(value: Double, units: LocationAccuracyUnits) {
+    public init(value: Double, units: LocationAccuracyUnits) {
         self.value = value
         self.units = units
-        // validation...
-        guard self.units.inRange(self.value) else {
-            LogError("TPDataVerticalAccuracy init: value \(value) \(units.rawValue) out of range!")
-            return nil
-        }
     }
     
     // MARK: - RawRepresentable

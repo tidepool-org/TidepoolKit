@@ -12,16 +12,6 @@ import HealthKit
 public enum TPCbgUnit: String, Encodable {
     case milligramsPerDeciliter = "mg/dL"
     case millimolesPerLiter = "mmol/L"
-    
-    // service syntax check
-    func inRange(_ value: Double) -> Bool {
-        switch self {
-        case .milligramsPerDeciliter:
-            return value >= 0.0 && value <= 1000.0
-        case .millimolesPerLiter:
-            return value >= 0.0 && value <= 55.0
-        }
-    }
 }
 
 public class TPDataCbg: TPDeviceData, TPData {
@@ -41,9 +31,6 @@ public class TPDataCbg: TPDeviceData, TPData {
     public init(time: Date, value: Double, units: TPCbgUnit) {
         self.value = value
         self.units = units
-        if !self.units.inRange(self.value) {
-            LogError("TPDataCbg init: value \(value) \(units.rawValue) out of range!")
-        }
         // TPSampleData fields
         super.init(.cbg, time: time)
     }

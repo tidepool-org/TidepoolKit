@@ -16,14 +16,11 @@ public struct TPDataNutrition: TPData {
 	public let fat: TPDataFat?
 	public let protein: TPDataProtein?
     
-    public init?(energy: TPDataEnergy? = nil, carbohydrate: TPDataCarbohydrate? = nil, fat: TPDataFat? = nil, protein: TPDataProtein? = nil) {
+    public init(energy: TPDataEnergy? = nil, carbohydrate: TPDataCarbohydrate? = nil, fat: TPDataFat? = nil, protein: TPDataProtein? = nil) {
         self.energy = energy
 		self.carbohydrate = carbohydrate
         self.fat = fat
         self.protein = protein
-        if energy == nil && carbohydrate == nil && fat == nil && protein == nil {
-            return nil
-        }
 	}
     
     // MARK: - RawRepresentable

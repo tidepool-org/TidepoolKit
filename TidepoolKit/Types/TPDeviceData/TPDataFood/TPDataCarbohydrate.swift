@@ -17,16 +17,11 @@ public struct TPDataCarbohydrate: TPData {
     public let total: Double?
     public let units = "grams"
     
-    public init?(net: Double, dietaryFiber: Double? = nil, sugars: Double? = nil, total: Double? = nil) {
+    public init(net: Double, dietaryFiber: Double? = nil, sugars: Double? = nil, total: Double? = nil) {
         self.dietaryFiber = dietaryFiber
         self.net = net
         self.sugars = sugars
         self.total = total
-        // validate
-        if !isValidDoubleOrNil(dietaryFiber, min: 0.0, max: 1000.0) { return nil }
-        if !isValidDouble(net, min: 0.0, max: 1000.0) { return nil }
-        if !isValidDoubleOrNil(sugars, min: 0.0, max: 1000.0) { return nil }
-        if !isValidDoubleOrNil(total, min: 0.0, max: 1000.0) { return nil }
     }
     
     // MARK: - RawRepresentable

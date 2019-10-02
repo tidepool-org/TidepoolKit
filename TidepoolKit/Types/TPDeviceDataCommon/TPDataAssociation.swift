@@ -23,22 +23,11 @@ public struct TPDataAssociation: TPData {
 	public let reason: String?
     public let url: String?
 
-    public init?(type: AssociationType, url: String? = nil, id: String? = nil, reason: String? = nil) {
+    public init(type: AssociationType, url: String? = nil, id: String? = nil, reason: String? = nil) {
         self.type = type
         self.url = url
         self.id = id
         self.reason = reason
-        // validations
-        // id exists if and only if type == "datum"/"image"/"blob"
-        if type == .url {
-            guard id == nil else { return nil }
-            guard url != nil else { return nil }
-            // TODO: some url validation to match service!
-        } else {
-            guard id != nil else { return nil }
-            guard url == nil else { return nil }
-        }
-        guard validateString(reason, maxLen: 1000, notEmpty: true) else { return nil }
     }
     
     // MARK: - RawRepresentable

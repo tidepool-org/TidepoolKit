@@ -14,11 +14,9 @@ public struct TPDataAmount: TPData {
     public let  value: Double
     public let  units: String
     
-    public init?(value: Double, units: String) {
+    public init(value: Double, units: String) {
         self.value = value
         self.units = units
-        if !isValidDouble(value, min: 0.0) { return nil }
-        if !validateString(units, maxLen: 100) { return nil }
     }
 
     // MARK: - RawRepresentable

@@ -17,9 +17,8 @@ public struct TPDataLatitude: TPData {
 		self.value = value
 	}
 
-	public init?(_ value: Double) {
+	public init(_ value: Double) {
 		self.value = value
-        guard isValidDouble(value, min: -90.0, max: 90.0) else { return nil }
 	}
 
 	// MARK: - RawRepresentable

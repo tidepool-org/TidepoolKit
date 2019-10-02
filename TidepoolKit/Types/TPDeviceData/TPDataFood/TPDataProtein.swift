@@ -14,11 +14,8 @@ public struct TPDataProtein: TPData {
     public let total: Double
     public let units = "grams"
 
-    public init?(total: Double) {
+    public init(total: Double) {
         self.total = total
-        if validateDouble(total, min: 0.0, max: 1000.0) == nil {
-            return nil
-        }
     }
     
     // MARK: - RawRepresentable

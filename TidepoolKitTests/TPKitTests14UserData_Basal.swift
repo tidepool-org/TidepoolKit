@@ -24,7 +24,7 @@ class TPKitTests14UserData_Basal: TPKitTestsBase {
     
     func createAutoBasalItem(_ rate: Double) -> TPDataBasal {
         let newId = UUID.init().uuidString
-        let origin = TPDataOrigin(id: newId, name: "org.tidepool.tidepoolKitTest", type: .service, payload: nil)!
+        let origin = TPDataOrigin(id: newId, name: "org.tidepool.tidepoolKitTest", type: .service, payload: nil)
         let scheduleName = "test schedule"
         let duration = kOneDayTimeInterval
         let expectedDuration = kOneDayTimeInterval
@@ -41,7 +41,7 @@ class TPKitTests14UserData_Basal: TPKitTestsBase {
     
     func createSchedBasalItem(_ rate: Double) -> TPDataBasal {
         let newId = UUID.init().uuidString
-        let origin = TPDataOrigin(id: newId, name: "org.tidepool.tidepoolKitTest", type: .service, payload: nil)!
+        let origin = TPDataOrigin(id: newId, name: "org.tidepool.tidepoolKitTest", type: .service, payload: nil)
         let scheduleName = "test schedule"
         let duration = kOneDayTimeInterval
         let expectedDuration = kOneDayTimeInterval
@@ -58,7 +58,7 @@ class TPKitTests14UserData_Basal: TPKitTestsBase {
 
     func createTempBasalItem(_ rate: Double) -> TPDataBasal {
         let newId = UUID.init().uuidString
-        let origin = TPDataOrigin(id: newId, name: "org.tidepool.tidepoolKitTest", type: .service, payload: nil)!
+        let origin = TPDataOrigin(id: newId, name: "org.tidepool.tidepoolKitTest", type: .service, payload: nil)
         let duration = kOneDayTimeInterval
         let expectedDuration = kOneDayTimeInterval
         let suppressed = TPDataSuppressed(.scheduled, rate: 0.25, scheduleName: "Standard")
@@ -74,7 +74,7 @@ class TPKitTests14UserData_Basal: TPKitTestsBase {
     
     func createSuspendBasalItem(_ deliveryType: TPBasalDeliveryType, rate: Double) -> TPDataBasal {
         let newId = UUID.init().uuidString
-        let origin = TPDataOrigin(id: newId, name: "org.tidepool.tidepoolKitTest", type: .service, payload: nil)!
+        let origin = TPDataOrigin(id: newId, name: "org.tidepool.tidepoolKitTest", type: .service, payload: nil)
         let duration = kOneHourTimeInterval
         let expectedDuration = kOneDayTimeInterval
         let suppressed = TPDataSuppressed(deliveryType, rate: 0.25, scheduleName: "Standard")

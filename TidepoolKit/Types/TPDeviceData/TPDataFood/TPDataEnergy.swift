@@ -50,12 +50,9 @@ public struct TPDataEnergy : TPData {
     public let value: Double         // 0.0 <= x < 10000.0 for kilocalories, converted for other types; 4.1848 joules / calories]
     public let units: EnergyUnits
 
-    public init?(value: Double, units: EnergyUnits) {
+    public init(value: Double, units: EnergyUnits) {
         self.units = units
         self.value = value
-        if validateDouble(value, min: units.min(), max:  units.max()) == nil {
-            return nil
-        }
     }
     
     // MARK: - RawRepresentable

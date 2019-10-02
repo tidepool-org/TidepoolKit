@@ -24,7 +24,7 @@ class TPKitTests13UserData_Bolus: TPKitTestsBase {
     
     func createNormalBolusItem(_ normal: Double) -> TPDataBolus {
         let newId = UUID.init().uuidString
-        let origin = TPDataOrigin(id: newId, name: "org.tidepool.tidepoolKitTest", type: .service, payload: nil)!
+        let origin = TPDataOrigin(id: newId, name: "org.tidepool.tidepoolKitTest", type: .service, payload: nil)
         let normalSample = TPDataBolusNormal(time: Date(), normal: normal)
         normalSample.origin = origin
         NSLog("created TPDataBolusNormal: \(normalSample)")
@@ -33,7 +33,7 @@ class TPKitTests13UserData_Bolus: TPKitTestsBase {
     
     func createExtendedBolusItem(_ extended: Double, duration: TimeInterval) -> TPDataBolus {
         let newId = UUID.init().uuidString
-        let origin = TPDataOrigin(id: newId, name: "org.tidepool.tidepoolKitTest", type: .service, payload: nil)!
+        let origin = TPDataOrigin(id: newId, name: "org.tidepool.tidepoolKitTest", type: .service, payload: nil)
         let extendedSample = TPDataBolusExtended(time: Date(), extended: extended, duration: duration)
         extendedSample.origin = origin
         NSLog("created TPDataBolusExtended: \(extendedSample)")
@@ -42,7 +42,7 @@ class TPKitTests13UserData_Bolus: TPKitTestsBase {
 
     func createCombinationBolusItem(normal: Double, expectedNormal: Double? = nil, extended: Double, expectedExtended: Double? = nil, duration: TimeInterval, expectedDuration: TimeInterval? = nil) -> TPDataBolus {
         let newId = UUID.init().uuidString
-        let origin = TPDataOrigin(id: newId, name: "org.tidepool.tidepoolKitTest", type: .service, payload: nil)!
+        let origin = TPDataOrigin(id: newId, name: "org.tidepool.tidepoolKitTest", type: .service, payload: nil)
         let combinationSample = TPDataBolusCombination(time: Date(), normal: normal, expectedNormal: expectedNormal, extended: extended, expectedExtended: expectedExtended, duration: duration, expectedDuration: expectedDuration)
         combinationSample.origin = origin
         NSLog("created TPDataBolusCombination: \(combinationSample)")

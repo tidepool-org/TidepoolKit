@@ -15,7 +15,7 @@ public struct TPDataLocation: TPData {
 	public let name: String?  // 1 <= len < 100]
 	public let gps: TPDataGPS?
     
-    public init?(name: String? = nil, gps: TPDataGPS? = nil) {
+    public init(name: String? = nil, gps: TPDataGPS? = nil) {
         self.name = name
         self.gps = gps
     }

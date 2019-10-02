@@ -11,19 +11,6 @@ import Foundation
 public enum ElevationUnits: String, Codable {
     case feet = "feet"
     case meters = "meters"
-
-    // service syntax check
-    func inRange(_ value: Double) -> Bool {
-        let kMetersMax: Double = 1000000.0
-        let kMetersMin: Double = -20000.0
-        let kMetersPerFoot: Double = 0.3048
-        switch self {
-        case .feet:
-            return value >= kMetersMin/kMetersPerFoot && value <= kMetersMax/kMetersPerFoot
-        case .meters:
-            return value >= kMetersMin && value <= kMetersMax
-        }
-    }
 }
 
 public struct TPDataElevation: TPData {
@@ -32,14 +19,9 @@ public struct TPDataElevation: TPData {
     public let value: Double  // -10000.0 <= x <= 10000.0 meters (and equivalent feet)
     public let units: ElevationUnits
     
-    public init?(value: Double, units: ElevationUnits) {
+    public init(value: Double, units: ElevationUnits) {
         self.value = value
         self.units = units
-        // validation...
-        guard self.units.inRange(self.value) else {
-            LogError("TPDataElevation init: value \(value) \(units.rawValue) out of range!")
-            return nil
-        }
      }
     
     // MARK: - RawRepresentable

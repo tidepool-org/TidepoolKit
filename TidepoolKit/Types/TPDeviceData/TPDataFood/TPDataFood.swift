@@ -37,7 +37,7 @@ public class TPDataFood: TPDeviceData, TPData {
 	public let nutrition: TPDataNutrition?
 	public let ingredients: [TPDataIngredient]?
 
-	public init?(time: Date, name: String? = nil, carbohydrate: Double) {
+	public init(time: Date, name: String? = nil, carbohydrate: Double) {
         self.name = name
         self.brand = nil
         self.code = nil
@@ -60,20 +60,7 @@ public class TPDataFood: TPDeviceData, TPData {
         self.nutrition = nutrition
         self.ingredients = ingredients
         super.init(.food, time: time)
-        // validate... (log errors but don't fail!)
-        _ = validateString(self.name, maxLen: 100)
-        _ = validateString(self.brand, maxLen: 100)
-        _ = validateString(self.code, maxLen: 100)
-        _ = validateString(self.mealOther, maxLen: 100)
-        if mealOther != nil && self.meal != .other { LogError("mealOther should be nil if meal is not an other!") }
-        if amount != nil && self.amount == nil { LogError("Nil amount!") }
-        if nutrition != nil && self.nutrition == nil { LogError("Nil nutrition!") }
-        if ingredients != nil && self.ingredients == nil { LogError("Nil ingredients array!") }
-        // return nil if all fields are nil...
-        if self.name == nil, self.brand == nil, self.code == nil, self.meal == nil, self.amount == nil, self.nutrition == nil, self.ingredients == nil {
-            LogError("All fields of food item are nil!")
-        }
-   }
+    }
 
     //
     // MARK: - RawRepresentable

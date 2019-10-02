@@ -17,9 +17,8 @@ public struct TPDataLongitude: TPData {
         self.value = value
     }
     
-    public init?(_ value: Double) {
+    public init(_ value: Double) {
         self.value = value
-        guard isValidDouble(value, min: -180.0, max: 180.0) else { return nil }
     }
     
     // MARK: - RawRepresentable
