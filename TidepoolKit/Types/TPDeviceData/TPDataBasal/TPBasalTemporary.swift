@@ -10,9 +10,6 @@ import Foundation
 
 public class TPDataBasalTemporary: TPDataBasal {
 
-//
-// MARK: - Type specific data
-//
     public let rate: Double
     public let percent: Double?
     public var suppressed: TPDataSuppressed?
@@ -25,8 +22,8 @@ public class TPDataBasalTemporary: TPDataBasal {
         super.init(time: time, deliveryType: .temp, duration: duration, expectedDuration: expectedDuration)
     }
     
-    // RawRepresentable protocol conformance
-
+    // MARK: - RawRepresentable
+    
     required public init?(rawValue: RawValue) {
         guard let rate = rawValue["rate"] as? NSNumber else {
             return nil

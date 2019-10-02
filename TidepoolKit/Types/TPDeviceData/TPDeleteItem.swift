@@ -49,7 +49,7 @@ public class TPDeleteItem: RawRepresentable {
         }
     }
 
-    // RawRepresentable protocol conformance
+    // MARK: - RawRepresentable
 
     public typealias RawValue = [String: Any]
 

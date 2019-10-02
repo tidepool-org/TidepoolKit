@@ -24,7 +24,7 @@ public class TPDataBolusExtended: TPDataBolus {
         super.init(time: time, subType: .extended)
     }
     
-    // RawRepresentable protocol conformance
+    // MARK: - RawRepresentable
 
     required public init?(rawValue: RawValue) {
         guard let extended = rawValue["extended"] as? NSNumber else {

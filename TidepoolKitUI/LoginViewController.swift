@@ -67,10 +67,8 @@ class LoginViewController: UIViewController {
         networkOfflineLabel.text = connected ? "Connected to Internet" : "No Internet Connection"
     }
     
-    //
     // MARK: - Login
-    //
-    
+     
     @IBAction func tapOutsideFieldHandler(_ sender: AnyObject) {
         passwordTextField.resignFirstResponder()
         emailTextField.resignFirstResponder()

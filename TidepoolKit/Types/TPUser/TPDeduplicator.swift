@@ -29,7 +29,7 @@ public struct TPDeduplicator: RawRepresentable, Equatable {
         return lhs.type == rhs.type
     }
 
-    // RawRepresentable protocol conformance
+    // MARK: - RawRepresentable
 
     public typealias RawValue = [String: Any]
     

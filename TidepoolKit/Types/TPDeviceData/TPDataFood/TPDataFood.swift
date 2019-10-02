@@ -56,7 +56,7 @@ public class TPDataFood: TPDeviceData, TPData {
         super.init(.food, time: time)
     }
 
-    // RawRepresentable protocol conformance
+    // MARK: - RawRepresentable
 
     public typealias RawValue = [String: Any]
 

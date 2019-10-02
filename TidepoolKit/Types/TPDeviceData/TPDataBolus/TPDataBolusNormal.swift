@@ -20,7 +20,7 @@ public class TPDataBolusNormal: TPDataBolus {
         super.init(time: time, subType: .normal)
     }
     
-    // RawRepresentable protocol conformance
+    // MARK: - RawRepresentable
 
     required public init?(rawValue: RawValue) {
         guard let normal = rawValue["normal"] as? NSNumber else {

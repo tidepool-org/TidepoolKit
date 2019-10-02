@@ -32,7 +32,7 @@ public class TPDataBasal: TPDeviceData, TPData {
         super.init(.basal, time: time)
     }
 
-    // RawRepresentable protocol conformance
+    // MARK: - RawRepresentable
 
     public typealias RawValue = [String: Any]
 

@@ -33,8 +33,8 @@ public class TPDataCbg: TPDeviceData, TPData {
         super.init(.cbg, time: time)
     }
     
-    // RawRepresentable protocol conformance
-    
+    // MARK: - RawRepresentable
+
     public typealias RawValue = [String: Any]
 
     required public init?(rawValue: RawValue) {

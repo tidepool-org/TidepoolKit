@@ -36,7 +36,7 @@ public class TPDataBolus: TPDeviceData, TPData {
         super.init(.bolus, time: time)
     }
     
-    // RawRepresentable protocol conformance
+     // MARK: - RawRepresentable
 
     public typealias RawValue = [String: Any]
     

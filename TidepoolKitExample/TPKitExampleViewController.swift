@@ -117,9 +117,8 @@ class TPKitExampleViewController: UIViewController, LoginSignupDelegate {
         }
     }
     
-    //
     // MARK: - LoginSignupDelegate
-    //
+
     func loginSignupComplete(_ session: TPSession) {
         guard let loginViewController = loginVC else {
             return

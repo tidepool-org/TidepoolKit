@@ -31,7 +31,7 @@ public struct TPDatasetClient: Equatable {
         return lhs.name == rhs.name
     }
 
-    // RawRepresentable protocol conformance
+    // MARK: - RawRepresentable
 
     public typealias RawValue = [String: Any]
     

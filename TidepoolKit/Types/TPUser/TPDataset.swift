@@ -35,7 +35,7 @@ public class TPDataset: TPUserData, RawRepresentable {
         self.uploadId = uploadId
     }
     
-    // RawRepresentable protocol conformance
+    // MARK: - RawRepresentable
 
     public required init?(rawValue: [String : Any]) {
         self.uploadId = rawValue["uploadId"] as? String

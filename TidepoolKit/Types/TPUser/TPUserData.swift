@@ -18,7 +18,7 @@ public class TPUserData: CustomStringConvertible {
         }
     }
 
-    // RawRepresentable protocol conformance
+    // MARK: - RawRepresentable
 
     public typealias RawValue = [String: Any]
     

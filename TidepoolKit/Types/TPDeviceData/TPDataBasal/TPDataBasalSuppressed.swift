@@ -18,7 +18,7 @@ public class TPDataBasalSuppressed: TPDataBasal {
         super.init(time: time, deliveryType: .suspend, duration: duration, expectedDuration: expectedDuration)
     }
     
-    // RawRepresentable protocol conformance
+    // MARK: - RawRepresentable
 
     required public init?(rawValue: RawValue) {
         self.suppressed = TPDataSuppressed.getSelfFromDict(rawValue)

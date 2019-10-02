@@ -20,7 +20,7 @@ public class TPUser: TPUserData, RawRepresentable {
         self.userEmail = userName
     }
     
-    // RawRepresentable protocol conformance
+    // MARK: - RawRepresentable
 
     public required init?(rawValue: [String : Any]) {
         guard let userId = rawValue["userid"] as? String else {
@@ -37,9 +37,7 @@ public class TPUser: TPUserData, RawRepresentable {
         return result
     }
 
-    //
-    // MARK: - Framework private methods
-    //
+    // MARK: - Framework private
     
     class func fromJsonData(_ data: Data) -> TPUser? {
         guard let json: Any = try? JSONSerialization.jsonObject(with: data) else {

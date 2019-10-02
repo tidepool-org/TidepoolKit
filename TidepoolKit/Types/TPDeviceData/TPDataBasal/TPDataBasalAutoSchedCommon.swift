@@ -19,7 +19,7 @@ public class TPDataBasalAutoSchedCommon: TPDataBasal {
         super.init(time: time, deliveryType: deliveryType, duration: duration, expectedDuration: expectedDuration)
     }
     
-    // RawRepresentable protocol conformance
+    // MARK: - RawRepresentable
 
     required public init?(rawValue: RawValue) {
         guard let rate = rawValue["rate"] as? NSNumber else {

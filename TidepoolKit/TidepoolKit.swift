@@ -287,9 +287,7 @@ public class TidepoolKit {
         }
     }
 
-    //
     // MARK: - Dataset methods
-    //
 
     /**
      Sends the device samples to the server, associating them with the provided dataset.

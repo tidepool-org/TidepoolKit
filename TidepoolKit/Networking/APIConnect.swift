@@ -45,15 +45,19 @@ extension Reachability: ReachabilitySource {
 /// - Get/put user data of various types (cbg, carb, etc.)
 class APIConnector {
     
-    // non-nil when "loggedIn", nil when "loggedOut"
+    /// Current session: non-nil when "loggedIn", nil when "loggedOut"
     var session: TPSession?
+    
+    /// queue to use for completion routines
     var apiQueue: DispatchQueue
     
-    // Base URL for API calls, set during initialization
+    /// Base URL for API calls, set during initialization
     var baseUrlString: String?
 
     /// Reachability object, valid during lifetime of this APIConnector, and convenience function that uses this
     var reachability: ReachabilitySource?
+    
+    /// Test point!
     var networkRequestHandler: TidepoolNetworkInterface
     
     init(queue: DispatchQueue) {
@@ -63,6 +67,11 @@ class APIConnector {
         self.configureReachability()
     }
     
+    deinit {
+        _ = reachability?.configureNotifier(false)
+    }
+
+    /// Test point!
     func configureReachability(_ reachability: ReachabilitySource? = nil) {
         _ = self.reachability?.configureNotifier(false)
         self.reachability = reachability
@@ -87,8 +96,6 @@ class APIConnector {
             self.networkRequestHandler = NetworkRequestHandler(apiQueue)
         }
     }
-    
-    // MARK: - Constants
     
     private let kSessionTokenHeaderId = "X-Tidepool-Session-Token"
     private let kSessionTokenResponseId = "x-tidepool-session-token"
@@ -121,14 +128,8 @@ class APIConnector {
             return true
         }
     }
-
-    //
-    // MARK: - Initialization
-    //
     
-    deinit {
-        _ = reachability?.configureNotifier(false)
-    }
+    // MARK: - Login, logout, session...
     
     /// Logs in the user and obtains the session token for the session (stored internally)
     func login(with username: String, password: String, server: TidepoolServer?, completion: @escaping (Result<TPSession, TidepoolKitError>) -> (Void)) {
@@ -341,9 +342,7 @@ class APIConnector {
         clearSession()
     }
 
-    //
     // MARK: - User api methods
-    //
     
     /// Pass type.self to enable type inference in all cases.
     /// Optional userId, to fetch profiles for other users than logged in user.
@@ -483,9 +482,7 @@ class APIConnector {
         }
     }
 
-    //
     // MARK: - Private methods for upload support
-    //
     
     /// Call this if currentUploadId is nil, before uploading data, after fetching user profile, to ensure we have a dataset id for data uploads (if so enabled)
     /// - parameter dataset: The service is queried to find an existing dataset that matches this; if no existing match is found, a new dataset will be created.
@@ -568,9 +565,7 @@ class APIConnector {
     }
 
 
-    //
     // MARK: - Lower-level networking methods
-    //
     
     private func isOfflineError() -> TidepoolKitError? {
         guard isConnectedToNetwork() else {
@@ -732,9 +727,7 @@ class APIConnector {
         completion(sendResponse, errorResult)
     }
     
-    //
     // MARK: - Background upload support
-    //
     
     /*
      Current design follows that of the HealthKit uploaded used by Tidepool Mobile. A background URLSession is created here and used for upload requests. Data is pushed into a file to minimize use of RAM, though this may be an anachronism. Since shared data structures are used to track the request, calls are assumed to be synchronized.
@@ -767,9 +760,7 @@ class APIConnector {
         }
     }
     
-    //
     // MARK: - Misc
-    //
     
     // TODO: remove? Provide external api for setting user agent string?
     // User-agent string, based on that from Alamofire, but common regardless of whether Alamofire library is used
@@ -894,9 +885,7 @@ class NetworkRequestHandler: NSObject, URLSessionDelegate, URLSessionTaskDelegat
         }
     }
     
-    //
     // MARK: - URLSessionDataDelegate
-    //
     
     // Retain last upload response data for error messaging...
     func urlSession(_ session: URLSession, dataTask: URLSessionDataTask, didReceive data: Data) {
@@ -914,9 +903,8 @@ class NetworkRequestHandler: NSObject, URLSessionDelegate, URLSessionTaskDelegat
         }
     }
     
-    //
     // MARK: - URLSessionTaskDelegate
-    //
+
     func urlSession(_ session: URLSession, task: URLSessionTask, didCompleteWithError error: Error?) {
         completionQueue.async {
             guard let uploadDescriptor = task.taskDescription else {
@@ -939,9 +927,8 @@ class NetworkRequestHandler: NSObject, URLSessionDelegate, URLSessionTaskDelegat
         }
     }
     
-    //
     // MARK: - URLSessionDelegate
-    //
+
     func urlSession(_ session: URLSession, didBecomeInvalidWithError error: Error?) {
         completionQueue.async {
             LogInfo("Upload session became invalid!")
@@ -950,9 +937,7 @@ class NetworkRequestHandler: NSObject, URLSessionDelegate, URLSessionTaskDelegat
         }
     }
 
-    //
     // MARK: - methods to create URLSession's
-    //
     
     func defaultURLSession() -> URLSession {
         return .shared
