@@ -1,5 +1,5 @@
 //
-//  APIAccessUsers.swift
+//  TPAccessUsersExtension.swift
 //  TidepoolKit
 //
 //  Created by Larry Kenyon on 8/23/19.
@@ -8,18 +8,8 @@
 
 import Foundation
 
-public class APIAccessUsers: TPFetchable {
+extension TPAccessUsers: TPFetchable {
     
-    public let users: [TPUser]
-        
-    //
-    // MARK: - methods private to framework!
-    //
-
-    init(_ users: [TPUser]) {
-        self.users = users
-    }
-
     //
     // MARK: - TPFetchable protocol conformance methods
     //
@@ -41,28 +31,7 @@ public class APIAccessUsers: TPFetchable {
                 print("adding user: \(user)")
             }
         }
-        return APIAccessUsers(users)
+        return TPAccessUsers(users)
     }
 }
 
-
-/*
- Example service json:
-
-    let jsonAccessGroups = """
-    {
-        "f934a287c4" : {
-            "root":{}
-        },
-        "739993beb3" : {
-            "note":{},
-            "view":{}
-        },
-        "3ee821ad6b" : {
-            "note":{},
-            "view":{}
-        }
-    }
-    """.data(using: .utf8)!
-
- */

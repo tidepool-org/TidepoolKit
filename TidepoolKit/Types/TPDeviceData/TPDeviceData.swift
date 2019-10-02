@@ -158,6 +158,14 @@ public class TPDeviceData: RawRepresentable, CustomStringConvertible {
         return tpData
     }
     
-
 }
 
+/// Class used internally for fetching/uploading device data...
+class TPDeviceDataArray {
+    
+    var userData: [TPDeviceData]
+
+    init(_ userData: [TPDeviceData]) {
+        self.userData = userData
+    }
+}

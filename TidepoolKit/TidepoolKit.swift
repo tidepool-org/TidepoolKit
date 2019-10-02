@@ -185,7 +185,7 @@ public class TidepoolKit {
         parameters.updateValue(DateUtils.dateToJSON(startDate), forKey: "startDate")
         parameters.updateValue(DateUtils.dateToJSON(endDate), forKey: "endDate")
         LogInfo("startDate: \(startDate), endData: \(endDate), objectTypes: \(objectTypes)")
-        apiConnect.fetch(APIDeviceDataArray.self, user: user, parameters: parameters) {
+        apiConnect.fetch(TPDeviceDataArray.self, user: user, parameters: parameters) {
             result in
             switch result {
             case .success(let tpUserData):
@@ -244,7 +244,7 @@ public class TidepoolKit {
      - parameter result: Result.success with an array of TPUser objects, or Result.failure with an error value
      */
     public func getAccessUsers(for user: TPUser, _ completion: @escaping (_ result: Result<[TPUser], TidepoolKitError>) -> (Void)) {
-        apiConnect.fetch(APIAccessUsers.self, user: user) {
+        apiConnect.fetch(TPAccessUsers.self, user: user) {
             result in
             switch result {
             case .success(let accessUsers):
@@ -312,7 +312,7 @@ public class TidepoolKit {
             completion(.failure(.noUploadId))
             return
         }
-        let uploadData = APIDeviceDataArray(samples)
+        let uploadData = TPDeviceDataArray(samples)
         self.apiConnect.upload(uploadData, uploadId: uploadId, httpMethod: "POST") {
             result in
             completion(result)
@@ -334,14 +334,13 @@ public class TidepoolKit {
             completion(.failure(.noUploadId))
             return
         }
-        let deleteItems = APIDeleteItemArray(samples)
-        self.apiConnect.upload(deleteItems, uploadId: uploadId, httpMethod: "DELETE") {
+        self.apiConnect.upload(samples, uploadId: uploadId, httpMethod: "DELETE") {
             result in
             completion(result)
         }
     }
-    
 }
+
 // global logging object
 var clientLogger: TPKitLogging?
 

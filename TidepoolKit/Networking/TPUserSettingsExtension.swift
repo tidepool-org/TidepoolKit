@@ -28,32 +28,3 @@ extension TPUserSettings: TPFetchable {
     }
 
 }
-
-/*
- Example service json:
- 
-    let jsonSettings = """
-    {
-        "bgTarget" : {
-            "low" : 80,
-            "high" : 165
-        },
-        "units" : {
-            "bg" : "mg/dL"
-        }
-    }
-    """.data(using: .utf8)!
-
-    let jsonSettingsAlt = """
-    {
-        "units" : {
-            "bg" : "mmol/L"
-        },
-        "bgTarget" : {
-            "low" : 4.4000000000000004,
-            "high" : 9.1999999999999993
-        }
-    }
-    """.data(using: .utf8)!
-
- */

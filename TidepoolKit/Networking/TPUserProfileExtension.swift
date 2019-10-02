@@ -29,19 +29,3 @@ extension TPUserProfile: TPFetchable {
 
 }
 
-/*
- Example service json:
-
-    let jsonProfile = """
-    {
-        "patient" : {
-        "biologicalSex" : "female",
-        "birthday" : "1983-08-27",
-        "diagnosisDate" : "1983-08-27",
-        "diagnosisType" : "prediabetes"
-        },
-        "fullName" : "Johannah Tsui"
-    }
-    """.data(using: .utf8)!
-
- */

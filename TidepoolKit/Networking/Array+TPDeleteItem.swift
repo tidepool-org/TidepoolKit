@@ -1,5 +1,5 @@
 //
-//  APIDeleteItemArray.swift
+//  Array+TPDeleteItem.swift
 //  TidepoolKit
 //
 //  Created by Larry Kenyon on 8/23/19.
@@ -8,21 +8,14 @@
 
 import Foundation
 
-class APIDeleteItemArray: TPUploadable {
-    
-    var deleteData: [TPDeleteItem]
-
-    // init changes TPDataItems into basic TPDeviceData items so that the upload machinery works...
-    init(_ deleteArray: [TPDeleteItem]) {
-        self.deleteData = deleteArray
-    }
+extension Array: TPUploadable where Element == TPDeleteItem {
     
     //
     // MARK: - TPUploadable
     //
    
     func postBodyData() -> Data? {
-        return postBodyData(deleteData)
+        return self.postBodyData(self)
     }
 
     func parseErrResponse(_ response: Data) -> [Int]? {
