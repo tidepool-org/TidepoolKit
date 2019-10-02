@@ -87,15 +87,11 @@ public class TPDataFood: TPDeviceData, TPData {
         } else {
             self.ingredients = nil
         }
-       // base properties in superclass...
         super.init(rawValue: rawValue)
     }
     
     override public var rawValue: RawValue {
-        // start with common data
         var dict = super.rawValue
-        // add in type-specific data...
-        // TODO: finish!
         dict["name"] = name
         dict["brand"] = brand
         dict["code"] = code

@@ -116,7 +116,6 @@ public class TPDeviceData: RawRepresentable, CustomStringConvertible {
     }
 
     class func typeFromJson(_ jsonDict: [String: Any]) -> TPDataType? {
-        // parse thru dictionary to create tpItem!
         guard let type = jsonDict["type"] as? String else {
             LogError("item has no type field!")
             return nil
@@ -133,7 +132,6 @@ public class TPDeviceData: RawRepresentable, CustomStringConvertible {
         guard let tpType = typeFromJson(jsonDict) else {
             return nil
         }
-        // parse thru dictionary to create tpItem!
         // Based on type field, call type-specific init to create the object...
         var tpData: TPDeviceData? = nil
         switch tpType {

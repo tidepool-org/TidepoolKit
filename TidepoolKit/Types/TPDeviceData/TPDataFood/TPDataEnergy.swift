@@ -47,7 +47,7 @@ public enum EnergyUnits: String {
 public struct TPDataEnergy : TPData {
     public static var tpType: TPDataType { return .energy }
     
-    public let value: Double         // 0.0 <= x < 10000.0 for kilocalories, converted for other types; 4.1848 joules / calories]
+    public let value: Double
     public let units: EnergyUnits
 
     public init(value: Double, units: EnergyUnits) {

@@ -25,11 +25,9 @@ public class TPDataCbg: TPDeviceData, TPData {
     public let value: Double
     public let units: TPCbgUnit
 
-    /// Only values acceptable to the Tidepool service are allowed in creating a TPDataCbg item.
     public init(time: Date, value: Double, units: TPCbgUnit) {
         self.value = value
         self.units = units
-        // TPSampleData fields
         super.init(.cbg, time: time)
     }
     
@@ -52,8 +50,6 @@ public class TPDataCbg: TPDeviceData, TPData {
         }
         self.value = value.doubleValue
         self.units = units
-        
-        // base properties in superclass...
         super.init(rawValue: rawValue)
     }
     

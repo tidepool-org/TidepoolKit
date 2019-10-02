@@ -29,9 +29,9 @@ class TPKitExampleViewController: UIViewController, LoginSignupDelegate {
         
         // Example of accessing current TidepoolKit logger...
         if let x = tpKit.logger {
-            print("logger type is \(type(of: x))")
+            NSLog("logger type is \(type(of: x))")
         } else {
-            print("logger is nil!")
+            NSLog("logger is nil!")
         }
 
         self.tpKitUI = TidepoolKitUI.init(tpKit: tpKit, logger: TPKitUILoggerExample()) // pass the instance of TidepoolKit created in the line above!

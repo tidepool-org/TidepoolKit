@@ -33,14 +33,11 @@ public class TPDataBolusNormal: TPDataBolus {
             self.expectedNormal = nil
         }
         self.normal = normal.doubleValue
-        // base properties in superclasses...
         super.init(rawValue: rawValue)
     }
     
     override public var rawValue: RawValue {
-        // start with common data
         var dict = super.rawValue
-        // add in type-specific data...
         dict["normal"] = self.normal
         dict["expectedNormal"] = self.expectedNormal
         return dict

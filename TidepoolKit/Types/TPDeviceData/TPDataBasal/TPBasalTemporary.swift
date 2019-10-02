@@ -35,7 +35,6 @@ public class TPDataBasalTemporary: TPDataBasal {
             self.percent = nil
         }
         self.suppressed = TPDataSuppressed.getSelfFromDict(rawValue)
-       // base properties in superclasses...
         super.init(rawValue: rawValue)
 
     }

@@ -96,7 +96,7 @@ class TPKitTestsBase: XCTestCase {
         
         func anyDiff(v1: Any, v2: Any, key: String) -> Bool {
             if type(of: v1) != type(of: v2) {
-                print("a2 key '\(key)' value '\(v2)' does not type of a1 value '\(v1)'")
+                NSLog("a2 key '\(key)' value '\(v2)' does not type of a1 value '\(v1)'")
                 return false
             }
             var result = true
@@ -107,10 +107,10 @@ class TPKitTestsBase: XCTestCase {
             } else if let v1 = v1 as? Double, let v2 = v2 as? Double {
                 if v1 != v2 { result = false }
             } else {
-                print("extend type compare for type '\(type(of: v1))'!")
+                NSLog("extend type compare for type '\(type(of: v1))'!")
             }
             if result == false {
-                print("a2 key '\(key)' value '\(v2)' does not match a1 value '\(v1)'")
+                NSLog("a2 key '\(key)' value '\(v2)' does not match a1 value '\(v1)'")
             }
             return result
         }
@@ -119,7 +119,7 @@ class TPKitTestsBase: XCTestCase {
         for (key, v1) in a1 {
             let v2 = a2[key]
             if v2 == nil {
-                print("a2 missing value \(v1) for key \(key)")
+                NSLog("a2 missing value \(v1) for key \(key)")
                 result = false
             } else if let v1 = v1 as? [String: Any], let v2 = v2 as? [String: Any] {
                 if !stringAnyDictDiff(a1: v1, a2: v2) {
@@ -127,7 +127,7 @@ class TPKitTestsBase: XCTestCase {
                 }
             } else if let v1 = v1 as? [[String: Any]], let v2 = v2 as? [[String: Any]] {
                 if v1.count != v2.count {
-                    print("a2 array \(v2) for \(key) differs in count!")
+                    NSLog("a2 array \(v2) for \(key) differs in count!")
                     result = false
                 } else {
                     for i in 0..<v1.count {
@@ -145,7 +145,7 @@ class TPKitTestsBase: XCTestCase {
         for (key, v2) in a2 {
             let v1 = a1[key]
             if v1 == nil {
-                print("a1 missing value \(v2) for key \(key)")
+                NSLog("a1 missing value \(v2) for key \(key)")
                 result = false
             }
         }

@@ -20,7 +20,6 @@ public class TPDataBolusExtended: TPDataBolus {
         self.expectedExtended = expectedExtended
         self.duration = duration
         self.expectedDuration = expectedDuration
-        // TPDeviceData fields
         super.init(time: time, subType: .extended)
     }
     
@@ -42,20 +41,16 @@ public class TPDataBolusExtended: TPDataBolus {
             return nil
         }
         self.duration = duration.doubleValue / 1000.0   // convert from milliseconds to seconds
-        NSLog("converted duration \(duration) ms into \(self.duration) sec!")
         if let expectedDuration = rawValue["expectedDuration"] as? NSNumber {
             self.expectedDuration = expectedDuration.doubleValue / 1000.0
         } else {
             self.expectedDuration = nil
         }
-        // base properties in superclasses...
         super.init(rawValue: rawValue)
     }
     
     override public var rawValue: RawValue {
-        // start with common data
         var dict = super.rawValue
-        // add in type-specific data...
         dict["extended"] = self.extended
         dict["expectedExtended"] = self.expectedExtended
         dict["duration"] = Int(self.duration * 1000.0) // convert to integer milliseconds!

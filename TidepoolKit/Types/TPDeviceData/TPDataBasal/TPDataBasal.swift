@@ -28,7 +28,6 @@ public class TPDataBasal: TPDeviceData, TPData {
         self.deliveryType = deliveryType
         self.duration = duration
         self.expectedDuration = expectedDuration
-        // TPDeviceData fields
         super.init(.basal, time: time)
     }
 
@@ -60,9 +59,7 @@ public class TPDataBasal: TPDeviceData, TPData {
     }
 
     override public var rawValue: RawValue {
-        // start with common data
         var dict = super.rawValue
-        // add in type-specific data...
         dict["deliveryType"] = self.deliveryType.rawValue
         dict["duration"] = Int(self.duration * 1000.0) // convert to integer milliseconds!
         if let expectedDuration = self.expectedDuration {
@@ -93,34 +90,4 @@ public class TPDataBasal: TPDeviceData, TPData {
     }
 
 }
-
-/* Example upload data:
-[{
-    "rate": 2,
-    "origin": {
-        "id": "D4F5A742-F56B-42AE-A8E2-14696ECC481C",
-        "type": "service",
-        "payload": {
-            "sourceRevision": {
-                "productType": "iPhone7,2",
-                "operatingSystemVersion": "12.2.0",
-                "source": {
-                    "bundleIdentifier": "com.apple.Health",
-                    "name": "Health"
-                },
-                "version": "12.2"
-            }
-        },
-        "name": "com.apple.HealthKit"
-    },
-    "type": "basal",
-    "duration": 3600000,
-    "deliveryType": "temp",
-    "payload": {
-        "HKWasUserEntered": 1,
-        "HKInsulinDeliveryReason": 1
-    },
-    "time": "2019-06-24T13:53:00.000Z"
-    }]
-*/
 

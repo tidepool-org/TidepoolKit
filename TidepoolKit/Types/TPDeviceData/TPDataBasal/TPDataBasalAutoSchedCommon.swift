@@ -27,15 +27,12 @@ public class TPDataBasalAutoSchedCommon: TPDataBasal {
         }
         self.rate = rate.doubleValue
         self.scheduleName = rawValue["scheduleName"] as? String
-        // base properties in superclasses...
         super.init(rawValue: rawValue)
         
     }
     
     override public var rawValue: RawValue {
-        // start with common data
         var dict = super.rawValue
-        // add in type-specific data...
         dict["rate"] = self.rate
         dict["scheduleName"] = self.scheduleName
         return dict

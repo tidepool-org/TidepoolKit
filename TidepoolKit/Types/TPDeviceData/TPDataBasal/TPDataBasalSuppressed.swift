@@ -22,15 +22,12 @@ public class TPDataBasalSuppressed: TPDataBasal {
 
     required public init?(rawValue: RawValue) {
         self.suppressed = TPDataSuppressed.getSelfFromDict(rawValue)
-        // base properties in superclasses...
         super.init(rawValue: rawValue)
     }
     
     override public var rawValue: RawValue {
-        // start with common data
         var dict = super.rawValue
         self.suppressed?.addSelfToDict(&dict)
-        // add in type-specific data...
         return dict
     }
     

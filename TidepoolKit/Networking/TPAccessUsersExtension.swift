@@ -24,7 +24,6 @@ extension TPAccessUsers: TPFetchable {
             if let keyStr = key as? String {
                 let user = TPUser(keyStr)
                 users.append(user)
-                print("adding user: \(user)")
             }
         }
         return TPAccessUsers(users)

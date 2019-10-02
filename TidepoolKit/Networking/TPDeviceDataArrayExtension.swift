@@ -43,18 +43,18 @@ extension TPDeviceDataArray: TPUploadable {
         
         func parseErrorDict(_ errDict: Any) {
             guard let errDict = errDict as? [String: Any] else {
-                NSLog("Error message source field is not valid!")
+                LogError("Error message source field is not valid!")
                 messageParseError = true
                 return
             }
             guard let errStr = errDict["pointer"] as? String else {
-                NSLog("Error message source pointer missing or invalid!")
+                LogError("Error message source pointer missing or invalid!")
                 messageParseError = true
                 return
             }
-            print("next error is \(errStr)")
+            //LogVerbose("next error is \(errStr)")
             guard errStr.count >= 2 else {
-                NSLog("Error message pointer string too short!")
+                LogError("Error message pointer string too short!")
                 messageParseError = true
                 return
             }
@@ -62,11 +62,11 @@ extension TPDeviceDataArray: TPUploadable {
             parser.scanLocation = 1
             var index: Int = -1
             guard parser.scanInt(&index) else {
-                NSLog("Unable to find index in error message!")
+                LogError("Unable to find index in error message!")
                 messageParseError = true
                 return
             }
-            print("index of next bad sample is: \(index)")
+            //LogVerbose("index of next bad sample is: \(index)")
             rejectedSamples.append(index)
         }
         

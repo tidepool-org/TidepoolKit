@@ -24,7 +24,6 @@ public class TPDataBolusCombination: TPDataBolus {
         self.expectedExtended = expectedExtended
         self.duration = duration
         self.expectedDuration = expectedDuration
-        // TPDeviceData fields
         super.init(time: time, subType: .combination)
     }
     
@@ -67,9 +66,7 @@ public class TPDataBolusCombination: TPDataBolus {
     }
     
     override public var rawValue: RawValue {
-        // start with common data
         var dict = super.rawValue
-        // add in type-specific data...
         dict["normal"] = self.normal
         dict["expectedNormal"] = self.expectedNormal
         dict["extended"] = self.extended

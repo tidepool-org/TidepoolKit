@@ -147,21 +147,16 @@ class APIConnector {
 
         // force current session nil if not already nil!
         self.session = nil
-        // Similar to email inputs in HTML5, trim the email (username) string of whitespace
+        
+        // similar to email inputs in HTML5, trim the email (username) string of whitespace
         let trimmedUsername = username.trimmingCharacters(in: .whitespacesAndNewlines)
         
-        // Set our endpoint for login
         let urlExtension = "/auth/login"
-        
-        // Create the authorization string (user:pass base-64 encoded)
         let base64LoginString = NSString(format: "%@:%@", trimmedUsername, password)
             .data(using: String.Encoding.utf8.rawValue)?
             .base64EncodedString(options: NSData.Base64EncodingOptions(rawValue: 0))
-        
-        // Set our headers with the login string
         let headers = ["Authorization" : "Basic " + base64LoginString!]
         
-        // Send the request and deal with the response as JSON
         sendRequest("POST", urlExtension: urlExtension, contentType: .urlEncoded, headers:headers, requiresToken: false) {
             sendResponse, error in
             
@@ -226,6 +221,7 @@ class APIConnector {
         let wasLoggedIn = self.session != nil
         self.session = nil
         self.baseUrlString = nil
+        
         // only send notification if we were logged in...
         if wasLoggedIn {
             NotificationCenter.default.post(name: TidepoolLogInChangedNotification, object:self)
@@ -245,7 +241,7 @@ class APIConnector {
             return
         }
         
-        // Set our endpoint for token refresh (same as login)
+        // set our endpoint for token refresh (same as login)
         let urlExtension = "/auth/login"
         sendRequest("GET", urlExtension: urlExtension, contentType: .urlEncoded) {
             sendResponse, error in
@@ -273,7 +269,7 @@ class APIConnector {
             }
             LogInfo("Login returned token: \(token)")
 
-            // Refresh the login user as well (email may have changed)
+            // refresh the login user as well (email may have changed)
             let urlExtension = "/auth/user"
             self.sendRequest("GET", urlExtension: urlExtension, contentType: .urlEncoded) {
                 sendResponse, error in
@@ -322,7 +318,6 @@ class APIConnector {
             return
         }
 
-        // Set our endpoint for logout
         let urlExtension = "/auth/logout"
 
         sendRequest("POST", urlExtension: urlExtension, contentType: .urlEncoded) {
@@ -345,7 +340,6 @@ class APIConnector {
     // MARK: - User api methods
     
     /// Pass type.self to enable type inference in all cases.
-    /// Optional userId, to fetch profiles for other users than logged in user.
     func fetch<T: TPFetchable>(_ type: T.Type, user: TPUser, parameters: [String: String]? = nil, headers: [String: String]? = nil, _ completion: @escaping (Result<T, TidepoolKitError>) -> (Void)) {
         
         let error = isOfflineOrUnauthorizedError()
@@ -386,7 +380,6 @@ class APIConnector {
     }
     
     /// Pass type.self to enable type inference in all cases.
-    /// Optional userId, to fetch profiles for other users than logged in user.
     private func post<P: TPPostable, T: TPFetchable>(_ postable: P, _ fetchType: T.Type, headers: [String: String]? = nil, userId: String? = nil, _ completion: @escaping (Result<T, TidepoolKitError>) -> (Void)) {
         
         let error = isOfflineOrUnauthorizedError()
@@ -489,9 +482,7 @@ class APIConnector {
     /// - parameter completion: Method that will be called when this async operation has completed. If successful, the matching or new TPDataset is returned.
     func getDataset(for user: TPUser, matching configDataset: TPDataset,  _ completion: @escaping (Result<TPDataset, TidepoolKitError>) -> (Void)) {
         
-        // TODO: should also verify that this is a DSAUser... i.e., has a profile in the user. Something we should fetch and persist, so the TPUser object includes a persisted isDSAUser field.
-        
-        // First try fetching one from the server that matches the one passed in...
+        // first try fetching one from the server that matches the one passed in...
         self.getDatasets(user: user) {
             result in
             switch result {
@@ -519,7 +510,7 @@ class APIConnector {
                 }
             }
 
-            // No matching existing dataset found, try creating a new one...
+            // no matching existing dataset found, try creating a new one...
             LogInfo("Dataset for current client/version not found, try creating new dataset!")
             self.createDataset(configDataset) {
                 result in
@@ -555,10 +546,10 @@ class APIConnector {
             result in
             switch result {
             case .success(let apiDataSet):
-                NSLog("createDataset post succeeded: \n\(apiDataSet)")
+                LogInfo("createDataset post succeeded: \n\(apiDataSet)")
                 completion(.success(apiDataSet))
             case .failure(let error):
-                NSLog("createDataset post failed! Error: \(error)")
+                LogError("createDataset post failed! Error: \(error)")
                 completion(.failure(error))
             }
         }
@@ -630,7 +621,7 @@ class APIConnector {
 
     typealias SendRequestCompletionHandler = (SendRequestResponse, TidepoolKitError?) -> Void
 
-    // Assumes onLine, and authorized (unless requiresToken = false is passed). Call isOfflineOrUnauthorizedError() to check before calling this method!
+    /// Assumes onLine, and authorized (unless requiresToken = false is passed). Call isOfflineOrUnauthorizedError() to check before calling this method!
     private func sendRequest(_ method: String, urlExtension: String, contentType: ContentType? = nil, parameters: [String: String]? = nil, headers: [String: String]? = nil, requiresToken: Bool = true, body: Data? = nil, completion: @escaping SendRequestCompletionHandler) {
         
         var urlString = baseUrlString! + urlExtension
@@ -694,7 +685,7 @@ class APIConnector {
         }
     }
     
-    // Used to dispatch all network request completions
+    /// Used to dispatch all network request completions
     internal func dispatchSendRequestResponse(request: URLRequest, data: Data?, response: URLResponse?, error: Error?, completion: @escaping SendRequestCompletionHandler) {
         let sendResponse = SendRequestResponse(request: request, response: response, data: data, error: error as NSError?)
         
@@ -715,7 +706,7 @@ class APIConnector {
             if let statusCode = statusCode {
                 if statusCode == 401 {
                     errorResult = .unauthorized
-                    // Clear our session here. This will change subsequent errors to .notLoggedIn, and the app will not make network requests!
+                    // clear our session here - this will change subsequent errors to .notLoggedIn, and the app will not make network requests!
                     self.clearSession()
                 } else if statusCode == 404 {
                     errorResult = .dataNotFound
@@ -735,7 +726,7 @@ class APIConnector {
     For testing purposes, it may be useful to pass in a different TidepoolNetworkInterface-conforming object to use. This can short-circuit the call to the service, and be used to inject errors or different data for test purposes.
     */
     
-    // Assumes onLine, and authorized. Call isOfflineOrUnauthorizedError() to check before calling this method!
+    /// Assumes onLine, and authorized. Call isOfflineOrUnauthorizedError() to check before calling this method!
     private func sendBackgroundRequest(_ method: String, urlExtension: String, body: Data, completion: @escaping SendRequestCompletionHandler) {
         
         let urlString = baseUrlString! + urlExtension
@@ -763,7 +754,7 @@ class APIConnector {
     // MARK: - Misc
     
     // TODO: remove? Provide external api for setting user agent string?
-    // User-agent string, based on that from Alamofire, but common regardless of whether Alamofire library is used
+    /// User-agent string, based on that from Alamofire, but common regardless of whether Alamofire library is used
     private func userAgentString() -> String {
         if _userAgentString == nil {
             _userAgentString = {
@@ -803,7 +794,7 @@ class APIConnector {
     
  }
 
-// Helper class that encapsulates the code needed to perform background URLSession uploads.
+/// Helper class that encapsulates the code needed to perform background URLSession uploads.
 class NetworkRequestHandler: NSObject, URLSessionDelegate, URLSessionTaskDelegate, URLSessionDataDelegate, TidepoolNetworkInterface {
     
     let completionQueue: DispatchQueue
@@ -871,7 +862,7 @@ class NetworkRequestHandler: NSObject, URLSessionDelegate, URLSessionTaskDelegat
     }
     private var uploadCounter = 0
 
-    // Currently unused... this would be needed to implement a public api for cancel
+    /// Currently unused... this would be needed to implement a public api for cancel
     private func cancelTasks() {
         LogVerbose("")
         if let session = self.uploadSession {
@@ -887,7 +878,7 @@ class NetworkRequestHandler: NSObject, URLSessionDelegate, URLSessionTaskDelegat
     
     // MARK: - URLSessionDataDelegate
     
-    // Retain last upload response data for error messaging...
+    // Retains last upload response data for error messaging...
     func urlSession(_ session: URLSession, dataTask: URLSessionDataTask, didReceive data: Data) {
         completionQueue.async {
             guard let uploadDescriptor = dataTask.taskDescription else {
@@ -956,9 +947,9 @@ class NetworkRequestHandler: NSObject, URLSessionDelegate, URLSessionTaskDelegat
         }
 
         let configuration = URLSessionConfiguration.background(withIdentifier: self.backgroundUploadSessionIdentifier)
-        configuration.timeoutIntervalForResource = 60 // 60 seconds
+        configuration.timeoutIntervalForResource = 60 // 60 seconds (TODO: should be configurable?)
         let newUploadSession = URLSession(configuration: configuration, delegate: self, delegateQueue: nil)
-        newUploadSession.delegateQueue.maxConcurrentOperationCount = 1 // keep it simple...
+        newUploadSession.delegateQueue.maxConcurrentOperationCount = 1 // TODO: could easily support more!
         self.uploadSession = newUploadSession
         LogVerbose("Created upload session...")
         return newUploadSession

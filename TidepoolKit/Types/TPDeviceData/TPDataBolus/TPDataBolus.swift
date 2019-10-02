@@ -28,11 +28,6 @@ public class TPDataBolus: TPDeviceData, TPData {
         // TODO: formulation, etc...
         createdUserId = nil
         createdTime = nil
-        // clockDriftOffset (int), conversionOffset (int), deviceId (string), device Time (date, no timezone offset info), history (array of complex object)
-        // TPDeviceData fields
-        // location, origin, payload, tags?, notes, id, time, associations, annotations
-        // add: timezoneOffset (Int), timezone (string), uploadId (string)
-        // ?? archivedDatasetId, archivedTime, createdUserId (string), modifiedTime (date), modifiedUserId (string), deletedTime (date), deletedUserId (string), deduplicator (object), guid (string), tags (array), source (string)
         super.init(.bolus, time: time)
     }
     
@@ -52,10 +47,8 @@ public class TPDataBolus: TPDeviceData, TPData {
     }
     
     override public var rawValue: RawValue {
-        // start with common data
         var dict = super.rawValue
         dict["subType"] = self.subType.rawValue
-        // add in type-specific data...
         // TODO: finish!
         return dict
     }

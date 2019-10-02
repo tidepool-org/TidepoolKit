@@ -10,6 +10,7 @@ import Foundation
 
 // Private to framework. Used by API to extend baseurl for a get request.
 protocol TPFetchable {
+    
     static func urlExtension(forUser userId: String) -> String
     static func fromJsonData(_ data: Data) -> TPFetchable?
 }
@@ -44,12 +45,12 @@ extension TPFetchable {
 // Private to framework. TPPostable objects are TPFetchable and also take a body.
 protocol TPPostable: TPFetchable {
     
-    // TPPostable objects also take a body...
     func postBodyData() -> Data?
 }
 
 // Private to framework. TPUploadable objects take a body, and can optionally parse an error response.
 protocol TPUploadable {
+    
     func postBodyData() -> Data?
     // And can parse 400 error responses into an array of indices indicating which upload samples were rejected...
     func parseErrResponse(_ response: Data) -> [Int]?
