@@ -525,14 +525,14 @@ class APIConnector {
     internal func getDatasets(user: TPUser, _ completion: @escaping (Result<[TPDataset], TidepoolKitError>) -> (Void)) {
         LogInfo("Try fetching existing dataset!")
         
-        self.fetch([TPDataset].self, user: user) {
+        self.fetch(TPDatasetArray.self, user: user) {
             result in
             switch result {
-            case .success(let apiDataSetArray):
-                LogInfo("APIDataSetArray fetch succeeded: \n\(apiDataSetArray)")
-                completion(.success(apiDataSetArray))
+            case .success(let dataSetArray):
+                LogInfo("APIDataSetArray fetch succeeded: \n\(dataSetArray)")
+                completion(.success(dataSetArray.datasets))
             case .failure(let error):
-                LogError("APIDataSetArray fetch failed! Error: \(error)")
+                LogError("TPDatasetArray fetch failed! Error: \(error)")
                 completion(.failure(error))
             }
         }

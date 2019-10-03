@@ -43,10 +43,11 @@
 		484C8EA7233848EE001C391D /* TPKitTestsMock_00Login.swift in Sources */ = {isa = PBXBuildFile; fileRef = 484C8EA6233848EE001C391D /* TPKitTestsMock_00Login.swift */; };
 		48541F1E23441A3C0077C75A /* TPAccessUsers.swift in Sources */ = {isa = PBXBuildFile; fileRef = 48541F1D23441A3C0077C75A /* TPAccessUsers.swift */; };
 		48541F2023451A020077C75A /* TPCommonEnums.swift in Sources */ = {isa = PBXBuildFile; fileRef = 48541F1F23451A020077C75A /* TPCommonEnums.swift */; };
+		48541F2223456DD70077C75A /* TPDatasetArray.swift in Sources */ = {isa = PBXBuildFile; fileRef = 48541F2123456DD70077C75A /* TPDatasetArray.swift */; };
+		48541F24234570810077C75A /* TPDeleteItemArray.swift in Sources */ = {isa = PBXBuildFile; fileRef = 48541F23234570810077C75A /* TPDeleteItemArray.swift */; };
 		488FC5D52330244A004F1692 /* TPKitTestsMockService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 488FC5D42330244A004F1692 /* TPKitTestsMockService.swift */; };
 		488FC5D723317DD1004F1692 /* TPKitTestsMockReachability.swift in Sources */ = {isa = PBXBuildFile; fileRef = 488FC5D623317DD1004F1692 /* TPKitTestsMockReachability.swift */; };
 		48A28BC9230704C800438382 /* TPDeleteItem.swift in Sources */ = {isa = PBXBuildFile; fileRef = 48A28BC8230704C800438382 /* TPDeleteItem.swift */; };
-		48A28BCC2307118600438382 /* Array+TPDeleteItem.swift in Sources */ = {isa = PBXBuildFile; fileRef = 48A28BCB2307118500438382 /* Array+TPDeleteItem.swift */; };
 		48A628F423144EDC004C0C1E /* TidepoolKit.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 48F7135222E9FCB900FC2C89 /* TidepoolKit.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
 		48A628F623144EDC004C0C1E /* TidepoolKitUI.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 48F713A622EA00CF00FC2C89 /* TidepoolKitUI.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
 		48A628FB231585F3004C0C1E /* TPPatient.swift in Sources */ = {isa = PBXBuildFile; fileRef = 48A628FA231585F3004C0C1E /* TPPatient.swift */; };
@@ -75,7 +76,6 @@
 		48F7139322E9FEE200FC2C89 /* TPUser.swift in Sources */ = {isa = PBXBuildFile; fileRef = 48F7137B22E9FEE200FC2C89 /* TPUser.swift */; };
 		48F7139522E9FEE200FC2C89 /* TPDataBasal.swift in Sources */ = {isa = PBXBuildFile; fileRef = 48F7137D22E9FEE200FC2C89 /* TPDataBasal.swift */; };
 		48F7139622E9FEE200FC2C89 /* TPDeviceDataArrayExtension.swift in Sources */ = {isa = PBXBuildFile; fileRef = 48F7137E22E9FEE200FC2C89 /* TPDeviceDataArrayExtension.swift */; };
-		48F7139722E9FEE200FC2C89 /* Array+TPDataset.swift in Sources */ = {isa = PBXBuildFile; fileRef = 48F7138022E9FEE200FC2C89 /* Array+TPDataset.swift */; };
 		48F7139822E9FEE200FC2C89 /* TPUserProfileExtension.swift in Sources */ = {isa = PBXBuildFile; fileRef = 48F7138122E9FEE200FC2C89 /* TPUserProfileExtension.swift */; };
 		48F7139A22E9FEE200FC2C89 /* TPUserSettingsExtension.swift in Sources */ = {isa = PBXBuildFile; fileRef = 48F7138322E9FEE200FC2C89 /* TPUserSettingsExtension.swift */; };
 		48F7139B22E9FEE200FC2C89 /* APIObjectMeta.swift in Sources */ = {isa = PBXBuildFile; fileRef = 48F7138422E9FEE200FC2C89 /* APIObjectMeta.swift */; };
@@ -199,10 +199,11 @@
 		484C8EA6233848EE001C391D /* TPKitTestsMock_00Login.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TPKitTestsMock_00Login.swift; sourceTree = "<group>"; };
 		48541F1D23441A3C0077C75A /* TPAccessUsers.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TPAccessUsers.swift; sourceTree = "<group>"; };
 		48541F1F23451A020077C75A /* TPCommonEnums.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TPCommonEnums.swift; sourceTree = "<group>"; };
+		48541F2123456DD70077C75A /* TPDatasetArray.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TPDatasetArray.swift; sourceTree = "<group>"; };
+		48541F23234570810077C75A /* TPDeleteItemArray.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TPDeleteItemArray.swift; sourceTree = "<group>"; };
 		488FC5D42330244A004F1692 /* TPKitTestsMockService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TPKitTestsMockService.swift; sourceTree = "<group>"; };
 		488FC5D623317DD1004F1692 /* TPKitTestsMockReachability.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TPKitTestsMockReachability.swift; sourceTree = "<group>"; };
 		48A28BC8230704C800438382 /* TPDeleteItem.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TPDeleteItem.swift; sourceTree = "<group>"; };
-		48A28BCB2307118500438382 /* Array+TPDeleteItem.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "Array+TPDeleteItem.swift"; sourceTree = "<group>"; };
 		48A628FA231585F3004C0C1E /* TPPatient.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = TPPatient.swift; path = "TPUser Common/TPPatient.swift"; sourceTree = "<group>"; };
 		48A628FC2316D86F004C0C1E /* TPKitExampleSessionSetting.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TPKitExampleSessionSetting.swift; sourceTree = "<group>"; };
 		48A628FF2316FF93004C0C1E /* TPDataLongitude.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TPDataLongitude.swift; sourceTree = "<group>"; };
@@ -232,7 +233,6 @@
 		48F7137B22E9FEE200FC2C89 /* TPUser.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TPUser.swift; sourceTree = "<group>"; };
 		48F7137D22E9FEE200FC2C89 /* TPDataBasal.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TPDataBasal.swift; sourceTree = "<group>"; };
 		48F7137E22E9FEE200FC2C89 /* TPDeviceDataArrayExtension.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TPDeviceDataArrayExtension.swift; sourceTree = "<group>"; };
-		48F7138022E9FEE200FC2C89 /* Array+TPDataset.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "Array+TPDataset.swift"; sourceTree = "<group>"; };
 		48F7138122E9FEE200FC2C89 /* TPUserProfileExtension.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TPUserProfileExtension.swift; sourceTree = "<group>"; };
 		48F7138322E9FEE200FC2C89 /* TPUserSettingsExtension.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TPUserSettingsExtension.swift; sourceTree = "<group>"; };
 		48F7138422E9FEE200FC2C89 /* APIObjectMeta.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = APIObjectMeta.swift; sourceTree = "<group>"; };
@@ -498,12 +498,12 @@
 			isa = PBXGroup;
 			children = (
 				48F7138522E9FEE200FC2C89 /* APIConnect.swift */,
-				48F7138022E9FEE200FC2C89 /* Array+TPDataset.swift */,
-				48A28BCB2307118500438382 /* Array+TPDeleteItem.swift */,
 				48F7138422E9FEE200FC2C89 /* APIObjectMeta.swift */,
 				48F7137A22E9FEE200FC2C89 /* DateUtils.swift */,
 				48F7138622E9FEE200FC2C89 /* TPAccessUsersExtension.swift */,
+				48541F2123456DD70077C75A /* TPDatasetArray.swift */,
 				480CD254230F05830022D14D /* TPDatasetExtension.swift */,
+				48541F23234570810077C75A /* TPDeleteItemArray.swift */,
 				48F7137E22E9FEE200FC2C89 /* TPDeviceDataArrayExtension.swift */,
 				48F7138122E9FEE200FC2C89 /* TPUserProfileExtension.swift */,
 				48F7138322E9FEE200FC2C89 /* TPUserSettingsExtension.swift */,
@@ -808,6 +808,7 @@
 				480CD252230EE9BB0022D14D /* TPDeduplicator.swift in Sources */,
 				48F7138B22E9FEE200FC2C89 /* TidepoolKit.swift in Sources */,
 				48F7139622E9FEE200FC2C89 /* TPDeviceDataArrayExtension.swift in Sources */,
+				48541F24234570810077C75A /* TPDeleteItemArray.swift in Sources */,
 				4812E80322EE507A0058AF41 /* TPDeviceData.swift in Sources */,
 				483529E62319830200C3D4DB /* TPDataBolusNormal.swift in Sources */,
 				4812E80022EE4FFC0058AF41 /* TPDataType.swift in Sources */,
@@ -825,6 +826,7 @@
 				48A628FB231585F3004C0C1E /* TPPatient.swift in Sources */,
 				48F713EB22EA7C7300FC2C89 /* TPDataNutrition.swift in Sources */,
 				48F7139222E9FEE200FC2C89 /* DateUtils.swift in Sources */,
+				48541F2223456DD70077C75A /* TPDatasetArray.swift in Sources */,
 				48F7139122E9FEE200FC2C89 /* TPDataCbg.swift in Sources */,
 				48F7139A22E9FEE200FC2C89 /* TPUserSettingsExtension.swift in Sources */,
 				480CD24E230C576F0022D14D /* TPDataset.swift in Sources */,
@@ -834,7 +836,6 @@
 				481E4B4A22F08C7500B128E8 /* TPUserSettings.swift in Sources */,
 				48F7139322E9FEE200FC2C89 /* TPUser.swift in Sources */,
 				481E4B4922F08C7500B128E8 /* TPUserProfile.swift in Sources */,
-				48F7139722E9FEE200FC2C89 /* Array+TPDataset.swift in Sources */,
 				483529E823199E8500C3D4DB /* TPDataBolusExtended.swift in Sources */,
 				48F7138C22E9FEE200FC2C89 /* TPKitConstants.swift in Sources */,
 				480CD23E230A3BB90022D14D /* TPKitLogging.swift in Sources */,
@@ -843,7 +844,6 @@
 				48541F1E23441A3C0077C75A /* TPAccessUsers.swift in Sources */,
 				483529EA23199E9900C3D4DB /* TPDataBolusCombination.swift in Sources */,
 				48F713EA22EA7C7300FC2C89 /* TPDataFat.swift in Sources */,
-				48A28BCC2307118600438382 /* Array+TPDeleteItem.swift in Sources */,
 				48A28BC9230704C800438382 /* TPDeleteItem.swift in Sources */,
 				48F7138A22E9FEE200FC2C89 /* Reachability.swift in Sources */,
 				482566BF231AF77500BB0BE6 /* TPBasalScheduled.swift in Sources */,

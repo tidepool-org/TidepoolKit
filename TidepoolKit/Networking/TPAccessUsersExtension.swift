@@ -20,6 +20,7 @@ extension TPAccessUsers: TPFetchable {
             return nil
         }
         var users: [TPUser] = []
+        // Note: The json dictionary we get from the service consists of user id strings as keys, and sub-dictionaries for values - we are currently only interested in the keys.
         for key in jsonDict.keyEnumerator() {
             if let userId = key as? String {
                 let user = TPUser(userId)

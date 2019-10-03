@@ -1,16 +1,25 @@
 //
-//  Array+TPDataset.swift
+//  TPDatasetArray.swift
 //  TidepoolKit
 //
-//  Created by Larry Kenyon on 8/23/19.
+//  Created by Larry Kenyon on 10/2/19.
 //  Copyright © 2019 Tidepool Project. All rights reserved.
 //
 
 import Foundation
 
-/// Used internally...
-extension Array: TPFetchable where Element == TPDataset {
+/// Class used internally for fetching/uploading device data...
+class TPDatasetArray {
+    
+    var datasets: [TPDataset]
 
+    init(_ datasets: [TPDataset]) {
+        self.datasets = datasets
+    }
+}
+
+extension TPDatasetArray: TPFetchable {
+    
     static func urlPath(forUser userId: String) -> String {
         let urlExtension = "/v1/users/" + userId + "/data_sets?client.name=org.tidepool.mobile&size=1"
         return urlExtension
@@ -20,14 +29,13 @@ extension Array: TPFetchable where Element == TPDataset {
         guard let jsonDictArray = dictArrayFromJsonData(data) else {
             return nil
         }
-        var items: [TPDataset] = []
+        var datasets: [TPDataset] = []
         for jsonDict in jsonDictArray {
-            LogInfo("calling createFromJson on \(jsonDict)")
             if let item = TPDataset(rawValue: jsonDict) {
-                items.append(item)
+                datasets.append(item)
             }
         }
-        return items
+        return TPDatasetArray(datasets)
     }
 
 }

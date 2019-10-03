@@ -326,7 +326,8 @@ public class TidepoolKit {
             completion(.failure(.noUploadId))
             return
         }
-        self.apiConnect.upload(samples, uploadId: uploadId, httpMethod: "DELETE") {
+        let deleteItems = TPDeleteItemArray(samples)
+        self.apiConnect.upload(deleteItems, uploadId: uploadId, httpMethod: "DELETE") {
             result in
             completion(result)
         }
