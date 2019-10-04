@@ -13,7 +13,7 @@ import TidepoolKit
 public protocol LoginSignupDelegate: AnyObject {
 
     func loginSignupComplete(_ session: TPSession)
-
+    func loginSignupCancelled()
 }
 
 
@@ -21,13 +21,14 @@ class LoginViewController: UIViewController {
 
     var loginSignupDelegate: LoginSignupDelegate?
     var tpKit: TidepoolKit!
-    var currentServer: TidepoolServer = .production
+    var serverHost: String?
     
     @IBOutlet weak var inputContainerView: UIView!
     
     @IBOutlet weak var emailTextField: UITextField!
     @IBOutlet weak var passwordTextField: UITextField!
     @IBOutlet weak var loginButton: UIButton!
+    @IBOutlet weak var cancelButton: UIButton!
     @IBOutlet weak var errorFeedbackLabel: UILabel!
     @IBOutlet weak var serviceButton: UIButton!
     @IBOutlet weak var loginIndicator: UIActivityIndicatorView!
@@ -42,7 +43,7 @@ class LoginViewController: UIViewController {
         notificationCenter.addObserver(self, selector: #selector(LoginViewController.textFieldDidChange), name: UITextField.textDidChangeNotification, object: nil)
         notificationCenter.addObserver(self, selector: #selector(LoginViewController.reachabilityChanged(_:)), name: ReachabilityChangedNotification, object: nil)
         
-        self.configureCurrentServer()
+        self.configureCurrentServerButton()
     }
     
     static var firstTime = true
@@ -66,7 +67,7 @@ class LoginViewController: UIViewController {
         let connected = tpKit.isConnectedToNetwork()
         networkOfflineLabel.text = connected ? "Connected to Internet" : "No Internet Connection"
     }
-    
+
     // MARK: - Login
      
     @IBAction func tapOutsideFieldHandler(_ sender: AnyObject) {
@@ -77,7 +78,7 @@ class LoginViewController: UIViewController {
     @IBAction func passwordEnterHandler(_ sender: AnyObject) {
         passwordTextField.resignFirstResponder()
         if (loginButton.isEnabled) {
-            login_button_tapped(self)
+            loginButtonTapped(self)
         }
     }
     
@@ -85,13 +86,22 @@ class LoginViewController: UIViewController {
         passwordTextField.becomeFirstResponder()
     }
     
-    @IBAction func login_button_tapped(_ sender: AnyObject) {
+    @IBAction func cancelButtonTapped(_ sender: Any) {
+        tapOutsideFieldHandler(self)
+        if let loginSignupDelegate = loginSignupDelegate {
+            loginSignupDelegate.loginSignupCancelled()
+        } else {
+            self.dismiss(animated: true)
+        }
+    }
+    
+    @IBAction func loginButtonTapped(_ sender: AnyObject) {
         updateButtonStates()
         tapOutsideFieldHandler(self)
         loginIndicator.startAnimating()
         
         //LogInfo("Logging into \(server?.rawValue ?? "default") server!")
-        tpKit.logIn(with: emailTextField.text!, password: passwordTextField.text!, server: self.currentServer) {
+        tpKit.logIn(with: emailTextField.text!, password: passwordTextField.text!, serverHost: self.serverHost) {
             result in
             LogInfo("Login result: \(result)")
             self.processLoginResult(result)
@@ -147,22 +157,50 @@ class LoginViewController: UIViewController {
         }
     }
     
-    private func configureCurrentServer(_ server: TidepoolServer? = nil) {
-        if let server = server {
-            self.currentServer = server
-        }
-        let serverName = currentServer.rawValue
-        self.serviceButton.setTitle(serverName, for: .normal)
+    private var currentServerHost: String {
+        return self.serverHost ?? tpKit.currentServerHost
     }
     
+    private func configureCurrentServerButton() {
+        self.serviceButton.setTitle(currentServerHost, for: .normal)
+    }
+    
+    var dnsFetcher = DNSSrvRecordFetcher()
+
     @IBAction func selectServiceButtonHandler(_ sender: Any) {
-        let actionSheet = UIAlertController(title: "Server" + " (" + currentServer.rawValue + ")", message: "", preferredStyle: .alert)
-        for server in TidepoolServer.allCases {
-            actionSheet.addAction(UIAlertAction(title: server.rawValue, style: .default, handler: { Void in
-                self.configureCurrentServer(server)
+
+        // TODO: show activity indicator while lookup is in progress!
+        let lookupStarted = dnsFetcher.doDNSSrvRecordLookup() {
+            urlArray in
+            NSLog("DNS lookup completed with result: \(urlArray)")
+            self.presentServiceChoicePopup(urlArray)
+        }
+        
+        if lookupStarted {
+            NSLog("DNS lookup started!")
+        } else {
+             NSLog("DNS lookup failed to start!")
+            // only choice will be the default host!
+            presentServiceChoicePopup([])
+        }
+    }
+    
+    private func presentServiceChoicePopup(_ dynamicHosts: [String]) {
+        let defaultHost = tpKit.currentServerHost // default when not logged in
+        var hostArray: [String] = dynamicHosts
+        // always include the default host...
+        if !hostArray.contains(defaultHost) {
+            hostArray.insert(defaultHost, at: 0)
+        }
+        let actionSheet = UIAlertController(title: "Server" + " (" + currentServerHost + ")", message: "", preferredStyle: .alert)
+        for Host in hostArray {
+            actionSheet.addAction(UIAlertAction(title: Host, style: .default, handler: { Void in
+                self.serverHost = Host
+                self.configureCurrentServerButton()
             }))
         }
         self.present(actionSheet, animated: true, completion: nil)
+
     }
 
 }

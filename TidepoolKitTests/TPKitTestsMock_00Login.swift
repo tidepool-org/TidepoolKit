@@ -53,7 +53,7 @@ class TPKitTestsMock_00Login: TPKitTestsBase {
         NSLog("runLoginMockCase errorCase: \(errorCase)")
         let tpKit = getTpKitSingleton()
         mockNetwork.loginInjectError = errorCase
-        tpKit.logIn(with: testEmail, password: testPassword, server: testServer) {
+        tpKit.logIn(with: testEmail, password: testPassword, serverHost: testServerHost) {
             result in
             switch result {
             case .success:

@@ -45,6 +45,7 @@
 		48541F2023451A020077C75A /* TPCommonEnums.swift in Sources */ = {isa = PBXBuildFile; fileRef = 48541F1F23451A020077C75A /* TPCommonEnums.swift */; };
 		48541F2223456DD70077C75A /* TPDatasetArray.swift in Sources */ = {isa = PBXBuildFile; fileRef = 48541F2123456DD70077C75A /* TPDatasetArray.swift */; };
 		48541F24234570810077C75A /* TPDeleteItemArray.swift in Sources */ = {isa = PBXBuildFile; fileRef = 48541F23234570810077C75A /* TPDeleteItemArray.swift */; };
+		48541F292347CB390077C75A /* DNSSrvRecordFetcher.swift in Sources */ = {isa = PBXBuildFile; fileRef = 48541F282347CB390077C75A /* DNSSrvRecordFetcher.swift */; };
 		488FC5D52330244A004F1692 /* TPKitTestsMockService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 488FC5D42330244A004F1692 /* TPKitTestsMockService.swift */; };
 		488FC5D723317DD1004F1692 /* TPKitTestsMockReachability.swift in Sources */ = {isa = PBXBuildFile; fileRef = 488FC5D623317DD1004F1692 /* TPKitTestsMockReachability.swift */; };
 		48A28BC9230704C800438382 /* TPDeleteItem.swift in Sources */ = {isa = PBXBuildFile; fileRef = 48A28BC8230704C800438382 /* TPDeleteItem.swift */; };
@@ -201,6 +202,7 @@
 		48541F1F23451A020077C75A /* TPCommonEnums.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TPCommonEnums.swift; sourceTree = "<group>"; };
 		48541F2123456DD70077C75A /* TPDatasetArray.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TPDatasetArray.swift; sourceTree = "<group>"; };
 		48541F23234570810077C75A /* TPDeleteItemArray.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TPDeleteItemArray.swift; sourceTree = "<group>"; };
+		48541F282347CB390077C75A /* DNSSrvRecordFetcher.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DNSSrvRecordFetcher.swift; sourceTree = "<group>"; };
 		488FC5D42330244A004F1692 /* TPKitTestsMockService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TPKitTestsMockService.swift; sourceTree = "<group>"; };
 		488FC5D623317DD1004F1692 /* TPKitTestsMockReachability.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TPKitTestsMockReachability.swift; sourceTree = "<group>"; };
 		48A28BC8230704C800438382 /* TPDeleteItem.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TPDeleteItem.swift; sourceTree = "<group>"; };
@@ -519,6 +521,7 @@
 				48F713D722EA029C00FC2C89 /* LoginSignup.storyboard */,
 				48F713D922EA029C00FC2C89 /* LoginViewController.swift */,
 				48F713D822EA029C00FC2C89 /* TidepoolKitUI.swift */,
+				48541F282347CB390077C75A /* DNSSrvRecordFetcher.swift */,
 			);
 			path = TidepoolKitUI;
 			sourceTree = "<group>";
@@ -875,6 +878,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				48541F292347CB390077C75A /* DNSSrvRecordFetcher.swift in Sources */,
 				48D6BE412310195900FFA9C0 /* LoginViewController.swift in Sources */,
 				48F713DB22EA029C00FC2C89 /* TidepoolKitUI.swift in Sources */,
 				480CD242230A3DAD0022D14D /* DebugGlobal.swift in Sources */,

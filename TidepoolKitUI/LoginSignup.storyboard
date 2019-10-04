@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="14868" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES" initialViewController="PjX-QO-gXs">
-    <device id="retina4_0" orientation="portrait" appearance="dark"/>
+    <device id="retina4_0" orientation="portrait" appearance="light"/>
     <dependencies>
         <deployment identifier="iOS"/>
         <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="14824"/>
@@ -28,29 +28,71 @@
                                 <rect key="frame" x="15" y="0.0" width="290" height="568"/>
                                 <subviews>
                                     <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="NUO-Rp-J28" userLabel="LoginViewContainer" customClass="UIControl">
-                                        <rect key="frame" x="0.0" y="20" width="290" height="320"/>
+                                        <rect key="frame" x="0.0" y="20" width="290" height="360"/>
                                         <subviews>
                                             <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="nUM-e6-krP" userLabel="instructionsContainerView">
-                                                <rect key="frame" x="23.5" y="0.0" width="243" height="121.5"/>
+                                                <rect key="frame" x="23.5" y="0.0" width="243" height="161.5"/>
                                                 <subviews>
-                                                    <textView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" text="Log in to a Tidepool DSA account to enable TidepoolKit framework testing:         " textAlignment="natural" translatesAutoresizingMaskIntoConstraints="NO" id="iqw-Ta-JGf">
-                                                        <rect key="frame" x="0.0" y="0.0" width="243" height="121.5"/>
-                                                        <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
-                                                        <color key="textColor" systemColor="labelColor" cocoaTouchSystemColor="darkTextColor"/>
-                                                        <fontDescription key="fontDescription" name="OpenSans" family="Open Sans" pointSize="17"/>
-                                                        <textInputTraits key="textInputTraits" autocapitalizationType="sentences"/>
-                                                    </textView>
+                                                    <stackView opaque="NO" contentMode="scaleToFill" axis="vertical" alignment="center" translatesAutoresizingMaskIntoConstraints="NO" id="72Z-RD-8ho">
+                                                        <rect key="frame" x="0.0" y="0.0" width="243" height="161.5"/>
+                                                        <subviews>
+                                                            <stackView opaque="NO" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="cAT-9B-Pkw">
+                                                                <rect key="frame" x="7.5" y="0.0" width="228" height="46"/>
+                                                                <subviews>
+                                                                    <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="leading" contentVerticalAlignment="center" buttonType="roundedRect" reversesTitleShadowWhenHighlighted="YES" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="la3-12-QqC" userLabel="cancelButton">
+                                                                        <rect key="frame" x="0.0" y="0.0" width="114" height="46"/>
+                                                                        <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
+                                                                        <constraints>
+                                                                            <constraint firstAttribute="height" constant="46" id="UkO-uW-TvE"/>
+                                                                            <constraint firstAttribute="width" constant="114" id="cbS-Zt-z99"/>
+                                                                        </constraints>
+                                                                        <fontDescription key="fontDescription" type="system" pointSize="18"/>
+                                                                        <color key="tintColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
+                                                                        <state key="normal" title="Cancel">
+                                                                            <color key="titleColor" systemColor="labelColor" cocoaTouchSystemColor="darkTextColor"/>
+                                                                        </state>
+                                                                        <connections>
+                                                                            <action selector="cancelButtonTapped:" destination="PjX-QO-gXs" eventType="touchUpInside" id="XGC-2d-rYj"/>
+                                                                        </connections>
+                                                                    </button>
+                                                                    <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="right" contentVerticalAlignment="center" buttonType="roundedRect" reversesTitleShadowWhenHighlighted="YES" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="ZqY-ky-6uX" userLabel="loginButton">
+                                                                        <rect key="frame" x="114" y="0.0" width="114" height="46"/>
+                                                                        <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
+                                                                        <constraints>
+                                                                            <constraint firstAttribute="width" constant="114" id="XYK-HH-lE1"/>
+                                                                            <constraint firstAttribute="height" constant="46" id="tHJ-RA-Wvt"/>
+                                                                        </constraints>
+                                                                        <fontDescription key="fontDescription" type="system" pointSize="18"/>
+                                                                        <color key="tintColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
+                                                                        <state key="normal" title="Login">
+                                                                            <color key="titleColor" systemColor="labelColor" cocoaTouchSystemColor="darkTextColor"/>
+                                                                        </state>
+                                                                        <connections>
+                                                                            <action selector="loginButtonTapped:" destination="PjX-QO-gXs" eventType="touchUpInside" id="Rl4-B6-oNH"/>
+                                                                        </connections>
+                                                                    </button>
+                                                                </subviews>
+                                                            </stackView>
+                                                            <textView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" text="Log in to a Tidepool DSA account to enable TidepoolKit framework testing:         " textAlignment="natural" translatesAutoresizingMaskIntoConstraints="NO" id="iqw-Ta-JGf">
+                                                                <rect key="frame" x="0.0" y="46" width="243" height="115.5"/>
+                                                                <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
+                                                                <color key="textColor" systemColor="labelColor" cocoaTouchSystemColor="darkTextColor"/>
+                                                                <fontDescription key="fontDescription" name="OpenSans" family="Open Sans" pointSize="17"/>
+                                                                <textInputTraits key="textInputTraits" autocapitalizationType="sentences"/>
+                                                            </textView>
+                                                        </subviews>
+                                                    </stackView>
                                                 </subviews>
                                                 <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
                                                 <constraints>
-                                                    <constraint firstItem="iqw-Ta-JGf" firstAttribute="leading" secondItem="nUM-e6-krP" secondAttribute="leading" id="5Ce-GJ-Xzn"/>
-                                                    <constraint firstAttribute="trailing" secondItem="iqw-Ta-JGf" secondAttribute="trailing" id="GEK-1P-UqN"/>
-                                                    <constraint firstAttribute="bottom" secondItem="iqw-Ta-JGf" secondAttribute="bottom" id="Hna-gR-JaV"/>
-                                                    <constraint firstItem="iqw-Ta-JGf" firstAttribute="top" secondItem="nUM-e6-krP" secondAttribute="top" id="gPt-Ys-fe1"/>
+                                                    <constraint firstItem="72Z-RD-8ho" firstAttribute="leading" secondItem="nUM-e6-krP" secondAttribute="leading" id="1Tx-xK-7SU"/>
+                                                    <constraint firstAttribute="bottom" secondItem="72Z-RD-8ho" secondAttribute="bottom" id="6U7-bB-Rg4"/>
+                                                    <constraint firstAttribute="trailing" secondItem="72Z-RD-8ho" secondAttribute="trailing" id="6eQ-aA-t4d"/>
+                                                    <constraint firstItem="72Z-RD-8ho" firstAttribute="top" secondItem="nUM-e6-krP" secondAttribute="top" id="APd-Ve-FSy"/>
                                                 </constraints>
                                             </view>
                                             <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="HVW-Gx-656" userLabel="LoginContainerView" customClass="UIControl">
-                                                <rect key="frame" x="0.0" y="120" width="290" height="200"/>
+                                                <rect key="frame" x="0.0" y="160" width="290" height="200"/>
                                                 <subviews>
                                                     <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Wrong email or password!" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="13h-oP-QhS" userLabel="errorFeedbackLabel">
                                                         <rect key="frame" x="35.5" y="1.5" width="219" height="14.5"/>
@@ -82,8 +124,8 @@
                                                                     <action selector="passwordEnterHandler:" destination="PjX-QO-gXs" eventType="editingDidEndOnExit" id="Ow4-Bb-z8o"/>
                                                                 </connections>
                                                             </textField>
-                                                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="O52-Ic-ciF" userLabel="serviceButton">
-                                                                <rect key="frame" x="16" y="140.5" width="103" height="33"/>
+                                                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="O52-Ic-ciF" userLabel="serviceButton">
+                                                                <rect key="frame" x="0.0" y="126" width="243" height="33"/>
                                                                 <fontDescription key="fontDescription" name="OpenSans" family="Open Sans" pointSize="18"/>
                                                                 <state key="normal" title="Staging">
                                                                     <color key="titleColor" systemColor="labelColor" cocoaTouchSystemColor="darkTextColor"/>
@@ -92,25 +134,10 @@
                                                                     <action selector="selectServiceButtonHandler:" destination="PjX-QO-gXs" eventType="touchUpInside" id="FAi-hd-Iry"/>
                                                                 </connections>
                                                             </button>
-                                                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" reversesTitleShadowWhenHighlighted="YES" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="la3-12-QqC" userLabel="loginButton">
-                                                                <rect key="frame" x="129" y="134" width="114" height="46"/>
-                                                                <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
-                                                                <constraints>
-                                                                    <constraint firstAttribute="height" constant="46" id="UkO-uW-TvE"/>
-                                                                    <constraint firstAttribute="width" constant="114" id="cbS-Zt-z99"/>
-                                                                </constraints>
-                                                                <fontDescription key="fontDescription" type="system" pointSize="18"/>
-                                                                <color key="tintColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
-                                                                <state key="normal" title="Login">
-                                                                    <color key="titleColor" systemColor="labelColor" cocoaTouchSystemColor="darkTextColor"/>
-                                                                </state>
-                                                                <connections>
-                                                                    <action selector="login_button_tapped:" destination="PjX-QO-gXs" eventType="touchUpInside" id="WF6-uV-gLD"/>
-                                                                </connections>
-                                                            </button>
                                                         </subviews>
                                                         <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                                         <constraints>
+                                                            <constraint firstAttribute="trailing" secondItem="O52-Ic-ciF" secondAttribute="trailing" id="9P7-p4-w6q"/>
                                                             <constraint firstItem="hEU-Bk-XZd" firstAttribute="top" secondItem="kss-iC-sO7" secondAttribute="bottom" constant="15" id="DIq-4C-E4L"/>
                                                             <constraint firstItem="kss-iC-sO7" firstAttribute="top" secondItem="IwI-vH-ldP" secondAttribute="top" id="Qh2-Sh-ZKL"/>
                                                             <constraint firstAttribute="height" constant="200" id="VqT-vn-KSp">
@@ -118,16 +145,13 @@
                                                             </constraint>
                                                             <constraint firstAttribute="width" constant="300" id="W41-AY-1Ce"/>
                                                             <constraint firstAttribute="height" constant="180" id="Ye7-Nf-17T"/>
-                                                            <constraint firstAttribute="bottom" secondItem="la3-12-QqC" secondAttribute="bottom" id="akg-Tf-9R4"/>
+                                                            <constraint firstItem="hEU-Bk-XZd" firstAttribute="bottom" secondItem="O52-Ic-ciF" secondAttribute="top" constant="-16" id="cYX-wp-UGf"/>
                                                             <constraint firstItem="hEU-Bk-XZd" firstAttribute="trailing" secondItem="kss-iC-sO7" secondAttribute="trailing" id="d0V-dx-kY1"/>
-                                                            <constraint firstItem="la3-12-QqC" firstAttribute="trailing" secondItem="hEU-Bk-XZd" secondAttribute="trailing" id="d7h-Jt-coU"/>
                                                             <constraint firstAttribute="trailing" secondItem="kss-iC-sO7" secondAttribute="trailing" id="gSf-kH-IPi"/>
-                                                            <constraint firstItem="O52-Ic-ciF" firstAttribute="trailing" secondItem="la3-12-QqC" secondAttribute="leading" constant="-10" id="glS-qk-iaz"/>
-                                                            <constraint firstItem="O52-Ic-ciF" firstAttribute="centerY" secondItem="la3-12-QqC" secondAttribute="centerY" id="kGr-iZ-pf7"/>
+                                                            <constraint firstItem="O52-Ic-ciF" firstAttribute="leading" secondItem="IwI-vH-ldP" secondAttribute="leading" id="pCx-Cm-2YE"/>
                                                             <constraint firstItem="hEU-Bk-XZd" firstAttribute="height" secondItem="kss-iC-sO7" secondAttribute="height" id="q6K-Qd-9zx"/>
                                                             <constraint firstItem="kss-iC-sO7" firstAttribute="leading" secondItem="IwI-vH-ldP" secondAttribute="leading" id="saC-Ta-NWa"/>
                                                             <constraint firstItem="hEU-Bk-XZd" firstAttribute="leading" secondItem="kss-iC-sO7" secondAttribute="leading" id="vU0-TU-hUW"/>
-                                                            <constraint firstItem="O52-Ic-ciF" firstAttribute="leading" secondItem="IwI-vH-ldP" secondAttribute="leading" constant="16" id="zep-eS-ec7"/>
                                                         </constraints>
                                                         <variation key="default">
                                                             <mask key="constraints">
@@ -168,7 +192,7 @@
                                         <constraints>
                                             <constraint firstItem="HVW-Gx-656" firstAttribute="leading" secondItem="NUO-Rp-J28" secondAttribute="leading" id="5vG-ke-gCt"/>
                                             <constraint firstAttribute="bottom" secondItem="HVW-Gx-656" secondAttribute="bottom" priority="750" id="BlC-iO-dJC"/>
-                                            <constraint firstAttribute="height" constant="320" id="HtC-0o-rG4"/>
+                                            <constraint firstAttribute="height" constant="360" id="HtC-0o-rG4"/>
                                             <constraint firstAttribute="trailing" secondItem="HVW-Gx-656" secondAttribute="trailing" id="RyB-zU-yce"/>
                                             <constraint firstItem="nUM-e6-krP" firstAttribute="bottom" secondItem="13h-oP-QhS" secondAttribute="top" id="VI2-9h-BOe"/>
                                             <constraint firstItem="nUM-e6-krP" firstAttribute="leading" secondItem="IwI-vH-ldP" secondAttribute="leading" id="Xmy-97-yKC"/>
@@ -181,7 +205,7 @@
                                         </connections>
                                     </view>
                                     <view userInteractionEnabled="NO" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="cCx-Xk-R3d" userLabel="ActivityContainer">
-                                        <rect key="frame" x="0.0" y="340" width="290" height="60"/>
+                                        <rect key="frame" x="0.0" y="380" width="290" height="60"/>
                                         <subviews>
                                             <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Offline!" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="to4-Xv-Yfy" userLabel="networkOfflineLabel">
                                                 <rect key="frame" x="118.5" y="20" width="53.5" height="20"/>
@@ -229,10 +253,11 @@
                     </view>
                     <navigationItem key="navigationItem" id="XpF-BF-Qh7"/>
                     <connections>
+                        <outlet property="cancelButton" destination="la3-12-QqC" id="B8h-Jz-LcM"/>
                         <outlet property="emailTextField" destination="kss-iC-sO7" id="ZTC-ZQ-CEr"/>
                         <outlet property="errorFeedbackLabel" destination="13h-oP-QhS" id="nkI-10-1BS"/>
                         <outlet property="inputContainerView" destination="IwI-vH-ldP" id="s1R-24-CyM"/>
-                        <outlet property="loginButton" destination="la3-12-QqC" id="d7G-Dt-ur3"/>
+                        <outlet property="loginButton" destination="ZqY-ky-6uX" id="Ile-jJ-kfQ"/>
                         <outlet property="loginIndicator" destination="Aec-ni-pl2" id="E3X-MC-eqC"/>
                         <outlet property="networkOfflineLabel" destination="to4-Xv-Yfy" id="BzX-Ys-3yD"/>
                         <outlet property="passwordTextField" destination="hEU-Bk-XZd" id="CtI-pj-uJW"/>

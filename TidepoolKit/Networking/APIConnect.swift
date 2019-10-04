@@ -52,7 +52,7 @@ class APIConnector {
     /// queue to use for completion routines
     var apiQueue: DispatchQueue
     
-    /// Base URL for API calls, set during initialization
+    /// Base URL for API calls, set during login
     var baseUrlString: String?
 
     /// Reachability object, valid during lifetime of this APIConnector, and convenience function that uses this
@@ -100,21 +100,7 @@ class APIConnector {
     
     private let kSessionTokenHeaderId = "X-Tidepool-Session-Token"
     private let kSessionTokenResponseId = "x-tidepool-session-token"
-    
-    // Dictionary of servers and their base URLs
-    private func serverUrl(_ server: TidepoolServer) -> String {
-        switch server {
-        case .development:
-            return "https://dev-api.tidepool.org"
-        case .staging:
-            return "https://stg-api.tidepool.org"
-        case .integration:
-            return "https://int-api.tidepool.org"
-        case .production:
-            return "https://api.tidepool.org"
-        }
-    }
-    private let kDefaultServer: TidepoolServer = .staging
+    let kDefaultServerHost = "stg-api.tidepool.org"
 
     private var user: TPUser?
     func loggedInUser() -> TPUser? {
@@ -133,18 +119,15 @@ class APIConnector {
     // MARK: - Login, logout, session...
     
     /// Logs in the user and obtains the session token for the session (stored internally)
-    func login(with username: String, password: String, server: TidepoolServer?, completion: @escaping (Result<TPSession, TidepoolKitError>) -> (Void)) {
+    func login(with username: String, password: String, serverHost: String?, completion: @escaping (Result<TPSession, TidepoolKitError>) -> (Void)) {
         
         if let error = isOfflineError() {
             completion(Result.failure(error))
             return
         }
 
-        var loginServer: TidepoolServer = kDefaultServer
-        if let server = server {
-            loginServer = server
-        }
-        self.baseUrlString = serverUrl(loginServer)
+        let serverHost = serverHost ?? kDefaultServerHost
+        self.baseUrlString = "https://\(serverHost)"
 
         // force current session nil if not already nil!
         self.session = nil
@@ -198,8 +181,8 @@ class APIConnector {
                 return
             }
         
-            self.session = TPSession(token, user: serviceUser, server: loginServer)
-            LogInfo("Logged into \(loginServer.rawValue) server successfully! Returned userId = \(serviceUser.userId), userName: \(String(describing: serviceUser.userEmail))")
+            self.session = TPSession(token, user: serviceUser, serverHost: serverHost)
+            LogInfo("Logged into \(serverHost) successfully! Returned userId = \(serviceUser.userId), userName: \(String(describing: serviceUser.userEmail))")
             NotificationCenter.default.post(name: TidepoolLogInChangedNotification, object:self)
             completion(Result.success(self.session!))
         }
@@ -211,7 +194,7 @@ class APIConnector {
             return Result.failure(.alreadyLoggedIn)
         }
         self.session = session
-        self.baseUrlString = serverUrl(session.server)
+        self.baseUrlString = "https://\(session.serverHost)"
         LogInfo("Logged in with existing TPSession!")
         NotificationCenter.default.post(name: TidepoolLogInChangedNotification, object:self)
         return Result.success(session)
@@ -237,10 +220,11 @@ class APIConnector {
             return
         }
         
-        guard let loginServer = self.session?.server else {
+        guard let serverHost = self.session?.serverHost else {
             completion(Result.failure(.internalError))
             return
         }
+        self.baseUrlString = "https://\(serverHost)"
         
         // set our endpoint for token refresh (same as login)
         let urlExtension = "/auth/login"
@@ -297,7 +281,7 @@ class APIConnector {
                     return
                 }
             
-                self.session = TPSession(token, user: serviceUser, server: loginServer)
+                self.session = TPSession(token, user: serviceUser, serverHost: serverHost)
                 LogInfo("Refreshed session and login user successfully! Returned userId = \(serviceUser.userId), userEmail: \(String(describing: serviceUser.userEmail))")
                 completion(Result.success(self.session!))
             }

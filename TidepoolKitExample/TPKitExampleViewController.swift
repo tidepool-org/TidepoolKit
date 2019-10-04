@@ -12,8 +12,8 @@ import TidepoolKitUI
 
 class TPKitExampleViewController: UIViewController, LoginSignupDelegate {
     
-    let lastServerSetting = TPKitExampleSetting(forKey: "testServer")
-    let savedSession = TPKitExampleSessionSetting(forKey: "testSession")
+    let lastServerHostSetting = TPKitExampleSetting(forKey: "testTPKitServerHost")
+    let savedSession = TPKitExampleSessionSetting(forKey: "testTPKitSession")
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -100,16 +100,13 @@ class TPKitExampleViewController: UIViewController, LoginSignupDelegate {
             NSLog("Already presenting UI!")
             return
         }
-        var defaultServer: TidepoolServer = .staging
-        NSLog("start with defaultServer = \(TidepoolServer.staging.rawValue)")
-        if let serverName = self.lastServerSetting.value {
-            NSLog("found lastServerSetting == \(serverName)")
-            if let server = TidepoolServer(rawValue: serverName) {
-                NSLog("changing to defaultServer == \(server.rawValue)")
-                defaultServer = server
-            }
+        var defaultServerHost = tpKit.currentServerHost
+        NSLog("start with defaultServerHost = \(defaultServerHost)")
+        if let serverHost = self.lastServerHostSetting.value {
+            NSLog("found lastServerHostSetting == \(serverHost)")
+            defaultServerHost = serverHost
         }
-        self.loginVC = tpKitUI.logInViewController(loginSignupDelegate: self, defaultServer: defaultServer)
+        self.loginVC = tpKitUI.logInViewController(loginSignupDelegate: self, defaultServerHost: defaultServerHost)
         self.navigationController?.present(self.loginVC!, animated: true) {
             () -> Void in
             self.configureForReachability()
@@ -131,9 +128,22 @@ class TPKitExampleViewController: UIViewController, LoginSignupDelegate {
             if let session = self.tpKit.currentSession {
                 NSLog("TidepoolKit current session is: \(session)")
                 self.savedSession.save(session)
-                NSLog("saving lastServer as \(session.server.rawValue)")
-                self.lastServerSetting.value = session.server.rawValue
+                NSLog("saving lastServerHost as \(session.serverHost)")
+                self.lastServerHostSetting.value = session.serverHost
             }
+            self.configureForReachability()
+        }
+    }
+
+    func loginSignupCancelled() {
+        guard let loginViewController = loginVC else {
+            return
+        }
+        
+        NSLog("loginSignupComplete returned with cancel!")
+            
+        loginViewController.dismiss(animated: true) {
+            self.loginVC = nil
             self.configureForReachability()
         }
     }

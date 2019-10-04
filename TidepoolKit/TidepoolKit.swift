@@ -27,16 +27,6 @@ public enum TidepoolKitError: Error {
     case unimplemented                              // used for any unfinished feaures...
 }
 
-/**
- Servers available to login. TidepoolServer.allCases returns an array of the available enums.
- */
-public enum TidepoolServer: String, RawRepresentable, CaseIterable {
-    case development = "Development"
-    case staging = "Staging"
-    case integration = "Integration"
-    case production = "Production"
-}
-
 public let TidepoolLogInChangedNotification = Notification.Name("TidepoolLogInChangedNotification")
 
 public class TidepoolKit {
@@ -99,9 +89,10 @@ public class TidepoolKit {
     }
     
     /**
-     The server for the current session (e.g., staging, production, etc). Note that the TidepoolServer enum can be iterated to discover the available servers. The server is specified at login time.
-     */    public var currentServer: TidepoolServer? {
-        return apiConnect.session?.server
+     The server host for the current session (e.g., api.tidepool.org, some test url, etc). If logged out, this will return the default server url (production). The server is specified at login time.
+     */
+    public var currentServerHost: String {
+        return apiConnect.session?.serverHost ?? apiConnect.kDefaultServerHost
     }
     
     /**
@@ -113,12 +104,12 @@ public class TidepoolKit {
 
      - parameter email: user's email used for logging in.
      - parameter password: user's password to the Tidepool service.
-     - parameter server: The service server to use, defaults to .staging.
+     - parameter serverHost: The service host to use, defaults to api.tidepool.org (at least for production builds). HTTPS procotol is implied.
      - parameter completion: This completion handler takes a Result parameter:
      - parameter result: Result.success has a TPSession object containing a valid authorization token and a TPUser representing the account owner, or Result.failure with an error value (e.g., .unauthorized if the service has rejected the email/password).
      */
-    public func logIn(with email: String, password: String, server: TidepoolServer? = nil, completion: @escaping (_ result: Result<TPSession, TidepoolKitError>) -> Void) {
-        apiConnect.login(with: email, password: password, server: server, completion: completion)
+    public func logIn(with email: String, password: String, serverHost: String? = nil, completion: @escaping (_ result: Result<TPSession, TidepoolKitError>) -> Void) {
+        apiConnect.login(with: email, password: password, serverHost: serverHost, completion: completion)
     }
     
     /**

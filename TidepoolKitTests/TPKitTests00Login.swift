@@ -19,7 +19,7 @@ class TPKitTests00Login: TPKitTestsBase {
                 _ in
             }
         }
-        tpKit.logIn(with: "badUserEmail@bad.com", password: testPassword, server: testServer) {
+        tpKit.logIn(with: "badUserEmail@bad.com", password: testPassword, serverHost: testServerHost) {
             result in
              expectation.fulfill()
             switch result {
@@ -45,7 +45,7 @@ class TPKitTests00Login: TPKitTestsBase {
         if tpKit.isLoggedIn() {
             tpKit.logOut() { _ in }
         }
-        tpKit.logIn(with: testEmail, password: testPassword, server: testServer) {
+        tpKit.logIn(with: testEmail, password: testPassword, serverHost: testServerHost) {
             result in
             expectation.fulfill()
             switch result {
@@ -153,7 +153,7 @@ class TPKitTests00Login: TPKitTestsBase {
         if tpKit.isLoggedIn() {
             tpKit.logOut() { _ in }
         }
-        tpKit.logIn(with: "badUserEmail@bad.com", password: testPassword, server: testServer) {
+        tpKit.logIn(with: "badUserEmail@bad.com", password: testPassword, serverHost: testServerHost) {
             result in
             expectation.fulfill()
             // be sure to restore reachability...

@@ -13,12 +13,12 @@ public class TPSession: TPUserData, RawRepresentable {
     
     public let authenticationToken: String
     public let user: TPUser
-    public let server: TidepoolServer
+    public let serverHost: String
     
-    init(_ token: String, user: TPUser, server: TidepoolServer) {
+    init(_ token: String, user: TPUser, serverHost: String) {
         self.authenticationToken = token
         self.user = user
-        self.server = server
+        self.serverHost = serverHost
         super.init()
     }
 
@@ -29,12 +29,8 @@ public class TPSession: TPUserData, RawRepresentable {
             LogError("TPSession rawValue is missing auth token!")
             return nil
         }
-        guard let serverString = rawValue["server"] as? String else {
-            LogError("TPSession rawValue is missing server string!")
-            return nil
-        }
-        guard let server = TidepoolServer(rawValue: serverString) else {
-            LogError("TPSession server string is invalid!")
+        guard let serverHost = rawValue["serverHost"] as? String else {
+            LogError("TPSession rawValue is missing serverHost string!")
             return nil
         }
         guard let userRaw = rawValue["user"] as? [String: Any] else {
@@ -46,7 +42,7 @@ public class TPSession: TPUserData, RawRepresentable {
             return nil
         }
         self.authenticationToken = token
-        self.server = server
+        self.serverHost = serverHost
         self.user = user
     }
     
@@ -54,7 +50,7 @@ public class TPSession: TPUserData, RawRepresentable {
         var result = [String: Any]()
         result["authenticationToken"] = authenticationToken
         result["user"] = user.rawValue
-        result["server"] = server.rawValue
+        result["serverHost"] = serverHost
         return result
     }
 

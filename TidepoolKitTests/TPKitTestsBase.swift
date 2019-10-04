@@ -12,7 +12,7 @@ import XCTest
 /// TODO: Set up a new test password?
 let testEmail: String = "larry+kittest@tidepool.org"
 let testPassword: String = "larry+kittest"
-let testServer: TidepoolServer = .staging
+let testServerHost = "stg-api.tidepool.org"
 var testDataset: TPDataset?
 var tidepoolKit: TidepoolKit?
 
@@ -50,7 +50,7 @@ class TPKitTestsBase: XCTestCase {
     func ensureLogin(completion: @escaping (TPSession) -> Void) {
         let tpKit = getTpKitSingleton()
         guard let session = tpKit.currentSession else {
-            tpKit.logIn(with: testEmail, password: testPassword, server: testServer) {
+            tpKit.logIn(with: testEmail, password: testPassword, serverHost: testServerHost) {
                 result in
                 switch result {
                 case .success (let session):
