@@ -14,7 +14,7 @@ public enum EnergyUnits: String {
     case joules = "joules"
     case kilojoules = "kilojoules"
     
-    static let kKilojoulesPerKilocalorie = 4.1858
+    static let kilojoulesPerKilocalorie = 4.1858
 }
 
 public struct TPDataEnergy : TPData {

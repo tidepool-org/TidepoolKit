@@ -98,8 +98,8 @@ class APIConnector {
         }
     }
     
-    private let kSessionTokenHeaderId = "X-Tidepool-Session-Token"
-    private let kSessionTokenResponseId = "x-tidepool-session-token"
+    // lower-cased header token id
+    private let sessionTokenHeaderId = "x-tidepool-session-token"
 
     private var user: TPUser?
     func loggedInUser() -> TPUser? {
@@ -157,7 +157,7 @@ class APIConnector {
                 return
             }
             
-            guard let token = httpResponse.allHeaderFields[self.kSessionTokenResponseId] as? String else {
+            guard let token = self.parseResponseForToken(httpResponse) else {
                 let description = "Login response contained no token in header!"
                 LogError(description)
                 completion(Result.failure(.badLoginResponse(description)))
@@ -186,8 +186,21 @@ class APIConnector {
         }
     }
     
+    private func parseResponseForToken(_ httpResponse: HTTPURLResponse) -> String? {
+        var token: String?
+        for (key, value) in httpResponse.allHeaderFields {
+            if let keyStr = key as? String {
+                if keyStr.lowercased() == self.sessionTokenHeaderId {
+                    token = value as? String
+                    break
+                }
+            }
+        }
+        return token
+    }
+    
     func login(with session: TPSession) -> Result<TPSession, TPError> {
-        guard self.session != nil else {
+        guard self.session == nil else {
             LogInfo("Login with existing TPSession failed: already logged in!")
             return Result.failure(.alreadyLoggedIn)
         }
@@ -244,7 +257,7 @@ class APIConnector {
                 return
             }
 
-            guard let token = httpResponse.allHeaderFields[self.kSessionTokenResponseId] as? String else {
+            guard let token = self.parseResponseForToken(httpResponse) else {
                 let description = "Login response contained no token in header!"
                 LogError(description)
                 completion(Result.failure(.badLoginResponse(description)))
@@ -644,7 +657,7 @@ class APIConnector {
                 completion(SendRequestResponse(), .notLoggedIn)
                 return
             }
-            request.setValue("\(token)", forHTTPHeaderField: kSessionTokenHeaderId)
+            request.setValue("\(token)", forHTTPHeaderField: sessionTokenHeaderId)
         }
         
         request.httpBody = body
@@ -725,7 +738,7 @@ class APIConnector {
             completion(SendRequestResponse(), .notLoggedIn)
             return
         }
-        request.setValue("\(token)", forHTTPHeaderField: kSessionTokenHeaderId)
+        request.setValue("\(token)", forHTTPHeaderField: sessionTokenHeaderId)
         request.setValue(userAgentString(), forHTTPHeaderField: "User-Agent")
         networkRequestHandler.sendBackgroundRequest(request, body: body) {
             (data, response, error) -> Void in

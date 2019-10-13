@@ -15,7 +15,7 @@ public protocol LoginSignupDelegate: AnyObject {
     func loginSignupCancelled()
 }
 
-class LoginViewController: UIViewController {
+class LoginViewController: UIViewController, UITextFieldDelegate {
 
     weak var loginSignupDelegate: LoginSignupDelegate?
     var tidepoolKit: TidepoolKit!
@@ -40,23 +40,10 @@ class LoginViewController: UIViewController {
         currentServerHost = serverHost
         configureForReachability()
         updateButtonStates()
-        let notificationCenter = NotificationCenter.default
-        notificationCenter.addObserver(self, selector: #selector(LoginViewController.textFieldDidChange), name: UITextField.textDidChangeNotification, object: nil)
-        notificationCenter.addObserver(self, selector: #selector(LoginViewController.reachabilityChanged(_:)), name: ReachabilityChangedNotification, object: nil)
-        
         configureCurrentServerButton()
-    }
-    
-    static var firstTime = true
-    override func viewDidAppear(_ animated: Bool) {
-        super.viewDidAppear(animated)
-        if LoginViewController.firstTime {
-            LoginViewController.firstTime = false
-            if tidepoolKit.isLoggedIn() {
-                //LogError("Already logged in!")
-            }
-        }
-    }
+
+        NotificationCenter.default.addObserver(self, selector: #selector(LoginViewController.reachabilityChanged(_:)), name: ReachabilityChangedNotification, object: nil)
+     }
     
     @objc func reachabilityChanged(_ note: Notification) {
         DispatchQueue.main.async {
@@ -136,7 +123,7 @@ class LoginViewController: UIViewController {
         }
     }
 
-    @objc func textFieldDidChange() {
+    @IBAction func textFieldEditingChanged(_ sender: Any) {
         updateButtonStates()
     }
     
@@ -182,12 +169,12 @@ class LoginViewController: UIViewController {
         }
     }
     
-    let kProductionServerHost = "api.tidepool.org"
+    private let productionServerHost = "api.tidepool.org"
     private func presentServiceChoicePopup(_ dynamicHosts: [String]) {
         var hostArray: [String] = dynamicHosts
         // always include the default host...
-        if !hostArray.contains(kProductionServerHost) {
-            hostArray.insert(kProductionServerHost, at: 0)
+        if !hostArray.contains(productionServerHost) {
+            hostArray.insert(productionServerHost, at: 0)
         }
         let actionSheet = UIAlertController(title: "Server" + " (" + currentServerHost + ")", message: "", preferredStyle: .alert)
         for Host in hostArray {

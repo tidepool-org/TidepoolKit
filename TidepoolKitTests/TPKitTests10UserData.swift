@@ -1,6 +1,6 @@
 //
 //  TPKitTests10UserData.swift
-//  TidepoolKit
+//  TidepoolKitTests
 //
 //  Created by Larry Kenyon on 8/23/19.
 //  Copyright © 2019 Tidepool Project. All rights reserved.
@@ -112,7 +112,7 @@ class TPKitTests10UserData: TPKitTestsBase {
             session in
             XCTAssert(tpKit.isLoggedIn())
             let end = Date()
-            let start = end.addingTimeInterval(-self.kOneWeekTimeInterval)
+            let start = end.addingTimeInterval(-self.oneWeekTimeInterval)
             tpKit.getData(for: session.user, startDate: start, endDate: end) {
                 result in
                 expectation.fulfill()
@@ -139,7 +139,7 @@ class TPKitTests10UserData: TPKitTestsBase {
             self.configureOffline(true)
             XCTAssert(tpKit.isLoggedIn())
             let end = Date()
-            let start = end.addingTimeInterval(-self.kOneWeekTimeInterval)
+            let start = end.addingTimeInterval(-self.oneWeekTimeInterval)
             tpKit.getData(for: session.user, startDate: start, endDate: end) {
                 result in
                 expectation.fulfill()
@@ -160,7 +160,7 @@ class TPKitTests10UserData: TPKitTestsBase {
             dataset, session in
             XCTAssert(tpKit.isLoggedIn())
             let end = Date()
-            let start = end.addingTimeInterval(-self.kOneWeekTimeInterval)
+            let start = end.addingTimeInterval(-self.oneWeekTimeInterval)
             tpKit.getData(for: session.user, startDate: start, endDate: end) {
                 result in
                 switch result {

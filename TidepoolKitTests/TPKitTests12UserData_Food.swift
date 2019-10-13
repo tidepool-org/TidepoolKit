@@ -1,6 +1,6 @@
 //
 //  TPKitTests12UserData_Food.swift
-//  TidepoolKit
+//  TidepoolKitTests
 //
 //  Created by Larry Kenyon on 8/23/19.
 //  Copyright © 2019 Tidepool Project. All rights reserved.

@@ -1,6 +1,6 @@
 //
 //  TPKitTestsBase.swift
-//  TidepoolKit
+//  TidepoolKitTests
 //
 //  Created by Larry Kenyon on 8/23/19.
 //  Copyright © 2019 Tidepool Project. All rights reserved.
@@ -18,9 +18,9 @@ var tidepoolKit: TidepoolKit?
 
 class TPKitTestsBase: XCTestCase {
 
-    let kOneWeekTimeInterval: TimeInterval = 60*60*24*7
-    let kOneDayTimeInterval: TimeInterval = 60*60*24
-    let kOneHourTimeInterval: TimeInterval = 60*60
+    let oneWeekTimeInterval: TimeInterval = 60*60*24*7
+    let oneDayTimeInterval: TimeInterval = 60*60*24
+    let oneHourTimeInterval: TimeInterval = 60*60
 
     override func setUp() {
         super.setUp()

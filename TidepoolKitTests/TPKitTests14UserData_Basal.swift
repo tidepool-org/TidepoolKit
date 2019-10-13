@@ -26,8 +26,8 @@ class TPKitTests14UserData_Basal: TPKitTestsBase {
         let newId = UUID.init().uuidString
         let origin = TPDataOrigin(id: newId, name: "org.tidepool.tidepoolKitTest", type: .service, payload: nil)
         let scheduleName = "test schedule"
-        let duration = kOneDayTimeInterval
-        let expectedDuration = kOneDayTimeInterval
+        let duration = oneDayTimeInterval
+        let expectedDuration = oneDayTimeInterval
         let sample = TPDataBasalAutomated(time: Date(), rate: rate, scheduleName: scheduleName, duration: duration, expectedDuration: expectedDuration)
         sample.origin = origin
         XCTAssert(sample.deliveryType == .automated)
@@ -43,8 +43,8 @@ class TPKitTests14UserData_Basal: TPKitTestsBase {
         let newId = UUID.init().uuidString
         let origin = TPDataOrigin(id: newId, name: "org.tidepool.tidepoolKitTest", type: .service, payload: nil)
         let scheduleName = "test schedule"
-        let duration = kOneDayTimeInterval
-        let expectedDuration = kOneDayTimeInterval
+        let duration = oneDayTimeInterval
+        let expectedDuration = oneDayTimeInterval
         let sample = TPDataBasalScheduled(time: Date(), rate: rate, scheduleName: scheduleName, duration: duration, expectedDuration: expectedDuration)
         sample.origin = origin
         XCTAssert(sample.deliveryType == .scheduled)
@@ -59,8 +59,8 @@ class TPKitTests14UserData_Basal: TPKitTestsBase {
     func createTempBasalItem(_ rate: Double) -> TPDataBasal {
         let newId = UUID.init().uuidString
         let origin = TPDataOrigin(id: newId, name: "org.tidepool.tidepoolKitTest", type: .service, payload: nil)
-        let duration = kOneDayTimeInterval
-        let expectedDuration = kOneDayTimeInterval
+        let duration = oneDayTimeInterval
+        let expectedDuration = oneDayTimeInterval
         let suppressed = TPDataSuppressed(.scheduled, rate: 0.25, scheduleName: "Standard")
         let sample = TPDataBasalTemporary(time: Date(), duration: duration, expectedDuration: expectedDuration, rate: rate, suppressed: suppressed)
         sample.origin = origin
@@ -75,8 +75,8 @@ class TPKitTests14UserData_Basal: TPKitTestsBase {
     func createSuspendBasalItem(_ deliveryType: TPBasalDeliveryType, rate: Double) -> TPDataBasal {
         let newId = UUID.init().uuidString
         let origin = TPDataOrigin(id: newId, name: "org.tidepool.tidepoolKitTest", type: .service, payload: nil)
-        let duration = kOneHourTimeInterval
-        let expectedDuration = kOneDayTimeInterval
+        let duration = oneHourTimeInterval
+        let expectedDuration = oneDayTimeInterval
         let suppressed = TPDataSuppressed(deliveryType, rate: 0.25, scheduleName: "Standard")
         let sample = TPDataBasalSuppressed(time: Date(), duration: duration, expectedDuration: expectedDuration, suppressed: suppressed)
         sample.origin = origin
@@ -170,12 +170,12 @@ class TPKitTests14UserData_Basal: TPKitTestsBase {
             XCTAssert(tpKit.isLoggedIn())
             // last hour:
             let end = Date()
-            let start = end.addingTimeInterval(-self.kOneHourTimeInterval)
+            let start = end.addingTimeInterval(-self.oneHourTimeInterval)
             // around a particular date
             //let dateStr = "2019-01-21T03:28:30.000Z"
             //let itemDate = self.dateFromStr(dateStr)
-            //let end =  itemDate.addingTimeInterval(self.kOneDayTimeInterval)
-            //let start = itemDate.addingTimeInterval(-self.kOneDayTimeInterval)
+            //let end =  itemDate.addingTimeInterval(self.oneDayTimeInterval)
+            //let start = itemDate.addingTimeInterval(-self.oneDayTimeInterval)
             tpKit.getData(for: session.user, startDate: start, endDate: end, objectTypes: "basal") {
                 result in
                 expectation.fulfill()
@@ -206,7 +206,7 @@ class TPKitTests14UserData_Basal: TPKitTestsBase {
         let thirdTempTime = self.dateFromStr("2016-10-07T10:00:00.000Z")
 
         // first, delete any existing data from previous test run...
-        self.deleteTestItems(intialItemTime.addingTimeInterval(-1), end: intialItemTime.addingTimeInterval(kOneDayTimeInterval)) {
+        self.deleteTestItems(intialItemTime.addingTimeInterval(-1), end: intialItemTime.addingTimeInterval(oneDayTimeInterval)) {
             result in
             
             // let's say a user programs a temp basal at 12:25 a.m. to run for three hours, until 3:25 a.m. Then the scheduled basal will look almost the same (as a 24 hours one), except the duration will be different since the scheduled segment will have only run for the twenty-five minutes from midnight to 12:25 a.m.

@@ -1,6 +1,6 @@
 //
 //  TPKitExampleViewController.swift
-//  TidepoolKit
+//  TidepoolKitExample
 //
 //  Created by Larry Kenyon on 8/23/19.
 //  Copyright © 2019 Tidepool Project. All rights reserved.
@@ -100,20 +100,20 @@ class TPKitExampleViewController: UIViewController, LoginSignupDelegate {
             NSLog("Already presenting UI!")
             return
         }
-        var defaultServerHost = kDefaultServerHost
+        var serverHost = defaultServerHost
         NSLog("start with defaultServerHost = \(defaultServerHost)")
-        if let serverHost = lastServerHostSetting.value {
+        if let host = lastServerHostSetting.value {
             NSLog("found lastServerHostSetting == \(serverHost)")
-            defaultServerHost = serverHost
+            serverHost = host
         }
-        loginVC = tidepoolKitUI.logInViewController(loginSignupDelegate: self, serverHost: defaultServerHost)
+        loginVC = tidepoolKitUI.logInViewController(loginSignupDelegate: self, serverHost: serverHost)
         navigationController?.present(loginVC!, animated: true) {
             () -> Void in
             self.configureForReachability()
             return
         }
     }
-    let kDefaultServerHost = "qa2.development.tidepool.org"
+    private let defaultServerHost = "qa2.development.tidepool.org"
 
     
     // MARK: - LoginSignupDelegate

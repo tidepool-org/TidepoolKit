@@ -1,6 +1,6 @@
 //
 //  TPKitTests13UserData_Bolus.swift
-//  TidepoolKit
+//  TidepoolKitTests
 //
 //  Created by Larry Kenyon on 8/23/19.
 //  Copyright © 2019 Tidepool Project. All rights reserved.
@@ -109,12 +109,12 @@ class TPKitTests13UserData_Bolus: TPKitTestsBase {
             XCTAssert(tpKit.isLoggedIn())
             // last hour:
             let end = Date()
-            let start = end.addingTimeInterval(-self.kOneHourTimeInterval)
+            let start = end.addingTimeInterval(-self.oneHourTimeInterval)
             // around a particular date
             //let dateStr = "2017-04-21T03:28:30.000Z"
             //let itemDate = self.dateFromStr(dateStr)
-            //let end =  itemDate.addingTimeInterval(self.kOnehourTimeInterval)
-            //let start = itemDate.addingTimeInterval(-self.kOnehourTimeInterval)
+            //let end =  itemDate.addingTimeInterval(self.onehourTimeInterval)
+            //let start = itemDate.addingTimeInterval(-self.onehourTimeInterval)
             tpKit.getData(for: session.user, startDate: start, endDate: end, objectTypes: "bolus") {
                 result in
                 expectation.fulfill()

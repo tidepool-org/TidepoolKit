@@ -112,6 +112,7 @@
                                                                 <textInputTraits key="textInputTraits" autocorrectionType="no" keyboardType="emailAddress" returnKeyType="next"/>
                                                                 <connections>
                                                                     <action selector="emailEnterHandler:" destination="PjX-QO-gXs" eventType="editingDidEndOnExit" id="sJv-kl-hIo"/>
+                                                                    <action selector="textFieldEditingChanged:" destination="PjX-QO-gXs" eventType="editingChanged" id="a19-2W-4r1"/>
                                                                     <outlet property="delegate" destination="PjX-QO-gXs" id="2Nw-PM-cvr"/>
                                                                 </connections>
                                                             </textField>
@@ -122,6 +123,8 @@
                                                                 <textInputTraits key="textInputTraits" autocorrectionType="no" spellCheckingType="no" returnKeyType="go" secureTextEntry="YES"/>
                                                                 <connections>
                                                                     <action selector="passwordEnterHandler:" destination="PjX-QO-gXs" eventType="editingDidEndOnExit" id="Ow4-Bb-z8o"/>
+                                                                    <action selector="textFieldEditingChanged:" destination="PjX-QO-gXs" eventType="editingChanged" id="E1u-Qy-045"/>
+                                                                    <action selector="textFieldValueChanged:" destination="PjX-QO-gXs" eventType="valueChanged" id="2g0-OU-6FF"/>
                                                                 </connections>
                                                             </textField>
                                                             <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="O52-Ic-ciF" userLabel="serviceButton">
