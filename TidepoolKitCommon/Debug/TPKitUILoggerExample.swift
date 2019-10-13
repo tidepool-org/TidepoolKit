@@ -10,7 +10,7 @@ import Foundation
 import TidepoolKit
 
 /// Example logger for getting logging information from TidepoolKitUI.
-public class TPKitUILoggerExample: TPKitLogging {
+public class TPKitUILoggerExample: TPLogging {
     
     public init() {
     }

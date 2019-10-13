@@ -21,7 +21,7 @@ public class TPKitExampleSessionSetting {
     func save(_ session: TPSession?) {
         guard let session = session else {
             NSLog("Clearing saved session from defaults and token store!")
-            defaults.set(nil, forKey: self.settingKey)
+            defaults.set(nil, forKey: settingKey)
             saveAuthToken(nil)
             return
         }
@@ -41,7 +41,7 @@ public class TPKitExampleSessionSetting {
             NSLog("Unable to serialize rawValue \(sessionRaw)!")
             return
         }
-        defaults.set(sessionJsonData, forKey: self.settingKey)
+        defaults.set(sessionJsonData, forKey: settingKey)
         saveAuthToken(authToken)
         NSLog("Saved session!")
     }

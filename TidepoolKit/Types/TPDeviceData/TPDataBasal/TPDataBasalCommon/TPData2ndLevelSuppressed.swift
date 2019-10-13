@@ -53,10 +53,10 @@ public struct TPData2ndLevelSuppressed: TPData {
     public var rawValue: RawValue {
         var rawValue: [String: Any] = [:]
         rawValue["type"] = TPDataType.basal.rawValue
-        rawValue["deliveryType"] = self.deliveryType.rawValue
-        rawValue["rate"] = self.rate
-        rawValue["percent"] = self.percent
-        rawValue["scheduleName"] = self.scheduleName
+        rawValue["deliveryType"] = deliveryType.rawValue
+        rawValue["rate"] = rate
+        rawValue["percent"] = percent
+        rawValue["scheduleName"] = scheduleName
         return rawValue
     }
     

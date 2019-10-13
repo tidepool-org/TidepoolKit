@@ -67,12 +67,12 @@ public class TPDataBolusCombination: TPDataBolus {
     
     override public var rawValue: RawValue {
         var rawValue = super.rawValue
-        rawValue["normal"] = self.normal
-        rawValue["expectedNormal"] = self.expectedNormal
-        rawValue["extended"] = self.extended
-        rawValue["expectedExtended"] = self.expectedExtended
-        rawValue["duration"] = Int(self.duration * 1000.0) // convert to integer milliseconds!
-        if let expectedDuration = self.expectedDuration {
+        rawValue["normal"] = normal
+        rawValue["expectedNormal"] = expectedNormal
+        rawValue["extended"] = extended
+        rawValue["expectedExtended"] = expectedExtended
+        rawValue["duration"] = Int(duration * 1000.0) // convert to integer milliseconds!
+        if let expectedDuration = expectedDuration {
             rawValue["expectedDuration"] = Int(expectedDuration * 1000.0)
         }
         return rawValue

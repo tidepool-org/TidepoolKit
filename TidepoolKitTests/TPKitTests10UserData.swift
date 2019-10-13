@@ -231,9 +231,14 @@ class TPKitTests10UserData: TPKitTestsBase {
                 result in
                 expectation.fulfill()
                 switch result {
-                case .failure:
-                    NSLog("\(#function) failed delete user data!")
-                    XCTFail()
+                case .failure(let error):
+                    if case .dataNotFound = error {
+                        // Only valid error is 404. Some instances of server just return 200.
+                        NSLog("\(#function) delete returned dataNotFound!")
+                    } else {
+                        NSLog("\(#function) failed delete user data!")
+                        XCTFail()
+                    }
                 case .success:
                     NSLog("\(#function) delete succeeded!")
                 }

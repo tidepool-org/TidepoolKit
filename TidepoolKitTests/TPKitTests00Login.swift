@@ -149,7 +149,7 @@ class TPKitTests00Login: TPKitTestsBase {
     func test10LoginErrorNotReachable() {
         let expectation = self.expectation(description: "Login call fails with offline error")
         let tpKit = getTpKitSingleton()
-        self.configureOffline(true)
+        configureOffline(true)
         if tpKit.isLoggedIn() {
             tpKit.logOut() { _ in }
         }

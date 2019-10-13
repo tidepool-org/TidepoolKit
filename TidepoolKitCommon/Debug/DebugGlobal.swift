@@ -9,14 +9,14 @@
 import Foundation
 
 func LogInfo(_ message: @autoclosure () -> String,  file: StaticString = #file, function: StaticString = #function, line: UInt = #line) {
-    clientLogger?.logInfo(message(), file: file, function: function, line: line)
+    globalLogger?.logInfo(message(), file: file, function: function, line: line)
 }
 
 func LogVerbose(_ message: @autoclosure () -> String,  file: StaticString = #file, function: StaticString = #function, line: UInt = #line) {
-    clientLogger?.logVerbose(message(), file: file, function: function, line: line)
+    globalLogger?.logVerbose(message(), file: file, function: function, line: line)
 }
 
 func LogError(_ message: @autoclosure () -> String,  file: StaticString = #file, function: StaticString = #function, line: UInt = #line) {
-    clientLogger?.logError(message(), file: file, function: function, line: line)
+    globalLogger?.logError(message(), file: file, function: function, line: line)
 }
 

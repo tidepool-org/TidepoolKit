@@ -8,25 +8,6 @@
 
 import Foundation
 
-/**
- Many calls return Result.failure on failures, with a TidepoolKitError.
- */
-public enum TidepoolKitError: Error {
-    case unauthorized                               // http error 401
-    case badRequest(_ badSampleIndices: [Int]?, response: Data) // http error 400
-    case dataNotFound                               // http error 404 (may be turned into a successful nil object return)
-    case badLoginResponse(_ description: String?)   // login failures other than .unauthorized
-    case offline                                    // network unavailable
-    case notLoggedIn                                // call requires login
-    case alreadyLoggedIn                            // login with Session requires logged out state!
-    case serviceError(_ statusCode: Int?)           // service error, status code if available
-    case noUploadId                                 // dataset uploadId is nil!
-    case noDataInResponse                           // service returned no data in fetch or post
-    case badJsonInResponse                          // service data was not json parseable into expected object
-    case internalError                              // some framework error (not service)
-    case unimplemented                              // used for any unfinished feaures...
-}
-
 public let TidepoolLogInChangedNotification = Notification.Name("TidepoolLogInChangedNotification")
 
 public class TidepoolKit {
@@ -34,12 +15,12 @@ public class TidepoolKit {
     /**
      Initialize the framework singleton.
      
-     - parameter logger: Optional TPKitLogging object that will be called for logging. If nil, no logging will be done.
+     - parameter logger: Optional TPLogging object that will be called for logging. If nil, no logging will be done.
      - parameter queue: Optional dispatch queue to use for completion handling; main queue will be used as a default (rather than a random networking queue). Immediate completions will always be on the current thread.
      - returns: initialized TidepoolKit object.
      */
-    public init(logger: TPKitLogging? = nil,  queue: DispatchQueue = DispatchQueue.main) {
-        clientLogger = logger
+    public init(logger: TPLogging? = nil,  queue: DispatchQueue = DispatchQueue.main) {
+        globalLogger = logger
         self.apiConnect = APIConnector(queue: queue)
     }
     private let apiConnect: APIConnector
@@ -49,12 +30,12 @@ public class TidepoolKit {
      
      Set to enable/disable logging if changes are desired post-initialization. The logger can also be provided with the framework init call.
      */
-    public var logger: TPKitLogging? {
+    public var logger: TPLogging? {
         get {
-            return clientLogger
+            return globalLogger
         }
         set {
-            clientLogger = newValue
+            globalLogger = newValue
         }
     }
 
@@ -108,7 +89,7 @@ public class TidepoolKit {
      - parameter completion: This completion handler takes a Result parameter:
      - parameter result: Result.success has a TPSession object containing a valid authorization token and a TPUser representing the account owner, or Result.failure with an error value (e.g., .unauthorized if the service has rejected the email/password).
      */
-    public func logIn(with email: String, password: String, serverHost: String? = nil, completion: @escaping (_ result: Result<TPSession, TidepoolKitError>) -> Void) {
+    public func logIn(with email: String, password: String, serverHost: String? = nil, completion: @escaping (_ result: Result<TPSession, TPError>) -> Void) {
         apiConnect.login(with: email, password: password, serverHost: serverHost, completion: completion)
     }
     
@@ -122,7 +103,7 @@ public class TidepoolKit {
      
      - returns: Result.success with the same TPSession object passed in, or Result.failure of .alreadyLoggedIn if TidepoolKit was already logged in (call logout() first!).
      */
-    public func logIn(with session: TPSession) -> Result<TPSession, TidepoolKitError> {
+    public func logIn(with session: TPSession) -> Result<TPSession, TPError> {
         return apiConnect.login(with: session)
     }
     
@@ -138,7 +119,7 @@ public class TidepoolKit {
      - parameter completion: This completion handler takes a Result parameter:
      - parameter result: Result.success with the refreshed TPSession and TPUser (server returned a 200 status), or Result.failure with an error value.
      */
-    public func refreshSession(completion: @escaping (_ result: Result<TPSession, TidepoolKitError>) -> (Void)) {
+    public func refreshSession(completion: @escaping (_ result: Result<TPSession, TPError>) -> (Void)) {
         apiConnect.refreshToken(completion)
     }
     
@@ -151,7 +132,7 @@ public class TidepoolKit {
      - parameter completion: This completion handler takes a Result parameter:
      - parameter result: Result.success with a true value (either already logged out, or server returned a 200 to the logout post), or Result.failure with an error value (e.g., .offline if the network is offline).
      */
-    public func logOut(completion: @escaping (_ result: Result<Bool, TidepoolKitError>) -> (Void)) {
+    public func logOut(completion: @escaping (_ result: Result<Bool, TPError>) -> (Void)) {
         apiConnect.logout(completion)
     }
     
@@ -167,7 +148,7 @@ public class TidepoolKit {
       - parameter completion: async completion to be called when fetch completes successfully or with an error condition. The completion method takes a Result parameter:
       - parameter result: Result.success with an array of TPDeviceData samples, or Result.failure with an error.
      */
-    public func getData(for user: TPUser, startDate: Date, endDate: Date, objectTypes: String = "smbg,bolus,cbg,wizard,basal,food", _ completion: @escaping (_ result: Result<[TPDeviceData], TidepoolKitError>) -> (Void)) {
+    public func getData(for user: TPUser, startDate: Date, endDate: Date, objectTypes: String = "smbg,bolus,cbg,wizard,basal,food", _ completion: @escaping (_ result: Result<[TPDeviceData], TPError>) -> (Void)) {
         var parameters: Dictionary = ["type": objectTypes]
         parameters.updateValue(DateUtils.dateToJSON(startDate), forKey: "startDate")
         parameters.updateValue(DateUtils.dateToJSON(endDate), forKey: "endDate")
@@ -192,7 +173,7 @@ public class TidepoolKit {
      - parameter completion: This completion handler takes a Result parameter:
      - parameter result: Result.success with a TPUserProfile object, or Result.failure with an error value
      */
-    public func getProfileInfo(for user: TPUser, _ completion: @escaping (_ result: Result<TPUserProfile, TidepoolKitError>) -> (Void)) {
+    public func getProfileInfo(for user: TPUser, _ completion: @escaping (_ result: Result<TPUserProfile, TPError>) -> (Void)) {
         apiConnect.fetch(TPUserProfile.self, user: user) {
             result in
             completion(result)
@@ -206,7 +187,7 @@ public class TidepoolKit {
      - parameter completion: This completion handler takes a Result parameter:
      - parameter result: Result.success with an optional TPUserSettings object (nil if there are no settings for this user), or Result.failure with an error value
      */
-    public func getSettingsInfo(for user: TPUser, _ completion: @escaping (_ result: Result<TPUserSettings?, TidepoolKitError>) -> (Void)) {
+    public func getSettingsInfo(for user: TPUser, _ completion: @escaping (_ result: Result<TPUserSettings?, TPError>) -> (Void)) {
         apiConnect.fetch(TPUserSettings.self, user: user) {
             result in
             switch result {
@@ -230,7 +211,7 @@ public class TidepoolKit {
      - parameter completion: This completion handler takes a Result parameter:
      - parameter result: Result.success with an array of TPUser objects, or Result.failure with an error value
      */
-    public func getAccessUsers(for user: TPUser, _ completion: @escaping (_ result: Result<[TPUser], TidepoolKitError>) -> (Void)) {
+    public func getAccessUsers(for user: TPUser, _ completion: @escaping (_ result: Result<[TPUser], TPError>) -> (Void)) {
         apiConnect.fetch(TPAccessUsers.self, user: user) {
             result in
             switch result {
@@ -255,7 +236,7 @@ public class TidepoolKit {
      - parameter completion: This completion handler takes a Result parameter:
      - parameter result: Result.success with a TPDataset containing a non-nil uploadId enabling data upload/delete, or Result.failure with an error value.
     */
-    public func getDataset(for user: TPUser, matching dataSet: TPDataset, _ completion: @escaping (_ result: Result<TPDataset, TidepoolKitError>) -> (Void)) {
+    public func getDataset(for user: TPUser, matching dataSet: TPDataset, _ completion: @escaping (_ result: Result<TPDataset, TPError>) -> (Void)) {
         apiConnect.getDataset(for: user, matching: dataSet) {
             result in
             completion(result)
@@ -271,7 +252,7 @@ public class TidepoolKit {
      - parameter completion: This completion handler takes a Result parameter:
      - parameter result: Result.success with an array of TPDatasets, or Result.failure with an error value
      */
-    public func getDatasets(for user: TPUser, _ completion: @escaping (_ result: Result<[TPDataset], TidepoolKitError>) -> (Void)) {
+    public func getDatasets(for user: TPUser, _ completion: @escaping (_ result: Result<[TPDataset], TPError>) -> (Void)) {
         apiConnect.getDatasets(user: user) {
             result in
             completion(result)
@@ -290,13 +271,13 @@ public class TidepoolKit {
      - parameter completion: This completion handler takes a Result parameter:
      - parameter result: Result.success with true boolean, or Result.failure with an error value. If the error code is .badRequest, an array of integer indices of the samples rejected by the service as well as the full response data will be included with the error.
      */
-    public func putData(samples: [TPDeviceData], into dataset: TPDataset, _ completion: @escaping (_ result: Result<Bool, TidepoolKitError>) -> (Void)) {
+    public func putData(samples: [TPDeviceData], into dataset: TPDataset, _ completion: @escaping (_ result: Result<Bool, TPError>) -> (Void)) {
         guard let uploadId = dataset.uploadId else {
             completion(.failure(.noUploadId))
             return
         }
         let uploadData = TPDeviceDataArray(samples)
-        self.apiConnect.upload(uploadData, uploadId: uploadId, httpMethod: "POST") {
+        apiConnect.upload(uploadData, uploadId: uploadId, httpMethod: "POST") {
             result in
             completion(result)
         }
@@ -312,13 +293,13 @@ public class TidepoolKit {
      - parameter completion: This completion handler takes a Result parameter:
      - parameter result: Result.success with true boolean, or Result.failure with an error value.
      */
-    public func deleteData(samples: [TPDeleteItem], from dataset: TPDataset, _ completion: @escaping (_ result: Result<Bool, TidepoolKitError>) -> (Void)) {
+    public func deleteData(samples: [TPDeleteItem], from dataset: TPDataset, _ completion: @escaping (_ result: Result<Bool, TPError>) -> (Void)) {
         guard let uploadId = dataset.uploadId else {
             completion(.failure(.noUploadId))
             return
         }
         let deleteItems = TPDeleteItemArray(samples)
-        self.apiConnect.upload(deleteItems, uploadId: uploadId, httpMethod: "DELETE") {
+        apiConnect.upload(deleteItems, uploadId: uploadId, httpMethod: "DELETE") {
             result in
             completion(result)
         }
@@ -326,7 +307,7 @@ public class TidepoolKit {
 }
 
 // global logging object
-var clientLogger: TPKitLogging?
+var globalLogger: TPLogging?
 
 // MARK: - Non-public extension for testing
 

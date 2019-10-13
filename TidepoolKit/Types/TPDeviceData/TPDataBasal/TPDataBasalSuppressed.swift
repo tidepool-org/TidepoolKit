@@ -27,7 +27,7 @@ public class TPDataBasalSuppressed: TPDataBasal {
     
     override public var rawValue: RawValue {
         var rawValue = super.rawValue
-        self.suppressed?.addSelfToDict(&rawValue)
+        suppressed?.addSelfToDict(&rawValue)
         return rawValue
     }
     

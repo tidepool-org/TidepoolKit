@@ -18,12 +18,12 @@ public class TPKitExampleSetting {
     // writes are persisted...
     var value: String? {
         set(newValue) {
-            defaults.set(newValue, forKey: self.settingKey)
+            defaults.set(newValue, forKey: settingKey)
             _value = newValue
         }
         get {
             if _value == nil {
-                _value = defaults.string(forKey: self.settingKey)
+                _value = defaults.string(forKey: settingKey)
             }
             return _value
         }

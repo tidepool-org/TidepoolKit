@@ -48,7 +48,7 @@ public class TPDataBolus: TPDeviceData, TPData {
     
     override public var rawValue: RawValue {
         var rawValue = super.rawValue
-        rawValue["subType"] = self.subType.rawValue
+        rawValue["subType"] = subType.rawValue
         // TODO: finish!
         return rawValue
     }

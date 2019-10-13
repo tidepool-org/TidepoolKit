@@ -12,7 +12,7 @@ import XCTest
 /// TODO: Set up a new test password?
 let testEmail: String = "larry+kittest@tidepool.org"
 let testPassword: String = "larry+kittest"
-let testServerHost = "stg-api.tidepool.org"
+let testServerHost = "qa2.development.tidepool.org"
 var testDataset: TPDataset?
 var tidepoolKit: TidepoolKit?
 
@@ -153,7 +153,7 @@ class TPKitTestsBase: XCTestCase {
     }
 
     // utility delete...
-    func deleteTestItems(_ start: Date, end: Date, completion: @escaping (_ result: Result<Bool, TidepoolKitError>) -> (Void)) {
+    func deleteTestItems(_ start: Date, end: Date, completion: @escaping (_ result: Result<Bool, TPError>) -> (Void)) {
         let tpKit = getTpKitSingleton()
         // first, ensure we are logged in, and then ...
         ensureDataset() {
@@ -204,7 +204,7 @@ class TPKitTestsBase: XCTestCase {
         tpKit.configureReachability(mockReachability) // defaults to not reachable...
     }
     
-    func checkForOfflineResult<T>(_ result: Result<T, TidepoolKitError>, fetchType: String) {
+    func checkForOfflineResult<T>(_ result: Result<T, TPError>, fetchType: String) {
         switch result {
         case .success:
             XCTFail("Expected \(fetchType) to fail with offline error!")

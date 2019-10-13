@@ -20,7 +20,7 @@ public protocol LoginSignupDelegate: AnyObject {
 class LoginViewController: UIViewController {
 
     var loginSignupDelegate: LoginSignupDelegate?
-    var tpKit: TidepoolKit!
+    var tidepoolKit: TidepoolKit!
     var serverHost: String?
     
     @IBOutlet weak var inputContainerView: UIView!
@@ -43,7 +43,7 @@ class LoginViewController: UIViewController {
         notificationCenter.addObserver(self, selector: #selector(LoginViewController.textFieldDidChange), name: UITextField.textDidChangeNotification, object: nil)
         notificationCenter.addObserver(self, selector: #selector(LoginViewController.reachabilityChanged(_:)), name: ReachabilityChangedNotification, object: nil)
         
-        self.configureCurrentServerButton()
+        configureCurrentServerButton()
     }
     
     static var firstTime = true
@@ -51,7 +51,7 @@ class LoginViewController: UIViewController {
         super.viewDidAppear(animated)
         if LoginViewController.firstTime {
             LoginViewController.firstTime = false
-            if tpKit.isLoggedIn() {
+            if tidepoolKit.isLoggedIn() {
                 //LogError("Already logged in!")
             }
         }
@@ -64,7 +64,7 @@ class LoginViewController: UIViewController {
     }
     
     func configureForReachability() {
-        let connected = tpKit.isConnectedToNetwork()
+        let connected = tidepoolKit.isConnectedToNetwork()
         networkOfflineLabel.text = connected ? "Connected to Internet" : "No Internet Connection"
     }
 
@@ -91,7 +91,7 @@ class LoginViewController: UIViewController {
         if let loginSignupDelegate = loginSignupDelegate {
             loginSignupDelegate.loginSignupCancelled()
         } else {
-            self.dismiss(animated: true)
+            dismiss(animated: true)
         }
     }
     
@@ -101,19 +101,19 @@ class LoginViewController: UIViewController {
         loginIndicator.startAnimating()
         
         //LogInfo("Logging into \(server?.rawValue ?? "default") server!")
-        tpKit.logIn(with: emailTextField.text!, password: passwordTextField.text!, serverHost: self.serverHost) {
+        tidepoolKit.logIn(with: emailTextField.text!, password: passwordTextField.text!, serverHost: serverHost) {
             result in
             LogInfo("Login result: \(result)")
             self.processLoginResult(result)
         }
     }
     
-    private func processLoginResult(_ result: Result<TPSession, TidepoolKitError>) {
-        self.loginIndicator.stopAnimating()
+    private func processLoginResult(_ result: Result<TPSession, TPError>) {
+        loginIndicator.stopAnimating()
         switch result {
         case .success(let session):
             //LogInfo("Login success: \(user)")
-            self.logInComplete(session)
+            logInComplete(session)
         case .failure(let error):
             var errorText = "Check your Internet connection!"
             switch error {
@@ -122,8 +122,8 @@ class LoginViewController: UIViewController {
             default:
                 break
             }
-            self.errorFeedbackLabel.text = errorText
-            self.errorFeedbackLabel.isHidden = false
+            errorFeedbackLabel.text = errorText
+            errorFeedbackLabel.isHidden = false
         }
     }
     
@@ -131,7 +131,7 @@ class LoginViewController: UIViewController {
         if let loginSignupDelegate = loginSignupDelegate {
             loginSignupDelegate.loginSignupComplete(session)
         } else {
-            self.dismiss(animated: true)
+            dismiss(animated: true)
         }
     }
 
@@ -141,7 +141,7 @@ class LoginViewController: UIViewController {
     
     private func updateButtonStates() {
         errorFeedbackLabel.isHidden = true
-        let connected = tpKit.isConnectedToNetwork()
+        let connected = tidepoolKit.isConnectedToNetwork()
         // login button
         if (emailTextField.text != "" && passwordTextField.text != "" && connected) {
             loginButton.isEnabled = true
@@ -158,11 +158,11 @@ class LoginViewController: UIViewController {
     }
     
     private var currentServerHost: String {
-        return self.serverHost ?? tpKit.currentServerHost
+        return serverHost ?? tidepoolKit.currentServerHost
     }
     
     private func configureCurrentServerButton() {
-        self.serviceButton.setTitle(currentServerHost, for: .normal)
+        serviceButton.setTitle(currentServerHost, for: .normal)
     }
     
     var dnsFetcher = DNSSrvRecordFetcher()
@@ -186,7 +186,7 @@ class LoginViewController: UIViewController {
     }
     
     private func presentServiceChoicePopup(_ dynamicHosts: [String]) {
-        let defaultHost = tpKit.currentServerHost // default when not logged in
+        let defaultHost = tidepoolKit.currentServerHost // default when not logged in
         var hostArray: [String] = dynamicHosts
         // always include the default host...
         if !hostArray.contains(defaultHost) {
@@ -199,7 +199,7 @@ class LoginViewController: UIViewController {
                 self.configureCurrentServerButton()
             }))
         }
-        self.present(actionSheet, animated: true, completion: nil)
+        present(actionSheet, animated: true, completion: nil)
 
     }
 

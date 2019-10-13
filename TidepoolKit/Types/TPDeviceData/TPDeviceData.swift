@@ -94,24 +94,24 @@ public class TPDeviceData: RawRepresentable, CustomStringConvertible {
          if let time = time {
             rawValue["time"] = DateUtils.dateToJSON(time)
         }
-        if let associations = self.associations {
+        if let associations = associations {
             var assocArrayRaw: [[String: Any]] = []
             for item in associations {
                 assocArrayRaw.append(item.rawValue)
             }
             rawValue["associations"] = assocArrayRaw
         }
-        rawValue["clockDriftOffset"] = self.clockDriftOffset
-        rawValue["conversionOffset"] = self.conversionOffset
-        rawValue["deviceId"] = self.deviceId
-        rawValue["deviceTime"] = self.deviceTime
-        rawValue["guid"] = self.guid
-        rawValue["id"] = self.id
-        self.location?.addSelfToDict(&rawValue)
-        self.origin?.addSelfToDict(&rawValue)
-        self.payload?.addSelfToDict(&rawValue)
-        rawValue["timezone"] = self.timeZone
-        rawValue["timezoneOffset"] = self.timeZoneOffset
+        rawValue["clockDriftOffset"] = clockDriftOffset
+        rawValue["conversionOffset"] = conversionOffset
+        rawValue["deviceId"] = deviceId
+        rawValue["deviceTime"] = deviceTime
+        rawValue["guid"] = guid
+        rawValue["id"] = id
+        location?.addSelfToDict(&rawValue)
+        origin?.addSelfToDict(&rawValue)
+        payload?.addSelfToDict(&rawValue)
+        rawValue["timezone"] = timeZone
+        rawValue["timezoneOffset"] = timeZoneOffset
         return rawValue
     }
 

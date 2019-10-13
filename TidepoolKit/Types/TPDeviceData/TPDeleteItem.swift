@@ -59,8 +59,8 @@ public class TPDeleteItem: RawRepresentable {
 
     public var rawValue: RawValue {
         var result = [String: Any]()
-        result["id"] = self.id
-        self.origin?.addSelfToDict(&result)
+        result["id"] = id
+        origin?.addSelfToDict(&result)
         return result
     }
     

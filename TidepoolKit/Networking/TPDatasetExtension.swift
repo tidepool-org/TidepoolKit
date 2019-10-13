@@ -29,7 +29,7 @@ extension TPDataset: TPPostable, TPFetchable {
     // Postable
     func postBodyData() -> Data? {
         do {
-            let postBody = try JSONSerialization.data(withJSONObject: self.rawValue)
+            let postBody = try JSONSerialization.data(withJSONObject: rawValue)
             return postBody
         } catch {
             LogError("TPDataset.postBodyData() unable to serialize \(self)!")

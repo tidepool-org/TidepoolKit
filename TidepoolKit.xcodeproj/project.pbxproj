@@ -9,9 +9,8 @@
 /* Begin PBXBuildFile section */
 		480CD239230A2DFA0022D14D /* TPKitLoggerExample.swift in Sources */ = {isa = PBXBuildFile; fileRef = 480CD238230A2DFA0022D14D /* TPKitLoggerExample.swift */; };
 		480CD23A230A2DFA0022D14D /* TPKitLoggerExample.swift in Sources */ = {isa = PBXBuildFile; fileRef = 480CD238230A2DFA0022D14D /* TPKitLoggerExample.swift */; };
-		480CD23E230A3BB90022D14D /* TPKitLogging.swift in Sources */ = {isa = PBXBuildFile; fileRef = 480CD235230A29730022D14D /* TPKitLogging.swift */; };
+		480CD23E230A3BB90022D14D /* TPLogging.swift in Sources */ = {isa = PBXBuildFile; fileRef = 480CD235230A29730022D14D /* TPLogging.swift */; };
 		480CD242230A3DAD0022D14D /* DebugGlobal.swift in Sources */ = {isa = PBXBuildFile; fileRef = 48F7137322E9FEE200FC2C89 /* DebugGlobal.swift */; };
-		480CD244230A3E760022D14D /* TPKitUILoggerExample.swift in Sources */ = {isa = PBXBuildFile; fileRef = 480CD243230A3E760022D14D /* TPKitUILoggerExample.swift */; };
 		480CD245230A3E760022D14D /* TPKitUILoggerExample.swift in Sources */ = {isa = PBXBuildFile; fileRef = 480CD243230A3E760022D14D /* TPKitUILoggerExample.swift */; };
 		480CD246230A3EB00022D14D /* DebugGlobal.swift in Sources */ = {isa = PBXBuildFile; fileRef = 48F7137322E9FEE200FC2C89 /* DebugGlobal.swift */; };
 		480CD24C230C574E0022D14D /* TPSession.swift in Sources */ = {isa = PBXBuildFile; fileRef = 480CD24B230C574E0022D14D /* TPSession.swift */; };
@@ -59,6 +58,7 @@
 		48A629062316FFDF004C0C1E /* TPDataLocationAccuracy.swift in Sources */ = {isa = PBXBuildFile; fileRef = 48A629052316FFDF004C0C1E /* TPDataLocationAccuracy.swift */; };
 		48A6290A23170007004C0C1E /* TPDataGPS.swift in Sources */ = {isa = PBXBuildFile; fileRef = 48A6290923170007004C0C1E /* TPDataGPS.swift */; };
 		48A6290D23174F72004C0C1E /* TPKitExampleSetting.swift in Sources */ = {isa = PBXBuildFile; fileRef = 48A6290C23174F72004C0C1E /* TPKitExampleSetting.swift */; };
+		48B7D82A2353CB9800C5ABC3 /* TPError.swift in Sources */ = {isa = PBXBuildFile; fileRef = 48B7D8292353CB9800C5ABC3 /* TPError.swift */; };
 		48D6BE412310195900FFA9C0 /* LoginViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 48F713D922EA029C00FC2C89 /* LoginViewController.swift */; };
 		48D6BE432310875100FFA9C0 /* TPUserData.swift in Sources */ = {isa = PBXBuildFile; fileRef = 48D6BE422310875100FFA9C0 /* TPUserData.swift */; };
 		48DFE68E231C466D00562E2B /* TPData2ndLevelSuppressed.swift in Sources */ = {isa = PBXBuildFile; fileRef = 48DFE68D231C466D00562E2B /* TPData2ndLevelSuppressed.swift */; };
@@ -68,7 +68,6 @@
 		48F7136F22E9FEB600FC2C89 /* TPKitTests10UserData.swift in Sources */ = {isa = PBXBuildFile; fileRef = 48F7136D22E9FEB600FC2C89 /* TPKitTests10UserData.swift */; };
 		48F7138A22E9FEE200FC2C89 /* Reachability.swift in Sources */ = {isa = PBXBuildFile; fileRef = 48F7137022E9FEE100FC2C89 /* Reachability.swift */; };
 		48F7138B22E9FEE200FC2C89 /* TidepoolKit.swift in Sources */ = {isa = PBXBuildFile; fileRef = 48F7137122E9FEE100FC2C89 /* TidepoolKit.swift */; };
-		48F7138C22E9FEE200FC2C89 /* TPKitConstants.swift in Sources */ = {isa = PBXBuildFile; fileRef = 48F7137222E9FEE200FC2C89 /* TPKitConstants.swift */; };
 		48F7138E22E9FEE200FC2C89 /* TPDataFood.swift in Sources */ = {isa = PBXBuildFile; fileRef = 48F7137522E9FEE200FC2C89 /* TPDataFood.swift */; };
 		48F7138F22E9FEE200FC2C89 /* TPDataOrigin.swift in Sources */ = {isa = PBXBuildFile; fileRef = 48F7137722E9FEE200FC2C89 /* TPDataOrigin.swift */; };
 		48F7139022E9FEE200FC2C89 /* TPData.swift in Sources */ = {isa = PBXBuildFile; fileRef = 48F7137822E9FEE200FC2C89 /* TPData.swift */; };
@@ -82,8 +81,6 @@
 		48F7139B22E9FEE200FC2C89 /* APIObjectMeta.swift in Sources */ = {isa = PBXBuildFile; fileRef = 48F7138422E9FEE200FC2C89 /* APIObjectMeta.swift */; };
 		48F7139C22E9FEE200FC2C89 /* APIConnect.swift in Sources */ = {isa = PBXBuildFile; fileRef = 48F7138522E9FEE200FC2C89 /* APIConnect.swift */; };
 		48F7139D22E9FEE200FC2C89 /* TPAccessUsersExtension.swift in Sources */ = {isa = PBXBuildFile; fileRef = 48F7138622E9FEE200FC2C89 /* TPAccessUsersExtension.swift */; };
-		48F713AF22EA00CF00FC2C89 /* TidepoolKitUI.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 48F713A622EA00CF00FC2C89 /* TidepoolKitUI.framework */; };
-		48F713B422EA00CF00FC2C89 /* TidepoolKitUITests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 48F713B322EA00CF00FC2C89 /* TidepoolKitUITests.swift */; };
 		48F713B622EA00CF00FC2C89 /* TidepoolKitUI.h in Headers */ = {isa = PBXBuildFile; fileRef = 48F713A822EA00CF00FC2C89 /* TidepoolKitUI.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		48F713C422EA00EC00FC2C89 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 48F713C322EA00EC00FC2C89 /* AppDelegate.swift */; };
 		48F713C922EA00EC00FC2C89 /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 48F713C722EA00EC00FC2C89 /* Main.storyboard */; };
@@ -121,13 +118,6 @@
 			proxyType = 1;
 			remoteGlobalIDString = 48F7135122E9FCB900FC2C89;
 			remoteInfo = TidepoolKit;
-		};
-		48F713B022EA00CF00FC2C89 /* PBXContainerItemProxy */ = {
-			isa = PBXContainerItemProxy;
-			containerPortal = 48F7134922E9FCB900FC2C89 /* Project object */;
-			proxyType = 1;
-			remoteGlobalIDString = 48F713A522EA00CF00FC2C89;
-			remoteInfo = TidepoolKitUI;
 		};
 		A9AF5A062302344400CB3F90 /* PBXContainerItemProxy */ = {
 			isa = PBXContainerItemProxy;
@@ -168,7 +158,7 @@
 /* End PBXCopyFilesBuildPhase section */
 
 /* Begin PBXFileReference section */
-		480CD235230A29730022D14D /* TPKitLogging.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TPKitLogging.swift; sourceTree = "<group>"; };
+		480CD235230A29730022D14D /* TPLogging.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TPLogging.swift; sourceTree = "<group>"; };
 		480CD238230A2DFA0022D14D /* TPKitLoggerExample.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TPKitLoggerExample.swift; sourceTree = "<group>"; };
 		480CD243230A3E760022D14D /* TPKitUILoggerExample.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TPKitUILoggerExample.swift; sourceTree = "<group>"; };
 		480CD24B230C574E0022D14D /* TPSession.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TPSession.swift; sourceTree = "<group>"; };
@@ -214,6 +204,7 @@
 		48A629052316FFDF004C0C1E /* TPDataLocationAccuracy.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TPDataLocationAccuracy.swift; sourceTree = "<group>"; };
 		48A6290923170007004C0C1E /* TPDataGPS.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TPDataGPS.swift; sourceTree = "<group>"; };
 		48A6290C23174F72004C0C1E /* TPKitExampleSetting.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TPKitExampleSetting.swift; sourceTree = "<group>"; };
+		48B7D8292353CB9800C5ABC3 /* TPError.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TPError.swift; sourceTree = "<group>"; };
 		48D6BE422310875100FFA9C0 /* TPUserData.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TPUserData.swift; sourceTree = "<group>"; };
 		48DFE68D231C466D00562E2B /* TPData2ndLevelSuppressed.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TPData2ndLevelSuppressed.swift; sourceTree = "<group>"; };
 		48F7135222E9FCB900FC2C89 /* TidepoolKit.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = TidepoolKit.framework; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -225,7 +216,6 @@
 		48F7136D22E9FEB600FC2C89 /* TPKitTests10UserData.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TPKitTests10UserData.swift; sourceTree = "<group>"; };
 		48F7137022E9FEE100FC2C89 /* Reachability.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Reachability.swift; sourceTree = "<group>"; };
 		48F7137122E9FEE100FC2C89 /* TidepoolKit.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TidepoolKit.swift; sourceTree = "<group>"; };
-		48F7137222E9FEE200FC2C89 /* TPKitConstants.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TPKitConstants.swift; sourceTree = "<group>"; };
 		48F7137322E9FEE200FC2C89 /* DebugGlobal.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = DebugGlobal.swift; sourceTree = "<group>"; };
 		48F7137522E9FEE200FC2C89 /* TPDataFood.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TPDataFood.swift; sourceTree = "<group>"; };
 		48F7137722E9FEE200FC2C89 /* TPDataOrigin.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TPDataOrigin.swift; sourceTree = "<group>"; };
@@ -243,9 +233,6 @@
 		48F713A622EA00CF00FC2C89 /* TidepoolKitUI.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = TidepoolKitUI.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		48F713A822EA00CF00FC2C89 /* TidepoolKitUI.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = TidepoolKitUI.h; sourceTree = "<group>"; };
 		48F713A922EA00CF00FC2C89 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
-		48F713AE22EA00CF00FC2C89 /* TidepoolKitUITests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = TidepoolKitUITests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
-		48F713B322EA00CF00FC2C89 /* TidepoolKitUITests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TidepoolKitUITests.swift; sourceTree = "<group>"; };
-		48F713B522EA00CF00FC2C89 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		48F713C122EA00EC00FC2C89 /* TidepoolKitExample.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = TidepoolKitExample.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		48F713C322EA00EC00FC2C89 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		48F713C822EA00EC00FC2C89 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/Main.storyboard; sourceTree = "<group>"; };
@@ -289,14 +276,6 @@
 			buildActionMask = 2147483647;
 			files = (
 				48F713D422EA00FE00FC2C89 /* TidepoolKit.framework in Frameworks */,
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-		};
-		48F713AB22EA00CF00FC2C89 /* Frameworks */ = {
-			isa = PBXFrameworksBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-				48F713AF22EA00CF00FC2C89 /* TidepoolKitUI.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -419,7 +398,6 @@
 				48F7135422E9FCB900FC2C89 /* TidepoolKit */,
 				48F7135F22E9FCB900FC2C89 /* TidepoolKitTests */,
 				48F713A722EA00CF00FC2C89 /* TidepoolKitUI */,
-				48F713B222EA00CF00FC2C89 /* TidepoolKitUITests */,
 				48F713C222EA00EC00FC2C89 /* TidepoolKitExample */,
 				48F7135322E9FCB900FC2C89 /* Products */,
 				48F713D322EA00FE00FC2C89 /* Frameworks */,
@@ -432,7 +410,6 @@
 				48F7135222E9FCB900FC2C89 /* TidepoolKit.framework */,
 				48F7135B22E9FCB900FC2C89 /* TidepoolKitTests.xctest */,
 				48F713A622EA00CF00FC2C89 /* TidepoolKitUI.framework */,
-				48F713AE22EA00CF00FC2C89 /* TidepoolKitUITests.xctest */,
 				48F713C122EA00EC00FC2C89 /* TidepoolKitExample.app */,
 			);
 			name = Products;
@@ -444,8 +421,8 @@
 				48F7135522E9FCB900FC2C89 /* TidepoolKit.h */,
 				48F7135622E9FCB900FC2C89 /* Info.plist */,
 				48F7137122E9FEE100FC2C89 /* TidepoolKit.swift */,
-				48F7137222E9FEE200FC2C89 /* TPKitConstants.swift */,
-				480CD235230A29730022D14D /* TPKitLogging.swift */,
+				48B7D8292353CB9800C5ABC3 /* TPError.swift */,
+				480CD235230A29730022D14D /* TPLogging.swift */,
 				48F7137F22E9FEE200FC2C89 /* Networking */,
 				48F713E022EA04E500FC2C89 /* Third Party */,
 				48F7137422E9FEE200FC2C89 /* Types */,
@@ -524,15 +501,6 @@
 				48541F282347CB390077C75A /* DNSSrvRecordFetcher.swift */,
 			);
 			path = TidepoolKitUI;
-			sourceTree = "<group>";
-		};
-		48F713B222EA00CF00FC2C89 /* TidepoolKitUITests */ = {
-			isa = PBXGroup;
-			children = (
-				48F713B522EA00CF00FC2C89 /* Info.plist */,
-				48F713B322EA00CF00FC2C89 /* TidepoolKitUITests.swift */,
-			);
-			path = TidepoolKitUITests;
 			sourceTree = "<group>";
 		};
 		48F713C222EA00EC00FC2C89 /* TidepoolKitExample */ = {
@@ -654,24 +622,6 @@
 			productReference = 48F713A622EA00CF00FC2C89 /* TidepoolKitUI.framework */;
 			productType = "com.apple.product-type.framework";
 		};
-		48F713AD22EA00CF00FC2C89 /* TidepoolKitUITests */ = {
-			isa = PBXNativeTarget;
-			buildConfigurationList = 48F713BC22EA00CF00FC2C89 /* Build configuration list for PBXNativeTarget "TidepoolKitUITests" */;
-			buildPhases = (
-				48F713AA22EA00CF00FC2C89 /* Sources */,
-				48F713AB22EA00CF00FC2C89 /* Frameworks */,
-				48F713AC22EA00CF00FC2C89 /* Resources */,
-			);
-			buildRules = (
-			);
-			dependencies = (
-				48F713B122EA00CF00FC2C89 /* PBXTargetDependency */,
-			);
-			name = TidepoolKitUITests;
-			productName = TidepoolKitUITests;
-			productReference = 48F713AE22EA00CF00FC2C89 /* TidepoolKitUITests.xctest */;
-			productType = "com.apple.product-type.bundle.unit-test";
-		};
 		48F713C022EA00EC00FC2C89 /* TidepoolKitExample */ = {
 			isa = PBXNativeTarget;
 			buildConfigurationList = 48F713D022EA00EC00FC2C89 /* Build configuration list for PBXNativeTarget "TidepoolKitExample" */;
@@ -714,9 +664,6 @@
 						CreatedOnToolsVersion = 10.2.1;
 						LastSwiftMigration = 1020;
 					};
-					48F713AD22EA00CF00FC2C89 = {
-						CreatedOnToolsVersion = 10.2.1;
-					};
 					48F713C022EA00EC00FC2C89 = {
 						CreatedOnToolsVersion = 10.2.1;
 					};
@@ -738,7 +685,6 @@
 				48F7135122E9FCB900FC2C89 /* TidepoolKit */,
 				48F7135A22E9FCB900FC2C89 /* TidepoolKitTests */,
 				48F713A522EA00CF00FC2C89 /* TidepoolKitUI */,
-				48F713AD22EA00CF00FC2C89 /* TidepoolKitUITests */,
 				48F713C022EA00EC00FC2C89 /* TidepoolKitExample */,
 			);
 		};
@@ -764,13 +710,6 @@
 			buildActionMask = 2147483647;
 			files = (
 				48F713DA22EA029C00FC2C89 /* LoginSignup.storyboard in Resources */,
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-		};
-		48F713AC22EA00CF00FC2C89 /* Resources */ = {
-			isa = PBXResourcesBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -814,6 +753,7 @@
 				48541F24234570810077C75A /* TPDeleteItemArray.swift in Sources */,
 				4812E80322EE507A0058AF41 /* TPDeviceData.swift in Sources */,
 				483529E62319830200C3D4DB /* TPDataBolusNormal.swift in Sources */,
+				48B7D82A2353CB9800C5ABC3 /* TPError.swift in Sources */,
 				4812E80022EE4FFC0058AF41 /* TPDataType.swift in Sources */,
 				48A6290A23170007004C0C1E /* TPDataGPS.swift in Sources */,
 				482566C7231B020400BB0BE6 /* TPDataSuppressed.swift in Sources */,
@@ -840,8 +780,7 @@
 				48F7139322E9FEE200FC2C89 /* TPUser.swift in Sources */,
 				481E4B4922F08C7500B128E8 /* TPUserProfile.swift in Sources */,
 				483529E823199E8500C3D4DB /* TPDataBolusExtended.swift in Sources */,
-				48F7138C22E9FEE200FC2C89 /* TPKitConstants.swift in Sources */,
-				480CD23E230A3BB90022D14D /* TPKitLogging.swift in Sources */,
+				480CD23E230A3BB90022D14D /* TPLogging.swift in Sources */,
 				48F7139522E9FEE200FC2C89 /* TPDataBasal.swift in Sources */,
 				482566BD231AF76400BB0BE6 /* TPBasalAutomated.swift in Sources */,
 				48541F1E23441A3C0077C75A /* TPAccessUsers.swift in Sources */,
@@ -885,15 +824,6 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
-		48F713AA22EA00CF00FC2C89 /* Sources */ = {
-			isa = PBXSourcesBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-				48F713B422EA00CF00FC2C89 /* TidepoolKitUITests.swift in Sources */,
-				480CD244230A3E760022D14D /* TPKitUILoggerExample.swift in Sources */,
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-		};
 		48F713BD22EA00EC00FC2C89 /* Sources */ = {
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
@@ -919,11 +849,6 @@
 			isa = PBXTargetDependency;
 			target = 48F7135122E9FCB900FC2C89 /* TidepoolKit */;
 			targetProxy = 48F7135D22E9FCB900FC2C89 /* PBXContainerItemProxy */;
-		};
-		48F713B122EA00CF00FC2C89 /* PBXTargetDependency */ = {
-			isa = PBXTargetDependency;
-			target = 48F713A522EA00CF00FC2C89 /* TidepoolKitUI */;
-			targetProxy = 48F713B022EA00CF00FC2C89 /* PBXContainerItemProxy */;
 		};
 		A9AF5A072302344400CB3F90 /* PBXTargetDependency */ = {
 			isa = PBXTargetDependency;
@@ -1304,40 +1229,6 @@
 			};
 			name = Release;
 		};
-		48F713B922EA00CF00FC2C89 /* Debug */ = {
-			isa = XCBuildConfiguration;
-			buildSettings = {
-				CODE_SIGN_STYLE = Automatic;
-				DEVELOPMENT_TEAM = "";
-				INFOPLIST_FILE = TidepoolKitUITests/Info.plist;
-				LD_RUNPATH_SEARCH_PATHS = (
-					"$(inherited)",
-					"@executable_path/Frameworks",
-					"@loader_path/Frameworks",
-				);
-				PRODUCT_BUNDLE_IDENTIFIER = org.tidepool.TidepoolKitUITests;
-				PRODUCT_NAME = "$(TARGET_NAME)";
-				TARGETED_DEVICE_FAMILY = "1,2";
-			};
-			name = Debug;
-		};
-		48F713BA22EA00CF00FC2C89 /* Release */ = {
-			isa = XCBuildConfiguration;
-			buildSettings = {
-				CODE_SIGN_STYLE = Automatic;
-				DEVELOPMENT_TEAM = "";
-				INFOPLIST_FILE = TidepoolKitUITests/Info.plist;
-				LD_RUNPATH_SEARCH_PATHS = (
-					"$(inherited)",
-					"@executable_path/Frameworks",
-					"@loader_path/Frameworks",
-				);
-				PRODUCT_BUNDLE_IDENTIFIER = org.tidepool.TidepoolKitUITests;
-				PRODUCT_NAME = "$(TARGET_NAME)";
-				TARGETED_DEVICE_FAMILY = "1,2";
-			};
-			name = Release;
-		};
 		48F713D122EA00EC00FC2C89 /* Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
@@ -1413,15 +1304,6 @@
 			buildConfigurations = (
 				48F713B722EA00CF00FC2C89 /* Debug */,
 				48F713B822EA00CF00FC2C89 /* Release */,
-			);
-			defaultConfigurationIsVisible = 0;
-			defaultConfigurationName = Release;
-		};
-		48F713BC22EA00CF00FC2C89 /* Build configuration list for PBXNativeTarget "TidepoolKitUITests" */ = {
-			isa = XCConfigurationList;
-			buildConfigurations = (
-				48F713B922EA00CF00FC2C89 /* Debug */,
-				48F713BA22EA00CF00FC2C89 /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;

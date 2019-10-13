@@ -14,7 +14,7 @@ public class TPUserData: CustomStringConvertible {
 
     public var description: String {
         get {
-            return TPDataType.description(self.rawValue)
+            return TPDataType.description(rawValue)
         }
     }
 

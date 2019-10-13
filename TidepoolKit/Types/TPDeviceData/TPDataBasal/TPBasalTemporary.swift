@@ -43,9 +43,9 @@ public class TPDataBasalTemporary: TPDataBasal {
         // start with common data
         var rawValue = super.rawValue
         // add in type-specific data...
-        rawValue["rate"] = self.rate
-        rawValue["percent"] = self.percent
-        self.suppressed?.addSelfToDict(&rawValue)
+        rawValue["rate"] = rate
+        rawValue["percent"] = percent
+        suppressed?.addSelfToDict(&rawValue)
         return rawValue
     }
 

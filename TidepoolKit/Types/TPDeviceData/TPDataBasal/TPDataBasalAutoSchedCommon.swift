@@ -33,8 +33,8 @@ public class TPDataBasalAutoSchedCommon: TPDataBasal {
     
     override public var rawValue: RawValue {
         var rawValue = super.rawValue
-        rawValue["rate"] = self.rate
-        rawValue["scheduleName"] = self.scheduleName
+        rawValue["rate"] = rate
+        rawValue["scheduleName"] = scheduleName
         return rawValue
     }
 }

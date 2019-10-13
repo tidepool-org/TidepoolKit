@@ -20,7 +20,7 @@ public extension TPData {
     }
     
     func addSelfToDict(_ dict: inout [String: Any]) {
-        dict[type(of: self).typeName] = self.rawValue
+        dict[type(of: self).typeName] = rawValue
     }
     
     static func getSelfFromDict<T: TPData>(_ dict: [String: Any]) -> T? {
@@ -34,7 +34,7 @@ public extension TPData {
 
     var description: String {
         get {
-            return TPDataType.description(self.rawValue)
+            return TPDataType.description(rawValue)
         }
     }
 }

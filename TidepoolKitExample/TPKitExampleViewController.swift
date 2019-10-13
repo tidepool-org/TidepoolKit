@@ -23,28 +23,28 @@ class TPKitExampleViewController: UIViewController, LoginSignupDelegate {
             return
         }
 
-        self.tpKit = TidepoolKit.init()
+        tidepoolKit = TidepoolKit.init()
         // Example of setting logger after init time (can also pass into init)
-        tpKit.logger = TPKitLoggerExample()
+        tidepoolKit.logger = TPKitLoggerExample()
         
         // Example of accessing current TidepoolKit logger...
-        if let x = tpKit.logger {
+        if let x = tidepoolKit.logger {
             NSLog("logger type is \(type(of: x))")
         } else {
             NSLog("logger is nil!")
         }
 
-        self.tpKitUI = TidepoolKitUI.init(tpKit: tpKit, logger: TPKitUILoggerExample()) // pass the instance of TidepoolKit created in the line above!
+        tidepoolKitUI = TidepoolKitUI.init(tidepoolKit: tidepoolKit, logger: TPKitUILoggerExample()) // pass the instance of TidepoolKit created in the line above!
         
         if let session = savedSession.restore() {
-            if case .success = self.tpKit.logIn(with: session) {
-                tpKit.refreshSession { [ weak self ]
+            if case .success = tidepoolKit.logIn(with: session) {
+                tidepoolKit.refreshSession { [ weak self ]
                     result in
                     guard let self = self else {
                         return
                     }
                     // if refresh resulted in logged out state, adjust UI
-                    guard let session = self.tpKit.currentSession else {
+                    guard let session = self.tidepoolKit.currentSession else {
                         NSLog("TidepoolKit refreshSession failed, clearing saved session!")
                         self.savedSession.save(nil)
                         self.configureForReachability()
@@ -62,8 +62,8 @@ class TPKitExampleViewController: UIViewController, LoginSignupDelegate {
         configureForReachability()
 
     }
-    private var tpKit: TidepoolKit!
-    private var tpKitUI: TidepoolKitUI!
+    private var tidepoolKit: TidepoolKit!
+    private var tidepoolKitUI: TidepoolKitUI!
 
     @objc func reachabilityChanged(_ note: Notification) {
         NSLog("\(#function)")
@@ -74,8 +74,8 @@ class TPKitExampleViewController: UIViewController, LoginSignupDelegate {
     
     func configureForReachability() {
         NSLog("\(#function)")
-        let connected = tpKit.isConnectedToNetwork()
-        let loggedIn = tpKit.isLoggedIn()
+        let connected = tidepoolKit.isConnectedToNetwork()
+        let loggedIn = tidepoolKit.isLoggedIn()
         
         loggedInLabel.text = connected ?
             (loggedIn ? "Logged in to Tidepool" : "Press button to log in!") :
@@ -89,8 +89,8 @@ class TPKitExampleViewController: UIViewController, LoginSignupDelegate {
     private var loginVC: UIViewController?
     @IBAction func testLoginButtonHandler(_ sender: Any) {
         NSLog("\(#function)")
-        if tpKit.isLoggedIn() {
-            tpKit.logOut() { _ in }
+        if tidepoolKit.isLoggedIn() {
+            tidepoolKit.logOut() { _ in }
             savedSession.save(nil)
             self.configureForReachability()
             return
@@ -100,14 +100,14 @@ class TPKitExampleViewController: UIViewController, LoginSignupDelegate {
             NSLog("Already presenting UI!")
             return
         }
-        var defaultServerHost = tpKit.currentServerHost
+        var defaultServerHost = tidepoolKit.currentServerHost
         NSLog("start with defaultServerHost = \(defaultServerHost)")
-        if let serverHost = self.lastServerHostSetting.value {
+        if let serverHost = lastServerHostSetting.value {
             NSLog("found lastServerHostSetting == \(serverHost)")
             defaultServerHost = serverHost
         }
-        self.loginVC = tpKitUI.logInViewController(loginSignupDelegate: self, defaultServerHost: defaultServerHost)
-        self.navigationController?.present(self.loginVC!, animated: true) {
+        loginVC = tidepoolKitUI.logInViewController(loginSignupDelegate: self, defaultServerHost: defaultServerHost)
+        navigationController?.present(loginVC!, animated: true) {
             () -> Void in
             self.configureForReachability()
             return
@@ -125,7 +125,7 @@ class TPKitExampleViewController: UIViewController, LoginSignupDelegate {
             
         loginViewController.dismiss(animated: true) {
             self.loginVC = nil
-            if let session = self.tpKit.currentSession {
+            if let session = self.tidepoolKit.currentSession {
                 NSLog("TidepoolKit current session is: \(session)")
                 self.savedSession.save(session)
                 NSLog("saving lastServerHost as \(session.serverHost)")

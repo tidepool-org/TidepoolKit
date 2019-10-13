@@ -60,9 +60,9 @@ public class TPDataBasal: TPDeviceData, TPData {
 
     override public var rawValue: RawValue {
         var rawValue = super.rawValue
-        rawValue["deliveryType"] = self.deliveryType.rawValue
-        rawValue["duration"] = Int(self.duration * 1000.0) // convert to integer milliseconds!
-        if let expectedDuration = self.expectedDuration {
+        rawValue["deliveryType"] = deliveryType.rawValue
+        rawValue["duration"] = Int(duration * 1000.0) // convert to integer milliseconds!
+        if let expectedDuration = expectedDuration {
             rawValue["expectedDuration"] = Int(expectedDuration * 1000.0)
         }
         return rawValue

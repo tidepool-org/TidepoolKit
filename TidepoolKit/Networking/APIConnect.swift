@@ -22,18 +22,18 @@ public protocol ReachabilitySource {
 
 extension Reachability: ReachabilitySource {
     public func serviceIsReachable() -> Bool {
-        return self.isReachable
+        return isReachable
     }
     public func configureNotifier(_ on: Bool) -> Bool {
         if on {
             do {
-                try self.startNotifier()
+                try startNotifier()
                 return true
             } catch {
                 return false
             }
         } else {
-            self.stopNotifier()
+            stopNotifier()
             return true
         }
     }
@@ -62,10 +62,10 @@ class APIConnector {
     var networkRequestHandler: TidepoolNetworkInterface
     
     init(queue: DispatchQueue) {
-        LogInfo("")
+        LogInfo("Initializing APIConnector")
         self.apiQueue = queue
         self.networkRequestHandler = NetworkRequestHandler(queue)
-        self.configureReachability()
+        configureReachability()
     }
     
     deinit {
@@ -74,7 +74,7 @@ class APIConnector {
 
     /// Test point!
     func configureReachability(_ reachability: ReachabilitySource? = nil) {
-        _ = self.reachability?.configureNotifier(false)
+        _ = reachability?.configureNotifier(false)
         self.reachability = reachability
         if self.reachability == nil {
             guard let defaultReachability = Reachability() else {
@@ -92,9 +92,9 @@ class APIConnector {
     // TODO: if replacing a current NetworkRequestHandler, might want to cancel any outstanding requests!
     func configureNetworkInterface(_ networkInterface: TidepoolNetworkInterface? = nil) {
         if let networkInterface = networkInterface {
-            self.networkRequestHandler = networkInterface
+            networkRequestHandler = networkInterface
         } else {
-            self.networkRequestHandler = NetworkRequestHandler(apiQueue)
+            networkRequestHandler = NetworkRequestHandler(apiQueue)
         }
     }
     
@@ -104,7 +104,7 @@ class APIConnector {
 
     private var user: TPUser?
     func loggedInUser() -> TPUser? {
-        return self.session?.user
+        return session?.user
     }
     
     func isConnectedToNetwork() -> Bool {
@@ -119,7 +119,7 @@ class APIConnector {
     // MARK: - Login, logout, session...
     
     /// Logs in the user and obtains the session token for the session (stored internally)
-    func login(with username: String, password: String, serverHost: String?, completion: @escaping (Result<TPSession, TidepoolKitError>) -> (Void)) {
+    func login(with username: String, password: String, serverHost: String?, completion: @escaping (Result<TPSession, TPError>) -> (Void)) {
         
         if let error = isOfflineError() {
             completion(Result.failure(error))
@@ -127,10 +127,10 @@ class APIConnector {
         }
 
         let serverHost = serverHost ?? kDefaultServerHost
-        self.baseUrlString = "https://\(serverHost)"
+        baseUrlString = "https://\(serverHost)"
 
         // force current session nil if not already nil!
-        self.session = nil
+        session = nil
         
         // similar to email inputs in HTML5, trim the email (username) string of whitespace
         let trimmedUsername = username.trimmingCharacters(in: .whitespacesAndNewlines)
@@ -188,23 +188,23 @@ class APIConnector {
         }
     }
     
-    func login(with session: TPSession) -> Result<TPSession, TidepoolKitError> {
-        if self.session != nil {
+    func login(with session: TPSession) -> Result<TPSession, TPError> {
+        guard self.session != nil else {
             LogInfo("Login with existing TPSession failed: already logged in!")
             return Result.failure(.alreadyLoggedIn)
         }
         self.session = session
-        self.baseUrlString = "https://\(session.serverHost)"
+        baseUrlString = "https://\(session.serverHost)"
         LogInfo("Logged in with existing TPSession!")
         NotificationCenter.default.post(name: TidepoolLogInChangedNotification, object:self)
         return Result.success(session)
     }
     
     func clearSession() {
-        LogVerbose("")
-        let wasLoggedIn = self.session != nil
-        self.session = nil
-        self.baseUrlString = nil
+        LogVerbose("Clearing current session!")
+        let wasLoggedIn = session != nil
+        session = nil
+        baseUrlString = nil
         
         // only send notification if we were logged in...
         if wasLoggedIn {
@@ -212,7 +212,7 @@ class APIConnector {
         }
     }
     
-    func refreshToken(_ completion: @escaping (_ result: Result<TPSession, TidepoolKitError>) -> (Void)) {
+    func refreshToken(_ completion: @escaping (_ result: Result<TPSession, TPError>) -> (Void)) {
         
         let error = isOfflineOrUnauthorizedError()
         guard error == nil else {
@@ -220,11 +220,11 @@ class APIConnector {
             return
         }
         
-        guard let serverHost = self.session?.serverHost else {
+        guard let serverHost = session?.serverHost else {
             completion(Result.failure(.internalError))
             return
         }
-        self.baseUrlString = "https://\(serverHost)"
+        baseUrlString = "https://\(serverHost)"
         
         // set our endpoint for token refresh (same as login)
         let urlExtension = "/auth/login"
@@ -288,9 +288,9 @@ class APIConnector {
         }
      }
     
-    func logout(_ completion: @escaping (Result<Bool, TidepoolKitError>) -> (Void)) {
+    func logout(_ completion: @escaping (Result<Bool, TPError>) -> (Void)) {
    
-        guard self.session?.authenticationToken != nil else {
+        guard session?.authenticationToken != nil else {
             LogInfo("Logout skipped, already logged out!")
             completion(Result.success(true))
             return
@@ -325,7 +325,7 @@ class APIConnector {
     // MARK: - User api methods
     
     /// Pass type.self to enable type inference in all cases.
-    func fetch<T: TPFetchable>(_ type: T.Type, user: TPUser, parameters: [String: String]? = nil, headers: [String: String]? = nil, _ completion: @escaping (Result<T, TidepoolKitError>) -> (Void)) {
+    func fetch<T: TPFetchable>(_ type: T.Type, user: TPUser, parameters: [String: String]? = nil, headers: [String: String]? = nil, _ completion: @escaping (Result<T, TPError>) -> (Void)) {
         
         let error = isOfflineOrUnauthorizedError()
         guard error == nil else {
@@ -365,7 +365,7 @@ class APIConnector {
     }
     
     /// Pass type.self to enable type inference in all cases.
-    private func post<P: TPPostable, T: TPFetchable>(_ postable: P, _ fetchType: T.Type, headers: [String: String]? = nil, userId: String? = nil, _ completion: @escaping (Result<T, TidepoolKitError>) -> (Void)) {
+    private func post<P: TPPostable, T: TPFetchable>(_ postable: P, _ fetchType: T.Type, headers: [String: String]? = nil, userId: String? = nil, _ completion: @escaping (Result<T, TPError>) -> (Void)) {
         
         let error = isOfflineOrUnauthorizedError()
         guard error == nil else {
@@ -373,7 +373,7 @@ class APIConnector {
             return
         }
 
-        guard let sessionUser = self.session?.user else {
+        guard let sessionUser = session?.user else {
             LogError("Post failed, no user logged in!")
             completion(Result.failure(.notLoggedIn))
             return
@@ -417,7 +417,7 @@ class APIConnector {
 
     /// Pass type.self to enable type inference in all cases.
     /// - parameter httpMethod: "POST" or "DELETE"
-    func upload<T: TPUploadable>(_ uploadable: T, uploadId: String, httpMethod: String, _ completion: @escaping (Result<Bool, TidepoolKitError>) -> (Void)) {
+    func upload<T: TPUploadable>(_ uploadable: T, uploadId: String, httpMethod: String, _ completion: @escaping (Result<Bool, TPError>) -> (Void)) {
         
         let error = isOfflineOrUnauthorizedError()
         guard error == nil else {
@@ -465,10 +465,10 @@ class APIConnector {
     /// Call this if currentUploadId is nil, before uploading data, after fetching user profile, to ensure we have a dataset id for data uploads (if so enabled)
     /// - parameter dataset: The service is queried to find an existing dataset that matches this; if no existing match is found, a new dataset will be created.
     /// - parameter completion: Method that will be called when this async operation has completed. If successful, the matching or new TPDataset is returned.
-    func getDataset(for user: TPUser, matching configDataset: TPDataset,  _ completion: @escaping (Result<TPDataset, TidepoolKitError>) -> (Void)) {
+    func getDataset(for user: TPUser, matching configDataset: TPDataset,  _ completion: @escaping (Result<TPDataset, TPError>) -> (Void)) {
         
         // first try fetching one from the server that matches the one passed in...
-        self.getDatasets(user: user) {
+        getDatasets(user: user) {
             result in
             switch result {
             case .success(let datasets):
@@ -506,10 +506,10 @@ class APIConnector {
     
     /// Ask service for the existing mobile app upload id for this client and version, if one exists.
     /// - parameter completion: Method that accepts a Result. Failure code is returned if network fetch of dataset array fails, otherwise success is returned. The success value will be an array of zero or more TPDataset objects.
-    internal func getDatasets(user: TPUser, _ completion: @escaping (Result<[TPDataset], TidepoolKitError>) -> (Void)) {
+    internal func getDatasets(user: TPUser, _ completion: @escaping (Result<[TPDataset], TPError>) -> (Void)) {
         LogInfo("Try fetching existing dataset!")
         
-        self.fetch(TPDatasetArray.self, user: user) {
+        fetch(TPDatasetArray.self, user: user) {
             result in
             switch result {
             case .success(let dataSetArray):
@@ -524,10 +524,10 @@ class APIConnector {
     
     /// Ask service to create a new upload id. Should only be called after fetchDataSet returns a nil array (no existing upload id).
     /// - parameter completion: Method that accepts an optional APIDataSet if the create succeeds, and an error result if not.
-    private func createDataset(_ configDataset: TPDataset, _ completion: @escaping (Result<TPDataset, TidepoolKitError>) -> (Void)) {
+    private func createDataset(_ configDataset: TPDataset, _ completion: @escaping (Result<TPDataset, TPError>) -> (Void)) {
         LogInfo("Try creating a new dataset!")
         
-        self.post(configDataset, TPDataset.self) {
+        post(configDataset, TPDataset.self) {
             result in
             switch result {
             case .success(let apiDataSet):
@@ -543,7 +543,7 @@ class APIConnector {
 
     // MARK: - Lower-level networking methods
     
-    private func isOfflineError() -> TidepoolKitError? {
+    private func isOfflineError() -> TPError? {
         guard isConnectedToNetwork() else {
             LogError("network offline!")
             return .offline
@@ -551,11 +551,11 @@ class APIConnector {
         return nil
     }
     
-    private func isOfflineOrUnauthorizedError() -> TidepoolKitError? {
+    private func isOfflineOrUnauthorizedError() -> TPError? {
         if let error = isOfflineError() {
             return error
         }
-        guard self.session?.authenticationToken != nil else {
+        guard session?.authenticationToken != nil else {
             return .notLoggedIn
         }
         return nil
@@ -604,7 +604,7 @@ class APIConnector {
         }
     }
 
-    typealias SendRequestCompletionHandler = (SendRequestResponse, TidepoolKitError?) -> Void
+    typealias SendRequestCompletionHandler = (SendRequestResponse, TPError?) -> Void
 
     /// Assumes onLine, and authorized (unless requiresToken = false is passed). Call isOfflineOrUnauthorizedError() to check before calling this method!
     private func sendRequest(_ method: String, urlExtension: String, contentType: ContentType? = nil, parameters: [String: String]? = nil, headers: [String: String]? = nil, requiresToken: Bool = true, body: Data? = nil, completion: @escaping SendRequestCompletionHandler) {
@@ -641,7 +641,7 @@ class APIConnector {
         }
         
         if requiresToken {
-            guard let token = self.session?.authenticationToken else {
+            guard let token = session?.authenticationToken else {
                 // should not get this if caller already checked!!! Send an empty response back...
                 LogError("user not logged in!")
                 completion(SendRequestResponse(), .notLoggedIn)
@@ -658,13 +658,13 @@ class APIConnector {
             }
         }
         
-        request.setValue(self.userAgentString(), forHTTPHeaderField: "User-Agent")
+        request.setValue(userAgentString(), forHTTPHeaderField: "User-Agent")
         
         if let urlStr = request.url?.absoluteString {
             LogVerbose("sendRequest \(method) url: \(urlStr)")
         }
 
-        self.networkRequestHandler.sendStandardRequest(request) {
+        networkRequestHandler.sendStandardRequest(request) {
             data, response, error in
             self.dispatchSendRequestResponse(request: request, data: data, response: response, error: error, completion: completion)
         }
@@ -684,7 +684,7 @@ class APIConnector {
             }
         }
         
-        var errorResult: TidepoolKitError? = nil
+        var errorResult: TPError? = nil
         let statusCode = sendResponse.statusCode
         if !sendResponse.isSuccess() {
             errorResult = .serviceError(nil)
@@ -692,7 +692,7 @@ class APIConnector {
                 if statusCode == 401 {
                     errorResult = .unauthorized
                     // clear our session here - this will change subsequent errors to .notLoggedIn, and the app will not make network requests!
-                    self.clearSession()
+                    clearSession()
                 } else if statusCode == 404 {
                     errorResult = .dataNotFound
                 } else {
@@ -722,15 +722,15 @@ class APIConnector {
         let contentTypeStr = "application/json"
         request.setValue(contentTypeStr, forHTTPHeaderField: "Content-Type")
         
-        guard let token = self.session?.authenticationToken else {
+        guard let token = session?.authenticationToken else {
             // send an empty response back...
             LogError("user not logged in!")
             completion(SendRequestResponse(), .notLoggedIn)
             return
         }
         request.setValue("\(token)", forHTTPHeaderField: kSessionTokenHeaderId)
-        request.setValue(self.userAgentString(), forHTTPHeaderField: "User-Agent")
-        self.networkRequestHandler.sendBackgroundRequest(request, body: body) {
+        request.setValue(userAgentString(), forHTTPHeaderField: "User-Agent")
+        networkRequestHandler.sendBackgroundRequest(request, body: body) {
             (data, response, error) -> Void in
             self.dispatchSendRequestResponse(request: request, data: data, response: response, error: error, completion: completion)
         }
@@ -787,7 +787,7 @@ class NetworkRequestHandler: NSObject, URLSessionDelegate, URLSessionTaskDelegat
     init(_ completionQueue: DispatchQueue) {
         self.completionQueue = completionQueue
         super.init()
-        _ = self.backgroundURLSession()
+        _ = backgroundURLSession()
     }
     
     func sendStandardRequest(_ request: URLRequest, completion: @escaping NetworkRequestCompletionHandler) {
@@ -804,20 +804,20 @@ class NetworkRequestHandler: NSObject, URLSessionDelegate, URLSessionTaskDelegat
     
     func sendBackgroundRequest(_ request: URLRequest, body: Data, completion: @escaping NetworkRequestCompletionHandler) {
         // create a unique descriptor for this upload, and use it to identify the task as well as file we use to upload...
-        let uploadDescriptor = self.nextUploadDescriptor()
+        let uploadDescriptor = nextUploadDescriptor()
         guard let fileUrl = savePostBodyForUpload(sampleData: body, identifier: uploadDescriptor) else {
             LogError("unable to save data to file!")
-            completion(nil, nil, TidepoolKitError.internalError)
+            completion(nil, nil, TPError.internalError)
             return
         }
         // save the request info for when task completes...
         let requestInfo = TPRequestInfo(completion: completion, responseData: nil)
-        self.requestsInProgress[uploadDescriptor] = requestInfo
+        requestsInProgress[uploadDescriptor] = requestInfo
         
         let uploadSession = backgroundURLSession()
         let uploadTask = uploadSession.uploadTask(with: request, fromFile: fileUrl)
         uploadTask.taskDescription = uploadDescriptor
-        LogInfo("((self.mode.rawValue)) Created upload task: \(uploadTask.taskIdentifier)")
+        LogInfo("Created upload task: \(uploadTask.taskIdentifier)")
         uploadTask.resume()
     }
     
@@ -849,8 +849,8 @@ class NetworkRequestHandler: NSObject, URLSessionDelegate, URLSessionTaskDelegat
 
     /// Currently unused... this would be needed to implement a public api for cancel
     private func cancelTasks() {
-        LogVerbose("")
-        if let session = self.uploadSession {
+        LogVerbose("Cancelling upload tasks!")
+        if let session = uploadSession {
             session.getTasksWithCompletionHandler { (dataTasks, uploadTasks, downloadTasks) -> Void in
                 LogInfo("Canceling \(uploadTasks.count) tasks")
                 for uploadTask in uploadTasks {
@@ -920,9 +920,8 @@ class NetworkRequestHandler: NSObject, URLSessionDelegate, URLSessionTaskDelegat
     }
     
     func backgroundURLSession() -> URLSession {
-        LogVerbose("")
  
-        if let uploadSession = self.uploadSession {
+        if let uploadSession = uploadSession {
             return uploadSession
         }
         
@@ -931,17 +930,17 @@ class NetworkRequestHandler: NSObject, URLSessionDelegate, URLSessionTaskDelegat
             requestsInProgress = [:]
         }
 
-        let configuration = URLSessionConfiguration.background(withIdentifier: self.backgroundUploadSessionIdentifier)
+        let configuration = URLSessionConfiguration.background(withIdentifier: backgroundUploadSessionIdentifier)
         configuration.timeoutIntervalForResource = 60 // 60 seconds (TODO: should be configurable?)
         let newUploadSession = URLSession(configuration: configuration, delegate: self, delegateQueue: nil)
         newUploadSession.delegateQueue.maxConcurrentOperationCount = 1 // TODO: could easily support more!
-        self.uploadSession = newUploadSession
+        uploadSession = newUploadSession
         LogVerbose("Created upload session...")
         return newUploadSession
     }
     
     func invalidateBackgroundSession() {
-        self.uploadSession = nil
+        uploadSession = nil
     }
     
     private var uploadSession: URLSession?

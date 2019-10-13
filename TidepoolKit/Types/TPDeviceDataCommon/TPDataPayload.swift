@@ -37,7 +37,7 @@ public struct TPDataPayload: TPData {
     }
     
     public var rawValue: RawValue {
-        return self.payload
+        return payload
     }
     
 }

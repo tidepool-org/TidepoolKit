@@ -58,8 +58,8 @@ public class TPDataset: TPUserData, RawRepresentable {
     public override var rawValue: [String : Any] {
         var result = [String: Any]()
         result["uploadId"] = uploadId
-        result["client"] = self.client.rawValue
-        result["deduplicator"] = self.deduplicator.rawValue
+        result["client"] = client.rawValue
+        result["deduplicator"] = deduplicator.rawValue
         return result
     }
 

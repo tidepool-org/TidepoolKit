@@ -9,20 +9,19 @@
 import Foundation
 import TidepoolKit
 
-
 public class TidepoolKitUI {
     
-    private var tpKit: TidepoolKit
+    private var tidepoolKit: TidepoolKit
     
-    public init(tpKit: TidepoolKit, logger: TPKitLogging? = nil) {
-        clientLogger = logger
-        self.tpKit = tpKit
+    public init(tidepoolKit: TidepoolKit, logger: TPLogging? = nil) {
+        globalLogger = logger
+        self.tidepoolKit = tidepoolKit
     }
     
     public func logInViewController(loginSignupDelegate: LoginSignupDelegate? = nil, defaultServerHost: String?) -> UIViewController {
         let loginViewController = UIStoryboard(name: "LoginSignup", bundle: Bundle(for: LoginViewController.self)).instantiateInitialViewController() as! LoginViewController
         loginViewController.loginSignupDelegate = loginSignupDelegate
-        loginViewController.tpKit = self.tpKit
+        loginViewController.tidepoolKit = tidepoolKit
         loginViewController.serverHost = defaultServerHost
         return loginViewController
     }
@@ -30,5 +29,5 @@ public class TidepoolKitUI {
 }
 
 // global logging protocol, optional...
-var clientLogger: TPKitLogging?
+var globalLogger: TPLogging?
 
