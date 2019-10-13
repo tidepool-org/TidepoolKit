@@ -18,7 +18,14 @@ public class TidepoolKitUI {
         self.tidepoolKit = tidepoolKit
     }
     
-    public func logInViewController(loginSignupDelegate: LoginSignupDelegate? = nil, serverHost: String?) -> UIViewController {
+    /**
+     Instantiate a view controller for logging into Tidepool. The client should present this view controller, and respond to callbacks on the passed in delegate protocol.
+     
+     - parameter loginSignupDelegate: LoginSignupDelegate for callbacks.
+     - parameter serverHost: Default service host to use. The login UI supports a debug UI for changing this. The actual service host used will be passed back as part of the TPSession object upon successful login.
+     - returns: initialized login view controller.
+     */
+    public func logInViewController(loginSignupDelegate: LoginSignupDelegate, serverHost: String) -> UIViewController {
         let loginViewController = UIStoryboard(name: "LoginSignup", bundle: Bundle(for: LoginViewController.self)).instantiateInitialViewController() as! LoginViewController
         loginViewController.loginSignupDelegate = loginSignupDelegate
         loginViewController.tidepoolKit = tidepoolKit

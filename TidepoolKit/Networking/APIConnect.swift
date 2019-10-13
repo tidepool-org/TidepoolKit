@@ -100,7 +100,6 @@ class APIConnector {
     
     private let kSessionTokenHeaderId = "X-Tidepool-Session-Token"
     private let kSessionTokenResponseId = "x-tidepool-session-token"
-    let kDefaultServerHost = "stg-api.tidepool.org"
 
     private var user: TPUser?
     func loggedInUser() -> TPUser? {
@@ -119,14 +118,13 @@ class APIConnector {
     // MARK: - Login, logout, session...
     
     /// Logs in the user and obtains the session token for the session (stored internally)
-    func login(with username: String, password: String, serverHost: String?, completion: @escaping (Result<TPSession, TPError>) -> (Void)) {
+    func login(with username: String, password: String, serverHost: String, completion: @escaping (Result<TPSession, TPError>) -> (Void)) {
         
         if let error = isOfflineError() {
             completion(Result.failure(error))
             return
         }
 
-        let serverHost = serverHost ?? kDefaultServerHost
         baseUrlString = "https://\(serverHost)"
 
         // force current session nil if not already nil!

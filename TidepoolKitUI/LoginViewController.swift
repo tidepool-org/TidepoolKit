@@ -17,9 +17,10 @@ public protocol LoginSignupDelegate: AnyObject {
 
 class LoginViewController: UIViewController {
 
-    var loginSignupDelegate: LoginSignupDelegate?
+    weak var loginSignupDelegate: LoginSignupDelegate?
     var tidepoolKit: TidepoolKit!
-    var serverHost: String?
+    // server host that client wants us to use as default; may be overridden by debug UI.
+    var serverHost: String!
     
     @IBOutlet weak var inputContainerView: UIView!
     
@@ -32,9 +33,11 @@ class LoginViewController: UIViewController {
     @IBOutlet weak var loginIndicator: UIActivityIndicatorView!
     @IBOutlet weak var networkOfflineLabel: UILabel!
     
+    private var currentServerHost: String!
+
     override func viewDidLoad() {
         super.viewDidLoad()
-        
+        currentServerHost = serverHost
         configureForReachability()
         updateButtonStates()
         let notificationCenter = NotificationCenter.default
@@ -99,7 +102,7 @@ class LoginViewController: UIViewController {
         loginIndicator.startAnimating()
         
         //LogInfo("Logging into \(server?.rawValue ?? "default") server!")
-        tidepoolKit.logIn(with: emailTextField.text!, password: passwordTextField.text!, serverHost: serverHost) {
+        tidepoolKit.logIn(with: emailTextField.text!, password: passwordTextField.text!, serverHost: currentServerHost) {
             result in
             LogInfo("Login result: \(result)")
             self.processLoginResult(result)
@@ -154,11 +157,7 @@ class LoginViewController: UIViewController {
             loginButton.setTitleColor(UIColor.gray, for:UIControl.State())
         }
     }
-    
-    private var currentServerHost: String {
-        return serverHost ?? tidepoolKit.currentServerHost
-    }
-    
+        
     private func configureCurrentServerButton() {
         serviceButton.setTitle(currentServerHost, for: .normal)
     }
@@ -183,17 +182,17 @@ class LoginViewController: UIViewController {
         }
     }
     
+    let kProductionServerHost = "api.tidepool.org"
     private func presentServiceChoicePopup(_ dynamicHosts: [String]) {
-        let defaultHost = tidepoolKit.currentServerHost // default when not logged in
         var hostArray: [String] = dynamicHosts
         // always include the default host...
-        if !hostArray.contains(defaultHost) {
-            hostArray.insert(defaultHost, at: 0)
+        if !hostArray.contains(kProductionServerHost) {
+            hostArray.insert(kProductionServerHost, at: 0)
         }
         let actionSheet = UIAlertController(title: "Server" + " (" + currentServerHost + ")", message: "", preferredStyle: .alert)
         for Host in hostArray {
             actionSheet.addAction(UIAlertAction(title: Host, style: .default, handler: { Void in
-                self.serverHost = Host
+                self.currentServerHost = Host
                 self.configureCurrentServerButton()
             }))
         }

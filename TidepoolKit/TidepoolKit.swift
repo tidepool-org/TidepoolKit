@@ -70,13 +70,6 @@ public class TidepoolKit {
     }
     
     /**
-     The server host for the current session (e.g., api.tidepool.org, some test url, etc). If logged out, this will return the default server url (production). The server is specified at login time.
-     */
-    public var currentServerHost: String {
-        return apiConnect.session?.serverHost ?? apiConnect.kDefaultServerHost
-    }
-    
-    /**
      Attempts to log the user into the service.
      
      Upon successful login, TidepoolKit will be in a "logged in" state, enabling other calls (except data upload/deletion which also requires a dataset).
@@ -85,11 +78,11 @@ public class TidepoolKit {
 
      - parameter email: user's email used for logging in.
      - parameter password: user's password to the Tidepool service.
-     - parameter serverHost: The service host to use, defaults to api.tidepool.org (at least for production builds). HTTPS procotol is implied.
+     - parameter serverHost: The service host to use. HTTPS procotol is implied.
      - parameter completion: This completion handler takes a Result parameter:
      - parameter result: Result.success has a TPSession object containing a valid authorization token and a TPUser representing the account owner, or Result.failure with an error value (e.g., .unauthorized if the service has rejected the email/password).
      */
-    public func logIn(with email: String, password: String, serverHost: String? = nil, completion: @escaping (_ result: Result<TPSession, TPError>) -> Void) {
+    public func logIn(with email: String, password: String, serverHost: String, completion: @escaping (_ result: Result<TPSession, TPError>) -> Void) {
         apiConnect.login(with: email, password: password, serverHost: serverHost, completion: completion)
     }
     

@@ -100,7 +100,7 @@ class TPKitExampleViewController: UIViewController, LoginSignupDelegate {
             NSLog("Already presenting UI!")
             return
         }
-        var defaultServerHost = tidepoolKit.currentServerHost
+        var defaultServerHost = kDefaultServerHost
         NSLog("start with defaultServerHost = \(defaultServerHost)")
         if let serverHost = lastServerHostSetting.value {
             NSLog("found lastServerHostSetting == \(serverHost)")
@@ -113,6 +113,8 @@ class TPKitExampleViewController: UIViewController, LoginSignupDelegate {
             return
         }
     }
+    let kDefaultServerHost = "qa2.development.tidepool.org"
+
     
     // MARK: - LoginSignupDelegate
 
