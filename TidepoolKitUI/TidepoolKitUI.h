@@ -1,6 +1,6 @@
 //
 //  TidepoolKitUI.h
-//  TidepoolKit
+//  TidepoolKitUI
 //
 //  Created by Larry Kenyon on 8/23/19.
 //  Copyright © 2019 Tidepool Project. All rights reserved.
@@ -15,5 +15,4 @@ FOUNDATION_EXPORT double TidepoolKitUIVersionNumber;
 FOUNDATION_EXPORT const unsigned char TidepoolKitUIVersionString[];
 
 // In this header, you should import all the public headers of your framework using statements like #import <TidepoolKitUI/PublicHeader.h>
-
 

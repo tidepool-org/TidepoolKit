@@ -11,7 +11,6 @@ import TidepoolKit
 
 class TPKitTests11UserData_Cbg: TPKitTestsBase {
 
-
     let TestCbgOriginPayload1 = TPDataPayload([
         "sourceRevision": [
             "source": [

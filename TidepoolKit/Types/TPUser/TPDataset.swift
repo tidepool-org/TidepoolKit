@@ -8,7 +8,6 @@
 
 import Foundation
 
-
 // Note: extend to other types as needed
 public enum DatasetType: String, Encodable {
     case continuous = "continuous"

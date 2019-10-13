@@ -61,4 +61,3 @@ public class TPDataCbg: TPDeviceData, TPData {
 
     
 
-

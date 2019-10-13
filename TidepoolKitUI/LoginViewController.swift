@@ -1,6 +1,6 @@
 //
 //  LoginViewController.swift
-//  TidepoolKit
+//  TidepoolKitUI
 //
 //  Created by Larry Kenyon on 8/23/19.
 //  Copyright © 2019 Tidepool Project. All rights reserved.
@@ -9,13 +9,11 @@
 import UIKit
 import TidepoolKit
 
-
 public protocol LoginSignupDelegate: AnyObject {
 
     func loginSignupComplete(_ session: TPSession)
     func loginSignupCancelled()
 }
-
 
 class LoginViewController: UIViewController {
 

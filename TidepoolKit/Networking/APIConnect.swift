@@ -540,7 +540,6 @@ class APIConnector {
         }
     }
 
-
     // MARK: - Lower-level networking methods
     
     private func isOfflineError() -> TPError? {

@@ -8,7 +8,6 @@
 
 import Foundation
 
-
 public class TPDataBasalSuppressed: TPDataBasal {
     
     public var suppressed: TPDataSuppressed?

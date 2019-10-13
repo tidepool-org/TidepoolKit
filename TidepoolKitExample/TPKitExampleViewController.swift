@@ -106,7 +106,7 @@ class TPKitExampleViewController: UIViewController, LoginSignupDelegate {
             NSLog("found lastServerHostSetting == \(serverHost)")
             defaultServerHost = serverHost
         }
-        loginVC = tidepoolKitUI.logInViewController(loginSignupDelegate: self, defaultServerHost: defaultServerHost)
+        loginVC = tidepoolKitUI.logInViewController(loginSignupDelegate: self, serverHost: defaultServerHost)
         navigationController?.present(loginVC!, animated: true) {
             () -> Void in
             self.configureForReachability()
@@ -147,7 +147,6 @@ class TPKitExampleViewController: UIViewController, LoginSignupDelegate {
             self.configureForReachability()
         }
     }
-
 
 }
 
