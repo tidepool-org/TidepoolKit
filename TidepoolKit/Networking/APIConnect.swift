@@ -16,14 +16,11 @@ protocol TidepoolNetworkInterface {
 }
 
 public protocol ReachabilitySource {
-    func serviceIsReachable() -> Bool
+    var isReachable: Bool { get }
     func configureNotifier(_ on: Bool) -> Bool
 }
 
 extension Reachability: ReachabilitySource {
-    public func serviceIsReachable() -> Bool {
-        return isReachable
-    }
     public func configureNotifier(_ on: Bool) -> Bool {
         if on {
             do {
@@ -108,7 +105,7 @@ class APIConnector {
     
     func isConnectedToNetwork() -> Bool {
         if let reachability = reachability {
-            return reachability.serviceIsReachable()
+            return reachability.isReachable
         } else {
             LogError("Reachability object not configured!")
             return true

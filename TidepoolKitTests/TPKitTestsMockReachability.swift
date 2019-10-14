@@ -10,12 +10,8 @@ import Foundation
 @testable import TidepoolKit
 
 class ReachabilityMock: ReachabilitySource {
-    var isReachable = false
+    var isReachable: Bool { return false }
 
-    func serviceIsReachable() -> Bool {
-        return isReachable
-    }
-    
     func configureNotifier(_ on: Bool) -> Bool {
         return true
     }
