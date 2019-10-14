@@ -121,7 +121,7 @@ class APIConnector {
     func login(with username: String, password: String, serverHost: String, completion: @escaping (Result<TPSession, TPError>) -> (Void)) {
         
         if let error = isOfflineError() {
-            completion(Result.failure(error))
+            completion(.failure(error))
             return
         }
 
@@ -144,38 +144,33 @@ class APIConnector {
             
             guard error == nil else {
                 let error = error!
-                LogError("Login post failed with error: \(error)!")
-                completion(Result.failure(error))
+                completion(.failure(error))
                 return
             }
             
             // failures past this point should be rare, due to bad coding here or service is in a bad state...
             guard let httpResponse = sendResponse.httpResponse else {
                 let description = "Login response not a valid http response!"
-                LogError(description)
-                completion(Result.failure(.badLoginResponse(description)))
+                completion(.failure(.badLoginResponse(description)))
                 return
             }
             
             guard let token = self.parseResponseForToken(httpResponse) else {
                 let description = "Login response contained no token in header!"
-                LogError(description)
-                completion(Result.failure(.badLoginResponse(description)))
+                completion(.failure(.badLoginResponse(description)))
                 return
             }
             LogInfo("Login returned token: \(token)")
 
             guard let data = sendResponse.data else {
                 let description = "Login returned token but no data!"
-                LogError(description)
-                completion(Result.failure(.badLoginResponse(description)))
+                completion(.failure(.badLoginResponse(description)))
                 return
             }
             
             guard let serviceUser = TPUser.fromJsonData(data) else {
                 let description = "Login json response not parseable as TPUser!"
-                LogError(description)
-                completion(Result.failure(.badLoginResponse(description)))
+                completion(.failure(.badLoginResponse(description)))
                 return
             }
         
@@ -202,7 +197,7 @@ class APIConnector {
     func login(with session: TPSession) -> Result<TPSession, TPError> {
         guard self.session == nil else {
             LogInfo("Login with existing TPSession failed: already logged in!")
-            return Result.failure(.alreadyLoggedIn)
+            return .failure(.alreadyLoggedIn)
         }
         self.session = session
         baseUrlString = "https://\(session.serverHost)"
@@ -227,12 +222,12 @@ class APIConnector {
         
         let error = isOfflineOrUnauthorizedError()
         guard error == nil else {
-            completion(Result.failure(error!))
+            completion(.failure(error!))
             return
         }
         
         guard let serverHost = session?.serverHost else {
-            completion(Result.failure(.internalError))
+            completion(.failure(.internalError))
             return
         }
         baseUrlString = "https://\(serverHost)"
@@ -243,24 +238,20 @@ class APIConnector {
             sendResponse, error in
             
             guard error == nil else {
-                let error = error!
-                LogError("Refresh failed, with error: \(error)!")
                 // Note: sendRequest will clear the session on .unauthorized errors!
-                completion(Result.failure(error))
+                completion(.failure(error!))
                 return
             }
             
             guard let httpResponse = sendResponse.httpResponse else {
                 let description = "Login response not a valid http response!"
-                LogError(description)
-                completion(Result.failure(.badLoginResponse(description)))
+                completion(.failure(.badLoginResponse(description)))
                 return
             }
 
             guard let token = self.parseResponseForToken(httpResponse) else {
                 let description = "Login response contained no token in header!"
-                LogError(description)
-                completion(Result.failure(.badLoginResponse(description)))
+                completion(.failure(.badLoginResponse(description)))
                 return
             }
             LogInfo("Login returned token: \(token)")
@@ -271,24 +262,20 @@ class APIConnector {
                 sendResponse, error in
                 
                 guard error == nil else {
-                    let error = error!
-                    LogError("Login user refresh failed, with error: \(error)!")
                     // Note: the session will remain valid assuming error was not 401
-                    completion(Result.failure(error))
+                    completion(.failure(error!))
                     return
                 }
                 
                 guard let data = sendResponse.data else {
                     let description = "Login user refresh returned no data!"
-                    LogError(description)
-                    completion(Result.failure(.badLoginResponse(description)))
+                    completion(.failure(.badLoginResponse(description)))
                     return
                 }
                 
                 guard let serviceUser = TPUser.fromJsonData(data) else {
                     let description = "Login json response not parseable as TPUser!"
-                    LogError(description)
-                    completion(Result.failure(.badLoginResponse(description)))
+                    completion(.failure(.badLoginResponse(description)))
                     return
                 }
             
@@ -310,7 +297,7 @@ class APIConnector {
         if let error = isOfflineError() {
             // still clear the session if offline.
             clearSession()
-            completion(Result.failure(error))
+            completion(.failure(error))
             return
         }
 
@@ -321,8 +308,7 @@ class APIConnector {
             
             guard error == nil else {
                 let error = error!
-                LogError("Tidepool fetch failed with error: \(error)!")
-                completion(Result.failure(error))
+                completion(.failure(error))
                 return
             }
             
@@ -340,7 +326,7 @@ class APIConnector {
         
         let error = isOfflineOrUnauthorizedError()
         guard error == nil else {
-            completion(Result.failure(error!))
+            completion(.failure(error!))
             return
         }
 
@@ -350,22 +336,18 @@ class APIConnector {
             sendResponse, error in
             
             guard error == nil else {
-                let error = error!
-                LogError("Tidepool fetch failed with error: \(error)!")
-                completion(Result.failure(error))
+                completion(.failure(error!))
                 return
             }
 
             // failures past this point should be rare, due to bad coding here or service is in a bad state...
            guard let data = sendResponse.data else {
-                LogError("Tidepool fetch returned no data!")
-                completion(Result.failure(.noDataInResponse))
+                completion(.failure(.noDataInResponse))
                 return
             }
             
             guard let tpObject = T.fromJsonData(data) as? T else {
-                LogError("response not parseable as json dict!")
-                completion(Result.failure(.badJsonInResponse))
+                completion(.failure(.badJsonInResponse))
                 return
             }
 
@@ -380,13 +362,12 @@ class APIConnector {
         
         let error = isOfflineOrUnauthorizedError()
         guard error == nil else {
-            completion(Result.failure(error!))
+            completion(.failure(error!))
             return
         }
 
         guard let sessionUser = session?.user else {
-            LogError("Post failed, no user logged in!")
-            completion(Result.failure(.notLoggedIn))
+            completion(.failure(.notLoggedIn))
             return
         }
 
@@ -395,7 +376,7 @@ class APIConnector {
         
         guard let body = postable.postBodyData() else {
             LogError("Post failed, no data to post!")
-            completion(Result.failure(.internalError))
+            completion(.failure(.internalError))
             return
         }
         
@@ -403,22 +384,18 @@ class APIConnector {
             sendResponse, error in
             
             guard error == nil else {
-                let error = error!
-                LogError("Tidepool post failed with error: \(error)!")
-                completion(Result.failure(error))
+                completion(.failure(error!))
                 return
             }
             
             // failures past this point should be rare, due to bad coding here or service is in a bad state...
             guard let data = sendResponse.data else {
-                LogError("Tidepool post returned no data!")
-                completion(Result.failure(.noDataInResponse))
+                completion(.failure(.noDataInResponse))
                 return
             }
             
             guard let tpObject = T.fromJsonData(data) as? T else {
-                LogError("response not parseable as json dict!")
-                completion(Result.failure(.badJsonInResponse))
+                completion(.failure(.badJsonInResponse))
                 return
             }
             
@@ -432,7 +409,7 @@ class APIConnector {
         
         let error = isOfflineOrUnauthorizedError()
         guard error == nil else {
-            completion(Result.failure(error!))
+            completion(.failure(error!))
             return
         }
 
@@ -440,13 +417,13 @@ class APIConnector {
         
         guard let body = uploadable.postBodyData() else {
             LogError("Post failed, no data to upload!")
-            completion(Result.failure(.internalError))
+            completion(.failure(.internalError))
             return
         }
         
         guard httpMethod == "POST" || httpMethod == "DELETE" else {
             LogError("Upload does not support \(httpMethod)!")
-            completion(Result.failure(.internalError))
+            completion(.failure(.internalError))
             return
         }
         
@@ -454,16 +431,14 @@ class APIConnector {
             sendResponse, error in
             
             guard error == nil else {
-                let error = error!
-                LogError("Tidepool upload failed with error: \(error)!")
-                var adjustedError = error
+                var adjustedError = error!
                 if let statusCode = sendResponse.statusCode, statusCode == 400 {
                     if let data = sendResponse.data {
                         let badSamples = uploadable.parseErrResponse(data)
                         adjustedError = .badRequest(badSamples, response: data)
                     }
                 }
-                completion(Result.failure(adjustedError))
+                completion(.failure(adjustedError))
                 return
             }
             
@@ -498,7 +473,6 @@ class APIConnector {
                 }
                 // no match found, fall through and create one...
             case .failure(let error):
-                LogError("configureUploadId fetchDataset failed! Error: \(error)")
                 // network failure for fetchDataset, don't try creating a new one in case one already does exist, unless it was a 404 data not found case...
                 guard case .dataNotFound = error else {
                     completion(.failure(error))
@@ -555,7 +529,6 @@ class APIConnector {
     
     private func isOfflineError() -> TPError? {
         guard isConnectedToNetwork() else {
-            LogError("network offline!")
             return .offline
         }
         return nil
@@ -653,7 +626,6 @@ class APIConnector {
         if requiresToken {
             guard let token = session?.authenticationToken else {
                 // should not get this if caller already checked!!! Send an empty response back...
-                LogError("user not logged in!")
                 completion(SendRequestResponse(), .notLoggedIn)
                 return
             }
@@ -734,7 +706,6 @@ class APIConnector {
         
         guard let token = session?.authenticationToken else {
             // send an empty response back...
-            LogError("user not logged in!")
             completion(SendRequestResponse(), .notLoggedIn)
             return
         }
