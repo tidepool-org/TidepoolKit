@@ -143,9 +143,7 @@ class TPKitTests14UserData_Basal: TPKitTestsBase {
         NSLog("\(#function): next calling ensureLogin/Dataset...")
         ensureDataset() {
             dataset, session in
-            XCTAssert(tpKit.isLoggedIn())
-            
-            tpKit.putData(samples: [autoSample, schedSample, tempSample, suspendSample], into: dataset) {
+            tpKit.putData(samples: [autoSample, schedSample, tempSample, suspendSample], into: dataset, with: session) {
                 result  in
                 expectation.fulfill()
                 switch result {
@@ -167,7 +165,6 @@ class TPKitTests14UserData_Basal: TPKitTestsBase {
         NSLog("\(#function): next calling ensureLogin...")
         ensureLogin() {
             session in
-            XCTAssert(tpKit.isLoggedIn())
             // last hour:
             let end = Date()
             let start = end.addingTimeInterval(-self.oneHourTimeInterval)
@@ -176,7 +173,7 @@ class TPKitTests14UserData_Basal: TPKitTestsBase {
             //let itemDate = self.dateFromStr(dateStr)
             //let end =  itemDate.addingTimeInterval(self.oneDayTimeInterval)
             //let start = itemDate.addingTimeInterval(-self.oneDayTimeInterval)
-            tpKit.getData(for: session.user, startDate: start, endDate: end, objectTypes: "basal") {
+            tpKit.getData(for: session.user, from: start, through: end, objectTypes: "basal", with: session) {
                 result in
                 expectation.fulfill()
                 switch result {
@@ -245,12 +242,12 @@ class TPKitTests14UserData_Basal: TPKitTestsBase {
             
              // first, ensure we are logged in, and then ...
             NSLog("\(#function): next calling ensureLogin/Dataset...")
-            guard let dataset = testDataset, let _ = tpKit.currentSession else {
+            guard let dataset = testDataset, let session = testSession else {
                 XCTFail("no session and/or dataset!")
                 return
             }
             
-            tpKit.putData(samples: [item1, item2, item3, item4], into: dataset) {
+            tpKit.putData(samples: [item1, item2, item3, item4], into: dataset, with: session) {
                 result  in
                 expectation.fulfill()
                 switch result {
@@ -287,12 +284,12 @@ class TPKitTests14UserData_Basal: TPKitTestsBase {
             
             // first, ensure we are logged in, and then ...
             NSLog("\(#function): next calling ensureLogin/Dataset...")
-            guard let dataset = testDataset, let _ = tpKit.currentSession else {
+            guard let dataset = testDataset, let session = testSession else {
                 XCTFail("no session and/or dataset!")
                 return
             }
             
-            tpKit.putData(samples: [item1], into: dataset) {
+            tpKit.putData(samples: [item1], into: dataset, with: session) {
                 result  in
                 expectation.fulfill()
                 switch result {
@@ -335,12 +332,12 @@ class TPKitTests14UserData_Basal: TPKitTestsBase {
             
             // first, ensure we are logged in, and then ...
             NSLog("\(#function): next calling ensureLogin/Dataset...")
-            guard let dataset = testDataset, let _ = tpKit.currentSession else {
+            guard let dataset = testDataset, let session = testSession else {
                 XCTFail("no session and/or dataset!")
                 return
             }
             
-            tpKit.putData(samples: [item1], into: dataset) {
+            tpKit.putData(samples: [item1], into: dataset, with: session) {
                 result  in
                 expectation.fulfill()
                 switch result {

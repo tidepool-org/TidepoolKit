@@ -82,9 +82,7 @@ class TPKitTests13UserData_Bolus: TPKitTestsBase {
         NSLog("\(#function): next calling ensureLogin/Dataset...")
         ensureDataset() {
             dataset, session in
-            XCTAssert(tpKit.isLoggedIn())
-            
-            tpKit.putData(samples: [normalSample, extendedSample, combinationSample], into: dataset) {
+            tpKit.putData(samples: [normalSample, extendedSample, combinationSample], into: dataset, with: session) {
                 result  in
                 expectation.fulfill()
                 switch result {
@@ -106,7 +104,6 @@ class TPKitTests13UserData_Bolus: TPKitTestsBase {
         NSLog("\(#function): next calling ensureLogin...")
         ensureLogin() {
             session in
-            XCTAssert(tpKit.isLoggedIn())
             // last hour:
             let end = Date()
             let start = end.addingTimeInterval(-self.oneHourTimeInterval)
@@ -115,7 +112,7 @@ class TPKitTests13UserData_Bolus: TPKitTestsBase {
             //let itemDate = self.dateFromStr(dateStr)
             //let end =  itemDate.addingTimeInterval(self.onehourTimeInterval)
             //let start = itemDate.addingTimeInterval(-self.onehourTimeInterval)
-            tpKit.getData(for: session.user, startDate: start, endDate: end, objectTypes: "bolus") {
+            tpKit.getData(for: session.user, from: start, through: end, objectTypes: "bolus", with: session) {
                 result in
                 expectation.fulfill()
                 switch result {

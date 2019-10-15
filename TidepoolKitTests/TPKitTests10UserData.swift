@@ -20,7 +20,7 @@ class TPKitTests10UserData: TPKitTestsBase {
         ensureLogin() {
             session in
             // first test with default dataset...
-            tpKit.getDataset(for: session.user, matching: TPDataset()) {
+            tpKit.getDataset(for: session.user, matching: TPDataset(), with: session) {
                 result in
                 if case .failure(let error) = result {
                     expectation.fulfill()
@@ -29,7 +29,7 @@ class TPKitTests10UserData: TPKitTestsBase {
                 
                 // second, test with test dataset...
                 let testDataSet = TPDataset(client: TPDatasetClient(name: "org.tidepool.tidepoolkittest", version: "1.0.0"), deduplicator: TPDeduplicator(type: .dataset_delete_origin))
-                tpKit.getDataset(for: session.user, matching: testDataSet) {
+                tpKit.getDataset(for: session.user, matching: testDataSet, with: session) {
                     result in
                     expectation.fulfill()
                     if case .failure(let error) = result {
@@ -52,7 +52,7 @@ class TPKitTests10UserData: TPKitTestsBase {
             session in
             self.configureOffline(true)
             // test with default dataset...
-            tpKit.getDataset(for: session.user, matching: TPDataset()) {
+            tpKit.getDataset(for: session.user, matching: TPDataset(), with: session) {
                 result in
                 expectation.fulfill()
                 self.configureOffline(false)
@@ -72,7 +72,7 @@ class TPKitTests10UserData: TPKitTestsBase {
         ensureLogin() {
             session in
             // first test with default dataset...
-            tpKit.getDatasets(for: session.user) {
+            tpKit.getDatasets(for: session.user, with: session) {
                 result in
                 expectation.fulfill()
                if case .failure(let error) = result {
@@ -92,7 +92,7 @@ class TPKitTests10UserData: TPKitTestsBase {
             session in
             self.configureOffline(true)
             // test with default dataset...
-            tpKit.getDatasets(for: session.user) {
+            tpKit.getDatasets(for: session.user, with: session) {
                 result in
                 expectation.fulfill()
                 self.configureOffline(false)
@@ -110,10 +110,9 @@ class TPKitTests10UserData: TPKitTestsBase {
         NSLog("\(#function): next calling ensureLogin...")
         ensureLogin() {
             session in
-            XCTAssert(tpKit.isLoggedIn())
             let end = Date()
             let start = end.addingTimeInterval(-self.oneWeekTimeInterval)
-            tpKit.getData(for: session.user, startDate: start, endDate: end) {
+            tpKit.getData(for: session.user, from: start, through: end, with: session) {
                 result in
                 expectation.fulfill()
                 switch result {
@@ -137,10 +136,9 @@ class TPKitTests10UserData: TPKitTestsBase {
         ensureLogin() {
             session in
             self.configureOffline(true)
-            XCTAssert(tpKit.isLoggedIn())
             let end = Date()
             let start = end.addingTimeInterval(-self.oneWeekTimeInterval)
-            tpKit.getData(for: session.user, startDate: start, endDate: end) {
+            tpKit.getData(for: session.user, from: start, through: end, with: session) {
                 result in
                 expectation.fulfill()
                 self.configureOffline(false)
@@ -158,10 +156,9 @@ class TPKitTests10UserData: TPKitTestsBase {
         NSLog("\(#function): next calling ensureLogin...")
         ensureDataset() {
             dataset, session in
-            XCTAssert(tpKit.isLoggedIn())
             let end = Date()
             let start = end.addingTimeInterval(-self.oneWeekTimeInterval)
-            tpKit.getData(for: session.user, startDate: start, endDate: end) {
+            tpKit.getData(for: session.user, from: start, through: end, with: session) {
                 result in
                 switch result {
                 case .failure:
@@ -184,7 +181,7 @@ class TPKitTests10UserData: TPKitTestsBase {
                         }
                     }
                     // and delete...
-                    tpKit.deleteData(samples: deleteItems, from: dataset) {
+                    tpKit.deleteData(samples: deleteItems, from: dataset, with: session) {
                         result in
                         expectation.fulfill()
                         switch result {
@@ -210,7 +207,6 @@ class TPKitTests10UserData: TPKitTestsBase {
         NSLog("\(#function): next calling ensureLogin...")
         ensureDataset() {
             dataset, session in
-            XCTAssert(tpKit.isLoggedIn())
             var deleteItemArray: [TPDeleteItem] = []
             for _ in 1...5 {
                 let id = UUID().uuidString
@@ -227,7 +223,7 @@ class TPKitTests10UserData: TPKitTestsBase {
                 }
             }
             XCTAssert(deleteItemArray.count == 10)
-            tpKit.deleteData(samples: deleteItemArray, from: dataset) {
+            tpKit.deleteData(samples: deleteItemArray, from: dataset, with: session) {
                 result in
                 expectation.fulfill()
                 switch result {
@@ -255,7 +251,6 @@ class TPKitTests10UserData: TPKitTestsBase {
         NSLog("\(#function): next calling ensureLogin...")
         ensureDataset() {
             dataset, session in
-            XCTAssert(tpKit.isLoggedIn())
             var deleteItemArray: [TPDeleteItem] = []
             for _ in 1...5 {
                 let id = UUID().uuidString
@@ -264,7 +259,7 @@ class TPKitTests10UserData: TPKitTestsBase {
                 }
             }
             self.configureOffline(true)
-            tpKit.deleteData(samples: deleteItemArray, from: dataset) {
+            tpKit.deleteData(samples: deleteItemArray, from: dataset, with: session) {
                 result in
                 expectation.fulfill()
                 self.configureOffline(false)

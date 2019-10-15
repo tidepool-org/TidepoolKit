@@ -21,6 +21,8 @@ public class TPSession: TPUserData, RawRepresentable {
         self.serverHost = serverHost
         super.init()
     }
+    
+    public var baseUrlString: String { return "https://" + serverHost }
 
     // MARK: - RawRepresentable
 

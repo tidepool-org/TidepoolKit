@@ -43,9 +43,6 @@ extension Reachability: ReachabilitySource {
 /// - Get/put user data of various types (cbg, carb, etc.)
 class APIConnector {
     
-    /// Current session: non-nil when "loggedIn", nil when "loggedOut"
-    var session: TPSession?
-    
     /// queue to use for completion routines
     var apiQueue: DispatchQueue
     
@@ -98,11 +95,6 @@ class APIConnector {
     // lower-cased header token id
     private let sessionTokenHeaderId = "x-tidepool-session-token"
 
-    private var user: TPUser?
-    func loggedInUser() -> TPUser? {
-        return session?.user
-    }
-    
     func isConnectedToNetwork() -> Bool {
         if let reachability = reachability {
             return reachability.isReachable
@@ -122,21 +114,20 @@ class APIConnector {
             return
         }
 
-        baseUrlString = "https://\(serverHost)"
-
-        // force current session nil if not already nil!
-        session = nil
         
+
         // similar to email inputs in HTML5, trim the email (username) string of whitespace
         let trimmedUsername = username.trimmingCharacters(in: .whitespacesAndNewlines)
         
-        let urlExtension = "/auth/login"
+        let baseUrlString = "https://\(serverHost)"
+        let urlString = baseUrlString + "/auth/login"
+
         let base64LoginString = NSString(format: "%@:%@", trimmedUsername, password)
             .data(using: String.Encoding.utf8.rawValue)?
             .base64EncodedString(options: NSData.Base64EncodingOptions(rawValue: 0))
         let headers = ["Authorization" : "Basic " + base64LoginString!]
         
-        sendRequest("POST", urlExtension: urlExtension, contentType: .urlEncoded, headers:headers, requiresToken: false) {
+        sendRequest("POST", urlString: urlString, contentType: .urlEncoded, headers:headers, token: nil) {
             sendResponse, error in
             
             guard error == nil else {
@@ -171,10 +162,9 @@ class APIConnector {
                 return
             }
         
-            self.session = TPSession(token, user: serviceUser, serverHost: serverHost)
+            let session = TPSession(token, user: serviceUser, serverHost: serverHost)
             LogInfo("Logged into \(serverHost) successfully! Returned userId = \(serviceUser.userId), userName: \(String(describing: serviceUser.userEmail))")
-            NotificationCenter.default.post(name: TidepoolLogInChangedNotification, object:self)
-            completion(Result.success(self.session!))
+            completion(Result.success(session))
         }
     }
     
@@ -190,48 +180,20 @@ class APIConnector {
         }
         return token
     }
-    
-    func login(with session: TPSession) -> Result<TPSession, TPError> {
-        guard self.session == nil else {
-            LogInfo("Login with existing TPSession failed: already logged in!")
-            return .failure(.alreadyLoggedIn)
-        }
-        self.session = session
-        baseUrlString = "https://\(session.serverHost)"
-        LogInfo("Logged in with existing TPSession!")
-        NotificationCenter.default.post(name: TidepoolLogInChangedNotification, object:self)
-        return Result.success(session)
-    }
-    
-    func clearSession() {
-        LogVerbose("Clearing current session!")
-        let wasLoggedIn = session != nil
-        session = nil
-        baseUrlString = nil
         
-        // only send notification if we were logged in...
-        if wasLoggedIn {
-            NotificationCenter.default.post(name: TidepoolLogInChangedNotification, object:self)
-        }
-    }
-    
-    func refreshToken(_ completion: @escaping (_ result: Result<TPSession, TPError>) -> (Void)) {
+    func refreshToken(for session: TPSession, _ completion: @escaping (_ result: Result<TPSession, TPError>) -> (Void)) {
         
-        let error = isOfflineOrUnauthorizedError()
+        let error = isOfflineError()
         guard error == nil else {
             completion(.failure(error!))
             return
         }
         
-        guard let serverHost = session?.serverHost else {
-            completion(.failure(.internalError))
-            return
-        }
-        baseUrlString = "https://\(serverHost)"
-        
         // set our endpoint for token refresh (same as login)
         let urlExtension = "/auth/login"
-        sendRequest("GET", urlExtension: urlExtension, contentType: .urlEncoded) {
+        let urlString = session.baseUrlString + urlExtension
+        
+        sendRequest("GET", urlString: urlString, contentType: .urlEncoded, token: session.authenticationToken) {
             sendResponse, error in
             
             guard error == nil else {
@@ -255,7 +217,9 @@ class APIConnector {
 
             // refresh the login user as well (email may have changed)
             let urlExtension = "/auth/user"
-            self.sendRequest("GET", urlExtension: urlExtension, contentType: .urlEncoded) {
+            let urlString = session.baseUrlString + urlExtension
+            
+            self.sendRequest("GET", urlString: urlString, contentType: .urlEncoded, token: token) {
                 sendResponse, error in
                 
                 guard error == nil else {
@@ -276,31 +240,24 @@ class APIConnector {
                     return
                 }
             
-                self.session = TPSession(token, user: serviceUser, serverHost: serverHost)
+                let refreshedSession = TPSession(token, user: serviceUser, serverHost: session.serverHost)
                 LogInfo("Refreshed session and login user successfully! Returned userId = \(serviceUser.userId), userEmail: \(String(describing: serviceUser.userEmail))")
-                completion(Result.success(self.session!))
+                completion(Result.success(refreshedSession))
             }
         }
      }
     
-    func logout(_ completion: @escaping (Result<Bool, TPError>) -> (Void)) {
+    func logout(from session: TPSession, _ completion: @escaping (Result<Bool, TPError>) -> (Void)) {
    
-        guard session?.authenticationToken != nil else {
-            LogInfo("Logout skipped, already logged out!")
-            completion(Result.success(true))
-            return
-       }
-        
         if let error = isOfflineError() {
-            // still clear the session if offline.
-            clearSession()
             completion(.failure(error))
             return
         }
 
         let urlExtension = "/auth/logout"
+        let urlString = session.baseUrlString + urlExtension
 
-        sendRequest("POST", urlExtension: urlExtension, contentType: .urlEncoded) {
+        sendRequest("POST", urlString: urlString, contentType: .urlEncoded, token: session.authenticationToken) {
             sendResponse, error in
             
             guard error == nil else {
@@ -308,28 +265,25 @@ class APIConnector {
                 completion(.failure(error))
                 return
             }
-            
             completion(Result.success(true))
         }
-        
-        // clear retained session, so we always enter logged out state immediately, and send TidepoolLogInChangedNotification...
-        clearSession()
     }
 
     // MARK: - User api methods
     
     /// Pass type.self to enable type inference in all cases.
-    func fetch<T: TPFetchable>(_ type: T.Type, user: TPUser, parameters: [String: String]? = nil, headers: [String: String]? = nil, _ completion: @escaping (Result<T, TPError>) -> (Void)) {
+    func fetch<T: TPFetchable>(_ type: T.Type, user: TPUser, parameters: [String: String]? = nil, headers: [String: String]? = nil, with session: TPSession, _ completion: @escaping (Result<T, TPError>) -> (Void)) {
         
-        let error = isOfflineOrUnauthorizedError()
+        let error = isOfflineError()
         guard error == nil else {
             completion(.failure(error!))
             return
         }
 
         let urlExtension = T.urlPath(forUser: user.userId)
+        let urlString = session.baseUrlString + urlExtension
         
-        sendRequest("GET", urlExtension: urlExtension, parameters: parameters, headers: headers) {
+        sendRequest("GET", urlString: urlString, parameters: parameters, headers: headers, token: session.authenticationToken) {
             sendResponse, error in
             
             guard error == nil else {
@@ -355,21 +309,17 @@ class APIConnector {
     }
     
     /// Pass type.self to enable type inference in all cases.
-    private func post<P: TPPostable, T: TPFetchable>(_ postable: P, _ fetchType: T.Type, headers: [String: String]? = nil, userId: String? = nil, _ completion: @escaping (Result<T, TPError>) -> (Void)) {
+    private func post<P: TPPostable, T: TPFetchable>(_ postable: P, _ fetchType: T.Type, headers: [String: String]? = nil, userId: String? = nil, with session: TPSession, _ completion: @escaping (Result<T, TPError>) -> (Void)) {
         
-        let error = isOfflineOrUnauthorizedError()
+        let error = isOfflineError()
         guard error == nil else {
             completion(.failure(error!))
             return
         }
 
-        guard let sessionUser = session?.user else {
-            completion(.failure(.notLoggedIn))
-            return
-        }
-
-        let fetchForUserId = sessionUser.userId
+        let fetchForUserId = session.user.userId
         let urlExtension = P.urlPath(forUser: fetchForUserId)
+        let urlString = session.baseUrlString + urlExtension
         
         guard let body = postable.postBodyData() else {
             LogError("Post failed, no data to post!")
@@ -377,7 +327,7 @@ class APIConnector {
             return
         }
         
-        sendRequest("POST", urlExtension: urlExtension,  contentType: .json, headers: headers, body: body) {
+        sendRequest("POST", urlString: urlString, contentType: .json, headers: headers, token: session.authenticationToken, body: body) {
             sendResponse, error in
             
             guard error == nil else {
@@ -402,16 +352,17 @@ class APIConnector {
 
     /// Pass type.self to enable type inference in all cases.
     /// - parameter httpMethod: "POST" or "DELETE"
-    func upload<T: TPUploadable>(_ uploadable: T, uploadId: String, httpMethod: String, _ completion: @escaping (Result<Bool, TPError>) -> (Void)) {
+    func upload<T: TPUploadable>(_ uploadable: T, uploadId: String, with session: TPSession, httpMethod: String, _ completion: @escaping (Result<Bool, TPError>) -> (Void)) {
         
-        let error = isOfflineOrUnauthorizedError()
+        let error = isOfflineError()
         guard error == nil else {
             completion(.failure(error!))
             return
         }
 
         let urlExtension = "/v1/data_sets/" + uploadId + "/data"
-        
+        let urlString = session.baseUrlString + urlExtension
+
         guard let body = uploadable.postBodyData() else {
             LogError("Post failed, no data to upload!")
             completion(.failure(.internalError))
@@ -424,7 +375,7 @@ class APIConnector {
             return
         }
         
-        sendBackgroundRequest(httpMethod, urlExtension: urlExtension, body: body) {
+        sendBackgroundRequest(httpMethod, urlString: urlString, token: session.authenticationToken, body: body) {
             sendResponse, error in
             
             guard error == nil else {
@@ -448,10 +399,10 @@ class APIConnector {
     /// Call this if currentUploadId is nil, before uploading data, after fetching user profile, to ensure we have a dataset id for data uploads (if so enabled)
     /// - parameter dataset: The service is queried to find an existing dataset that matches this; if no existing match is found, a new dataset will be created.
     /// - parameter completion: Method that will be called when this async operation has completed. If successful, the matching or new TPDataset is returned.
-    func getDataset(for user: TPUser, matching configDataset: TPDataset,  _ completion: @escaping (Result<TPDataset, TPError>) -> (Void)) {
+    func getDataset(for user: TPUser, matching configDataset: TPDataset, with session: TPSession, _ completion: @escaping (Result<TPDataset, TPError>) -> (Void)) {
         
         // first try fetching one from the server that matches the one passed in...
-        getDatasets(user: user) {
+        getDatasets(for: user, with: session) {
             result in
             switch result {
             case .success(let datasets):
@@ -479,7 +430,7 @@ class APIConnector {
 
             // no matching existing dataset found, try creating a new one...
             LogInfo("Dataset for current client/version not found, try creating new dataset!")
-            self.createDataset(configDataset) {
+            self.createDataset(configDataset, with: session) {
                 result in
                 completion(result)
             }
@@ -488,10 +439,10 @@ class APIConnector {
     
     /// Ask service for the existing mobile app upload id for this client and version, if one exists.
     /// - parameter completion: Method that accepts a Result. Failure code is returned if network fetch of dataset array fails, otherwise success is returned. The success value will be an array of zero or more TPDataset objects.
-    internal func getDatasets(user: TPUser, _ completion: @escaping (Result<[TPDataset], TPError>) -> (Void)) {
+    internal func getDatasets(for user: TPUser, with session: TPSession, _ completion: @escaping (Result<[TPDataset], TPError>) -> (Void)) {
         LogInfo("Try fetching existing dataset!")
         
-        fetch(TPDatasetArray.self, user: user) {
+        fetch(TPDatasetArray.self, user: user, with: session) {
             result in
             switch result {
             case .success(let dataSetArray):
@@ -506,10 +457,10 @@ class APIConnector {
     
     /// Ask service to create a new upload id. Should only be called after fetchDataSet returns a nil array (no existing upload id).
     /// - parameter completion: Method that accepts an optional APIDataSet if the create succeeds, and an error result if not.
-    private func createDataset(_ configDataset: TPDataset, _ completion: @escaping (Result<TPDataset, TPError>) -> (Void)) {
+    private func createDataset(_ configDataset: TPDataset, with session: TPSession, _ completion: @escaping (Result<TPDataset, TPError>) -> (Void)) {
         LogInfo("Try creating a new dataset!")
         
-        post(configDataset, TPDataset.self) {
+        post(configDataset, TPDataset.self, with: session) {
             result in
             switch result {
             case .success(let apiDataSet):
@@ -527,16 +478,6 @@ class APIConnector {
     private func isOfflineError() -> TPError? {
         guard isConnectedToNetwork() else {
             return .offline
-        }
-        return nil
-    }
-    
-    private func isOfflineOrUnauthorizedError() -> TPError? {
-        if let error = isOfflineError() {
-            return error
-        }
-        guard session?.authenticationToken != nil else {
-            return .notLoggedIn
         }
         return nil
     }
@@ -587,10 +528,9 @@ class APIConnector {
     typealias SendRequestCompletionHandler = (SendRequestResponse, TPError?) -> Void
 
     /// Assumes onLine, and authorized (unless requiresToken = false is passed). Call isOfflineOrUnauthorizedError() to check before calling this method!
-    private func sendRequest(_ method: String, urlExtension: String, contentType: ContentType? = nil, parameters: [String: String]? = nil, headers: [String: String]? = nil, requiresToken: Bool = true, body: Data? = nil, completion: @escaping SendRequestCompletionHandler) {
+    private func sendRequest(_ method: String, urlString: String, contentType: ContentType? = nil, parameters: [String: String]? = nil, headers: [String: String]? = nil, token: String?, body: Data? = nil, completion: @escaping SendRequestCompletionHandler) {
         
-        var urlString = baseUrlString! + urlExtension
-        urlString = urlString.addingPercentEncoding(withAllowedCharacters: CharacterSet.urlQueryAllowed)!
+        let urlString = urlString.addingPercentEncoding(withAllowedCharacters: CharacterSet.urlQueryAllowed)!
 
         var queryParameters: [URLQueryItem] = []
         if let parameters = parameters {
@@ -620,12 +560,7 @@ class APIConnector {
             }
         }
         
-        if requiresToken {
-            guard let token = session?.authenticationToken else {
-                // should not get this if caller already checked!!! Send an empty response back...
-                completion(SendRequestResponse(), .notLoggedIn)
-                return
-            }
+        if let token = token {
             request.setValue("\(token)", forHTTPHeaderField: sessionTokenHeaderId)
         }
         
@@ -670,8 +605,6 @@ class APIConnector {
             if let statusCode = statusCode {
                 if statusCode == 401 {
                     errorResult = .unauthorized
-                    // clear our session here - this will change subsequent errors to .notLoggedIn, and the app will not make network requests!
-                    clearSession()
                 } else if statusCode == 404 {
                     errorResult = .dataNotFound
                 } else {
@@ -691,21 +624,14 @@ class APIConnector {
     */
     
     /// Assumes onLine, and authorized. Call isOfflineOrUnauthorizedError() to check before calling this method!
-    private func sendBackgroundRequest(_ method: String, urlExtension: String, body: Data, completion: @escaping SendRequestCompletionHandler) {
+    private func sendBackgroundRequest(_ method: String, urlString: String, token: String, body: Data, completion: @escaping SendRequestCompletionHandler) {
         
-        let urlString = baseUrlString! + urlExtension
         let url = URL(string: urlString)!
         var request = URLRequest(url: url)
         request.httpMethod = method
         
         let contentTypeStr = "application/json"
         request.setValue(contentTypeStr, forHTTPHeaderField: "Content-Type")
-        
-        guard let token = session?.authenticationToken else {
-            // send an empty response back...
-            completion(SendRequestResponse(), .notLoggedIn)
-            return
-        }
         request.setValue("\(token)", forHTTPHeaderField: sessionTokenHeaderId)
         request.setValue(userAgentString(), forHTTPHeaderField: "User-Agent")
         networkRequestHandler.sendBackgroundRequest(request, body: body) {

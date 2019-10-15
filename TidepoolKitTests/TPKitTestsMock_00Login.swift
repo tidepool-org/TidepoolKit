@@ -15,11 +15,6 @@ class TPKitTestsMock_00Login: TPKitTestsBase {
         NSLog("\(#function)")
         let expectation = self.expectation(description: "All login test cases complete")
         let tpKit = getTpKitSingleton()
-        if tpKit.isLoggedIn() {
-            tpKit.logOut() {
-                _ in
-            }
-        }
         let mockNetworkInterface = TestNetworkInterfaceLogin(tpKit)
         tpKit.configureNetworkInterface(mockNetworkInterface)
         // add .succeed at end since all tests assume we are logged out.

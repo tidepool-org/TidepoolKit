@@ -64,7 +64,6 @@ class TPKitTests11UserData_Cbg: TPKitTestsBase {
         NSLog("\(#function): next calling ensureLogin...")
         ensureDataset() {
             dataset, session in
-            XCTAssert(tpKit.isLoggedIn())
             let newId = UUID.init().uuidString
             let origin = TPDataOrigin(id: newId, name: "org.tidepool.tidepoolKitTest", type: .service, payload: self.TestCbgOriginPayload2)
             let payload = self.TestCbgPayload2
@@ -72,7 +71,7 @@ class TPKitTests11UserData_Cbg: TPKitTestsBase {
             cbgSample.origin = origin
             cbgSample.payload = payload
             NSLog("created TPDataCbg: \(cbgSample)")
-            tpKit.putData(samples: [cbgSample], into: dataset) {
+            tpKit.putData(samples: [cbgSample], into: dataset, with: session) {
                 result  in
                 expectation.fulfill()
                 switch result {
@@ -95,7 +94,6 @@ class TPKitTests11UserData_Cbg: TPKitTestsBase {
         NSLog("\(#function): next calling ensureLogin...")
         ensureDataset() {
             dataset, session in
-            XCTAssert(tpKit.isLoggedIn())
             let newId = UUID.init().uuidString
             let origin = TPDataOrigin(id: newId, name: "org.tidepool.tidepoolKitTest", type: .service, payload: self.TestCbgOriginPayload2)
             let payload = self.TestCbgPayload2
@@ -104,7 +102,7 @@ class TPKitTests11UserData_Cbg: TPKitTestsBase {
             cbgSample.payload = payload
             NSLog("created TPDataCbg: \(cbgSample)")
             self.configureOffline(true)
-            tpKit.putData(samples: [cbgSample], into: dataset) {
+            tpKit.putData(samples: [cbgSample], into: dataset, with: session) {
                 result  in
                 expectation.fulfill()
                 self.configureOffline(false)
@@ -122,7 +120,6 @@ class TPKitTests11UserData_Cbg: TPKitTestsBase {
         NSLog("\(#function): next calling ensureLogin...")
         ensureDataset() {
             dataset, session in
-            XCTAssert(tpKit.isLoggedIn())
             let newId = UUID.init().uuidString
             let origin = TPDataOrigin(id: newId, name: "org.tidepool.tidepoolKitTest", type: .service, payload: self.TestCbgOriginPayload2)
             let payload = self.TestCbgPayload2
@@ -132,7 +129,7 @@ class TPKitTests11UserData_Cbg: TPKitTestsBase {
             NSLog("created TPDataCbg: \(cbgSample)")
             // now create a similar cbg item that is out of bounds...
             let cbgSample2 = TPDataCbg(time: Date().addingTimeInterval(-5), value: 1100, units: .milligramsPerDeciliter)
-            tpKit.putData(samples: [cbgSample, cbgSample2], into: dataset) {
+            tpKit.putData(samples: [cbgSample, cbgSample2], into: dataset, with: session) {
                 result  in
                 expectation.fulfill()
                 switch result {

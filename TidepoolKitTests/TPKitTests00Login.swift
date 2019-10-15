@@ -14,11 +14,6 @@ class TPKitTests00Login: TPKitTestsBase {
     func test01LoginBadUser() {
         let expectation = self.expectation(description: "Login call fails with unauthorized")
         let tpKit = getTpKitSingleton()
-        if tpKit.isLoggedIn() {
-            tpKit.logOut() {
-                _ in
-            }
-        }
         tpKit.logIn(with: "badUserEmail@bad.com", password: testPassword, serverHost: testServerHost) {
             result in
              expectation.fulfill()
@@ -42,9 +37,6 @@ class TPKitTests00Login: TPKitTestsBase {
     func test02Login() {
         let expectation = self.expectation(description: "login call completes")
         let tpKit = getTpKitSingleton()
-        if tpKit.isLoggedIn() {
-            tpKit.logOut() { _ in }
-        }
         tpKit.logIn(with: testEmail, password: testPassword, serverHost: testServerHost) {
             result in
             expectation.fulfill()
@@ -52,6 +44,7 @@ class TPKitTests00Login: TPKitTestsBase {
             case .success(let session):
                 XCTAssert(session.user.userEmail != nil)
                 XCTAssert(session.user.userEmail! == testEmail)
+                testSession = session
             case .failure(let error):
                 XCTFail("Login failed: \(error)")
             }
@@ -65,7 +58,7 @@ class TPKitTests00Login: TPKitTestsBase {
         let expectation = self.expectation(description: "logIn/logOut completes")
         ensureLogin() {
             session in
-            tpKit.logOut() {
+            tpKit.logOut(from: session) {
                 result in
                 expectation.fulfill()
                 switch result {
@@ -80,65 +73,36 @@ class TPKitTests00Login: TPKitTestsBase {
         waitForExpectations(timeout: 20.0, handler: nil)
     }
 
-    
-    func test04LoginWithSavedSession() {
-        let tpKit = getTpKitSingleton()
-        let expectation = self.expectation(description: "login with saved session completed")
-        ensureLogin() {
-            session in
-            let session = tpKit.currentSession!
-            tpKit.clearSession() // non-public test hook to clear state
-            let result = tpKit.logIn(with: session)
-            if case .failure = result {
-                XCTFail("Login with saved session failed!")
-            } else {
-                tpKit.refreshSession() {
-                    result in
-                    expectation.fulfill()
-                    switch result {
-                    case .success:
-                        XCTAssert(tpKit.isLoggedIn() == true)
-                    case .failure(let error):
-                        XCTFail("Failed to refresh token, error: \(error)")
-                    }
-                }
-            }
-        }
-        waitForExpectations(timeout: 20.0, handler: nil)
-    }
-    
+
     func test05RefreshWithExpiredToken() {
         let tpKit = getTpKitSingleton()
         let expectation = self.expectation(description: "Login, logout, and refresh completed")
         ensureLogin() {
             session in
-            tpKit.logOut() {
+            // logging out, so be sure to nil the saved test session!
+            testSession = nil
+            tpKit.logOut(from: session) {
                 result in
                 switch result {
                 case .success:
                     // now login with just saved session credentials...
-                    let result = tpKit.logIn(with: session)
-                    if case .failure = result {
-                        XCTFail("Login with saved session failed!")
-                    } else {
-                        // and attempt to refresh auth token...
-                        tpKit.refreshSession() {
-                            result in
-                            expectation.fulfill()
-                            switch result {
-                            case .success:
-                                XCTFail("Refresh of expired token incorrectly succeeded!")
-                            case .failure(let error):
-                                if case .unauthorized = error {
-                                    NSLog("Correctly failed to refresh token, error: \(error)")
-                                    XCTAssert(tpKit.currentSession == nil)
-                                } else {
-                                    XCTFail("refresh correctly failed, but with unexpected error: \(error)")
-                                }
-                             }
+                    // now attempt to refresh auth token...
+                    tpKit.refreshSession(session) {
+                        result in
+                        expectation.fulfill()
+                        switch result {
+                        case .success:
+                            XCTFail("Refresh of expired token incorrectly succeeded!")
+                        case .failure(let error):
+                            if case .unauthorized = error {
+                                NSLog("Correctly failed to refresh token, error: \(error)")
+                            } else {
+                                XCTFail("refresh correctly failed, but with unexpected error: \(error)")
+                            }
                         }
                     }
-                 case .failure(let error):
+                    
+                case .failure(let error):
                     XCTFail("LogOut failed: \(error)")
                 }
             }
@@ -150,9 +114,6 @@ class TPKitTests00Login: TPKitTestsBase {
         let expectation = self.expectation(description: "Login call fails with offline error")
         let tpKit = getTpKitSingleton()
         configureOffline(true)
-        if tpKit.isLoggedIn() {
-            tpKit.logOut() { _ in }
-        }
         tpKit.logIn(with: "badUserEmail@bad.com", password: testPassword, serverHost: testServerHost) {
             result in
             expectation.fulfill()

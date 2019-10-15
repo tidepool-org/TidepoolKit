@@ -17,13 +17,10 @@ public enum TPError: Error {
     case dataNotFound                               // http error 404 (may be turned into a successful nil object return)
     case badLoginResponse(_ description: String?)   // login failures other than .unauthorized
     case offline                                    // network unavailable
-    case notLoggedIn                                // call requires login
-    case alreadyLoggedIn                            // login with Session requires logged out state!
     case serviceError(_ statusCode: Int?)           // service error, status code if available
     case noUploadId                                 // dataset uploadId is nil!
     case noDataInResponse                           // service returned no data in fetch or post
     case badJsonInResponse                          // service data was not json parseable into expected object
     case internalError                              // some framework error (not service)
-    case unimplemented                              // used for any unfinished feaures...
 }
 

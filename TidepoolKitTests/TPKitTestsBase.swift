@@ -15,6 +15,7 @@ let testPassword: String = "larry+kittest"
 let testServerHost = "qa2.development.tidepool.org"
 var testDataset: TPDataset?
 var tidepoolKit: TidepoolKit?
+var testSession: TPSession?
 
 class TPKitTestsBase: XCTestCase {
 
@@ -49,12 +50,13 @@ class TPKitTestsBase: XCTestCase {
     
     func ensureLogin(completion: @escaping (TPSession) -> Void) {
         let tpKit = getTpKitSingleton()
-        guard let session = tpKit.currentSession else {
+        guard let session = testSession else {
             tpKit.logIn(with: testEmail, password: testPassword, serverHost: testServerHost) {
                 result in
                 switch result {
                 case .success (let session):
                     NSLog("Logged into server creating session: \(session)")
+                    testSession = session
                     completion(session)
                 case .failure(let error):
                     XCTFail("Login failed: \(error)")
@@ -77,7 +79,7 @@ class TPKitTestsBase: XCTestCase {
                 return
             }
             let testDataSet = TPDataset(client: TPDatasetClient(name: "org.tidepool.tidepoolkittest", version: "1.0.0"), deduplicator: TPDeduplicator(type: .dataset_delete_origin))
-            tpKit.getDataset(for: session.user, matching: testDataSet) {
+            tpKit.getDataset(for: session.user, matching: testDataSet, with: session) {
                 result in
                 switch result {
                 case .failure(let error):
@@ -158,8 +160,7 @@ class TPKitTestsBase: XCTestCase {
         // first, ensure we are logged in, and then ...
         ensureDataset() {
             dataset, session in
-            XCTAssert(tpKit.isLoggedIn())
-            tpKit.getData(for: session.user, startDate: start, endDate: end) {
+            tpKit.getData(for: session.user, from: start, through: end, with: session) {
                 result in
                 switch result {
                 case .failure(let error):
@@ -181,7 +182,7 @@ class TPKitTestsBase: XCTestCase {
                         }
                     }
                     // and delete...
-                    tpKit.deleteData(samples: deleteItems, from: dataset) {
+                    tpKit.deleteData(samples: deleteItems, from: dataset, with: session) {
                         result in
                         switch result {
                         case .failure:

@@ -18,7 +18,7 @@ class TPKitTests01UserInfo: TPKitTestsBase {
         NSLog("\(#function): next calling ensureLogin...")
         ensureLogin() {
             session in
-            tpKit.getProfileInfo(for: session.user) {
+            tpKit.getProfileInfo(for: session.user, with: session) {
                 result in
                 expectation.fulfill()
                 switch result {
@@ -42,7 +42,7 @@ class TPKitTests01UserInfo: TPKitTestsBase {
         ensureLogin() {
             session in
             self.configureOffline(true)
-            tpKit.getProfileInfo(for: session.user) {
+            tpKit.getProfileInfo(for: session.user, with: session) {
                 result in
                 expectation.fulfill()
                 // be sure to restore reachability...
@@ -63,7 +63,7 @@ class TPKitTests01UserInfo: TPKitTestsBase {
         NSLog("\(#function): next calling ensureLogin...")
         ensureLogin() {
             session in
-            tpKit.getSettingsInfo(for: session.user) {
+            tpKit.getSettingsInfo(for: session.user, with: session) {
                 result in
                 expectation.fulfill()
                 switch result {
@@ -90,7 +90,7 @@ class TPKitTests01UserInfo: TPKitTestsBase {
         ensureLogin() {
             session in
             self.configureOffline(true)
-            tpKit.getSettingsInfo(for: session.user) {
+            tpKit.getSettingsInfo(for: session.user, with: session) {
                 result in
                 expectation.fulfill()
                 // be sure to restore reachability...
@@ -109,14 +109,14 @@ class TPKitTests01UserInfo: TPKitTestsBase {
         NSLog("\(#function): next calling ensureLogin...")
         ensureLogin() {
             session in
-            tpKit.getAccessUsers(for: session.user) {
+            tpKit.getAccessUsers(for: session.user, with: session) {
                 result in
                 switch result {
                 case .success(let accessUsers):
                     NSLog("access users fetch succeeded: \n\(accessUsers)")
                     // should have returned at least the root object... try fetching that profile (same as logged in user). TODO: try fetching all profiles...
                     XCTAssert(!accessUsers.isEmpty)
-                    tpKit.getProfileInfo(for: accessUsers.last!) {
+                    tpKit.getProfileInfo(for: accessUsers.last!, with: session) {
                         result in
                         expectation.fulfill()
                         switch result {
@@ -144,7 +144,7 @@ class TPKitTests01UserInfo: TPKitTestsBase {
         ensureLogin() {
             session in
             self.configureOffline(true)
-            tpKit.getAccessUsers(for: session.user) {
+            tpKit.getAccessUsers(for: session.user, with: session) {
                 result in
                 expectation.fulfill()
                 // be sure to restore reachability...

@@ -35,12 +35,10 @@ class TPKitTests12UserData_Food: TPKitTestsBase {
         NSLog("\(#function): next calling ensureLogin...")
         ensureDataset() {
             dataset, session in
-            XCTAssert(tpKit.isLoggedIn())
-
             let foodSample = self.createCarbItem(30)
             XCTAssertNotNil(foodSample, "\(#function) failed to create food sample!")
 
-            tpKit.putData(samples: [foodSample!], into: dataset) {
+            tpKit.putData(samples: [foodSample!], into: dataset, with: session) {
                 result  in
                 expectation.fulfill()
                 switch result {
@@ -155,12 +153,10 @@ class TPKitTests12UserData_Food: TPKitTestsBase {
         NSLog("\(#function): next calling ensureLogin...")
         ensureDataset() {
             dataset, session in
-            XCTAssert(tpKit.isLoggedIn())
-            
             let foodSample = self.createFoodItem()
             XCTAssertNotNil(foodSample, "\(#function) failed to create food sample!")
             
-            tpKit.putData(samples: [foodSample!], into: dataset) {
+            tpKit.putData(samples: [foodSample!], into: dataset, with: session) {
                 result  in
                 expectation.fulfill()
                 switch result {
@@ -183,12 +179,10 @@ class TPKitTests12UserData_Food: TPKitTestsBase {
         NSLog("\(#function): next calling ensureLogin...")
         ensureDataset() {
             dataset, session in
-            XCTAssert(tpKit.isLoggedIn())
-            
             let foodSample = self.createFoodItem()
             XCTAssertNotNil(foodSample, "\(#function) failed to create food sample!")
             
-            tpKit.putData(samples: [foodSample!], into: dataset) {
+            tpKit.putData(samples: [foodSample!], into: dataset, with: session) {
                 result  in
                 switch result {
                 case .failure:
@@ -198,7 +192,7 @@ class TPKitTests12UserData_Food: TPKitTestsBase {
                     NSLog("\(#function) upload succeeded!")
                     let end = Date()
                     let start = end.addingTimeInterval(-60) // check samples in last minute...
-                    tpKit.getData(for: session.user, startDate: start, endDate: end, objectTypes: "food") {
+                    tpKit.getData(for: session.user, from: start, through: end, objectTypes: "food", with: session) {
                         result in
                         expectation.fulfill()
                         switch result {
