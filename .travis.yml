@@ -5,4 +5,4 @@ osx_image: xcode11.3
 script:
    - set -o pipefail && xcodebuild -project 'TidepoolKit.xcodeproj' -scheme 'Shared' build -destination 'name=iPhone 8' build | xcpretty
    - set -o pipefail && xcodebuild -project 'TidepoolKit.xcodeproj' -scheme 'Shared' build -destination 'name=iPhone 8' test | xcpretty
-   - set -o pipefail && xcodebuild -project 'TidepoolKit.xcodeproj' -scheme 'LoopKit Example' -destination 'name=iPhone 8' build CODE_SIGNING_ALLOWED=NO | xcpretty
+   - set -o pipefail && xcodebuild -project 'TidepoolKit.xcodeproj' -scheme 'TidepoolKit Example' -destination 'name=iPhone 8' build CODE_SIGNING_ALLOWED=NO | xcpretty
