@@ -7,15 +7,39 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		A903670523D939AE009BD8C5 /* LabelTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = A903670423D939AE009BD8C5 /* LabelTableViewCell.swift */; };
+		A92F62D223D7D0E3007B3CA6 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = A92F62D123D7D0E3007B3CA6 /* Assets.xcassets */; };
 		A943535A23C932A10093CFA3 /* TidepoolKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = A943535023C932A10093CFA3 /* TidepoolKit.framework */; };
 		A943536123C932A10093CFA3 /* TidepoolKit.h in Headers */ = {isa = PBXBuildFile; fileRef = A943535323C932A10093CFA3 /* TidepoolKit.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		A943537823C932BF0093CFA3 /* TidepoolKitUI.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = A943536F23C932BF0093CFA3 /* TidepoolKitUI.framework */; };
 		A943537F23C932BF0093CFA3 /* TidepoolKitUI.h in Headers */ = {isa = PBXBuildFile; fileRef = A943537123C932BF0093CFA3 /* TidepoolKitUI.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		A943538D23C932D10093CFA3 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = A943538C23C932D10093CFA3 /* AppDelegate.swift */; };
-		A943538F23C932D10093CFA3 /* ViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = A943538E23C932D10093CFA3 /* ViewController.swift */; };
+		A943538F23C932D10093CFA3 /* RootTableViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = A943538E23C932D10093CFA3 /* RootTableViewController.swift */; };
 		A943539223C932D10093CFA3 /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = A943539023C932D10093CFA3 /* Main.storyboard */; };
 		A943539423C932D20093CFA3 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = A943539323C932D20093CFA3 /* Assets.xcassets */; };
 		A943539723C932D20093CFA3 /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = A943539523C932D20093CFA3 /* LaunchScreen.storyboard */; };
+		A94D7D4323E242D60087A9C0 /* Locked.swift in Sources */ = {isa = PBXBuildFile; fileRef = A94D7D4223E242D60087A9C0 /* Locked.swift */; };
+		A94D7D4523E243780087A9C0 /* UnfairLock.swift in Sources */ = {isa = PBXBuildFile; fileRef = A94D7D4423E243780087A9C0 /* UnfairLock.swift */; };
+		A973CD2323D68B6400C44032 /* TLogging.swift in Sources */ = {isa = PBXBuildFile; fileRef = A973CD2223D68B6400C44032 /* TLogging.swift */; };
+		A973CD2523D68E9D00C44032 /* LoginSignupViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = A973CD2423D68E9D00C44032 /* LoginSignupViewController.swift */; };
+		A973CD2723D68FC300C44032 /* TAPI+UI.swift in Sources */ = {isa = PBXBuildFile; fileRef = A973CD2623D68FC300C44032 /* TAPI+UI.swift */; };
+		A973CD2923D68FE000C44032 /* TAPI.swift in Sources */ = {isa = PBXBuildFile; fileRef = A973CD2823D68FE000C44032 /* TAPI.swift */; };
+		A973CD2B23D6916300C44032 /* TidepoolKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = A943535023C932A10093CFA3 /* TidepoolKit.framework */; };
+		A973CD3023D6916C00C44032 /* TidepoolKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = A943535023C932A10093CFA3 /* TidepoolKit.framework */; };
+		A973CD3123D6916C00C44032 /* TidepoolKit.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = A943535023C932A10093CFA3 /* TidepoolKit.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
+		A973CD3423D6916C00C44032 /* TidepoolKitUI.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = A943536F23C932BF0093CFA3 /* TidepoolKitUI.framework */; };
+		A973CD3523D6916C00C44032 /* TidepoolKitUI.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = A943536F23C932BF0093CFA3 /* TidepoolKitUI.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
+		A973CD3B23D692D600C44032 /* LoginSignup.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = A973CD3D23D692D600C44032 /* LoginSignup.storyboard */; };
+		A994916723FB288E00865738 /* Logging.swift in Sources */ = {isa = PBXBuildFile; fileRef = A994916623FB288E00865738 /* Logging.swift */; };
+		A994916923FB4CF500865738 /* TEnvironment.swift in Sources */ = {isa = PBXBuildFile; fileRef = A994916823FB4CF500865738 /* TEnvironment.swift */; };
+		A994916B23FB4D3200865738 /* TSession.swift in Sources */ = {isa = PBXBuildFile; fileRef = A994916A23FB4D3200865738 /* TSession.swift */; };
+		A994916D23FB54D200865738 /* TError.swift in Sources */ = {isa = PBXBuildFile; fileRef = A994916C23FB54D200865738 /* TError.swift */; };
+		A994917223FB6C1100865738 /* StatusTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = A994917123FB6C1100865738 /* StatusTableViewCell.swift */; };
+		A994917423FB88A300865738 /* DNS+TEnvironment.swift in Sources */ = {isa = PBXBuildFile; fileRef = A994917323FB88A300865738 /* DNS+TEnvironment.swift */; };
+		A994917A23FE15CE00865738 /* HTTPURLResponse.swift in Sources */ = {isa = PBXBuildFile; fileRef = A994917923FE15CE00865738 /* HTTPURLResponse.swift */; };
+		A994917C23FE15E000865738 /* Bundle.swift in Sources */ = {isa = PBXBuildFile; fileRef = A994917B23FE15E000865738 /* Bundle.swift */; };
+		A994918023FE1AD500865738 /* ProcessInfo.swift in Sources */ = {isa = PBXBuildFile; fileRef = A994917F23FE1AD500865738 /* ProcessInfo.swift */; };
+		A9EAB8E823DFC77E00874D2A /* DNS.swift in Sources */ = {isa = PBXBuildFile; fileRef = A9EAB8E723DFC77E00874D2A /* DNS.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -61,9 +85,47 @@
 			remoteGlobalIDString = A943536E23C932BF0093CFA3;
 			remoteInfo = TidepoolKitUI;
 		};
+		A973CD2D23D6916300C44032 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = A943534723C932A10093CFA3 /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = A943534F23C932A10093CFA3;
+			remoteInfo = TidepoolKit;
+		};
+		A973CD3223D6916C00C44032 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = A943534723C932A10093CFA3 /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = A943534F23C932A10093CFA3;
+			remoteInfo = TidepoolKit;
+		};
+		A973CD3623D6916C00C44032 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = A943534723C932A10093CFA3 /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = A943536E23C932BF0093CFA3;
+			remoteInfo = TidepoolKitUI;
+		};
 /* End PBXContainerItemProxy section */
 
+/* Begin PBXCopyFilesBuildPhase section */
+		A973CD3823D6916C00C44032 /* Embed Frameworks */ = {
+			isa = PBXCopyFilesBuildPhase;
+			buildActionMask = 2147483647;
+			dstPath = "";
+			dstSubfolderSpec = 10;
+			files = (
+				A973CD3123D6916C00C44032 /* TidepoolKit.framework in Embed Frameworks */,
+				A973CD3523D6916C00C44032 /* TidepoolKitUI.framework in Embed Frameworks */,
+			);
+			name = "Embed Frameworks";
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXCopyFilesBuildPhase section */
+
 /* Begin PBXFileReference section */
+		A903670423D939AE009BD8C5 /* LabelTableViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LabelTableViewCell.swift; sourceTree = "<group>"; };
+		A92F62D123D7D0E3007B3CA6 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		A943535023C932A10093CFA3 /* TidepoolKit.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = TidepoolKit.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		A943535323C932A10093CFA3 /* TidepoolKit.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = TidepoolKit.h; sourceTree = "<group>"; };
 		A943535423C932A10093CFA3 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
@@ -76,11 +138,28 @@
 		A943537E23C932BF0093CFA3 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		A943538A23C932D10093CFA3 /* TidepoolKit Example.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "TidepoolKit Example.app"; sourceTree = BUILT_PRODUCTS_DIR; };
 		A943538C23C932D10093CFA3 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
-		A943538E23C932D10093CFA3 /* ViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ViewController.swift; sourceTree = "<group>"; };
+		A943538E23C932D10093CFA3 /* RootTableViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RootTableViewController.swift; sourceTree = "<group>"; };
 		A943539123C932D10093CFA3 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/Main.storyboard; sourceTree = "<group>"; };
 		A943539323C932D20093CFA3 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		A943539623C932D20093CFA3 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/LaunchScreen.storyboard; sourceTree = "<group>"; };
 		A943539823C932D20093CFA3 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		A94D7D4223E242D60087A9C0 /* Locked.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Locked.swift; sourceTree = "<group>"; };
+		A94D7D4423E243780087A9C0 /* UnfairLock.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UnfairLock.swift; sourceTree = "<group>"; };
+		A973CD2223D68B6400C44032 /* TLogging.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TLogging.swift; sourceTree = "<group>"; };
+		A973CD2423D68E9D00C44032 /* LoginSignupViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LoginSignupViewController.swift; sourceTree = "<group>"; };
+		A973CD2623D68FC300C44032 /* TAPI+UI.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "TAPI+UI.swift"; sourceTree = "<group>"; };
+		A973CD2823D68FE000C44032 /* TAPI.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TAPI.swift; sourceTree = "<group>"; };
+		A973CD3C23D692D600C44032 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/LoginSignup.storyboard; sourceTree = "<group>"; };
+		A994916623FB288E00865738 /* Logging.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Logging.swift; sourceTree = "<group>"; };
+		A994916823FB4CF500865738 /* TEnvironment.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TEnvironment.swift; sourceTree = "<group>"; };
+		A994916A23FB4D3200865738 /* TSession.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TSession.swift; sourceTree = "<group>"; };
+		A994916C23FB54D200865738 /* TError.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TError.swift; sourceTree = "<group>"; };
+		A994917123FB6C1100865738 /* StatusTableViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StatusTableViewCell.swift; sourceTree = "<group>"; };
+		A994917323FB88A300865738 /* DNS+TEnvironment.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "DNS+TEnvironment.swift"; sourceTree = "<group>"; };
+		A994917923FE15CE00865738 /* HTTPURLResponse.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HTTPURLResponse.swift; sourceTree = "<group>"; };
+		A994917B23FE15E000865738 /* Bundle.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Bundle.swift; sourceTree = "<group>"; };
+		A994917F23FE1AD500865738 /* ProcessInfo.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProcessInfo.swift; sourceTree = "<group>"; };
+		A9EAB8E723DFC77E00874D2A /* DNS.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DNS.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -103,6 +182,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				A973CD2B23D6916300C44032 /* TidepoolKit.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -118,6 +198,8 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				A973CD3023D6916C00C44032 /* TidepoolKit.framework in Frameworks */,
+				A973CD3423D6916C00C44032 /* TidepoolKitUI.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -133,6 +215,7 @@
 				A943537B23C932BF0093CFA3 /* TidepoolKitUITests */,
 				A943538B23C932D10093CFA3 /* TidepoolKit Example */,
 				A943535123C932A10093CFA3 /* Products */,
+				A973CD2A23D6916300C44032 /* Frameworks */,
 			);
 			sourceTree = "<group>";
 		};
@@ -153,6 +236,12 @@
 			children = (
 				A943535323C932A10093CFA3 /* TidepoolKit.h */,
 				A943535423C932A10093CFA3 /* Info.plist */,
+				A973CD2823D68FE000C44032 /* TAPI.swift */,
+				A994916823FB4CF500865738 /* TEnvironment.swift */,
+				A994916C23FB54D200865738 /* TError.swift */,
+				A973CD2223D68B6400C44032 /* TLogging.swift */,
+				A994916A23FB4D3200865738 /* TSession.swift */,
+				A94D7D4623E246C40087A9C0 /* Internal */,
 			);
 			path = TidepoolKit;
 			sourceTree = "<group>";
@@ -170,6 +259,8 @@
 			children = (
 				A943537123C932BF0093CFA3 /* TidepoolKitUI.h */,
 				A943537223C932BF0093CFA3 /* Info.plist */,
+				A973CD2623D68FC300C44032 /* TAPI+UI.swift */,
+				A994917023FB61E400865738 /* Internal */,
 			);
 			path = TidepoolKitUI;
 			sourceTree = "<group>";
@@ -185,14 +276,56 @@
 		A943538B23C932D10093CFA3 /* TidepoolKit Example */ = {
 			isa = PBXGroup;
 			children = (
+				A943539823C932D20093CFA3 /* Info.plist */,
 				A943538C23C932D10093CFA3 /* AppDelegate.swift */,
-				A943538E23C932D10093CFA3 /* ViewController.swift */,
-				A943539023C932D10093CFA3 /* Main.storyboard */,
+				A903670423D939AE009BD8C5 /* LabelTableViewCell.swift */,
+				A994916623FB288E00865738 /* Logging.swift */,
+				A943538E23C932D10093CFA3 /* RootTableViewController.swift */,
+				A994917123FB6C1100865738 /* StatusTableViewCell.swift */,
 				A943539323C932D20093CFA3 /* Assets.xcassets */,
 				A943539523C932D20093CFA3 /* LaunchScreen.storyboard */,
-				A943539823C932D20093CFA3 /* Info.plist */,
+				A943539023C932D10093CFA3 /* Main.storyboard */,
 			);
 			path = "TidepoolKit Example";
+			sourceTree = "<group>";
+		};
+		A94D7D4623E246C40087A9C0 /* Internal */ = {
+			isa = PBXGroup;
+			children = (
+				A9EAB8E723DFC77E00874D2A /* DNS.swift */,
+				A94D7D4223E242D60087A9C0 /* Locked.swift */,
+				A94D7D4423E243780087A9C0 /* UnfairLock.swift */,
+				A99491D223FE1F0F00865738 /* Extensions */,
+			);
+			path = Internal;
+			sourceTree = "<group>";
+		};
+		A973CD2A23D6916300C44032 /* Frameworks */ = {
+			isa = PBXGroup;
+			children = (
+			);
+			name = Frameworks;
+			sourceTree = "<group>";
+		};
+		A994917023FB61E400865738 /* Internal */ = {
+			isa = PBXGroup;
+			children = (
+				A973CD2423D68E9D00C44032 /* LoginSignupViewController.swift */,
+				A92F62D123D7D0E3007B3CA6 /* Assets.xcassets */,
+				A973CD3D23D692D600C44032 /* LoginSignup.storyboard */,
+			);
+			path = Internal;
+			sourceTree = "<group>";
+		};
+		A99491D223FE1F0F00865738 /* Extensions */ = {
+			isa = PBXGroup;
+			children = (
+				A994917B23FE15E000865738 /* Bundle.swift */,
+				A994917323FB88A300865738 /* DNS+TEnvironment.swift */,
+				A994917923FE15CE00865738 /* HTTPURLResponse.swift */,
+				A994917F23FE1AD500865738 /* ProcessInfo.swift */,
+			);
+			path = Extensions;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -266,6 +399,7 @@
 			);
 			dependencies = (
 				A95FB64723C93D9200D3B3AB /* PBXTargetDependency */,
+				A973CD2E23D6916300C44032 /* PBXTargetDependency */,
 			);
 			name = TidepoolKitUI;
 			productName = TidepoolKitUI;
@@ -298,12 +432,15 @@
 				A943538623C932D10093CFA3 /* Sources */,
 				A943538723C932D10093CFA3 /* Frameworks */,
 				A943538823C932D10093CFA3 /* Resources */,
+				A973CD3823D6916C00C44032 /* Embed Frameworks */,
 			);
 			buildRules = (
 			);
 			dependencies = (
 				A95FB64B23C93D9F00D3B3AB /* PBXTargetDependency */,
 				A95FB64D23C93D9F00D3B3AB /* PBXTargetDependency */,
+				A973CD3323D6916C00C44032 /* PBXTargetDependency */,
+				A973CD3723D6916C00C44032 /* PBXTargetDependency */,
 			);
 			name = "TidepoolKit Example";
 			productName = "TidepoolKit Example";
@@ -322,12 +459,14 @@
 				TargetAttributes = {
 					A943534F23C932A10093CFA3 = {
 						CreatedOnToolsVersion = 10.1;
+						LastSwiftMigration = 1130;
 					};
 					A943535823C932A10093CFA3 = {
 						CreatedOnToolsVersion = 10.1;
 					};
 					A943536E23C932BF0093CFA3 = {
 						CreatedOnToolsVersion = 10.1;
+						LastSwiftMigration = 1130;
 					};
 					A943537623C932BF0093CFA3 = {
 						CreatedOnToolsVersion = 10.1;
@@ -378,6 +517,8 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				A973CD3B23D692D600C44032 /* LoginSignup.storyboard in Resources */,
+				A92F62D223D7D0E3007B3CA6 /* Assets.xcassets in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -405,6 +546,18 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				A9EAB8E823DFC77E00874D2A /* DNS.swift in Sources */,
+				A994918023FE1AD500865738 /* ProcessInfo.swift in Sources */,
+				A994917C23FE15E000865738 /* Bundle.swift in Sources */,
+				A994916923FB4CF500865738 /* TEnvironment.swift in Sources */,
+				A994917A23FE15CE00865738 /* HTTPURLResponse.swift in Sources */,
+				A994917423FB88A300865738 /* DNS+TEnvironment.swift in Sources */,
+				A94D7D4323E242D60087A9C0 /* Locked.swift in Sources */,
+				A973CD2323D68B6400C44032 /* TLogging.swift in Sources */,
+				A994916B23FB4D3200865738 /* TSession.swift in Sources */,
+				A994916D23FB54D200865738 /* TError.swift in Sources */,
+				A94D7D4523E243780087A9C0 /* UnfairLock.swift in Sources */,
+				A973CD2923D68FE000C44032 /* TAPI.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -419,6 +572,8 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				A973CD2523D68E9D00C44032 /* LoginSignupViewController.swift in Sources */,
+				A973CD2723D68FC300C44032 /* TAPI+UI.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -433,8 +588,11 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				A943538F23C932D10093CFA3 /* ViewController.swift in Sources */,
+				A903670523D939AE009BD8C5 /* LabelTableViewCell.swift in Sources */,
+				A994917223FB6C1100865738 /* StatusTableViewCell.swift in Sources */,
+				A943538F23C932D10093CFA3 /* RootTableViewController.swift in Sources */,
 				A943538D23C932D10093CFA3 /* AppDelegate.swift in Sources */,
+				A994916723FB288E00865738 /* Logging.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -471,6 +629,21 @@
 			target = A943536E23C932BF0093CFA3 /* TidepoolKitUI */;
 			targetProxy = A95FB64C23C93D9F00D3B3AB /* PBXContainerItemProxy */;
 		};
+		A973CD2E23D6916300C44032 /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = A943534F23C932A10093CFA3 /* TidepoolKit */;
+			targetProxy = A973CD2D23D6916300C44032 /* PBXContainerItemProxy */;
+		};
+		A973CD3323D6916C00C44032 /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = A943534F23C932A10093CFA3 /* TidepoolKit */;
+			targetProxy = A973CD3223D6916C00C44032 /* PBXContainerItemProxy */;
+		};
+		A973CD3723D6916C00C44032 /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = A943536E23C932BF0093CFA3 /* TidepoolKitUI */;
+			targetProxy = A973CD3623D6916C00C44032 /* PBXContainerItemProxy */;
+		};
 /* End PBXTargetDependency section */
 
 /* Begin PBXVariantGroup section */
@@ -488,6 +661,14 @@
 				A943539623C932D20093CFA3 /* Base */,
 			);
 			name = LaunchScreen.storyboard;
+			sourceTree = "<group>";
+		};
+		A973CD3D23D692D600C44032 /* LoginSignup.storyboard */ = {
+			isa = PBXVariantGroup;
+			children = (
+				A973CD3C23D692D600C44032 /* Base */,
+			);
+			name = LoginSignup.storyboard;
 			sourceTree = "<group>";
 		};
 /* End PBXVariantGroup section */
@@ -697,10 +878,7 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				APPLICATION_EXTENSION_API_ONLY = YES;
-				CODE_SIGN_IDENTITY = "";
-				CODE_SIGN_STYLE = Automatic;
 				DEFINES_MODULE = YES;
-				DEVELOPMENT_TEAM = "";
 				DYLIB_COMPATIBILITY_VERSION = 1;
 				DYLIB_CURRENT_VERSION = 1;
 				DYLIB_INSTALL_NAME_BASE = "@rpath";
@@ -713,9 +891,7 @@
 				);
 				PRODUCT_BUNDLE_IDENTIFIER = org.tidepool.TidepoolKit;
 				PRODUCT_NAME = "$(TARGET_NAME:c99extidentifier)";
-				PROVISIONING_PROFILE_SPECIFIER = "";
 				SKIP_INSTALL = YES;
-				TARGETED_DEVICE_FAMILY = "1,2";
 			};
 			name = Debug;
 		};
@@ -723,10 +899,7 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				APPLICATION_EXTENSION_API_ONLY = YES;
-				CODE_SIGN_IDENTITY = "";
-				CODE_SIGN_STYLE = Automatic;
 				DEFINES_MODULE = YES;
-				DEVELOPMENT_TEAM = "";
 				DYLIB_COMPATIBILITY_VERSION = 1;
 				DYLIB_CURRENT_VERSION = 1;
 				DYLIB_INSTALL_NAME_BASE = "@rpath";
@@ -739,17 +912,13 @@
 				);
 				PRODUCT_BUNDLE_IDENTIFIER = org.tidepool.TidepoolKit;
 				PRODUCT_NAME = "$(TARGET_NAME:c99extidentifier)";
-				PROVISIONING_PROFILE_SPECIFIER = "";
 				SKIP_INSTALL = YES;
-				TARGETED_DEVICE_FAMILY = "1,2";
 			};
 			name = Release;
 		};
 		A943536823C932A10093CFA3 /* Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
-				CODE_SIGN_STYLE = Automatic;
-				DEVELOPMENT_TEAM = "";
 				INFOPLIST_FILE = TidepoolKitTests/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
@@ -758,15 +927,12 @@
 				);
 				PRODUCT_BUNDLE_IDENTIFIER = org.tidepool.TidepoolKitTests;
 				PRODUCT_NAME = "$(TARGET_NAME)";
-				TARGETED_DEVICE_FAMILY = "1,2";
 			};
 			name = Debug;
 		};
 		A943536923C932A10093CFA3 /* Release */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
-				CODE_SIGN_STYLE = Automatic;
-				DEVELOPMENT_TEAM = "";
 				INFOPLIST_FILE = TidepoolKitTests/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
@@ -775,7 +941,6 @@
 				);
 				PRODUCT_BUNDLE_IDENTIFIER = org.tidepool.TidepoolKitTests;
 				PRODUCT_NAME = "$(TARGET_NAME)";
-				TARGETED_DEVICE_FAMILY = "1,2";
 			};
 			name = Release;
 		};
@@ -783,10 +948,7 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				APPLICATION_EXTENSION_API_ONLY = YES;
-				CODE_SIGN_IDENTITY = "";
-				CODE_SIGN_STYLE = Automatic;
 				DEFINES_MODULE = YES;
-				DEVELOPMENT_TEAM = "";
 				DYLIB_COMPATIBILITY_VERSION = 1;
 				DYLIB_CURRENT_VERSION = 1;
 				DYLIB_INSTALL_NAME_BASE = "@rpath";
@@ -799,9 +961,7 @@
 				);
 				PRODUCT_BUNDLE_IDENTIFIER = org.tidepool.TidepoolKitUI;
 				PRODUCT_NAME = "$(TARGET_NAME:c99extidentifier)";
-				PROVISIONING_PROFILE_SPECIFIER = "";
 				SKIP_INSTALL = YES;
-				TARGETED_DEVICE_FAMILY = "1,2";
 			};
 			name = Debug;
 		};
@@ -809,10 +969,7 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				APPLICATION_EXTENSION_API_ONLY = YES;
-				CODE_SIGN_IDENTITY = "";
-				CODE_SIGN_STYLE = Automatic;
 				DEFINES_MODULE = YES;
-				DEVELOPMENT_TEAM = "";
 				DYLIB_COMPATIBILITY_VERSION = 1;
 				DYLIB_CURRENT_VERSION = 1;
 				DYLIB_INSTALL_NAME_BASE = "@rpath";
@@ -825,17 +982,13 @@
 				);
 				PRODUCT_BUNDLE_IDENTIFIER = org.tidepool.TidepoolKitUI;
 				PRODUCT_NAME = "$(TARGET_NAME:c99extidentifier)";
-				PROVISIONING_PROFILE_SPECIFIER = "";
 				SKIP_INSTALL = YES;
-				TARGETED_DEVICE_FAMILY = "1,2";
 			};
 			name = Release;
 		};
 		A943538423C932BF0093CFA3 /* Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
-				CODE_SIGN_STYLE = Automatic;
-				DEVELOPMENT_TEAM = "";
 				INFOPLIST_FILE = TidepoolKitUITests/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
@@ -844,15 +997,12 @@
 				);
 				PRODUCT_BUNDLE_IDENTIFIER = org.tidepool.TidepoolKitUITests;
 				PRODUCT_NAME = "$(TARGET_NAME)";
-				TARGETED_DEVICE_FAMILY = "1,2";
 			};
 			name = Debug;
 		};
 		A943538523C932BF0093CFA3 /* Release */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
-				CODE_SIGN_STYLE = Automatic;
-				DEVELOPMENT_TEAM = "";
 				INFOPLIST_FILE = TidepoolKitUITests/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
@@ -861,7 +1011,6 @@
 				);
 				PRODUCT_BUNDLE_IDENTIFIER = org.tidepool.TidepoolKitUITests;
 				PRODUCT_NAME = "$(TARGET_NAME)";
-				TARGETED_DEVICE_FAMILY = "1,2";
 			};
 			name = Release;
 		};
@@ -869,9 +1018,6 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
-				CODE_SIGN_IDENTITY = "";
-				CODE_SIGN_STYLE = Automatic;
-				DEVELOPMENT_TEAM = "";
 				INFOPLIST_FILE = "TidepoolKit Example/Info.plist";
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
@@ -879,8 +1025,6 @@
 				);
 				PRODUCT_BUNDLE_IDENTIFIER = "org.tidepool.TidepoolKit-Example";
 				PRODUCT_NAME = "$(TARGET_NAME)";
-				PROVISIONING_PROFILE_SPECIFIER = "";
-				TARGETED_DEVICE_FAMILY = "1,2";
 			};
 			name = Debug;
 		};
@@ -888,9 +1032,6 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
-				CODE_SIGN_IDENTITY = "";
-				CODE_SIGN_STYLE = Automatic;
-				DEVELOPMENT_TEAM = "";
 				INFOPLIST_FILE = "TidepoolKit Example/Info.plist";
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
@@ -898,8 +1039,6 @@
 				);
 				PRODUCT_BUNDLE_IDENTIFIER = "org.tidepool.TidepoolKit-Example";
 				PRODUCT_NAME = "$(TARGET_NAME)";
-				PROVISIONING_PROFILE_SPECIFIER = "";
-				TARGETED_DEVICE_FAMILY = "1,2";
 			};
 			name = Release;
 		};
