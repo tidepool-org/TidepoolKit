@@ -6,11 +6,14 @@
 //  Copyright © 2020 Tidepool Project. All rights reserved.
 //
 
+import Foundation
+
 /// Representation of a Tidepool API environment that includes a host and port. Typically discovered dynamically
 /// via DNS SRV record lookup.
 ///
 /// Network requests will use HTTPS only if port is 443. Otherwise, HTTP will be used.
-public struct TEnvironment {
+public struct TEnvironment: RawRepresentable {
+    public typealias RawValue = [String: Any]
 
     /// The host for the environment. For example, api.tidepool.org.
     public let host: String
@@ -21,6 +24,23 @@ public struct TEnvironment {
     public init(host: String, port: UInt16) {
         self.host = host
         self.port = port
+    }
+
+    public init?(rawValue: RawValue) {
+        guard let host = rawValue["host"] as? String,
+            let port = rawValue["port"] as? UInt16 else
+        {
+            return nil
+        }
+        self.host = host
+        self.port = port
+    }
+
+    public var rawValue: RawValue {
+        var rawValue: RawValue = [:]
+        rawValue["host"] = host
+        rawValue["port"] = port
+        return rawValue
     }
 
     public func url(path: String = "", queryItems: [URLQueryItem]? = nil) -> URL {
@@ -38,27 +58,6 @@ public struct TEnvironment {
         components.path = path
         components.queryItems = queryItems
         return components.url!
-    }
-}
-
-extension TEnvironment: RawRepresentable {
-    public typealias RawValue = [String: Any]
-    
-    public init?(rawValue: RawValue) {
-        guard let host = rawValue["host"] as? String,
-            let port = rawValue["port"] as? UInt16 else
-        {
-            return nil
-        }
-        self.host = host
-        self.port = port
-    }
-    
-    public var rawValue: RawValue {
-        return [
-            "host": host,
-            "port": port
-        ]
     }
 }
 

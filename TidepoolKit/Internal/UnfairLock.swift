@@ -8,6 +8,8 @@
 
 // Source: http://www.russbishop.net/the-law
 
+import os
+
 final class UnfairLock {
     private var _lock: UnsafeMutablePointer<os_unfair_lock>
 

@@ -13,9 +13,15 @@ import TidepoolKitUI
 
 class RootTableViewController: UITableViewController {
     private let api = TAPI()
-    private var environment: TEnvironment?
+    private var environment: TEnvironment? {
+        didSet {
+            UserDefaults.standard.environment = environment
+            tableView.reloadData()
+        }
+    }
     private var session: TSession? {
         didSet {
+            UserDefaults.standard.session = session
             tableView.reloadData()
         }
     }
@@ -29,6 +35,13 @@ class RootTableViewController: UITableViewController {
         case login
         case refresh
         case logout
+    }
+
+    required init?(coder: NSCoder) {
+        super.init(coder: coder)
+
+        self.session = UserDefaults.standard.session
+        self.environment = UserDefaults.standard.environment
     }
 
     override func viewDidLoad() {
@@ -63,16 +76,19 @@ class RootTableViewController: UITableViewController {
         switch Section(rawValue: indexPath.section)! {
         case .status:
             let cell = tableView.dequeueReusableCell(withIdentifier: StatusTableViewCell.className, for: indexPath) as! StatusTableViewCell
+            if let environment = environment {
+                cell.environmentLabel?.text = environment.description
+                cell.environmentLabel?.lineBreakMode = .byTruncatingMiddle
+            } else {
+                cell.environmentLabel?.text = NSLocalizedString("-", comment: "The environment label placeholder when an environment does not exist")
+            }
             if let session = session {
                 cell.stateLabel?.text = NSLocalizedString("Authenticated", comment: "The state label when an authenticated session exists")
-                cell.environmentLabel?.text = session.environment.description
-                cell.environmentLabel?.lineBreakMode = .byTruncatingMiddle
                 cell.authenticationTokenLabel?.text = session.authenticationToken
                 cell.authenticationTokenLabel?.lineBreakMode = .byTruncatingMiddle
                 cell.userIDLabel?.text = session.userID
             } else {
                 cell.stateLabel?.text = NSLocalizedString("Unauthenticated", comment: "The state text label an authenticated session does not exist")
-                cell.environmentLabel?.text = NSLocalizedString("-", comment: "The environment label placeholder when an authenticated session does not exist")
                 cell.authenticationTokenLabel?.text = NSLocalizedString("-", comment: "The authentication token label placeholder when an authenticated session does not exist")
                 cell.userIDLabel?.text = NSLocalizedString("-", comment: "The user id label placeholder when an authenticated session does not exist")
             }
@@ -81,16 +97,16 @@ class RootTableViewController: UITableViewController {
             let cell = tableView.dequeueReusableCell(withIdentifier: TextButtonTableViewCell.className, for: indexPath) as! TextButtonTableViewCell
             switch Authentication(rawValue: indexPath.row)! {
             case .login:
-                cell.textLabel?.text = NSLocalizedString("Login", comment: "The text label of the login cell")
+                cell.textLabel?.text = NSLocalizedString("Login", comment: "The text label of the authentication login cell")
                 cell.accessoryType = .disclosureIndicator
                 cell.isEnabled = session == nil
                 return cell
             case .refresh:
-                cell.textLabel?.text = NSLocalizedString("Refresh", comment: "The text label of the refresh cell")
+                cell.textLabel?.text = NSLocalizedString("Refresh", comment: "The text label of the authentication refresh cell")
                 cell.isEnabled = session != nil
                 return cell
             case .logout:
-                cell.textLabel?.text = NSLocalizedString("Logout", comment: "The text label of the logout cell")
+                cell.textLabel?.text = NSLocalizedString("Logout", comment: "The text label of the authentication logout cell")
                 cell.isEnabled = session != nil
             }
             return cell
@@ -124,15 +140,15 @@ class RootTableViewController: UITableViewController {
             cell.isLoading = true
             switch Authentication(rawValue: indexPath.row)! {
             case .login:
-                login() {
+                authenticationLogin() {
                     cell.isLoading = false
                 }
             case .refresh:
-                refresh() {
+                authenticationRefresh() {
                     cell.isLoading = false
                 }
             case .logout:
-                logout() {
+                authenticationLogout() {
                     cell.isLoading = false
                 }
             }
@@ -140,7 +156,7 @@ class RootTableViewController: UITableViewController {
         tableView.deselectRow(at: indexPath, animated: true)
     }
 
-    private func login(completion: @escaping () -> Void) {
+    private func authenticationLogin(completion: @escaping () -> Void) {
         var loginSignupViewController = api.loginSignupViewController()
         loginSignupViewController.delegate = self
         loginSignupViewController.environment = environment
@@ -148,13 +164,13 @@ class RootTableViewController: UITableViewController {
         completion()
     }
 
-    private func refresh(completion: @escaping () -> Void) {
+    private func authenticationRefresh(completion: @escaping () -> Void) {
         api.refresh(session: session!) { result in
             DispatchQueue.main.async {
                 switch result {
                 case .failure(let error):
                     let alert = UIAlertController(error: error) {
-                        if case .unauthenticated(_, _) = error {
+                        if case .requestNotAuthenticated(_, _) = error {
                             self.session = nil
                         }
                     }
@@ -167,7 +183,7 @@ class RootTableViewController: UITableViewController {
         }
     }
 
-    private func logout(completion: @escaping () -> Void) {
+    private func authenticationLogout(completion: @escaping () -> Void) {
         api.logout(session: session!) { error in
             DispatchQueue.main.async {
                 if let error = error {
@@ -185,18 +201,10 @@ class RootTableViewController: UITableViewController {
 }
 
 extension RootTableViewController: TLoginSignupDelegate {
-    func loginSignup(_ loginSignup: TLoginSignup, didCreateSession session: TSession) {
-        DispatchQueue.main.async {
-            self.environment = session.environment
-            self.session = session
-            self.navigationController?.popViewController(animated: true)
-        }
-    }
-}
-
-extension UIAlertController {
-    convenience init(error: TError, handler: (() -> Void)? = nil) {
-        self.init(title: NSLocalizedString("Error", comment: "The title of the error alert"), message: error.localizedDescription, preferredStyle: .alert)
-        addAction(UIAlertAction(title: NSLocalizedString("OK", comment: "The title of the OK button in the error alert"), style: .default) { _ in handler?() })
+    func loginSignup(_ loginSignup: TLoginSignup, didCreateSession session: TSession) -> Error? {
+        self.environment = session.environment
+        self.session = session
+        navigationController?.popViewController(animated: true)
+        return nil
     }
 }

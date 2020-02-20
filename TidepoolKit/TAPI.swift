@@ -6,6 +6,8 @@
 //  Copyright © 2020 Tidepool Project. All rights reserved.
 //
 
+import Foundation
+
 /// The Tidepool API
 public class TAPI {
 
@@ -51,7 +53,14 @@ public class TAPI {
                         TSharedLogging.error("Failure during DNS SRV record lookup: \(error)")
                     }
                 case .success(let records):
-                    let environments = (TAPI.DNSSRVRecordsImplicit + records).environments
+                    var records = records + TAPI.DNSSRVRecordsImplicit
+                    records = records.map { record in
+                        if record.host != "localhost" {
+                            return record
+                        }
+                        return DNSSRVRecord(priority: UInt16.max, weight: record.weight, host: record.host, port: record.port)
+                    }
+                    let environments = records.sorted().environments
                     self.environmentsLocked.mutate { $0 = environments }
                     if let completion = completion {
                         completion(.success(environments))
@@ -81,13 +90,19 @@ public class TAPI {
             case .failure(let error):
                 completion(.failure(error))
             case .success(let response, let data):
-                if let authenticationToken = response.value(forHTTPHeaderField: "X-Tidepool-Session-Token"),
-                    let data = data,
-                    let dictionaryArray = try? JSONSerialization.jsonObject(with: data) as? [String: Any],
-                    let login = Login(rawValue: dictionaryArray) {
-                    completion(.success(TSession(environment: environment, authenticationToken: authenticationToken, userID: login.userID)))
+                if let data = data {
+                    if let dictionaryArray = try? JSONSerialization.jsonObject(with: data) as? [String: Any],
+                        let loginResponse = LoginResponse(rawValue: dictionaryArray) {
+                        if let authenticationToken = response.value(forHTTPHeaderField: "X-Tidepool-Session-Token"), !authenticationToken.isEmpty {
+                            completion(.success(TSession(environment: environment, authenticationToken: authenticationToken, userID: loginResponse.userID)))
+                        } else {
+                            completion(.failure(.responseNotAuthenticated(response, data)))
+                        }
+                    } else {
+                        completion(.failure(.responseMalformedJSON(response, data)))
+                    }
                 } else {
-                    completion(.failure(.badResponse(response, data)))
+                    completion(.failure(.responseMissingJSON(response)))
                 }
             }
         }
@@ -115,10 +130,10 @@ public class TAPI {
             case .failure(let error):
                 completion(.failure(error))
             case .success(let response, let data):
-                if let authenticationToken = response.value(forHTTPHeaderField: "X-Tidepool-Session-Token") {
-                    completion(.success(TSession(environment: session.environment, authenticationToken: authenticationToken, userID: session.userID)))
+                if let authenticationToken = response.value(forHTTPHeaderField: "X-Tidepool-Session-Token"), !authenticationToken.isEmpty {
+                    completion(.success(TSession(environment: session.environment, authenticationToken: authenticationToken, userID: session.userID, trace: session.trace)))
                 } else {
-                    completion(.failure(.badResponse(response, data)))
+                    completion(.failure(.responseNotAuthenticated(response, data)))
                 }
             }
         }
@@ -138,6 +153,9 @@ public class TAPI {
     private func createRequest(session: TSession, method: String, path: String, queryItems: [URLQueryItem]? = nil) -> URLRequest {
         var request = createRequest(environment: session.environment, method: method, path: path, queryItems: queryItems)
         request.setValue(session.authenticationToken, forHTTPHeaderField: "X-Tidepool-Session-Token")
+        if let trace = session.trace {
+            request.setValue(trace, forHTTPHeaderField: "X-Tidepool-Trace-Session")
+        }
         return request
     }
 
@@ -175,15 +193,15 @@ public class TAPI {
         case 200...299:
             return .success((response, data))
         case 400:
-            return .failure(.badRequest(response, data))
+            return .failure(.requestMalformed(response, data))
         case 401:
-            return .failure(.unauthenticated(response, data))
+            return .failure(.requestNotAuthenticated(response, data))
         case 403:
-            return .failure(.unauthorized(response, data))
+            return .failure(.requestNotAuthorized(response, data))
         case 404:
-            return .failure(.notFound(response, data))
+            return .failure(.requestResourceNotFound(response, data))
         default:
-            return .failure(.unexpectedStatusCode(response, data))
+            return .failure(.responseUnexpectedStatusCode(response, data))
         }
     }
 
@@ -222,28 +240,5 @@ public class TAPI {
 
     private static let DNSSRVRecordsDomainName = "environments-srv.tidepool.org"
 
-    private static let DNSSRVRecordsImplicit = [DNSSRVRecord(priority: UInt16.min, weight: UInt16.max, port: 443, host: "app.tidepool.org")]
-}
-
-public struct Login {
-    public typealias RawValue = [String: Any]
-
-    public let userID: String
-    public let email: String
-    public let emailVerified: Bool
-    public let termsAccepted: String?
-
-    public init?(rawValue: RawValue) {
-        guard let userID = rawValue["userid"] as? String,
-            let email = rawValue["username"] as? String,
-            let emailVerified = rawValue["emailVerified"] as? Bool else
-        {
-            return nil
-        }
-
-        self.userID = userID
-        self.email = email
-        self.emailVerified = emailVerified
-        self.termsAccepted = rawValue["termsAccepted"] as? String
-    }
+    private static let DNSSRVRecordsImplicit = [DNSSRVRecord(priority: UInt16.min, weight: UInt16.max, host: "app.tidepool.org", port: 443)]
 }

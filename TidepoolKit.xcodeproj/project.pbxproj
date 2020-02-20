@@ -39,8 +39,11 @@
 		A994917A23FE15CE00865738 /* HTTPURLResponse.swift in Sources */ = {isa = PBXBuildFile; fileRef = A994917923FE15CE00865738 /* HTTPURLResponse.swift */; };
 		A994917C23FE15E000865738 /* Bundle.swift in Sources */ = {isa = PBXBuildFile; fileRef = A994917B23FE15E000865738 /* Bundle.swift */; };
 		A994918023FE1AD500865738 /* ProcessInfo.swift in Sources */ = {isa = PBXBuildFile; fileRef = A994917F23FE1AD500865738 /* ProcessInfo.swift */; };
+		A9C57C5023FF66A000A5964D /* LoginResponse.swift in Sources */ = {isa = PBXBuildFile; fileRef = A9C57C4F23FF66A000A5964D /* LoginResponse.swift */; };
 		A9C57C5424005C3800A5964D /* LoadingTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = A9C57C5324005C3800A5964D /* LoadingTableViewCell.swift */; };
 		A9C57C562400628800A5964D /* IdentifiableClass.swift in Sources */ = {isa = PBXBuildFile; fileRef = A9C57C552400628800A5964D /* IdentifiableClass.swift */; };
+		A9C9D2522400CC4300D66F16 /* UIAlertController.swift in Sources */ = {isa = PBXBuildFile; fileRef = A9C9D2512400CC4300D66F16 /* UIAlertController.swift */; };
+		A9C9D2542400CC6500D66F16 /* UserDefaults.swift in Sources */ = {isa = PBXBuildFile; fileRef = A9C9D2532400CC6500D66F16 /* UserDefaults.swift */; };
 		A9EAB8E823DFC77E00874D2A /* DNS.swift in Sources */ = {isa = PBXBuildFile; fileRef = A9EAB8E723DFC77E00874D2A /* DNS.swift */; };
 /* End PBXBuildFile section */
 
@@ -161,8 +164,11 @@
 		A994917923FE15CE00865738 /* HTTPURLResponse.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HTTPURLResponse.swift; sourceTree = "<group>"; };
 		A994917B23FE15E000865738 /* Bundle.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Bundle.swift; sourceTree = "<group>"; };
 		A994917F23FE1AD500865738 /* ProcessInfo.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProcessInfo.swift; sourceTree = "<group>"; };
+		A9C57C4F23FF66A000A5964D /* LoginResponse.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LoginResponse.swift; sourceTree = "<group>"; };
 		A9C57C5324005C3800A5964D /* LoadingTableViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LoadingTableViewCell.swift; sourceTree = "<group>"; };
 		A9C57C552400628800A5964D /* IdentifiableClass.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = IdentifiableClass.swift; sourceTree = "<group>"; };
+		A9C9D2512400CC4300D66F16 /* UIAlertController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UIAlertController.swift; sourceTree = "<group>"; };
+		A9C9D2532400CC6500D66F16 /* UserDefaults.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UserDefaults.swift; sourceTree = "<group>"; };
 		A9EAB8E723DFC77E00874D2A /* DNS.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DNS.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
@@ -299,6 +305,7 @@
 				A94D7D4223E242D60087A9C0 /* Locked.swift */,
 				A94D7D4423E243780087A9C0 /* UnfairLock.swift */,
 				A99491D223FE1F0F00865738 /* Extensions */,
+				A9C57C4E23FF668300A5964D /* Responses */,
 			);
 			path = Internal;
 			sourceTree = "<group>";
@@ -331,6 +338,14 @@
 			path = Extensions;
 			sourceTree = "<group>";
 		};
+		A9C57C4E23FF668300A5964D /* Responses */ = {
+			isa = PBXGroup;
+			children = (
+				A9C57C4F23FF66A000A5964D /* LoginResponse.swift */,
+			);
+			path = Responses;
+			sourceTree = "<group>";
+		};
 		A9C57C572400636200A5964D /* Support */ = {
 			isa = PBXGroup;
 			children = (
@@ -338,8 +353,18 @@
 				A9C57C5324005C3800A5964D /* LoadingTableViewCell.swift */,
 				A994917123FB6C1100865738 /* StatusTableViewCell.swift */,
 				A903670423D939AE009BD8C5 /* TextButtonTableViewCell.swift */,
+				A9C9D2502400CC1600D66F16 /* Extensions */,
 			);
 			path = Support;
+			sourceTree = "<group>";
+		};
+		A9C9D2502400CC1600D66F16 /* Extensions */ = {
+			isa = PBXGroup;
+			children = (
+				A9C9D2512400CC4300D66F16 /* UIAlertController.swift */,
+				A9C9D2532400CC6500D66F16 /* UserDefaults.swift */,
+			);
+			path = Extensions;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -561,6 +586,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				A9EAB8E823DFC77E00874D2A /* DNS.swift in Sources */,
+				A9C57C5023FF66A000A5964D /* LoginResponse.swift in Sources */,
 				A994918023FE1AD500865738 /* ProcessInfo.swift in Sources */,
 				A994917C23FE15E000865738 /* Bundle.swift in Sources */,
 				A994916923FB4CF500865738 /* TEnvironment.swift in Sources */,
@@ -603,10 +629,12 @@
 			buildActionMask = 2147483647;
 			files = (
 				A903670523D939AE009BD8C5 /* TextButtonTableViewCell.swift in Sources */,
+				A9C9D2522400CC4300D66F16 /* UIAlertController.swift in Sources */,
 				A9C57C562400628800A5964D /* IdentifiableClass.swift in Sources */,
 				A994917223FB6C1100865738 /* StatusTableViewCell.swift in Sources */,
 				A9C57C5424005C3800A5964D /* LoadingTableViewCell.swift in Sources */,
 				A943538F23C932D10093CFA3 /* RootTableViewController.swift in Sources */,
+				A9C9D2542400CC6500D66F16 /* UserDefaults.swift in Sources */,
 				A943538D23C932D10093CFA3 /* AppDelegate.swift in Sources */,
 				A994916723FB288E00865738 /* Logging.swift in Sources */,
 			);

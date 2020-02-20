@@ -76,18 +76,18 @@ class LoginSignupViewController: UIViewController, TLoginSignup {
             case .success(let session):
                 DispatchQueue.main.async {
                     self.activityIndicatorView.stopAnimating()
+                    if let error = self.delegate?.loginSignup(self, didCreateSession: session) {
+                        self.feedbackLabel.text = error.localizedDescription
+                    }
                 }
-                self.delegate?.loginSignup(self, didCreateSession: session)
             }
         }
     }
 
     private func loginFeedback(error: TError) -> String {
         switch error {
-        case .unauthenticated:
-            return NSLocalizedString("Wrong username or password.", comment: "The login feedback for the unauthenticated error")
-        case .unauthorized:
-            return NSLocalizedString("The email is not verified.", comment: "The login feedback for the unauthorized error")
+        case .requestNotAuthenticated:
+            return NSLocalizedString("Wrong username or password.", comment: "The login feedback for the request not authenticated error")
         default:
             return error.localizedDescription
         }

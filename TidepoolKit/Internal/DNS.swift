@@ -17,11 +17,32 @@ enum DNSError: Error {
 struct DNSSRVRecord: Equatable {
     let priority: UInt16
     let weight: UInt16
-    let port: UInt16
     let host: String
+    let port: UInt16
 }
 
-final class DNS {
+extension DNSSRVRecord: Comparable {
+    public static func < (lhs: DNSSRVRecord, rhs: DNSSRVRecord) -> Bool {
+        if lhs.priority < rhs.priority {
+            return true
+        } else if lhs.priority > rhs.priority {
+            return false
+        }
+        if lhs.weight > rhs.weight {
+            return true
+        } else if lhs.weight < rhs.weight {
+            return false
+        }
+        if lhs.host < rhs.host {
+            return true
+        } else if lhs.host > rhs.host {
+            return false
+        }
+        return lhs.port < rhs.port
+    }
+}
+
+class DNS {
     static func lookupSRVRecords(for domainName: String, timeout: Int = 10, completion: @escaping (Result<[DNSSRVRecord], DNSError>) -> Void) {
         var records: [DNSSRVRecord] = []
 
@@ -158,7 +179,7 @@ private extension DNSSRVRecord {
 
         self.priority = priority
         self.weight = weight
-        self.port = port
         self.host = host
+        self.port = port
     }
 }
