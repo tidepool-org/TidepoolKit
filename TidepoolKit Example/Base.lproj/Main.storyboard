@@ -2,7 +2,6 @@
 <document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="15705" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES" initialViewController="XaO-kX-p0a">
     <device id="retina5_9" orientation="portrait" appearance="light"/>
     <dependencies>
-        <deployment identifier="iOS"/>
         <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="15706"/>
         <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
     </dependencies>
@@ -117,31 +116,6 @@
                                     <outlet property="environmentLabel" destination="3z1-wF-2wm" id="2ia-3C-Lh7"/>
                                     <outlet property="stateLabel" destination="Zvw-uB-gtU" id="Fdl-WP-eya"/>
                                     <outlet property="userIDLabel" destination="IkC-fw-Mnq" id="fg1-F1-DuG"/>
-                                </connections>
-                            </tableViewCell>
-                            <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" preservesSuperviewLayoutMargins="YES" selectionStyle="default" indentationWidth="10" reuseIdentifier="LabelTableViewCell" id="Wqo-Oz-lx4" userLabel="Label Table View Cell" customClass="LabelTableViewCell" customModule="TidepoolKit_Example" customModuleProvider="target">
-                                <rect key="frame" x="0.0" y="144" width="375" height="43.333332061767578"/>
-                                <autoresizingMask key="autoresizingMask"/>
-                                <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" preservesSuperviewLayoutMargins="YES" insetsLayoutMarginsFromSafeArea="NO" tableViewCell="Wqo-Oz-lx4" id="Frf-27-CVi">
-                                    <rect key="frame" x="0.0" y="0.0" width="375" height="43.333332061767578"/>
-                                    <autoresizingMask key="autoresizingMask"/>
-                                    <subviews>
-                                        <label opaque="NO" userInteractionEnabled="NO" contentMode="left" text="Label" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="phM-Pj-Gs2">
-                                            <rect key="frame" x="16" y="10.999999999999998" width="343" height="21.333333333333329"/>
-                                            <fontDescription key="fontDescription" type="system" pointSize="17"/>
-                                            <nil key="textColor"/>
-                                            <nil key="highlightedColor"/>
-                                        </label>
-                                    </subviews>
-                                    <constraints>
-                                        <constraint firstItem="phM-Pj-Gs2" firstAttribute="centerY" secondItem="Frf-27-CVi" secondAttribute="centerY" id="5Xr-kh-nIm"/>
-                                        <constraint firstItem="phM-Pj-Gs2" firstAttribute="leading" secondItem="Frf-27-CVi" secondAttribute="leadingMargin" id="ajT-7a-tmD"/>
-                                        <constraint firstItem="phM-Pj-Gs2" firstAttribute="bottom" secondItem="Frf-27-CVi" secondAttribute="bottomMargin" id="qQ2-Vk-RGg"/>
-                                        <constraint firstItem="phM-Pj-Gs2" firstAttribute="trailing" secondItem="Frf-27-CVi" secondAttribute="trailingMargin" id="sd2-TV-utK"/>
-                                    </constraints>
-                                </tableViewCellContentView>
-                                <connections>
-                                    <outlet property="label" destination="phM-Pj-Gs2" id="DxA-F0-waL"/>
                                 </connections>
                             </tableViewCell>
                         </prototypes>

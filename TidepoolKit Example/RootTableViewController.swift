@@ -31,6 +31,12 @@ class RootTableViewController: UITableViewController {
         case logout
     }
 
+    override func viewDidLoad() {
+        super.viewDidLoad()
+
+        tableView.register(TextButtonTableViewCell.self, forCellReuseIdentifier: TextButtonTableViewCell.className)
+    }
+
     override func numberOfSections(in tableView: UITableView) -> Int {
         return Section.allCases.count
     }
@@ -56,7 +62,7 @@ class RootTableViewController: UITableViewController {
     override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         switch Section(rawValue: indexPath.section)! {
         case .status:
-            let cell = tableView.dequeueReusableCell(withIdentifier: "StatusTableViewCell", for: indexPath) as! StatusTableViewCell
+            let cell = tableView.dequeueReusableCell(withIdentifier: StatusTableViewCell.className, for: indexPath) as! StatusTableViewCell
             if let session = session {
                 cell.stateLabel?.text = NSLocalizedString("Authenticated", comment: "The state label when an authenticated session exists")
                 cell.environmentLabel?.text = session.environment.description
@@ -72,23 +78,22 @@ class RootTableViewController: UITableViewController {
             }
             return cell
         case .authentication:
+            let cell = tableView.dequeueReusableCell(withIdentifier: TextButtonTableViewCell.className, for: indexPath) as! TextButtonTableViewCell
             switch Authentication(rawValue: indexPath.row)! {
             case .login:
-                let cell = tableView.dequeueReusableCell(withIdentifier: "LabelTableViewCell", for: indexPath) as! LabelTableViewCell
-                cell.label?.text = NSLocalizedString("Login", comment: "The label of the login cell")
-                cell.label?.isEnabled = session == nil
+                cell.textLabel?.text = NSLocalizedString("Login", comment: "The text label of the login cell")
+                cell.accessoryType = .disclosureIndicator
+                cell.isEnabled = session == nil
                 return cell
             case .refresh:
-                let cell = tableView.dequeueReusableCell(withIdentifier: "LabelTableViewCell", for: indexPath) as! LabelTableViewCell
-                cell.label?.text = NSLocalizedString("Refresh", comment: "The label of the refresh cell")
-                cell.label?.isEnabled = session != nil
+                cell.textLabel?.text = NSLocalizedString("Refresh", comment: "The text label of the refresh cell")
+                cell.isEnabled = session != nil
                 return cell
             case .logout:
-                let cell = tableView.dequeueReusableCell(withIdentifier: "LabelTableViewCell", for: indexPath) as! LabelTableViewCell
-                cell.label?.text = NSLocalizedString("Logout", comment: "The label of the logout cell")
-                cell.label?.isEnabled = session != nil
-                return cell
+                cell.textLabel?.text = NSLocalizedString("Logout", comment: "The text label of the logout cell")
+                cell.isEnabled = session != nil
             }
+            return cell
         }
     }
 
@@ -115,26 +120,35 @@ class RootTableViewController: UITableViewController {
                 UIPasteboard.general.string = "\(session.environment)|\(session.authenticationToken)|\(session.userID)"
             }
         case .authentication:
+            let cell = tableView.cellForRow(at: indexPath) as! TextButtonTableViewCell
+            cell.isLoading = true
             switch Authentication(rawValue: indexPath.row)! {
             case .login:
-                login()
+                login() {
+                    cell.isLoading = false
+                }
             case .refresh:
-                refresh()
+                refresh() {
+                    cell.isLoading = false
+                }
             case .logout:
-                logout()
+                logout() {
+                    cell.isLoading = false
+                }
             }
         }
         tableView.deselectRow(at: indexPath, animated: true)
     }
 
-    private func login() {
+    private func login(completion: @escaping () -> Void) {
         var loginSignupViewController = api.loginSignupViewController()
         loginSignupViewController.delegate = self
         loginSignupViewController.environment = environment
         navigationController?.pushViewController(loginSignupViewController, animated: true)
+        completion()
     }
 
-    private func refresh() {
+    private func refresh(completion: @escaping () -> Void) {
         api.refresh(session: session!) { result in
             DispatchQueue.main.async {
                 switch result {
@@ -148,11 +162,12 @@ class RootTableViewController: UITableViewController {
                 case .success(let session):
                     self.session = session
                 }
+                completion()
             }
         }
     }
 
-    private func logout() {
+    private func logout(completion: @escaping () -> Void) {
         api.logout(session: session!) { error in
             DispatchQueue.main.async {
                 if let error = error {
@@ -163,6 +178,7 @@ class RootTableViewController: UITableViewController {
                 } else {
                     self.session = nil
                 }
+                completion()
             }
         }
     }

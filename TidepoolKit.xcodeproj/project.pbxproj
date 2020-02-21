@@ -7,7 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
-		A903670523D939AE009BD8C5 /* LabelTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = A903670423D939AE009BD8C5 /* LabelTableViewCell.swift */; };
+		A903670523D939AE009BD8C5 /* TextButtonTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = A903670423D939AE009BD8C5 /* TextButtonTableViewCell.swift */; };
 		A92F62D223D7D0E3007B3CA6 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = A92F62D123D7D0E3007B3CA6 /* Assets.xcassets */; };
 		A943535A23C932A10093CFA3 /* TidepoolKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = A943535023C932A10093CFA3 /* TidepoolKit.framework */; };
 		A943536123C932A10093CFA3 /* TidepoolKit.h in Headers */ = {isa = PBXBuildFile; fileRef = A943535323C932A10093CFA3 /* TidepoolKit.h */; settings = {ATTRIBUTES = (Public, ); }; };
@@ -39,6 +39,8 @@
 		A994917A23FE15CE00865738 /* HTTPURLResponse.swift in Sources */ = {isa = PBXBuildFile; fileRef = A994917923FE15CE00865738 /* HTTPURLResponse.swift */; };
 		A994917C23FE15E000865738 /* Bundle.swift in Sources */ = {isa = PBXBuildFile; fileRef = A994917B23FE15E000865738 /* Bundle.swift */; };
 		A994918023FE1AD500865738 /* ProcessInfo.swift in Sources */ = {isa = PBXBuildFile; fileRef = A994917F23FE1AD500865738 /* ProcessInfo.swift */; };
+		A9C57C5424005C3800A5964D /* LoadingTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = A9C57C5324005C3800A5964D /* LoadingTableViewCell.swift */; };
+		A9C57C562400628800A5964D /* IdentifiableClass.swift in Sources */ = {isa = PBXBuildFile; fileRef = A9C57C552400628800A5964D /* IdentifiableClass.swift */; };
 		A9EAB8E823DFC77E00874D2A /* DNS.swift in Sources */ = {isa = PBXBuildFile; fileRef = A9EAB8E723DFC77E00874D2A /* DNS.swift */; };
 /* End PBXBuildFile section */
 
@@ -124,7 +126,7 @@
 /* End PBXCopyFilesBuildPhase section */
 
 /* Begin PBXFileReference section */
-		A903670423D939AE009BD8C5 /* LabelTableViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LabelTableViewCell.swift; sourceTree = "<group>"; };
+		A903670423D939AE009BD8C5 /* TextButtonTableViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TextButtonTableViewCell.swift; sourceTree = "<group>"; };
 		A92F62D123D7D0E3007B3CA6 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		A943535023C932A10093CFA3 /* TidepoolKit.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = TidepoolKit.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		A943535323C932A10093CFA3 /* TidepoolKit.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = TidepoolKit.h; sourceTree = "<group>"; };
@@ -159,6 +161,8 @@
 		A994917923FE15CE00865738 /* HTTPURLResponse.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HTTPURLResponse.swift; sourceTree = "<group>"; };
 		A994917B23FE15E000865738 /* Bundle.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Bundle.swift; sourceTree = "<group>"; };
 		A994917F23FE1AD500865738 /* ProcessInfo.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProcessInfo.swift; sourceTree = "<group>"; };
+		A9C57C5324005C3800A5964D /* LoadingTableViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LoadingTableViewCell.swift; sourceTree = "<group>"; };
+		A9C57C552400628800A5964D /* IdentifiableClass.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = IdentifiableClass.swift; sourceTree = "<group>"; };
 		A9EAB8E723DFC77E00874D2A /* DNS.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DNS.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
@@ -278,13 +282,12 @@
 			children = (
 				A943539823C932D20093CFA3 /* Info.plist */,
 				A943538C23C932D10093CFA3 /* AppDelegate.swift */,
-				A903670423D939AE009BD8C5 /* LabelTableViewCell.swift */,
 				A994916623FB288E00865738 /* Logging.swift */,
 				A943538E23C932D10093CFA3 /* RootTableViewController.swift */,
-				A994917123FB6C1100865738 /* StatusTableViewCell.swift */,
 				A943539323C932D20093CFA3 /* Assets.xcassets */,
 				A943539523C932D20093CFA3 /* LaunchScreen.storyboard */,
 				A943539023C932D10093CFA3 /* Main.storyboard */,
+				A9C57C572400636200A5964D /* Support */,
 			);
 			path = "TidepoolKit Example";
 			sourceTree = "<group>";
@@ -326,6 +329,17 @@
 				A994917F23FE1AD500865738 /* ProcessInfo.swift */,
 			);
 			path = Extensions;
+			sourceTree = "<group>";
+		};
+		A9C57C572400636200A5964D /* Support */ = {
+			isa = PBXGroup;
+			children = (
+				A9C57C552400628800A5964D /* IdentifiableClass.swift */,
+				A9C57C5324005C3800A5964D /* LoadingTableViewCell.swift */,
+				A994917123FB6C1100865738 /* StatusTableViewCell.swift */,
+				A903670423D939AE009BD8C5 /* TextButtonTableViewCell.swift */,
+			);
+			path = Support;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -588,8 +602,10 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				A903670523D939AE009BD8C5 /* LabelTableViewCell.swift in Sources */,
+				A903670523D939AE009BD8C5 /* TextButtonTableViewCell.swift in Sources */,
+				A9C57C562400628800A5964D /* IdentifiableClass.swift in Sources */,
 				A994917223FB6C1100865738 /* StatusTableViewCell.swift in Sources */,
+				A9C57C5424005C3800A5964D /* LoadingTableViewCell.swift in Sources */,
 				A943538F23C932D10093CFA3 /* RootTableViewController.swift in Sources */,
 				A943538D23C932D10093CFA3 /* AppDelegate.swift in Sources */,
 				A994916723FB288E00865738 /* Logging.swift in Sources */,
@@ -764,7 +780,7 @@
 				GCC_WARN_UNUSED_LABEL = YES;
 				GCC_WARN_UNUSED_PARAMETER = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
-				IPHONEOS_DEPLOYMENT_TARGET = 12.1;
+				IPHONEOS_DEPLOYMENT_TARGET = 13.0;
 				MTL_ENABLE_DEBUG_INFO = INCLUDE_SOURCE;
 				MTL_FAST_MATH = YES;
 				ONLY_ACTIVE_ARCH = YES;
@@ -861,7 +877,7 @@
 				GCC_WARN_UNUSED_LABEL = YES;
 				GCC_WARN_UNUSED_PARAMETER = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
-				IPHONEOS_DEPLOYMENT_TARGET = 12.1;
+				IPHONEOS_DEPLOYMENT_TARGET = 13.0;
 				MTL_ENABLE_DEBUG_INFO = NO;
 				MTL_FAST_MATH = YES;
 				SDKROOT = iphoneos;

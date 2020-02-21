@@ -23,3 +23,5 @@ class StatusTableViewCell: UITableViewCell {
         userIDLabel?.text = nil
     }
 }
+
+extension StatusTableViewCell: IdentifiableClass {}
