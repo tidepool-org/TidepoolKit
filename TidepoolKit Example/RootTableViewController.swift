@@ -16,19 +16,68 @@ class RootTableViewController: UITableViewController {
     private var environment: TEnvironment? {
         didSet {
             UserDefaults.standard.environment = environment
-            tableView.reloadData()
+            updateViews()
         }
     }
     private var session: TSession? {
         didSet {
             UserDefaults.standard.session = session
-            tableView.reloadData()
+            updateViews()
         }
     }
+    private var dataSetId: String? {
+        didSet {
+            UserDefaults.standard.dataSetId = dataSetId
+            updateViews()
+        }
+    }
+
+    required init?(coder: NSCoder) {
+        super.init(coder: coder)
+
+        self.session = UserDefaults.standard.session
+        self.environment = UserDefaults.standard.environment
+        self.dataSetId = UserDefaults.standard.dataSetId
+    }
+
+    override func viewDidLoad() {
+        super.viewDidLoad()
+
+        tableView.register(TextButtonTableViewCell.self, forCellReuseIdentifier: TextButtonTableViewCell.className)
+
+        navigationItem.rightBarButtonItem = UIBarButtonItem(barButtonSystemItem: .action, target: self, action: #selector(share))
+
+        updateViews()
+    }
+
+    private func updateViews() {
+        tableView.reloadData()
+        navigationItem.rightBarButtonItem?.isEnabled = session != nil
+    }
+
+    @objc func share() {
+        guard let session = session,
+            let data = try? JSONEncoder.pretty.encode(session),
+            let text = String(data: data, encoding: .utf8) else
+        {
+            return
+        }
+        let activityItem = UTF8TextFileActivityItem(name: "Session")
+        if let error = activityItem.write(text: text) {
+            present(UIAlertController(error: error), animated: true)
+        } else {
+            present(UIActivityViewController(activityItems: [activityItem], applicationActivities: nil), animated: true)
+        }
+    }
+
+    // MARK: - UITableView
 
     private enum Section: Int, CaseIterable {
         case status
         case authentication
+        case profile
+        case dataSet
+        case datum
     }
 
     private enum Authentication: Int, CaseIterable {
@@ -37,17 +86,18 @@ class RootTableViewController: UITableViewController {
         case logout
     }
 
-    required init?(coder: NSCoder) {
-        super.init(coder: coder)
-
-        self.session = UserDefaults.standard.session
-        self.environment = UserDefaults.standard.environment
+    private enum Profile: Int, CaseIterable {
+        case get
     }
 
-    override func viewDidLoad() {
-        super.viewDidLoad()
+    private enum DataSet: Int, CaseIterable {
+        case list
+        case create
+    }
 
-        tableView.register(TextButtonTableViewCell.self, forCellReuseIdentifier: TextButtonTableViewCell.className)
+    private enum Datum: Int, CaseIterable {
+        case list
+        case create
     }
 
     override func numberOfSections(in tableView: UITableView) -> Int {
@@ -60,6 +110,12 @@ class RootTableViewController: UITableViewController {
             return NSLocalizedString("Status", comment: "The title for the header of the status section")
         case .authentication:
             return NSLocalizedString("Authentication", comment: "The title for the header of the authentication section")
+        case .profile:
+            return NSLocalizedString("Profile", comment: "The title for the header of the profile section")
+        case .dataSet:
+            return NSLocalizedString("Data Set", comment: "The title for the header of the data set section")
+        case .datum:
+            return NSLocalizedString("Datum", comment: "The title for the header of the datum section")
         }
     }
 
@@ -69,6 +125,12 @@ class RootTableViewController: UITableViewController {
             return 1
         case .authentication:
             return Authentication.allCases.count
+        case .profile:
+            return Profile.allCases.count
+        case .dataSet:
+            return DataSet.allCases.count
+        case .datum:
+            return Datum.allCases.count
         }
     }
 
@@ -82,11 +144,11 @@ class RootTableViewController: UITableViewController {
             if let session = session {
                 cell.stateLabel?.text = NSLocalizedString("Authenticated", comment: "The state label when an authenticated session exists")
                 cell.authenticationTokenLabel?.text = session.authenticationToken
-                cell.userIDLabel?.text = session.userID
+                cell.userIdLabel?.text = session.userId
             } else {
                 cell.stateLabel?.text = NSLocalizedString("Unauthenticated", comment: "The state text label an authenticated session does not exist")
                 cell.authenticationTokenLabel?.text = defaultStatusLabelText
-                cell.userIDLabel?.text = defaultStatusLabelText
+                cell.userIdLabel?.text = defaultStatusLabelText
             }
             return cell
         case .authentication:
@@ -96,14 +158,44 @@ class RootTableViewController: UITableViewController {
                 cell.textLabel?.text = NSLocalizedString("Login", comment: "The text label of the authentication login cell")
                 cell.accessoryType = .disclosureIndicator
                 cell.isEnabled = session == nil
-                return cell
             case .refresh:
                 cell.textLabel?.text = NSLocalizedString("Refresh", comment: "The text label of the authentication refresh cell")
                 cell.isEnabled = session != nil
-                return cell
             case .logout:
                 cell.textLabel?.text = NSLocalizedString("Logout", comment: "The text label of the authentication logout cell")
                 cell.isEnabled = session != nil
+            }
+            return cell
+        case .profile:
+            let cell = tableView.dequeueReusableCell(withIdentifier: TextButtonTableViewCell.className, for: indexPath) as! TextButtonTableViewCell
+            cell.accessoryType = .disclosureIndicator
+            cell.isEnabled = session != nil
+            switch Profile(rawValue: indexPath.row)! {
+            case .get:
+                cell.textLabel?.text = NSLocalizedString("Get Profile", comment: "The text label of the get profile cell")
+            }
+            return cell
+        case .dataSet:
+            let cell = tableView.dequeueReusableCell(withIdentifier: TextButtonTableViewCell.className, for: indexPath) as! TextButtonTableViewCell
+            cell.accessoryType = .disclosureIndicator
+            cell.isEnabled = session != nil
+            switch DataSet(rawValue: indexPath.row)! {
+            case .list:
+                cell.textLabel?.text = NSLocalizedString("List Data Sets", comment: "The text label of the list data sets cell")
+            case .create:
+                cell.textLabel?.text = NSLocalizedString("Create Data Set", comment: "The text label of the create data set cell")
+            }
+            return cell
+        case .datum:
+            let cell = tableView.dequeueReusableCell(withIdentifier: TextButtonTableViewCell.className, for: indexPath) as! TextButtonTableViewCell
+            cell.accessoryType = .disclosureIndicator
+            switch Datum(rawValue: indexPath.row)! {
+            case .list:
+                cell.textLabel?.text = NSLocalizedString("List Data", comment: "The text label of the list data cell")
+                cell.isEnabled = session != nil
+            case .create:
+                cell.textLabel?.text = NSLocalizedString("Create Data", comment: "The text label of the create data cell")
+                cell.isEnabled = session != nil && dataSetId != nil
             }
             return cell
         }
@@ -117,11 +209,18 @@ class RootTableViewController: UITableViewController {
             switch Authentication(rawValue: indexPath.row)! {
             case .login:
                 return session == nil
-            case .refresh:
-                return session != nil
-            case .logout:
+            default:
                 return session != nil
             }
+        case .datum:
+            switch Datum(rawValue: indexPath.row)! {
+            case .create:
+                return session != nil && dataSetId != nil
+            default:
+                return session != nil
+            }
+        default:
+            return session != nil
         }
     }
 
@@ -134,23 +233,41 @@ class RootTableViewController: UITableViewController {
             cell.isLoading = true
             switch Authentication(rawValue: indexPath.row)! {
             case .login:
-                authenticationLogin() {
-                    cell.isLoading = false
-                }
+                login(completion: cell.stopLoading)
             case .refresh:
-                authenticationRefresh() {
-                    cell.isLoading = false
-                }
+                refresh(completion: cell.stopLoading)
             case .logout:
-                authenticationLogout() {
-                    cell.isLoading = false
-                }
+                logout(completion: cell.stopLoading)
+            }
+        case .profile:
+            let cell = tableView.cellForRow(at: indexPath) as! TextButtonTableViewCell
+            cell.isLoading = true
+            getProfile(completion: cell.stopLoading)
+        case .dataSet:
+            let cell = tableView.cellForRow(at: indexPath) as! TextButtonTableViewCell
+            cell.isLoading = true
+            switch DataSet(rawValue: indexPath.row)! {
+            case .list:
+                listDataSets(completion: cell.stopLoading)
+            case .create:
+                createDataSet(completion: cell.stopLoading)
+            }
+        case .datum:
+            let cell = tableView.cellForRow(at: indexPath) as! TextButtonTableViewCell
+            cell.isLoading = true
+            switch Datum(rawValue: indexPath.row)! {
+            case .list:
+                listData(completion: cell.stopLoading)
+            case .create:
+                createData(completion: cell.stopLoading)
             }
         }
         tableView.deselectRow(at: indexPath, animated: true)
     }
 
-    private func authenticationLogin(completion: @escaping () -> Void) {
+    // MARK: - Authentication
+
+    private func login(completion: @escaping () -> Void) {
         var loginSignupViewController = api.loginSignupViewController()
         loginSignupViewController.delegate = self
         loginSignupViewController.environment = environment
@@ -158,13 +275,13 @@ class RootTableViewController: UITableViewController {
         completion()
     }
 
-    private func authenticationRefresh(completion: @escaping () -> Void) {
+    private func refresh(completion: @escaping () -> Void) {
         api.refresh(session: session!) { result in
             DispatchQueue.main.async {
                 switch result {
                 case .failure(let error):
                     let alert = UIAlertController(error: error) {
-                        if case .requestNotAuthenticated(_, _) = error {
+                        if case .requestNotAuthenticated = error {
                             self.session = nil
                         }
                     }
@@ -177,7 +294,7 @@ class RootTableViewController: UITableViewController {
         }
     }
 
-    private func authenticationLogout(completion: @escaping () -> Void) {
+    private func logout(completion: @escaping () -> Void) {
         api.logout(session: session!) { error in
             DispatchQueue.main.async {
                 if let error = error {
@@ -191,6 +308,127 @@ class RootTableViewController: UITableViewController {
                 completion()
             }
         }
+    }
+
+    // MARK: - Profile
+
+    private func getProfile(completion: @escaping () -> Void) {
+        api.getProfile(session: session!) { result in
+            DispatchQueue.main.async {
+                switch result {
+                case .failure(let error):
+                    self.present(UIAlertController(error: error), animated: true)
+                case .success(let profile):
+                    self.display(profile, withTitle: "Get Profile")
+                }
+                completion()
+            }
+        }
+    }
+
+    // MARK: - Data Set
+
+    private func listDataSets(completion: @escaping () -> Void) {
+        let filter = TDataSet.Filter(clientName: Bundle.main.bundleIdentifier)
+        api.listDataSets(filter: filter, session: session!) { result in
+            DispatchQueue.main.async {
+                switch result {
+                case .failure(let error):
+                    self.present(UIAlertController(error: error), animated: true)
+                case .success(let dataSets):
+                    self.dataSetId = dataSets.first?.uploadId
+                    self.display(dataSets, withTitle: "List Data Sets")
+                }
+                completion()
+            }
+        }
+    }
+
+    private func createDataSet(completion: @escaping () -> Void) {
+        let client = TDataSet.Client(name: Bundle.main.bundleIdentifier!, version: Bundle.main.semanticVersion!)
+        let deduplicator = TDataSet.Deduplicator(name: .none)
+        let dataSet = TDataSet(dataSetType: .continuous, client: client, deduplicator: deduplicator)
+        api.createDataSet(dataSet, session: session!) { result in
+            DispatchQueue.main.async {
+                switch result {
+                case .failure(let error):
+                    self.present(UIAlertController(error: error), animated: true)
+                case .success(let dataSet):
+                    self.dataSetId = dataSet.uploadId
+                    self.display(dataSet, withTitle: "Create Data Set")
+                }
+                completion()
+            }
+        }
+    }
+
+    // MARK: - Datum
+
+    private func listData(completion: @escaping () -> Void) {
+        let filter = TDatum.Filter(dataSetId: dataSetId)
+        api.listData(filter: filter, session: session!) { result in
+            DispatchQueue.main.async {
+                switch result {
+                case .failure(let error):
+                    self.present(UIAlertController(error: error), animated: true)
+                case .success((let data, let malformed)):
+                    if !malformed.isEmpty {
+                        self.present(UIAlertController(error: "Response contains malformed data.") {
+                            self.display(malformed, withTitle: "MALFORMED - List Data")
+                        }, animated: true)
+                    } else {
+                        self.display(data, withTitle: "List Data")
+                    }
+                }
+                completion()
+            }
+        }
+    }
+
+    private func createData(completion: @escaping () -> Void) {
+        let data = Sample.Datum.data
+        api.createData(data, dataSetId: dataSetId!, session: session!) { error in
+            DispatchQueue.main.async {
+                if let error = error {
+                    if case .requestMalformedJSON(_, _, let errors) = error {
+                        self.present(UIAlertController(error: "Response contains errors.") {
+                            self.display(errors, withTitle: "ERRORS - Create Data")
+                        }, animated: true)
+                    } else {
+                        self.present(UIAlertController(error: error), animated: true)
+                    }
+                }
+                completion()
+            }
+        }
+    }
+
+    // MARK: - Internal
+
+    private func display<E>(_ encodable: E, withTitle title: String? = nil) where E: Encodable {
+        do {
+            display(try JSONEncoder.pretty.encode(encodable), withTitle: title)
+        } catch let error {
+            TSharedLogging.error("Failure to encode object as JSON data [\(error)]")
+            present(UIAlertController(error: "Failure to encode object as JSON data."), animated: true)
+        }
+    }
+
+    private func display(_ object: Any, withTitle title: String? = nil) {
+        do {
+            display(try JSONSerialization.data(withJSONObject: object, options: [.prettyPrinted, .sortedKeys, .withoutEscapingSlashes]), withTitle: title)
+        } catch let error {
+            TSharedLogging.error("Failure to encode object as JSON data [\(error)]")
+            present(UIAlertController(error: "Failure to encode object as JSON data."), animated: true)
+        }
+    }
+
+    private func display(_ data: Data, withTitle title: String? = nil) {
+        guard let text = String(data: data, encoding: .utf8) else {
+            present(UIAlertController(error: "Failure to decode JSON data as string."), animated: true)
+            return
+        }
+        show(TextViewController(text: text, withTitle: title), sender: self)
     }
 }
 

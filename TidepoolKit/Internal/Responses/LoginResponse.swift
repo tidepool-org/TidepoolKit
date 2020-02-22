@@ -6,29 +6,23 @@
 //  Copyright © 2020 Tidepool Project. All rights reserved.
 //
 
-struct LoginResponse: RawRepresentable {
-    typealias RawValue = [String: Any]
-
-    let userID: String
+struct LoginResponse: Codable, Equatable {
+    let userId: String
     let email: String
     let emailVerified: Bool
     let termsAccepted: String?
 
-    init?(rawValue: RawValue) {
-        guard let userID = rawValue["userid"] as? String,
-            let email = rawValue["username"] as? String,
-            let emailVerified = rawValue["emailVerified"] as? Bool else
-        {
-            return nil
-        }
-
-        self.userID = userID
+    init(userId: String, email: String, emailVerified: Bool = false, termsAccepted: String? = nil) {
+        self.userId = userId
         self.email = email
         self.emailVerified = emailVerified
-        self.termsAccepted = rawValue["termsAccepted"] as? String
+        self.termsAccepted = termsAccepted
     }
 
-    var rawValue: RawValue {
-        fatalError("rawValue has not been implemented")
+    private enum CodingKeys: String, CodingKey {
+        case userId = "userid"
+        case email = "username"
+        case emailVerified
+        case termsAccepted
     }
 }

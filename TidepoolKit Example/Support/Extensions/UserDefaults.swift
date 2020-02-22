@@ -13,17 +13,18 @@ extension UserDefaults {
     private enum Key: String {
         case environment = "org.tidepool.TidepoolKit-Example.environment"
         case session = "org.tidepool.TidepoolKit-Example.session"
+        case dataSetId = "org.tidepool.TidepoolKit-Example.dataSetId"
     }
 
     var environment: TEnvironment? {
         get {
-            guard let environmentRawValue = dictionary(forKey: Key.environment.rawValue) else {
+            guard let data = data(forKey: Key.environment.rawValue) else {
                 return nil
             }
-            return TEnvironment(rawValue: environmentRawValue)
+            return try? JSONDecoder.tidepool.decode(TEnvironment.self, from: data)
         }
         set {
-            set(newValue?.rawValue, forKey: Key.environment.rawValue)
+            set(try! JSONEncoder.tidepool.encode(newValue), forKey: Key.environment.rawValue)
         }
     }
 
@@ -31,13 +32,22 @@ extension UserDefaults {
     // for example purposes ONLY, use UserDefaults.
     var session: TSession? {
         get {
-            guard let sessionRawValue = dictionary(forKey: Key.session.rawValue) else {
+            guard let data = data(forKey: Key.session.rawValue) else {
                 return nil
             }
-            return TSession(rawValue: sessionRawValue)
+            return try? JSONDecoder.tidepool.decode(TSession.self, from: data)
         }
         set {
-            set(newValue?.rawValue, forKey: Key.session.rawValue)
+            set(try! JSONEncoder.tidepool.encode(newValue), forKey: Key.session.rawValue)
+        }
+    }
+
+    var dataSetId: String? {
+        get {
+            return string(forKey: Key.dataSetId.rawValue)
+        }
+        set {
+            set(newValue, forKey: Key.dataSetId.rawValue)
         }
     }
 }

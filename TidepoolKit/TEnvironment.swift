@@ -12,8 +12,7 @@ import Foundation
 /// via DNS SRV record lookup.
 ///
 /// Network requests will use HTTPS only if port is 443. Otherwise, HTTP will be used.
-public struct TEnvironment: RawRepresentable {
-    public typealias RawValue = [String: Any]
+public struct TEnvironment: Codable, Equatable {
 
     /// The host for the environment. For example, api.tidepool.org.
     public let host: String
@@ -26,24 +25,7 @@ public struct TEnvironment: RawRepresentable {
         self.port = port
     }
 
-    public init?(rawValue: RawValue) {
-        guard let host = rawValue["host"] as? String,
-            let port = rawValue["port"] as? UInt16 else
-        {
-            return nil
-        }
-        self.host = host
-        self.port = port
-    }
-
-    public var rawValue: RawValue {
-        var rawValue: RawValue = [:]
-        rawValue["host"] = host
-        rawValue["port"] = port
-        return rawValue
-    }
-
-    public func url(path: String = "", queryItems: [URLQueryItem]? = nil) -> URL {
+    public func url(path: String = "/", queryItems: [URLQueryItem]? = nil) -> URL? {
         var components = URLComponents()
         components.host = host
         switch port {
@@ -55,9 +37,9 @@ public struct TEnvironment: RawRepresentable {
                 components.scheme = "http"
                 components.port = Int(port)
         }
-        components.path = path
+        components.path = path.hasPrefix("/") ? path : "/\(path)"
         components.queryItems = queryItems
-        return components.url!
+        return components.url
     }
 }
 

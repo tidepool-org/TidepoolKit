@@ -12,7 +12,7 @@ class StatusTableViewCell: UITableViewCell {
     @IBOutlet weak var stateLabel: UILabel!
     @IBOutlet weak var environmentLabel: UILabel!
     @IBOutlet weak var authenticationTokenLabel: UILabel!
-    @IBOutlet weak var userIDLabel: UILabel!
+    @IBOutlet weak var userIdLabel: UILabel!
 
     override public func prepareForReuse() {
         super.prepareForReuse()
@@ -20,7 +20,7 @@ class StatusTableViewCell: UITableViewCell {
         stateLabel?.text = nil
         environmentLabel?.text = nil
         authenticationTokenLabel?.text = nil
-        userIDLabel?.text = nil
+        userIdLabel?.text = nil
     }
 }
 

@@ -20,4 +20,8 @@ class LoadingTableViewCell: UITableViewCell {
             }
         }
     }
+
+    func stopLoading() {
+        self.isLoading = false
+    }
 }

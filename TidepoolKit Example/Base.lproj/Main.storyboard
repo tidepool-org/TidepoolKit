@@ -80,7 +80,7 @@
                                             <nil key="textColor"/>
                                             <nil key="highlightedColor"/>
                                         </label>
-                                        <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="51" verticalHuggingPriority="251" horizontalCompressionResistancePriority="749" text="&lt;userID&gt;" textAlignment="right" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="IkC-fw-Mnq">
+                                        <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="51" verticalHuggingPriority="251" horizontalCompressionResistancePriority="749" text="&lt;userId&gt;" textAlignment="right" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="IkC-fw-Mnq">
                                             <rect key="frame" x="80" y="87" width="275" height="17"/>
                                             <fontDescription key="fontDescription" type="system" pointSize="14"/>
                                             <nil key="textColor"/>
@@ -115,7 +115,7 @@
                                     <outlet property="authenticationTokenLabel" destination="fUM-Vk-uhD" id="4NB-od-Nrb"/>
                                     <outlet property="environmentLabel" destination="3z1-wF-2wm" id="2ia-3C-Lh7"/>
                                     <outlet property="stateLabel" destination="Zvw-uB-gtU" id="Fdl-WP-eya"/>
-                                    <outlet property="userIDLabel" destination="IkC-fw-Mnq" id="fg1-F1-DuG"/>
+                                    <outlet property="userIdLabel" destination="IkC-fw-Mnq" id="kpq-S8-cr1"/>
                                 </connections>
                             </tableViewCell>
                         </prototypes>

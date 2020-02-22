@@ -7,13 +7,20 @@
 //
 
 import UIKit
+import TidepoolKit
 
 extension UIAlertController {
     convenience init(error: Error, handler: (() -> Void)? = nil) {
+        TSharedLogging.error((error as CustomDebugStringConvertible).debugDescription)
         self.init(errorString: error.localizedDescription, handler: handler)
     }
 
-    convenience init(errorString: String, handler: (() -> Void)? = nil) {
+    convenience init(error: String, handler: (() -> Void)? = nil) {
+        TSharedLogging.error(error)
+        self.init(errorString: error, handler: handler)
+    }
+
+    private convenience init(errorString: String, handler: (() -> Void)? = nil) {
         self.init(title: NSLocalizedString("Error", comment: "The title of the error alert"), message: errorString, preferredStyle: .alert)
         addAction(UIAlertAction(title: NSLocalizedString("OK", comment: "The title of the OK button in the error alert"), style: .default) { _ in handler?() })
     }

@@ -8,7 +8,19 @@
 
 /* Begin PBXBuildFile section */
 		A903670523D939AE009BD8C5 /* TextButtonTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = A903670423D939AE009BD8C5 /* TextButtonTableViewCell.swift */; };
+		A9116ACD2405B7F300483021 /* Bundle.swift in Sources */ = {isa = PBXBuildFile; fileRef = A9116ACC2405B7F300483021 /* Bundle.swift */; };
+		A9116ACF2405CC3300483021 /* LegacyResponse.swift in Sources */ = {isa = PBXBuildFile; fileRef = A9116ACE2405CC3300483021 /* LegacyResponse.swift */; };
+		A9116AD12405D81100483021 /* JSONDecoder.swift in Sources */ = {isa = PBXBuildFile; fileRef = A9116AD02405D81100483021 /* JSONDecoder.swift */; };
+		A9116AD32405D81B00483021 /* JSONEncoder.swift in Sources */ = {isa = PBXBuildFile; fileRef = A9116AD22405D81B00483021 /* JSONEncoder.swift */; };
+		A9116AD82406012600483021 /* Date.swift in Sources */ = {isa = PBXBuildFile; fileRef = A9116AD62406012600483021 /* Date.swift */; };
+		A9116AD92406012600483021 /* TimeInterval.swift in Sources */ = {isa = PBXBuildFile; fileRef = A9116AD72406012600483021 /* TimeInterval.swift */; };
+		A9116ADD24075D5A00483021 /* Codable.swift in Sources */ = {isa = PBXBuildFile; fileRef = A9116ADC24075D5A00483021 /* Codable.swift */; };
+		A9116AE224083C1100483021 /* TDataSet.swift in Sources */ = {isa = PBXBuildFile; fileRef = A9116AE024083C1100483021 /* TDataSet.swift */; };
+		A9116AF32409D8C400483021 /* TDatum.swift in Sources */ = {isa = PBXBuildFile; fileRef = A9116AF12409D8C400483021 /* TDatum.swift */; };
+		A9116AF62409D8E000483021 /* DataResponse.swift in Sources */ = {isa = PBXBuildFile; fileRef = A9116AF52409D8E000483021 /* DataResponse.swift */; };
+		A929A90D2411DDB300742B08 /* URLProtocolMock.swift in Sources */ = {isa = PBXBuildFile; fileRef = A929A90C2411DDB300742B08 /* URLProtocolMock.swift */; };
 		A92F62D223D7D0E3007B3CA6 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = A92F62D123D7D0E3007B3CA6 /* Assets.xcassets */; };
+		A93F59FE240D9C1800299E75 /* XCTest.swift in Sources */ = {isa = PBXBuildFile; fileRef = A93F59FD240D9C1800299E75 /* XCTest.swift */; };
 		A943535A23C932A10093CFA3 /* TidepoolKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = A943535023C932A10093CFA3 /* TidepoolKit.framework */; };
 		A943536123C932A10093CFA3 /* TidepoolKit.h in Headers */ = {isa = PBXBuildFile; fileRef = A943535323C932A10093CFA3 /* TidepoolKit.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		A943537823C932BF0093CFA3 /* TidepoolKitUI.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = A943536F23C932BF0093CFA3 /* TidepoolKitUI.framework */; };
@@ -20,6 +32,8 @@
 		A943539723C932D20093CFA3 /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = A943539523C932D20093CFA3 /* LaunchScreen.storyboard */; };
 		A94D7D4323E242D60087A9C0 /* Locked.swift in Sources */ = {isa = PBXBuildFile; fileRef = A94D7D4223E242D60087A9C0 /* Locked.swift */; };
 		A94D7D4523E243780087A9C0 /* UnfairLock.swift in Sources */ = {isa = PBXBuildFile; fileRef = A94D7D4423E243780087A9C0 /* UnfairLock.swift */; };
+		A96633DE2409E99F007B68C1 /* TFoodDatum.swift in Sources */ = {isa = PBXBuildFile; fileRef = A96633C22409E99F007B68C1 /* TFoodDatum.swift */; };
+		A96633E32409E99F007B68C1 /* TCBGDatum.swift in Sources */ = {isa = PBXBuildFile; fileRef = A96633C82409E99F007B68C1 /* TCBGDatum.swift */; };
 		A973CD2323D68B6400C44032 /* TLogging.swift in Sources */ = {isa = PBXBuildFile; fileRef = A973CD2223D68B6400C44032 /* TLogging.swift */; };
 		A973CD2523D68E9D00C44032 /* LoginSignupViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = A973CD2423D68E9D00C44032 /* LoginSignupViewController.swift */; };
 		A973CD2723D68FC300C44032 /* TAPI+UI.swift in Sources */ = {isa = PBXBuildFile; fileRef = A973CD2623D68FC300C44032 /* TAPI+UI.swift */; };
@@ -30,6 +44,15 @@
 		A973CD3423D6916C00C44032 /* TidepoolKitUI.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = A943536F23C932BF0093CFA3 /* TidepoolKitUI.framework */; };
 		A973CD3523D6916C00C44032 /* TidepoolKitUI.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = A943536F23C932BF0093CFA3 /* TidepoolKitUI.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
 		A973CD3B23D692D600C44032 /* LoginSignup.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = A973CD3D23D692D600C44032 /* LoginSignup.storyboard */; };
+		A98780B8240A0D5E0007D5E1 /* TOriginTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = A9878093240A0D5E0007D5E1 /* TOriginTests.swift */; };
+		A98780B9240A0D5E0007D5E1 /* TAsssociationTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = A9878094240A0D5E0007D5E1 /* TAsssociationTests.swift */; };
+		A98780BA240A0D5E0007D5E1 /* TBloodGlucoseTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = A9878095240A0D5E0007D5E1 /* TBloodGlucoseTests.swift */; };
+		A98780BB240A0D5E0007D5E1 /* TLocationTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = A9878096240A0D5E0007D5E1 /* TLocationTests.swift */; };
+		A98780BD240A0D5E0007D5E1 /* TFoodDatumTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = A9878099240A0D5E0007D5E1 /* TFoodDatumTests.swift */; };
+		A98780C6240A0D5E0007D5E1 /* TCBGDatumTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = A98780A3240A0D5E0007D5E1 /* TCBGDatumTests.swift */; };
+		A98780CC240A0D5E0007D5E1 /* TDatumTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = A98780A9240A0D5E0007D5E1 /* TDatumTests.swift */; };
+		A98780DB240A14E80007D5E1 /* Date.swift in Sources */ = {isa = PBXBuildFile; fileRef = A98780DA240A14E80007D5E1 /* Date.swift */; };
+		A98D55282410A50200EE62B5 /* Sample.swift in Sources */ = {isa = PBXBuildFile; fileRef = A98D55272410A50200EE62B5 /* Sample.swift */; };
 		A994916723FB288E00865738 /* Logging.swift in Sources */ = {isa = PBXBuildFile; fileRef = A994916623FB288E00865738 /* Logging.swift */; };
 		A994916923FB4CF500865738 /* TEnvironment.swift in Sources */ = {isa = PBXBuildFile; fileRef = A994916823FB4CF500865738 /* TEnvironment.swift */; };
 		A994916B23FB4D3200865738 /* TSession.swift in Sources */ = {isa = PBXBuildFile; fileRef = A994916A23FB4D3200865738 /* TSession.swift */; };
@@ -39,11 +62,27 @@
 		A994917A23FE15CE00865738 /* HTTPURLResponse.swift in Sources */ = {isa = PBXBuildFile; fileRef = A994917923FE15CE00865738 /* HTTPURLResponse.swift */; };
 		A994917C23FE15E000865738 /* Bundle.swift in Sources */ = {isa = PBXBuildFile; fileRef = A994917B23FE15E000865738 /* Bundle.swift */; };
 		A994918023FE1AD500865738 /* ProcessInfo.swift in Sources */ = {isa = PBXBuildFile; fileRef = A994917F23FE1AD500865738 /* ProcessInfo.swift */; };
+		A9BF06D0240EE47D005D5337 /* TDictionary.swift in Sources */ = {isa = PBXBuildFile; fileRef = A9BF06CF240EE47D005D5337 /* TDictionary.swift */; };
+		A9BF06D2240EEC87005D5337 /* TProfileTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = A9BF06D1240EEC87005D5337 /* TProfileTests.swift */; };
+		A9BF06D6240EF5BB005D5337 /* TDataSetTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = A9BF06D5240EF5BB005D5337 /* TDataSetTests.swift */; };
+		A9BF06D8240F0A13005D5337 /* TEnvironmentTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = A9BF06D7240F0A13005D5337 /* TEnvironmentTests.swift */; };
+		A9BF06DA240F0A20005D5337 /* TSessionTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = A9BF06D9240F0A20005D5337 /* TSessionTests.swift */; };
+		A9BF06E0240F2FF1005D5337 /* TAPITests.swift in Sources */ = {isa = PBXBuildFile; fileRef = A9BF06DF240F2FF1005D5337 /* TAPITests.swift */; };
+		A9BF06E4240F3051005D5337 /* JSONDecoderTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = A9BF06E3240F3051005D5337 /* JSONDecoderTests.swift */; };
+		A9BF06E6240F305B005D5337 /* JSONEncoderTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = A9BF06E5240F305B005D5337 /* JSONEncoderTests.swift */; };
+		A9BF06E8240F3557005D5337 /* JSONEncoder.swift in Sources */ = {isa = PBXBuildFile; fileRef = A9BF06E7240F3557005D5337 /* JSONEncoder.swift */; };
+		A9C57C2423FF3BFD00A5964D /* TBloodGlucose.swift in Sources */ = {isa = PBXBuildFile; fileRef = A9C57BF823FF3BFD00A5964D /* TBloodGlucose.swift */; };
+		A9C57C2823FF3BFD00A5964D /* TLocation.swift in Sources */ = {isa = PBXBuildFile; fileRef = A9C57BFD23FF3BFD00A5964D /* TLocation.swift */; };
+		A9C57C2923FF3BFD00A5964D /* TAssociation.swift in Sources */ = {isa = PBXBuildFile; fileRef = A9C57BFE23FF3BFD00A5964D /* TAssociation.swift */; };
+		A9C57C2A23FF3BFD00A5964D /* TOrigin.swift in Sources */ = {isa = PBXBuildFile; fileRef = A9C57BFF23FF3BFD00A5964D /* TOrigin.swift */; };
 		A9C57C5023FF66A000A5964D /* LoginResponse.swift in Sources */ = {isa = PBXBuildFile; fileRef = A9C57C4F23FF66A000A5964D /* LoginResponse.swift */; };
 		A9C57C5424005C3800A5964D /* LoadingTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = A9C57C5324005C3800A5964D /* LoadingTableViewCell.swift */; };
 		A9C57C562400628800A5964D /* IdentifiableClass.swift in Sources */ = {isa = PBXBuildFile; fileRef = A9C57C552400628800A5964D /* IdentifiableClass.swift */; };
+		A9C57C592400B76000A5964D /* TProfile.swift in Sources */ = {isa = PBXBuildFile; fileRef = A9C57C582400B76000A5964D /* TProfile.swift */; };
+		A9C9D24F2400BFCC00D66F16 /* TextViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = A9C9D24E2400BFCC00D66F16 /* TextViewController.swift */; };
 		A9C9D2522400CC4300D66F16 /* UIAlertController.swift in Sources */ = {isa = PBXBuildFile; fileRef = A9C9D2512400CC4300D66F16 /* UIAlertController.swift */; };
 		A9C9D2542400CC6500D66F16 /* UserDefaults.swift in Sources */ = {isa = PBXBuildFile; fileRef = A9C9D2532400CC6500D66F16 /* UserDefaults.swift */; };
+		A9C9D2562400CD7A00D66F16 /* UTF8TextFileActivityItem.swift in Sources */ = {isa = PBXBuildFile; fileRef = A9C9D2552400CD7A00D66F16 /* UTF8TextFileActivityItem.swift */; };
 		A9EAB8E823DFC77E00874D2A /* DNS.swift in Sources */ = {isa = PBXBuildFile; fileRef = A9EAB8E723DFC77E00874D2A /* DNS.swift */; };
 /* End PBXBuildFile section */
 
@@ -130,7 +169,19 @@
 
 /* Begin PBXFileReference section */
 		A903670423D939AE009BD8C5 /* TextButtonTableViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TextButtonTableViewCell.swift; sourceTree = "<group>"; };
+		A9116ACC2405B7F300483021 /* Bundle.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Bundle.swift; sourceTree = "<group>"; };
+		A9116ACE2405CC3300483021 /* LegacyResponse.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LegacyResponse.swift; sourceTree = "<group>"; };
+		A9116AD02405D81100483021 /* JSONDecoder.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = JSONDecoder.swift; sourceTree = "<group>"; };
+		A9116AD22405D81B00483021 /* JSONEncoder.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = JSONEncoder.swift; sourceTree = "<group>"; };
+		A9116AD62406012600483021 /* Date.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Date.swift; sourceTree = "<group>"; };
+		A9116AD72406012600483021 /* TimeInterval.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TimeInterval.swift; sourceTree = "<group>"; };
+		A9116ADC24075D5A00483021 /* Codable.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Codable.swift; sourceTree = "<group>"; };
+		A9116AE024083C1100483021 /* TDataSet.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TDataSet.swift; sourceTree = "<group>"; };
+		A9116AF12409D8C400483021 /* TDatum.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TDatum.swift; sourceTree = "<group>"; };
+		A9116AF52409D8E000483021 /* DataResponse.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = DataResponse.swift; sourceTree = "<group>"; };
+		A929A90C2411DDB300742B08 /* URLProtocolMock.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = URLProtocolMock.swift; sourceTree = "<group>"; };
 		A92F62D123D7D0E3007B3CA6 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
+		A93F59FD240D9C1800299E75 /* XCTest.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = XCTest.swift; sourceTree = "<group>"; };
 		A943535023C932A10093CFA3 /* TidepoolKit.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = TidepoolKit.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		A943535323C932A10093CFA3 /* TidepoolKit.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = TidepoolKit.h; sourceTree = "<group>"; };
 		A943535423C932A10093CFA3 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
@@ -150,11 +201,22 @@
 		A943539823C932D20093CFA3 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		A94D7D4223E242D60087A9C0 /* Locked.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Locked.swift; sourceTree = "<group>"; };
 		A94D7D4423E243780087A9C0 /* UnfairLock.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UnfairLock.swift; sourceTree = "<group>"; };
+		A96633C22409E99F007B68C1 /* TFoodDatum.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TFoodDatum.swift; sourceTree = "<group>"; };
+		A96633C82409E99F007B68C1 /* TCBGDatum.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TCBGDatum.swift; sourceTree = "<group>"; };
 		A973CD2223D68B6400C44032 /* TLogging.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TLogging.swift; sourceTree = "<group>"; };
 		A973CD2423D68E9D00C44032 /* LoginSignupViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LoginSignupViewController.swift; sourceTree = "<group>"; };
 		A973CD2623D68FC300C44032 /* TAPI+UI.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "TAPI+UI.swift"; sourceTree = "<group>"; };
 		A973CD2823D68FE000C44032 /* TAPI.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TAPI.swift; sourceTree = "<group>"; };
 		A973CD3C23D692D600C44032 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/LoginSignup.storyboard; sourceTree = "<group>"; };
+		A9878093240A0D5E0007D5E1 /* TOriginTests.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TOriginTests.swift; sourceTree = "<group>"; };
+		A9878094240A0D5E0007D5E1 /* TAsssociationTests.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TAsssociationTests.swift; sourceTree = "<group>"; };
+		A9878095240A0D5E0007D5E1 /* TBloodGlucoseTests.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TBloodGlucoseTests.swift; sourceTree = "<group>"; };
+		A9878096240A0D5E0007D5E1 /* TLocationTests.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TLocationTests.swift; sourceTree = "<group>"; };
+		A9878099240A0D5E0007D5E1 /* TFoodDatumTests.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TFoodDatumTests.swift; sourceTree = "<group>"; };
+		A98780A3240A0D5E0007D5E1 /* TCBGDatumTests.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TCBGDatumTests.swift; sourceTree = "<group>"; };
+		A98780A9240A0D5E0007D5E1 /* TDatumTests.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TDatumTests.swift; sourceTree = "<group>"; };
+		A98780DA240A14E80007D5E1 /* Date.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Date.swift; sourceTree = "<group>"; };
+		A98D55272410A50200EE62B5 /* Sample.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Sample.swift; sourceTree = "<group>"; };
 		A994916623FB288E00865738 /* Logging.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Logging.swift; sourceTree = "<group>"; };
 		A994916823FB4CF500865738 /* TEnvironment.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TEnvironment.swift; sourceTree = "<group>"; };
 		A994916A23FB4D3200865738 /* TSession.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TSession.swift; sourceTree = "<group>"; };
@@ -164,11 +226,27 @@
 		A994917923FE15CE00865738 /* HTTPURLResponse.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HTTPURLResponse.swift; sourceTree = "<group>"; };
 		A994917B23FE15E000865738 /* Bundle.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Bundle.swift; sourceTree = "<group>"; };
 		A994917F23FE1AD500865738 /* ProcessInfo.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProcessInfo.swift; sourceTree = "<group>"; };
+		A9BF06CF240EE47D005D5337 /* TDictionary.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TDictionary.swift; sourceTree = "<group>"; };
+		A9BF06D1240EEC87005D5337 /* TProfileTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TProfileTests.swift; sourceTree = "<group>"; };
+		A9BF06D5240EF5BB005D5337 /* TDataSetTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TDataSetTests.swift; sourceTree = "<group>"; };
+		A9BF06D7240F0A13005D5337 /* TEnvironmentTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TEnvironmentTests.swift; sourceTree = "<group>"; };
+		A9BF06D9240F0A20005D5337 /* TSessionTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TSessionTests.swift; sourceTree = "<group>"; };
+		A9BF06DF240F2FF1005D5337 /* TAPITests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TAPITests.swift; sourceTree = "<group>"; };
+		A9BF06E3240F3051005D5337 /* JSONDecoderTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = JSONDecoderTests.swift; sourceTree = "<group>"; };
+		A9BF06E5240F305B005D5337 /* JSONEncoderTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = JSONEncoderTests.swift; sourceTree = "<group>"; };
+		A9BF06E7240F3557005D5337 /* JSONEncoder.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = JSONEncoder.swift; sourceTree = "<group>"; };
+		A9C57BF823FF3BFD00A5964D /* TBloodGlucose.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TBloodGlucose.swift; sourceTree = "<group>"; };
+		A9C57BFD23FF3BFD00A5964D /* TLocation.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TLocation.swift; sourceTree = "<group>"; };
+		A9C57BFE23FF3BFD00A5964D /* TAssociation.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TAssociation.swift; sourceTree = "<group>"; };
+		A9C57BFF23FF3BFD00A5964D /* TOrigin.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TOrigin.swift; sourceTree = "<group>"; };
 		A9C57C4F23FF66A000A5964D /* LoginResponse.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LoginResponse.swift; sourceTree = "<group>"; };
 		A9C57C5324005C3800A5964D /* LoadingTableViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LoadingTableViewCell.swift; sourceTree = "<group>"; };
 		A9C57C552400628800A5964D /* IdentifiableClass.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = IdentifiableClass.swift; sourceTree = "<group>"; };
+		A9C57C582400B76000A5964D /* TProfile.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TProfile.swift; sourceTree = "<group>"; };
+		A9C9D24E2400BFCC00D66F16 /* TextViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TextViewController.swift; sourceTree = "<group>"; };
 		A9C9D2512400CC4300D66F16 /* UIAlertController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UIAlertController.swift; sourceTree = "<group>"; };
 		A9C9D2532400CC6500D66F16 /* UserDefaults.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UserDefaults.swift; sourceTree = "<group>"; };
+		A9C9D2552400CD7A00D66F16 /* UTF8TextFileActivityItem.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UTF8TextFileActivityItem.swift; sourceTree = "<group>"; };
 		A9EAB8E723DFC77E00874D2A /* DNS.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DNS.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
@@ -216,6 +294,16 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
+		A9116AE424083C4C00483021 /* Datum */ = {
+			isa = PBXGroup;
+			children = (
+				A96633C82409E99F007B68C1 /* TCBGDatum.swift */,
+				A9116AF12409D8C400483021 /* TDatum.swift */,
+				A96633C22409E99F007B68C1 /* TFoodDatum.swift */,
+			);
+			path = Datum;
+			sourceTree = "<group>";
+		};
 		A943534623C932A10093CFA3 = {
 			isa = PBXGroup;
 			children = (
@@ -251,7 +339,9 @@
 				A994916C23FB54D200865738 /* TError.swift */,
 				A973CD2223D68B6400C44032 /* TLogging.swift */,
 				A994916A23FB4D3200865738 /* TSession.swift */,
+				A9C57C2123FF3BFD00A5964D /* Extensions */,
 				A94D7D4623E246C40087A9C0 /* Internal */,
+				A9C57BF723FF3BFD00A5964D /* Model */,
 			);
 			path = TidepoolKit;
 			sourceTree = "<group>";
@@ -260,6 +350,12 @@
 			isa = PBXGroup;
 			children = (
 				A943536023C932A10093CFA3 /* Info.plist */,
+				A9BF06DF240F2FF1005D5337 /* TAPITests.swift */,
+				A9BF06D7240F0A13005D5337 /* TEnvironmentTests.swift */,
+				A9BF06D9240F0A20005D5337 /* TSessionTests.swift */,
+				A9BF06E2240F3041005D5337 /* Extensions */,
+				A9BF06E1240F3023005D5337 /* Internal */,
+				A9878092240A0D5E0007D5E1 /* Model */,
 			);
 			path = TidepoolKitTests;
 			sourceTree = "<group>";
@@ -317,6 +413,39 @@
 			name = Frameworks;
 			sourceTree = "<group>";
 		};
+		A9878092240A0D5E0007D5E1 /* Model */ = {
+			isa = PBXGroup;
+			children = (
+				A9878094240A0D5E0007D5E1 /* TAsssociationTests.swift */,
+				A9878095240A0D5E0007D5E1 /* TBloodGlucoseTests.swift */,
+				A9BF06D5240EF5BB005D5337 /* TDataSetTests.swift */,
+				A9878096240A0D5E0007D5E1 /* TLocationTests.swift */,
+				A9878093240A0D5E0007D5E1 /* TOriginTests.swift */,
+				A9BF06D1240EEC87005D5337 /* TProfileTests.swift */,
+				A9878097240A0D5E0007D5E1 /* Datum */,
+			);
+			path = Model;
+			sourceTree = "<group>";
+		};
+		A9878097240A0D5E0007D5E1 /* Datum */ = {
+			isa = PBXGroup;
+			children = (
+				A98780A3240A0D5E0007D5E1 /* TCBGDatumTests.swift */,
+				A98780A9240A0D5E0007D5E1 /* TDatumTests.swift */,
+				A9878099240A0D5E0007D5E1 /* TFoodDatumTests.swift */,
+			);
+			path = Datum;
+			sourceTree = "<group>";
+		};
+		A98780D9240A14E80007D5E1 /* Extensions */ = {
+			isa = PBXGroup;
+			children = (
+				A98780DA240A14E80007D5E1 /* Date.swift */,
+				A93F59FD240D9C1800299E75 /* XCTest.swift */,
+			);
+			path = Extensions;
+			sourceTree = "<group>";
+		};
 		A994917023FB61E400865738 /* Internal */ = {
 			isa = PBXGroup;
 			children = (
@@ -331,9 +460,54 @@
 			isa = PBXGroup;
 			children = (
 				A994917B23FE15E000865738 /* Bundle.swift */,
+				A9116ADC24075D5A00483021 /* Codable.swift */,
+				A9116AD62406012600483021 /* Date.swift */,
 				A994917323FB88A300865738 /* DNS+TEnvironment.swift */,
 				A994917923FE15CE00865738 /* HTTPURLResponse.swift */,
 				A994917F23FE1AD500865738 /* ProcessInfo.swift */,
+				A9116AD72406012600483021 /* TimeInterval.swift */,
+			);
+			path = Extensions;
+			sourceTree = "<group>";
+		};
+		A9BF06E1240F3023005D5337 /* Internal */ = {
+			isa = PBXGroup;
+			children = (
+				A929A90C2411DDB300742B08 /* URLProtocolMock.swift */,
+				A98780D9240A14E80007D5E1 /* Extensions */,
+			);
+			path = Internal;
+			sourceTree = "<group>";
+		};
+		A9BF06E2240F3041005D5337 /* Extensions */ = {
+			isa = PBXGroup;
+			children = (
+				A9BF06E3240F3051005D5337 /* JSONDecoderTests.swift */,
+				A9BF06E5240F305B005D5337 /* JSONEncoderTests.swift */,
+			);
+			path = Extensions;
+			sourceTree = "<group>";
+		};
+		A9C57BF723FF3BFD00A5964D /* Model */ = {
+			isa = PBXGroup;
+			children = (
+				A9C57BFE23FF3BFD00A5964D /* TAssociation.swift */,
+				A9C57BF823FF3BFD00A5964D /* TBloodGlucose.swift */,
+				A9116AE024083C1100483021 /* TDataSet.swift */,
+				A9BF06CF240EE47D005D5337 /* TDictionary.swift */,
+				A9C57BFD23FF3BFD00A5964D /* TLocation.swift */,
+				A9C57BFF23FF3BFD00A5964D /* TOrigin.swift */,
+				A9C57C582400B76000A5964D /* TProfile.swift */,
+				A9116AE424083C4C00483021 /* Datum */,
+			);
+			path = Model;
+			sourceTree = "<group>";
+		};
+		A9C57C2123FF3BFD00A5964D /* Extensions */ = {
+			isa = PBXGroup;
+			children = (
+				A9116AD02405D81100483021 /* JSONDecoder.swift */,
+				A9116AD22405D81B00483021 /* JSONEncoder.swift */,
 			);
 			path = Extensions;
 			sourceTree = "<group>";
@@ -341,6 +515,8 @@
 		A9C57C4E23FF668300A5964D /* Responses */ = {
 			isa = PBXGroup;
 			children = (
+				A9116AF52409D8E000483021 /* DataResponse.swift */,
+				A9116ACE2405CC3300483021 /* LegacyResponse.swift */,
 				A9C57C4F23FF66A000A5964D /* LoginResponse.swift */,
 			);
 			path = Responses;
@@ -353,6 +529,8 @@
 				A9C57C5324005C3800A5964D /* LoadingTableViewCell.swift */,
 				A994917123FB6C1100865738 /* StatusTableViewCell.swift */,
 				A903670423D939AE009BD8C5 /* TextButtonTableViewCell.swift */,
+				A9C9D24E2400BFCC00D66F16 /* TextViewController.swift */,
+				A9C9D2552400CD7A00D66F16 /* UTF8TextFileActivityItem.swift */,
 				A9C9D2502400CC1600D66F16 /* Extensions */,
 			);
 			path = Support;
@@ -361,6 +539,9 @@
 		A9C9D2502400CC1600D66F16 /* Extensions */ = {
 			isa = PBXGroup;
 			children = (
+				A9116ACC2405B7F300483021 /* Bundle.swift */,
+				A9BF06E7240F3557005D5337 /* JSONEncoder.swift */,
+				A98D55272410A50200EE62B5 /* Sample.swift */,
 				A9C9D2512400CC4300D66F16 /* UIAlertController.swift */,
 				A9C9D2532400CC6500D66F16 /* UserDefaults.swift */,
 			);
@@ -585,19 +766,36 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				A9116AE224083C1100483021 /* TDataSet.swift in Sources */,
 				A9EAB8E823DFC77E00874D2A /* DNS.swift in Sources */,
+				A9116AF62409D8E000483021 /* DataResponse.swift in Sources */,
+				A9C57C2423FF3BFD00A5964D /* TBloodGlucose.swift in Sources */,
 				A9C57C5023FF66A000A5964D /* LoginResponse.swift in Sources */,
+				A9116AF32409D8C400483021 /* TDatum.swift in Sources */,
 				A994918023FE1AD500865738 /* ProcessInfo.swift in Sources */,
 				A994917C23FE15E000865738 /* Bundle.swift in Sources */,
+				A96633DE2409E99F007B68C1 /* TFoodDatum.swift in Sources */,
 				A994916923FB4CF500865738 /* TEnvironment.swift in Sources */,
+				A9C57C2823FF3BFD00A5964D /* TLocation.swift in Sources */,
 				A994917A23FE15CE00865738 /* HTTPURLResponse.swift in Sources */,
+				A9116ADD24075D5A00483021 /* Codable.swift in Sources */,
+				A96633E32409E99F007B68C1 /* TCBGDatum.swift in Sources */,
 				A994917423FB88A300865738 /* DNS+TEnvironment.swift in Sources */,
+				A9116AD92406012600483021 /* TimeInterval.swift in Sources */,
 				A94D7D4323E242D60087A9C0 /* Locked.swift in Sources */,
 				A973CD2323D68B6400C44032 /* TLogging.swift in Sources */,
+				A9116AD82406012600483021 /* Date.swift in Sources */,
 				A994916B23FB4D3200865738 /* TSession.swift in Sources */,
+				A9C57C2923FF3BFD00A5964D /* TAssociation.swift in Sources */,
+				A9BF06D0240EE47D005D5337 /* TDictionary.swift in Sources */,
+				A9116AD12405D81100483021 /* JSONDecoder.swift in Sources */,
+				A9116AD32405D81B00483021 /* JSONEncoder.swift in Sources */,
 				A994916D23FB54D200865738 /* TError.swift in Sources */,
+				A9116ACF2405CC3300483021 /* LegacyResponse.swift in Sources */,
+				A9C57C2A23FF3BFD00A5964D /* TOrigin.swift in Sources */,
 				A94D7D4523E243780087A9C0 /* UnfairLock.swift in Sources */,
 				A973CD2923D68FE000C44032 /* TAPI.swift in Sources */,
+				A9C57C592400B76000A5964D /* TProfile.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -605,6 +803,23 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				A9BF06E0240F2FF1005D5337 /* TAPITests.swift in Sources */,
+				A9BF06E6240F305B005D5337 /* JSONEncoderTests.swift in Sources */,
+				A98780CC240A0D5E0007D5E1 /* TDatumTests.swift in Sources */,
+				A98780C6240A0D5E0007D5E1 /* TCBGDatumTests.swift in Sources */,
+				A9BF06D8240F0A13005D5337 /* TEnvironmentTests.swift in Sources */,
+				A9BF06D6240EF5BB005D5337 /* TDataSetTests.swift in Sources */,
+				A98780BA240A0D5E0007D5E1 /* TBloodGlucoseTests.swift in Sources */,
+				A9BF06E4240F3051005D5337 /* JSONDecoderTests.swift in Sources */,
+				A93F59FE240D9C1800299E75 /* XCTest.swift in Sources */,
+				A98780B9240A0D5E0007D5E1 /* TAsssociationTests.swift in Sources */,
+				A929A90D2411DDB300742B08 /* URLProtocolMock.swift in Sources */,
+				A98780B8240A0D5E0007D5E1 /* TOriginTests.swift in Sources */,
+				A98780DB240A14E80007D5E1 /* Date.swift in Sources */,
+				A9BF06D2240EEC87005D5337 /* TProfileTests.swift in Sources */,
+				A98780BD240A0D5E0007D5E1 /* TFoodDatumTests.swift in Sources */,
+				A98780BB240A0D5E0007D5E1 /* TLocationTests.swift in Sources */,
+				A9BF06DA240F0A20005D5337 /* TSessionTests.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -629,12 +844,17 @@
 			buildActionMask = 2147483647;
 			files = (
 				A903670523D939AE009BD8C5 /* TextButtonTableViewCell.swift in Sources */,
+				A9116ACD2405B7F300483021 /* Bundle.swift in Sources */,
+				A9BF06E8240F3557005D5337 /* JSONEncoder.swift in Sources */,
+				A98D55282410A50200EE62B5 /* Sample.swift in Sources */,
 				A9C9D2522400CC4300D66F16 /* UIAlertController.swift in Sources */,
 				A9C57C562400628800A5964D /* IdentifiableClass.swift in Sources */,
 				A994917223FB6C1100865738 /* StatusTableViewCell.swift in Sources */,
 				A9C57C5424005C3800A5964D /* LoadingTableViewCell.swift in Sources */,
 				A943538F23C932D10093CFA3 /* RootTableViewController.swift in Sources */,
+				A9C9D2562400CD7A00D66F16 /* UTF8TextFileActivityItem.swift in Sources */,
 				A9C9D2542400CC6500D66F16 /* UserDefaults.swift in Sources */,
+				A9C9D24F2400BFCC00D66F16 /* TextViewController.swift in Sources */,
 				A943538D23C932D10093CFA3 /* AppDelegate.swift in Sources */,
 				A994916723FB288E00865738 /* Logging.swift in Sources */,
 			);
@@ -1062,6 +1282,7 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				DEVELOPMENT_TEAM = 75U4X84TEG;
 				INFOPLIST_FILE = "TidepoolKit Example/Info.plist";
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
@@ -1076,6 +1297,7 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				DEVELOPMENT_TEAM = 75U4X84TEG;
 				INFOPLIST_FILE = "TidepoolKit Example/Info.plist";
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
