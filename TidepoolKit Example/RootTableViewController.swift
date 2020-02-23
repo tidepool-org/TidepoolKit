@@ -116,7 +116,7 @@ class RootTableViewController: UITableViewController {
     override func tableView(_ tableView: UITableView, shouldHighlightRowAt indexPath: IndexPath) -> Bool {
         switch Section(rawValue: indexPath.section)! {
         case .status:
-            return true
+            return false
         case .authentication:
             switch Authentication(rawValue: indexPath.row)! {
             case .login:
@@ -132,9 +132,7 @@ class RootTableViewController: UITableViewController {
     override func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         switch Section(rawValue: indexPath.section)! {
         case .status:
-            if let session = session {
-                UIPasteboard.general.string = "\(session.environment)|\(session.authenticationToken)|\(session.userID)"
-            }
+            break
         case .authentication:
             let cell = tableView.cellForRow(at: indexPath) as! TextButtonTableViewCell
             cell.isLoading = true
