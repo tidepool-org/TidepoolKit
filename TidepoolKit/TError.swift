@@ -32,6 +32,9 @@ public enum TError: Error {
     /// The server responded that the requested resource was not found. Equivalent to HTTP status code 404.
     case requestResourceNotFound(HTTPURLResponse, Data?)
 
+    /// The server response was unexpected (not HTTP).
+    case responseUnexpected(URLResponse?, Data?)
+
     /// The server response included an unexpected HTTP status code, namely anything other than those specified above and 200-299 (success).
     case responseUnexpectedStatusCode(HTTPURLResponse, Data?)
 
@@ -67,8 +70,10 @@ public enum TError: Error {
             return NSLocalizedString("The Terms of Service are not accepted.", comment: "The default localized description of the request terms of service not accepted error")
         case .requestResourceNotFound(_):
             return NSLocalizedString("The requested resource was not found.", comment: "The default localized description of the request resource not found error")
+        case .responseUnexpected(_, _):
+            return NSLocalizedString("The request returned an unexpected response.", comment: "The default localized description of the response unexpected error")
         case .responseUnexpectedStatusCode(_, _):
-            return NSLocalizedString("The request returned an unexpected response.", comment: "The default localized description of the response unexpected status code error")
+            return NSLocalizedString("The request returned an unexpected response status code.", comment: "The default localized description of the response unexpected status code error")
         case .responseNotAuthenticated(_, _):
             return NSLocalizedString("The request returned an unauthenticated response.", comment: "The default localized description of the response not authenticated error")
         case .responseMissingJSON(_):

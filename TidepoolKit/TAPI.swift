@@ -85,7 +85,7 @@ public class TAPI {
     public func login(environment: TEnvironment, email: String, password: String, completion: @escaping (Result<TSession, TError>) -> Void) {
         var request = createRequest(environment: environment, method: "POST", path: "/auth/login")
         request.setValue(basicAuthorizationFromCredentials(email: email, password: password), forHTTPHeaderField: "Authorization")
-        performRequest(request) { (result: Result<(HTTPURLResponse, Data?), TError>) -> Void in
+        performRequest(request) { (result: HTTPResult) -> Void in
             switch result {
             case .failure(let error):
                 completion(.failure(error))
@@ -125,7 +125,7 @@ public class TAPI {
     ///   - completion: The completion function to invoke with the updated session or any error.
     public func refresh(session: TSession, completion: @escaping (Result<TSession, TError>) -> Void) {
         let request = createRequest(session: session, method: "GET", path: "/auth/login")
-        performRequest(request) { (result: Result<(HTTPURLResponse, Data?), TError>) -> Void in
+        performRequest(request) { (result: HTTPResult) -> Void in
             switch result {
             case .failure(let error):
                 completion(.failure(error))
@@ -166,7 +166,7 @@ public class TAPI {
     }
 
     private func performRequest(_ request: URLRequest, completion: @escaping (TError?) -> Void) {
-        performRequest(request) { (result: Result<(HTTPURLResponse, Data?), TError>) -> Void in
+        performRequest(request) { (result: HTTPResult) -> Void in
             switch result {
             case .failure(let error):
                 completion(error)
@@ -176,18 +176,22 @@ public class TAPI {
         }
     }
 
-    private func performRequest(_ request: URLRequest, completion: @escaping (Result<(HTTPURLResponse, Data?), TError>) -> Void) {
+    private typealias HTTPResult = Result<(HTTPURLResponse, Data?), TError>
+
+    private func performRequest(_ request: URLRequest, completion: @escaping (HTTPResult) -> Void) {
         let task = urlSession.dataTask(with: request) { (data, response, error) in
             if let error = error {
                 completion(.failure(.network(error)))
+            } else if let response = response as? HTTPURLResponse {
+                completion(self.processStatusCode(response: response, data: data))
             } else {
-                completion(self.processStatusCode(response: response as! HTTPURLResponse, data: data))
+                completion(.failure(.responseUnexpected(response, data)))
             }
         }
         task.resume()
     }
 
-    private func processStatusCode(response: HTTPURLResponse, data: Data?) -> Result<(HTTPURLResponse, Data?), TError> {
+    private func processStatusCode(response: HTTPURLResponse, data: Data?) -> HTTPResult {
         let statusCode = response.statusCode
         switch statusCode {
         case 200...299:
@@ -215,7 +219,7 @@ public class TAPI {
         if urlSessionConfiguration.httpAdditionalHeaders == nil {
             urlSessionConfiguration.httpAdditionalHeaders = [:]
         }
-        urlSessionConfiguration.httpAdditionalHeaders!["User-Agent"] = TAPI.defaultUserAgent
+        urlSessionConfiguration.httpAdditionalHeaders?["User-Agent"] = TAPI.defaultUserAgent
         return urlSessionConfiguration
     }
 
