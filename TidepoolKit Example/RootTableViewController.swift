@@ -72,25 +72,21 @@ class RootTableViewController: UITableViewController {
         }
     }
 
+    private let defaultStatusLabelText = NSLocalizedString("-", comment: "The default status label text")
+
     override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         switch Section(rawValue: indexPath.section)! {
         case .status:
             let cell = tableView.dequeueReusableCell(withIdentifier: StatusTableViewCell.className, for: indexPath) as! StatusTableViewCell
-            if let environment = environment {
-                cell.environmentLabel?.text = environment.description
-                cell.environmentLabel?.lineBreakMode = .byTruncatingMiddle
-            } else {
-                cell.environmentLabel?.text = NSLocalizedString("-", comment: "The environment label placeholder when an environment does not exist")
-            }
+            cell.environmentLabel?.text = environment?.description ?? defaultStatusLabelText
             if let session = session {
                 cell.stateLabel?.text = NSLocalizedString("Authenticated", comment: "The state label when an authenticated session exists")
                 cell.authenticationTokenLabel?.text = session.authenticationToken
-                cell.authenticationTokenLabel?.lineBreakMode = .byTruncatingMiddle
                 cell.userIDLabel?.text = session.userID
             } else {
                 cell.stateLabel?.text = NSLocalizedString("Unauthenticated", comment: "The state text label an authenticated session does not exist")
-                cell.authenticationTokenLabel?.text = NSLocalizedString("-", comment: "The authentication token label placeholder when an authenticated session does not exist")
-                cell.userIDLabel?.text = NSLocalizedString("-", comment: "The user id label placeholder when an authenticated session does not exist")
+                cell.authenticationTokenLabel?.text = defaultStatusLabelText
+                cell.userIDLabel?.text = defaultStatusLabelText
             }
             return cell
         case .authentication:
