@@ -198,6 +198,14 @@ extension TDatum: Equatable {
             return lhs.isEqual(to: rhs)
         case let (lhs as TBloodKetoneDatum, rhs as TBloodKetoneDatum):
             return lhs.isEqual(to: rhs)
+        case let (lhs as TCombinationBolusDatum, rhs as TCombinationBolusDatum):
+            return lhs.isEqual(to: rhs)
+        case let (lhs as TExtendedBolusDatum, rhs as TExtendedBolusDatum):
+            return lhs.isEqual(to: rhs)
+        case let (lhs as TNormalBolusDatum, rhs as TNormalBolusDatum):
+            return lhs.isEqual(to: rhs)
+        case let (lhs as TCalculatorDatum, rhs as TCalculatorDatum):
+            return lhs.isEqual(to: rhs)
         case let (lhs as TCBGDatum, rhs as TCBGDatum):
             return lhs.isEqual(to: rhs)
         case let (lhs as TCGMSettingsDatum, rhs as TCGMSettingsDatum):

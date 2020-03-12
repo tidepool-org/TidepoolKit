@@ -41,6 +41,18 @@ struct DataResponse: Codable {
                     }
                 case .bloodKetone:
                     datum = try TBloodKetoneDatum(from: superDecoder)
+                case .bolus:
+                    let subType = try superContainer.decode(TBolusDatum.SubType.self, forKey: .subType)
+                    switch subType {
+                    case .combination:
+                        datum = try TCombinationBolusDatum(from: superDecoder)
+                    case .extended:
+                        datum = try TExtendedBolusDatum(from: superDecoder)
+                    case .normal:
+                        datum = try TNormalBolusDatum(from: superDecoder)
+                    }
+                case .calculator:
+                    datum = try TCalculatorDatum(from: superDecoder)
                 case .cbg:
                     datum = try TCBGDatum(from: superDecoder)
                 case .cgmSettings:
