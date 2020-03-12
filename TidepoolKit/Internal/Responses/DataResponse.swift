@@ -35,6 +35,10 @@ struct DataResponse: Codable {
                     datum = try TCGMSettingsDatum(from: superDecoder)
                 case .food:
                     datum = try TFoodDatum(from: superDecoder)
+                case .insulin:
+                    datum = try TInsulinDatum(from: superDecoder)
+                case .physicalActivity:
+                    datum = try TPhysicalActivityDatum(from: superDecoder)
                 case .pumpSettings:
                     datum = try TPumpSettingsDatum(from: superDecoder)
                 case .reportedState:

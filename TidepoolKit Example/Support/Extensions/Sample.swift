@@ -47,6 +47,26 @@ struct Sample {
                            mealOther: "midnight snack",
                            nutrition: foodNutrition,
                            ingredients: [foodIngredient, foodIngredient]),
+                TInsulinDatum(time: Date(),
+                              dose: TInsulinDatum.Dose(active: 1.23,
+                                                       correction: 2.34,
+                                                       food: 3.45,
+                                                       total: 4.56),
+                              formulation: insulinFormulation,
+                              site: "Forehead"),
+                TPhysicalActivityDatum(time: Date(),
+                                       name: "Exercise",
+                                       aggregate: true,
+                                       activityType: .other,
+                                       activityTypeOther: "extremeSports",
+                                       duration: TPhysicalActivityDatum.Duration(1.2, .hours),
+                                       distance: TPhysicalActivityDatum.Distance(5.0, .kilometers),
+                                       elevationChange: TPhysicalActivityDatum.ElevationChange(500, .meters),
+                                       flight: TPhysicalActivityDatum.Flight(count: 160),
+                                       lap: TPhysicalActivityDatum.Lap(1, TPhysicalActivityDatum.Distance(5.0, .kilometers)),
+                                       step: TPhysicalActivityDatum.Step(count: 12345),
+                                       reportedIntensity: .high,
+                                       energy: TPhysicalActivityDatum.Energy(800, .kilocalories)),
                 TPumpSettingsDatum(time: Date(),
                                    activeScheduleName: "Normal",
                                    basal: TPumpSettingsDatum.Basal(rateMaximum: TPumpSettingsDatum.Basal.RateMaximum(3),
@@ -110,6 +130,13 @@ struct Sample {
                                         energy: TFoodDatum.Nutrition.Energy(350, .kilocalories))
         }
 
+        fileprivate static var insulinFormulation: TInsulinDatum.Formulation {
+            return TInsulinDatum.Formulation(name: "My Formula",
+                                             simple: TInsulinDatum.Formulation.Simple(actingType: .rapid,
+                                                                                      brand: "Humalog",
+                                                                                      concentration: TInsulinDatum.Formulation.Simple.Concentration(100, .unitsPerML)))
+        }
+        
         fileprivate static var cgmSettingsAlerts: TCGMSettingsDatum.Alerts {
             let snooze = TCGMSettingsDatum.Alerts.Snooze(30, .minutes)
             return TCGMSettingsDatum.Alerts(enabled: true,

@@ -194,6 +194,10 @@ extension TDatum: Equatable {
             return lhs.isEqual(to: rhs)
         case let (lhs as TFoodDatum, rhs as TFoodDatum):
             return lhs.isEqual(to: rhs)
+        case let (lhs as TInsulinDatum, rhs as TInsulinDatum):
+            return lhs.isEqual(to: rhs)
+        case let (lhs as TPhysicalActivityDatum, rhs as TPhysicalActivityDatum):
+            return lhs.isEqual(to: rhs)
         case let (lhs as TPumpSettingsDatum, rhs as TPumpSettingsDatum):
             return lhs.isEqual(to: rhs)
         case let (lhs as TReportedStateDatum, rhs as TReportedStateDatum):
