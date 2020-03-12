@@ -188,6 +188,14 @@ extension TDatum: Equatable {
         switch (lhs, rhs) {
         case let (lhs as TApplicationSettingsDatum, rhs as TApplicationSettingsDatum):
             return lhs.isEqual(to: rhs)
+        case let (lhs as TAutomatedBasalDatum, rhs as TAutomatedBasalDatum):
+            return lhs.isEqual(to: rhs)
+        case let (lhs as TScheduledBasalDatum, rhs as TScheduledBasalDatum):
+            return lhs.isEqual(to: rhs)
+        case let (lhs as TSuspendedBasalDatum, rhs as TSuspendedBasalDatum):
+            return lhs.isEqual(to: rhs)
+        case let (lhs as TTemporaryBasalDatum, rhs as TTemporaryBasalDatum):
+            return lhs.isEqual(to: rhs)
         case let (lhs as TBloodKetoneDatum, rhs as TBloodKetoneDatum):
             return lhs.isEqual(to: rhs)
         case let (lhs as TCBGDatum, rhs as TCBGDatum):

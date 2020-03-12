@@ -16,6 +16,29 @@ struct Sample {
                 TApplicationSettingsDatum(time: Date(),
                                           name: "Sample Application",
                                           version: "1.2.3"),
+                TAutomatedBasalDatum(time: Date(),
+                                     duration: 300000,
+                                     expectedDuration: 600000,
+                                     rate: 1.25,
+                                     scheduleName: "Auto",
+                                     insulinFormulation: insulinFormulation),
+                TScheduledBasalDatum(time: Date(),
+                                     duration: 150000,
+                                     expectedDuration: 300000,
+                                     rate: 1.0,
+                                     scheduleName: "Schedule",
+                                     insulinFormulation: insulinFormulation),
+                TSuspendedBasalDatum(time: Date(),
+                                     duration: 100000,
+                                     expectedDuration: 200000,
+                                     suppressed: temporaryBasalSuppressed),
+                TTemporaryBasalDatum(time: Date(),
+                                     duration: 50000,
+                                     expectedDuration: 100000,
+                                     rate: 1.5,
+                                     percent: 1.5,
+                                     insulinFormulation: insulinFormulation,
+                                     suppressed: scheduledBasalSuppressed),
                 TBloodKetoneDatum(time: Date(),
                                   value: 3.1),
                 TCBGDatum(time: Date(),
@@ -144,6 +167,21 @@ struct Sample {
             return data
         }
 
+        fileprivate static var scheduledBasalSuppressed: TScheduledBasalDatum.Suppressed {
+            return TScheduledBasalDatum.Suppressed(rate: 1.0,
+                                                   scheduleName: "Schedule",
+                                                   insulinFormulation: insulinFormulation,
+                                                   annotations: [TDictionary(["two": 2])])
+        }
+        
+        fileprivate static var temporaryBasalSuppressed: TTemporaryBasalDatum.Suppressed {
+            return TTemporaryBasalDatum.Suppressed(rate: 1.5,
+                                                   percent: 1.5,
+                                                   insulinFormulation: insulinFormulation,
+                                                   annotations: [TDictionary(["one": 1])],
+                                                   suppressed: scheduledBasalSuppressed)
+        }
+        
         fileprivate static var foodIngredient: TFoodDatum.Ingredient {
             return TFoodDatum.Ingredient(name: "Everything",
                                          amount: TFoodDatum.Amount(1.0, "cups"),

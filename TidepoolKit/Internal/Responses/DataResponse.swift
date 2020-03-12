@@ -27,6 +27,18 @@ struct DataResponse: Codable {
                 switch type {
                 case .applicationSettings:
                     datum = try TApplicationSettingsDatum(from: superDecoder)
+                case .basal:
+                    let deliveryType = try superContainer.decode(TBasalDatum.DeliveryType.self, forKey: .deliveryType)
+                    switch deliveryType {
+                    case .automated:
+                        datum = try TAutomatedBasalDatum(from: superDecoder)
+                    case .scheduled:
+                        datum = try TScheduledBasalDatum(from: superDecoder)
+                    case .suspended:
+                        datum = try TSuspendedBasalDatum(from: superDecoder)
+                    case .temporary:
+                        datum = try TTemporaryBasalDatum(from: superDecoder)
+                    }
                 case .bloodKetone:
                     datum = try TBloodKetoneDatum(from: superDecoder)
                 case .cbg:

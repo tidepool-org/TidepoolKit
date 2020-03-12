@@ -25,12 +25,22 @@
 		A9307630241224C700D1E376 /* TReportedStateDatum.swift in Sources */ = {isa = PBXBuildFile; fileRef = A9307613241224C600D1E376 /* TReportedStateDatum.swift */; };
 		A9307631241224C700D1E376 /* TCGMSettingsDatum.swift in Sources */ = {isa = PBXBuildFile; fileRef = A9307614241224C600D1E376 /* TCGMSettingsDatum.swift */; };
 		A9307639241224C700D1E376 /* TSMBGDatum.swift in Sources */ = {isa = PBXBuildFile; fileRef = A930761D241224C600D1E376 /* TSMBGDatum.swift */; };
+		A930763E241224C700D1E376 /* TSuspendedBasalDatum.swift in Sources */ = {isa = PBXBuildFile; fileRef = A9307624241224C600D1E376 /* TSuspendedBasalDatum.swift */; };
+		A930763F241224C700D1E376 /* TBasalDatum.swift in Sources */ = {isa = PBXBuildFile; fileRef = A9307625241224C600D1E376 /* TBasalDatum.swift */; };
+		A9307640241224C700D1E376 /* TTemporaryBasalDatum.swift in Sources */ = {isa = PBXBuildFile; fileRef = A9307626241224C600D1E376 /* TTemporaryBasalDatum.swift */; };
+		A9307641241224C700D1E376 /* TAutomatedBasalDatum.swift in Sources */ = {isa = PBXBuildFile; fileRef = A9307627241224C600D1E376 /* TAutomatedBasalDatum.swift */; };
+		A9307642241224C700D1E376 /* TScheduledBasalDatum.swift in Sources */ = {isa = PBXBuildFile; fileRef = A9307628241224C600D1E376 /* TScheduledBasalDatum.swift */; };
 		A9307643241224C700D1E376 /* TWaterDatum.swift in Sources */ = {isa = PBXBuildFile; fileRef = A9307629241224C600D1E376 /* TWaterDatum.swift */; };
 		A9307645241224C700D1E376 /* TPhysicalActivityDatum.swift in Sources */ = {isa = PBXBuildFile; fileRef = A930762B241224C600D1E376 /* TPhysicalActivityDatum.swift */; };
 		A9307646241224C700D1E376 /* TInsulinDatum.swift in Sources */ = {isa = PBXBuildFile; fileRef = A930762C241224C600D1E376 /* TInsulinDatum.swift */; };
 		A9307665241224F800D1E376 /* TBloodKetoneDatumTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = A9307648241224F700D1E376 /* TBloodKetoneDatumTests.swift */; };
 		A9307666241224F800D1E376 /* TReportedStateDatumTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = A9307649241224F700D1E376 /* TReportedStateDatumTests.swift */; };
 		A9307667241224F800D1E376 /* TPumpSettingsDatumTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = A930764A241224F700D1E376 /* TPumpSettingsDatumTests.swift */; };
+		A930766F241224F800D1E376 /* TSuspendedBasalDatumTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = A9307654241224F700D1E376 /* TSuspendedBasalDatumTests.swift */; };
+		A9307670241224F800D1E376 /* TAutomatedBasalDatumTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = A9307655241224F700D1E376 /* TAutomatedBasalDatumTests.swift */; };
+		A9307671241224F800D1E376 /* TScheduledBasalDatumTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = A9307656241224F700D1E376 /* TScheduledBasalDatumTests.swift */; };
+		A9307672241224F800D1E376 /* TTemporaryBasalDatumTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = A9307657241224F700D1E376 /* TTemporaryBasalDatumTests.swift */; };
+		A9307673241224F800D1E376 /* TBasalDatumTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = A9307658241224F700D1E376 /* TBasalDatumTests.swift */; };
 		A9307674241224F800D1E376 /* TSMBGDatumTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = A9307659241224F700D1E376 /* TSMBGDatumTests.swift */; };
 		A9307675241224F800D1E376 /* TInsulinDatumTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = A930765A241224F700D1E376 /* TInsulinDatumTests.swift */; };
 		A9307677241224F800D1E376 /* TPhysicalActivityDatumTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = A930765C241224F700D1E376 /* TPhysicalActivityDatumTests.swift */; };
@@ -212,12 +222,22 @@
 		A9307613241224C600D1E376 /* TReportedStateDatum.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TReportedStateDatum.swift; sourceTree = "<group>"; };
 		A9307614241224C600D1E376 /* TCGMSettingsDatum.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TCGMSettingsDatum.swift; sourceTree = "<group>"; };
 		A930761D241224C600D1E376 /* TSMBGDatum.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TSMBGDatum.swift; sourceTree = "<group>"; };
+		A9307624241224C600D1E376 /* TSuspendedBasalDatum.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TSuspendedBasalDatum.swift; sourceTree = "<group>"; };
+		A9307625241224C600D1E376 /* TBasalDatum.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TBasalDatum.swift; sourceTree = "<group>"; };
+		A9307626241224C600D1E376 /* TTemporaryBasalDatum.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TTemporaryBasalDatum.swift; sourceTree = "<group>"; };
+		A9307627241224C600D1E376 /* TAutomatedBasalDatum.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TAutomatedBasalDatum.swift; sourceTree = "<group>"; };
+		A9307628241224C600D1E376 /* TScheduledBasalDatum.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TScheduledBasalDatum.swift; sourceTree = "<group>"; };
 		A9307629241224C600D1E376 /* TWaterDatum.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TWaterDatum.swift; sourceTree = "<group>"; };
 		A930762B241224C600D1E376 /* TPhysicalActivityDatum.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TPhysicalActivityDatum.swift; sourceTree = "<group>"; };
 		A930762C241224C600D1E376 /* TInsulinDatum.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TInsulinDatum.swift; sourceTree = "<group>"; };
 		A9307648241224F700D1E376 /* TBloodKetoneDatumTests.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TBloodKetoneDatumTests.swift; sourceTree = "<group>"; };
 		A9307649241224F700D1E376 /* TReportedStateDatumTests.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TReportedStateDatumTests.swift; sourceTree = "<group>"; };
 		A930764A241224F700D1E376 /* TPumpSettingsDatumTests.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TPumpSettingsDatumTests.swift; sourceTree = "<group>"; };
+		A9307654241224F700D1E376 /* TSuspendedBasalDatumTests.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TSuspendedBasalDatumTests.swift; sourceTree = "<group>"; };
+		A9307655241224F700D1E376 /* TAutomatedBasalDatumTests.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TAutomatedBasalDatumTests.swift; sourceTree = "<group>"; };
+		A9307656241224F700D1E376 /* TScheduledBasalDatumTests.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TScheduledBasalDatumTests.swift; sourceTree = "<group>"; };
+		A9307657241224F700D1E376 /* TTemporaryBasalDatumTests.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TTemporaryBasalDatumTests.swift; sourceTree = "<group>"; };
+		A9307658241224F700D1E376 /* TBasalDatumTests.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TBasalDatumTests.swift; sourceTree = "<group>"; };
 		A9307659241224F700D1E376 /* TSMBGDatumTests.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TSMBGDatumTests.swift; sourceTree = "<group>"; };
 		A930765A241224F700D1E376 /* TInsulinDatumTests.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TInsulinDatumTests.swift; sourceTree = "<group>"; };
 		A930765C241224F700D1E376 /* TPhysicalActivityDatumTests.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TPhysicalActivityDatumTests.swift; sourceTree = "<group>"; };
@@ -363,8 +383,33 @@
 				A9307613241224C600D1E376 /* TReportedStateDatum.swift */,
 				A930761D241224C600D1E376 /* TSMBGDatum.swift */,
 				A9307629241224C600D1E376 /* TWaterDatum.swift */,
+				A9307623241224C600D1E376 /* BasalDatum */,
 			);
 			path = Datum;
+			sourceTree = "<group>";
+		};
+		A9307623241224C600D1E376 /* BasalDatum */ = {
+			isa = PBXGroup;
+			children = (
+				A9307627241224C600D1E376 /* TAutomatedBasalDatum.swift */,
+				A9307625241224C600D1E376 /* TBasalDatum.swift */,
+				A9307628241224C600D1E376 /* TScheduledBasalDatum.swift */,
+				A9307624241224C600D1E376 /* TSuspendedBasalDatum.swift */,
+				A9307626241224C600D1E376 /* TTemporaryBasalDatum.swift */,
+			);
+			path = BasalDatum;
+			sourceTree = "<group>";
+		};
+		A9307653241224F700D1E376 /* BasalDatum */ = {
+			isa = PBXGroup;
+			children = (
+				A9307655241224F700D1E376 /* TAutomatedBasalDatumTests.swift */,
+				A9307658241224F700D1E376 /* TBasalDatumTests.swift */,
+				A9307656241224F700D1E376 /* TScheduledBasalDatumTests.swift */,
+				A9307654241224F700D1E376 /* TSuspendedBasalDatumTests.swift */,
+				A9307657241224F700D1E376 /* TTemporaryBasalDatumTests.swift */,
+			);
+			path = BasalDatum;
 			sourceTree = "<group>";
 		};
 		A943534623C932A10093CFA3 = {
@@ -509,6 +554,7 @@
 				A9307649241224F700D1E376 /* TReportedStateDatumTests.swift */,
 				A9307659241224F700D1E376 /* TSMBGDatumTests.swift */,
 				A930765E241224F700D1E376 /* TWaterDatumTests.swift */,
+				A9307653241224F700D1E376 /* BasalDatum */,
 			);
 			path = Datum;
 			sourceTree = "<group>";
@@ -849,8 +895,10 @@
 				A9116AF62409D8E000483021 /* DataResponse.swift in Sources */,
 				A9DA2ABD24130B380083298B /* TPumpStatusDatum.swift in Sources */,
 				A9307639241224C700D1E376 /* TSMBGDatum.swift in Sources */,
+				A9307641241224C700D1E376 /* TAutomatedBasalDatum.swift in Sources */,
 				A9C57C2423FF3BFD00A5964D /* TBloodGlucose.swift in Sources */,
 				A9C57C5023FF66A000A5964D /* LoginResponse.swift in Sources */,
+				A9307640241224C700D1E376 /* TTemporaryBasalDatum.swift in Sources */,
 				A9116AF32409D8C400483021 /* TDatum.swift in Sources */,
 				A994918023FE1AD500865738 /* ProcessInfo.swift in Sources */,
 				A994917C23FE15E000865738 /* Bundle.swift in Sources */,
@@ -875,6 +923,8 @@
 				A9BF06D0240EE47D005D5337 /* TDictionary.swift in Sources */,
 				A94300CC2416E63A00DDFAD4 /* TCarbohydrate.swift in Sources */,
 				A9116AD12405D81100483021 /* JSONDecoder.swift in Sources */,
+				A9307642241224C700D1E376 /* TScheduledBasalDatum.swift in Sources */,
+				A930763E241224C700D1E376 /* TSuspendedBasalDatum.swift in Sources */,
 				A9116AD32405D81B00483021 /* JSONEncoder.swift in Sources */,
 				A994916D23FB54D200865738 /* TError.swift in Sources */,
 				A9307645241224C700D1E376 /* TPhysicalActivityDatum.swift in Sources */,
@@ -886,6 +936,7 @@
 				A9307643241224C700D1E376 /* TWaterDatum.swift in Sources */,
 				A973CD2923D68FE000C44032 /* TAPI.swift in Sources */,
 				A9C57C592400B76000A5964D /* TProfile.swift in Sources */,
+				A930763F241224C700D1E376 /* TBasalDatum.swift in Sources */,
 				A9307630241224C700D1E376 /* TReportedStateDatum.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -894,9 +945,13 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				A9307671241224F800D1E376 /* TScheduledBasalDatumTests.swift in Sources */,
+				A9307672241224F800D1E376 /* TTemporaryBasalDatumTests.swift in Sources */,
 				A945A58424141B6D002FB575 /* TApplicationSettingsDatumTests.swift in Sources */,
+				A9307670241224F800D1E376 /* TAutomatedBasalDatumTests.swift in Sources */,
 				A9BF06E0240F2FF1005D5337 /* TAPITests.swift in Sources */,
 				A9307675241224F800D1E376 /* TInsulinDatumTests.swift in Sources */,
+				A9307673241224F800D1E376 /* TBasalDatumTests.swift in Sources */,
 				A9BF06E6240F305B005D5337 /* JSONEncoderTests.swift in Sources */,
 				A98780CC240A0D5E0007D5E1 /* TDatumTests.swift in Sources */,
 				A98780C6240A0D5E0007D5E1 /* TCBGDatumTests.swift in Sources */,
@@ -920,6 +975,7 @@
 				A9307678241224F800D1E376 /* TCGMSettingsDatumTests.swift in Sources */,
 				A9BF06D2240EEC87005D5337 /* TProfileTests.swift in Sources */,
 				A9DA2ABF24130D050083298B /* TPumpStatusDatumTests.swift in Sources */,
+				A930766F241224F800D1E376 /* TSuspendedBasalDatumTests.swift in Sources */,
 				A9307677241224F800D1E376 /* TPhysicalActivityDatumTests.swift in Sources */,
 				A98780BD240A0D5E0007D5E1 /* TFoodDatumTests.swift in Sources */,
 				A98780BB240A0D5E0007D5E1 /* TLocationTests.swift in Sources */,
