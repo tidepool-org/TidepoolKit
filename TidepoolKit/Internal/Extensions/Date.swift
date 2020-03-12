@@ -8,7 +8,7 @@
 
 import Foundation
 
-public extension Date {
+extension Date {
     init?(timeString: String) {
         if let date = Date.timeFormatter.date(from: timeString) {
             self = date.roundedToTimeInterval(TimeInterval.millisecond)

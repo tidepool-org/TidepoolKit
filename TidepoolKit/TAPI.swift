@@ -83,7 +83,7 @@ public class TAPI {
     ///   - completion: The completion function to invoke with the newly created session or an error.
     public func login(environment: TEnvironment, email: String, password: String, completion: @escaping (Result<TSession, TError>) -> Void) {
         var request = createRequest(environment: environment, method: "POST", path: "/auth/login")
-        request?.setValue(basicAuthorizationFromCredentials(email: email, password: password), forHTTPHeaderField: "Authorization")
+        request?.setValue(basicAuthorizationFromCredentials(email: email, password: password), forHTTPHeaderField: HTTPHeaderField.authorization.rawValue)
         performRequest(request) { (result: DecodableHTTPResult<LoginResponse>) -> Void in
             switch result {
             case .failure(let error):
@@ -253,7 +253,7 @@ public class TAPI {
 
     private func createRequest<E>(session: TSession, method: String, path: String, body: E) -> URLRequest? where E: Encodable {
         var request = createRequest(session: session, method: method, path: path)
-        request?.setValue("application/json; charset=utf-8", forHTTPHeaderField: "Content-Type")
+        request?.setValue("application/json; charset=utf-8", forHTTPHeaderField: HTTPHeaderField.contentType.rawValue)
         do {
             request?.httpBody = try JSONEncoder.tidepool.encode(body)
         } catch let error {
@@ -265,9 +265,9 @@ public class TAPI {
 
     private func createRequest(session: TSession, method: String, path: String, queryItems: [URLQueryItem]? = nil) -> URLRequest? {
         var request = createRequest(environment: session.environment, method: method, path: path, queryItems: queryItems)
-        request?.setValue(session.authenticationToken, forHTTPHeaderField: "X-Tidepool-Session-Token")
+        request?.setValue(session.authenticationToken, forHTTPHeaderField: HTTPHeaderField.tidepoolSessionToken.rawValue)
         if let trace = session.trace {
-            request?.setValue(trace, forHTTPHeaderField: "X-Tidepool-Trace-Session")
+            request?.setValue(trace, forHTTPHeaderField: HTTPHeaderField.tidepoolTraceSession.rawValue)
         }
         return request
     }
@@ -403,4 +403,11 @@ public class TAPI {
     private static let DNSSRVRecordsDomainName = "environments-srv.tidepool.org"
 
     private static let DNSSRVRecordsImplicit = [DNSSRVRecord(priority: UInt16.min, weight: UInt16.max, host: "app.tidepool.org", port: 443)]
+
+    private enum HTTPHeaderField: String {
+        case authorization = "Authorization"
+        case contentType = "Content-Type"
+        case tidepoolSessionToken = "X-Tidepool-Session-Token"
+        case tidepoolTraceSession = "X-Tidepool-Trace-Session"
+    }
 }
