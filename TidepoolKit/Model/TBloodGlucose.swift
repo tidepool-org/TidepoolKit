@@ -37,4 +37,35 @@ public struct TBloodGlucose {
             self.high = high
         }
     }
+
+    public struct StartTarget: Codable, Equatable {
+        public var start: Int?
+        public var target: Double?
+        public var range: Double?
+        public var low: Double?
+        public var high: Double?
+
+        public init(start: Int, target: Double) {
+            self.start = start
+            self.target = target
+        }
+
+        public init(start: Int, target: Double, range: Double) {
+            self.start = start
+            self.target = target
+            self.range = range
+        }
+
+        public init(start: Int, target: Double, high: Double) {
+            self.start = start
+            self.target = target
+            self.high = high
+        }
+
+        public init(start: Int, low: Double, high: Double) {
+            self.start = start
+            self.low = low
+            self.high = high
+        }
+    }
 }

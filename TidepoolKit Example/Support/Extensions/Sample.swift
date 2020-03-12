@@ -11,8 +11,8 @@ import TidepoolKit
 
 struct Sample {
     struct Datum {
-        static var data: [TDatum] {
-            return adorn(data: [
+        static func data(fullAdorned: Bool = true) -> [TDatum] {
+            var data: [TDatum] = [
                 TCBGDatum(time: Date(),
                           value: 123,
                           units: .milligramsPerDeciliter),
@@ -25,7 +25,12 @@ struct Sample {
                            mealOther: "midnight snack",
                            nutrition: foodNutrition,
                            ingredients: [foodIngredient, foodIngredient])
-            ])
+            ]
+            
+            if fullAdorned {
+                data = adorn(data: data)
+            }
+            return data
         }
 
         fileprivate static var foodIngredient: TFoodDatum.Ingredient {

@@ -466,8 +466,8 @@ class TAPIListDataTests: TAPISessionTests {
         XCTAssertEqual(malformed.count, 0)
     }
 
-    private func performRequest() -> Result<([TDatum], [Int: [String:Any]]), TError>? {
-        let expectation = XCTestExpectationWithResult<([TDatum], [Int: [String:Any]]), TError>()
+    private func performRequest() -> Result<([TDatum], [String: [String: Any]]), TError>? {
+        let expectation = XCTestExpectationWithResult<([TDatum], [String: [String: Any]]), TError>()
         api.listData(filter: TDatum.Filter(startDate: Date.test), session: session) { expectation.fulfill($0) }
         XCTAssertNotEqual(XCTWaiter.wait(for: [expectation], timeout: 10), .timedOut)
         return expectation.result

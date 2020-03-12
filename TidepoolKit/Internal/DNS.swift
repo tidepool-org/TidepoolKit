@@ -48,7 +48,9 @@ class DNS {
 
         let serviceRef: UnsafeMutablePointer<DNSServiceRef?> = UnsafeMutablePointer.allocate(capacity: MemoryLayout<DNSServiceRef>.size)
         let callback: DNSServiceQueryRecordReply = { (_, _, _, _, _, _, _, rdlen, rdata, _, context) -> Void in
-            context?.assumingMemoryBound(to: DNSSRVRecordHandler.self).pointee(DNSSRVRecord(data: Data(bytes: rdata!, count: Int(rdlen))))
+            if let rdata = rdata, rdlen > 0 {
+                context?.assumingMemoryBound(to: DNSSRVRecordHandler.self).pointee(DNSSRVRecord(data: Data(bytes: rdata, count: Int(rdlen))))
+            }
         }
         var handler: DNSSRVRecordHandler = { records.append($0) }
 

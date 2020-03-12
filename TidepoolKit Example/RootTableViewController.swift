@@ -22,6 +22,9 @@ class RootTableViewController: UITableViewController {
     private var session: TSession? {
         didSet {
             UserDefaults.standard.session = session
+            if session == nil {
+                self.dataSetId = nil
+            }
             updateViews()
         }
     }
@@ -55,14 +58,19 @@ class RootTableViewController: UITableViewController {
         navigationItem.rightBarButtonItem?.isEnabled = session != nil
     }
 
+    private struct SharedStatus: Codable, Equatable {
+        let session: TSession
+        let dataSetId: String?
+    }
+
     @objc func share() {
         guard let session = session,
-            let data = try? JSONEncoder.pretty.encode(session),
+            let data = try? JSONEncoder.pretty.encode(SharedStatus(session: session, dataSetId: dataSetId)),
             let text = String(data: data, encoding: .utf8) else
         {
             return
         }
-        let activityItem = UTF8TextFileActivityItem(name: "Session")
+        let activityItem = UTF8TextFileActivityItem(name: "Status")
         if let error = activityItem.write(text: text) {
             present(UIAlertController(error: error), animated: true)
         } else {
@@ -141,15 +149,9 @@ class RootTableViewController: UITableViewController {
         case .status:
             let cell = tableView.dequeueReusableCell(withIdentifier: StatusTableViewCell.className, for: indexPath) as! StatusTableViewCell
             cell.environmentLabel?.text = environment?.description ?? defaultStatusLabelText
-            if let session = session {
-                cell.stateLabel?.text = NSLocalizedString("Authenticated", comment: "The state label when an authenticated session exists")
-                cell.authenticationTokenLabel?.text = session.authenticationToken
-                cell.userIdLabel?.text = session.userId
-            } else {
-                cell.stateLabel?.text = NSLocalizedString("Unauthenticated", comment: "The state text label an authenticated session does not exist")
-                cell.authenticationTokenLabel?.text = defaultStatusLabelText
-                cell.userIdLabel?.text = defaultStatusLabelText
-            }
+            cell.authenticationTokenLabel?.text = session?.authenticationToken ?? defaultStatusLabelText
+            cell.userIdLabel?.text = session?.userId ?? defaultStatusLabelText
+            cell.dataSetIdLabel?.text = dataSetId ?? defaultStatusLabelText
             return cell
         case .authentication:
             let cell = tableView.dequeueReusableCell(withIdentifier: TextButtonTableViewCell.className, for: indexPath) as! TextButtonTableViewCell
@@ -386,7 +388,7 @@ class RootTableViewController: UITableViewController {
     }
 
     private func createData(completion: @escaping () -> Void) {
-        let data = Sample.Datum.data
+        let data = Sample.Datum.data()
         api.createData(data, dataSetId: dataSetId!, session: session!) { error in
             DispatchQueue.main.async {
                 if let error = error {

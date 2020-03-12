@@ -9,18 +9,18 @@
 import UIKit
 
 class StatusTableViewCell: UITableViewCell {
-    @IBOutlet weak var stateLabel: UILabel!
     @IBOutlet weak var environmentLabel: UILabel!
     @IBOutlet weak var authenticationTokenLabel: UILabel!
     @IBOutlet weak var userIdLabel: UILabel!
+    @IBOutlet weak var dataSetIdLabel: UILabel!
 
     override public func prepareForReuse() {
         super.prepareForReuse()
         
-        stateLabel?.text = nil
         environmentLabel?.text = nil
         authenticationTokenLabel?.text = nil
         userIdLabel?.text = nil
+        dataSetIdLabel?.text = nil
     }
 }
 
