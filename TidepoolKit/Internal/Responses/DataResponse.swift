@@ -45,6 +45,22 @@ struct DataResponse: Codable {
                     datum = try TCBGDatum(from: superDecoder)
                 case .cgmSettings:
                     datum = try TCGMSettingsDatum(from: superDecoder)
+                case .deviceEvent:
+                    let subType = try superContainer.decode(TDeviceEventDatum.SubType.self, forKey: .subType)
+                    switch subType {
+                    case .alarm:
+                        datum = try TAlarmDeviceEventDatum(from: superDecoder)
+                    case .calibration:
+                        datum = try TCalibrationDeviceEventDatum(from: superDecoder)
+                    case .prime:
+                        datum = try TPrimeDeviceEventDatum(from: superDecoder)
+                    case .reservoirChange:
+                        datum = try TReservoirChangeDeviceEventDatum(from: superDecoder)
+                    case .status:
+                        datum = try TStatusDeviceEventDatum(from: superDecoder)
+                    case .timeChange:
+                        datum = try TTimeChangeDeviceEventDatum(from: superDecoder)
+                    }
                 case .dosingDecision:
                     datum = try TDosingDecisionDatum(from: superDecoder)
                 case .food:

@@ -61,6 +61,26 @@ struct Sample {
                                                                                      start: 0,
                                                                                      end: 64800000,
                                                                                      alerts: cgmSettingsAlerts)]),
+                TAlarmDeviceEventDatum(time: Date(),
+                                       alarmType: .noDelivery,
+                                       status: statusDeviceEventDatum),
+                TCalibrationDeviceEventDatum(time: Date(),
+                                             value: 167,
+                                             units: .milligramsPerDeciliter),
+                TPrimeDeviceEventDatum(time: Date(),
+                                       volume: 0.25,
+                                       target: .cannula),
+                TReservoirChangeDeviceEventDatum(time: Date(),
+                                                 status: statusDeviceEventDatum),
+                TStatusDeviceEventDatum(time: Date(),
+                                        name: .resumed,
+                                        duration: 500000,
+                                        expectedDuration: 1000000,
+                                        reason: TDictionary(["five": 5])),
+                TTimeChangeDeviceEventDatum(time: Date(),
+                                            from: TTimeChangeDeviceEventDatum.Info(timeZoneName: "America/Los_Angeles"),
+                                            to: TTimeChangeDeviceEventDatum.Info(timeZoneName: "America/New_York"),
+                                            method: .automatic),
                 TDosingDecisionDatum(time: Date(),
                                      alerts: ["Alert 1", "Alert 2"],
                                      insulinOnBoard: TDosingDecisionDatum.InsulinOnBoard(startTime: Date(), amount: 1.23),
@@ -182,6 +202,14 @@ struct Sample {
                                                    suppressed: scheduledBasalSuppressed)
         }
         
+        fileprivate static var statusDeviceEventDatum: TStatusDeviceEventDatum {
+            return TStatusDeviceEventDatum(time: Date(),
+                                           name: .suspended,
+                                           duration: 360000,
+                                           expectedDuration: 720000,
+                                           reason: TDictionary(["one": 1]))
+        }
+
         fileprivate static var foodIngredient: TFoodDatum.Ingredient {
             return TFoodDatum.Ingredient(name: "Everything",
                                          amount: TFoodDatum.Amount(1.0, "cups"),

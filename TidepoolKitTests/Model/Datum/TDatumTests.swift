@@ -202,6 +202,18 @@ extension TDatum: Equatable {
             return lhs.isEqual(to: rhs)
         case let (lhs as TCGMSettingsDatum, rhs as TCGMSettingsDatum):
             return lhs.isEqual(to: rhs)
+        case let (lhs as TAlarmDeviceEventDatum, rhs as TAlarmDeviceEventDatum):
+            return lhs.isEqual(to: rhs)
+        case let (lhs as TCalibrationDeviceEventDatum, rhs as TCalibrationDeviceEventDatum):
+            return lhs.isEqual(to: rhs)
+        case let (lhs as TPrimeDeviceEventDatum, rhs as TPrimeDeviceEventDatum):
+            return lhs.isEqual(to: rhs)
+        case let (lhs as TReservoirChangeDeviceEventDatum, rhs as TReservoirChangeDeviceEventDatum):
+            return lhs.isEqual(to: rhs)
+        case let (lhs as TStatusDeviceEventDatum, rhs as TStatusDeviceEventDatum):
+            return lhs.isEqual(to: rhs)
+        case let (lhs as TTimeChangeDeviceEventDatum, rhs as TTimeChangeDeviceEventDatum):
+            return lhs.isEqual(to: rhs)
         case let (lhs as TDosingDecisionDatum, rhs as TDosingDecisionDatum):
             return lhs.isEqual(to: rhs)
         case let (lhs as TFoodDatum, rhs as TFoodDatum):
