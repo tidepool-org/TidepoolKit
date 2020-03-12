@@ -31,8 +31,12 @@ struct DataResponse: Codable {
                     datum = try TBloodKetoneDatum(from: superDecoder)
                 case .cbg:
                     datum = try TCBGDatum(from: superDecoder)
+                case .cgmSettings:
+                    datum = try TCGMSettingsDatum(from: superDecoder)
                 case .food:
                     datum = try TFoodDatum(from: superDecoder)
+                case .pumpSettings:
+                    datum = try TPumpSettingsDatum(from: superDecoder)
                 case .reportedState:
                     datum = try TReportedStateDatum(from: superDecoder)
                 case .smbg:

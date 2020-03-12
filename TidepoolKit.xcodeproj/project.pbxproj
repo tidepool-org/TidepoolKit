@@ -21,12 +21,16 @@
 		A929A90D2411DDB300742B08 /* URLProtocolMock.swift in Sources */ = {isa = PBXBuildFile; fileRef = A929A90C2411DDB300742B08 /* URLProtocolMock.swift */; };
 		A92F62D223D7D0E3007B3CA6 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = A92F62D123D7D0E3007B3CA6 /* Assets.xcassets */; };
 		A930762D241224C700D1E376 /* TBloodKetoneDatum.swift in Sources */ = {isa = PBXBuildFile; fileRef = A9307610241224C600D1E376 /* TBloodKetoneDatum.swift */; };
+		A930762E241224C700D1E376 /* TPumpSettingsDatum.swift in Sources */ = {isa = PBXBuildFile; fileRef = A9307611241224C600D1E376 /* TPumpSettingsDatum.swift */; };
 		A9307630241224C700D1E376 /* TReportedStateDatum.swift in Sources */ = {isa = PBXBuildFile; fileRef = A9307613241224C600D1E376 /* TReportedStateDatum.swift */; };
+		A9307631241224C700D1E376 /* TCGMSettingsDatum.swift in Sources */ = {isa = PBXBuildFile; fileRef = A9307614241224C600D1E376 /* TCGMSettingsDatum.swift */; };
 		A9307639241224C700D1E376 /* TSMBGDatum.swift in Sources */ = {isa = PBXBuildFile; fileRef = A930761D241224C600D1E376 /* TSMBGDatum.swift */; };
 		A9307643241224C700D1E376 /* TWaterDatum.swift in Sources */ = {isa = PBXBuildFile; fileRef = A9307629241224C600D1E376 /* TWaterDatum.swift */; };
 		A9307665241224F800D1E376 /* TBloodKetoneDatumTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = A9307648241224F700D1E376 /* TBloodKetoneDatumTests.swift */; };
 		A9307666241224F800D1E376 /* TReportedStateDatumTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = A9307649241224F700D1E376 /* TReportedStateDatumTests.swift */; };
+		A9307667241224F800D1E376 /* TPumpSettingsDatumTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = A930764A241224F700D1E376 /* TPumpSettingsDatumTests.swift */; };
 		A9307674241224F800D1E376 /* TSMBGDatumTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = A9307659241224F700D1E376 /* TSMBGDatumTests.swift */; };
+		A9307678241224F800D1E376 /* TCGMSettingsDatumTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = A930765D241224F700D1E376 /* TCGMSettingsDatumTests.swift */; };
 		A9307679241224F800D1E376 /* TWaterDatumTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = A930765E241224F700D1E376 /* TWaterDatumTests.swift */; };
 		A93F59FE240D9C1800299E75 /* XCTest.swift in Sources */ = {isa = PBXBuildFile; fileRef = A93F59FD240D9C1800299E75 /* XCTest.swift */; };
 		A94300CA2416E63000DDFAD4 /* TInsulin.swift in Sources */ = {isa = PBXBuildFile; fileRef = A94300C92416E63000DDFAD4 /* TInsulin.swift */; };
@@ -196,12 +200,16 @@
 		A929A90C2411DDB300742B08 /* URLProtocolMock.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = URLProtocolMock.swift; sourceTree = "<group>"; };
 		A92F62D123D7D0E3007B3CA6 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		A9307610241224C600D1E376 /* TBloodKetoneDatum.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TBloodKetoneDatum.swift; sourceTree = "<group>"; };
+		A9307611241224C600D1E376 /* TPumpSettingsDatum.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TPumpSettingsDatum.swift; sourceTree = "<group>"; };
 		A9307613241224C600D1E376 /* TReportedStateDatum.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TReportedStateDatum.swift; sourceTree = "<group>"; };
+		A9307614241224C600D1E376 /* TCGMSettingsDatum.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TCGMSettingsDatum.swift; sourceTree = "<group>"; };
 		A930761D241224C600D1E376 /* TSMBGDatum.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TSMBGDatum.swift; sourceTree = "<group>"; };
 		A9307629241224C600D1E376 /* TWaterDatum.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TWaterDatum.swift; sourceTree = "<group>"; };
 		A9307648241224F700D1E376 /* TBloodKetoneDatumTests.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TBloodKetoneDatumTests.swift; sourceTree = "<group>"; };
 		A9307649241224F700D1E376 /* TReportedStateDatumTests.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TReportedStateDatumTests.swift; sourceTree = "<group>"; };
+		A930764A241224F700D1E376 /* TPumpSettingsDatumTests.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TPumpSettingsDatumTests.swift; sourceTree = "<group>"; };
 		A9307659241224F700D1E376 /* TSMBGDatumTests.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TSMBGDatumTests.swift; sourceTree = "<group>"; };
+		A930765D241224F700D1E376 /* TCGMSettingsDatumTests.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TCGMSettingsDatumTests.swift; sourceTree = "<group>"; };
 		A930765E241224F700D1E376 /* TWaterDatumTests.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TWaterDatumTests.swift; sourceTree = "<group>"; };
 		A93F59FD240D9C1800299E75 /* XCTest.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = XCTest.swift; sourceTree = "<group>"; };
 		A94300C92416E63000DDFAD4 /* TInsulin.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TInsulin.swift; sourceTree = "<group>"; };
@@ -328,8 +336,10 @@
 				A945A58124141B55002FB575 /* TApplicationSettingsDatum.swift */,
 				A9307610241224C600D1E376 /* TBloodKetoneDatum.swift */,
 				A96633C82409E99F007B68C1 /* TCBGDatum.swift */,
+				A9307614241224C600D1E376 /* TCGMSettingsDatum.swift */,
 				A9116AF12409D8C400483021 /* TDatum.swift */,
 				A96633C22409E99F007B68C1 /* TFoodDatum.swift */,
+				A9307611241224C600D1E376 /* TPumpSettingsDatum.swift */,
 				A9307613241224C600D1E376 /* TReportedStateDatum.swift */,
 				A930761D241224C600D1E376 /* TSMBGDatum.swift */,
 				A9307629241224C600D1E376 /* TWaterDatum.swift */,
@@ -468,8 +478,10 @@
 				A945A58324141B6D002FB575 /* TApplicationSettingsDatumTests.swift */,
 				A9307648241224F700D1E376 /* TBloodKetoneDatumTests.swift */,
 				A98780A3240A0D5E0007D5E1 /* TCBGDatumTests.swift */,
+				A930765D241224F700D1E376 /* TCGMSettingsDatumTests.swift */,
 				A98780A9240A0D5E0007D5E1 /* TDatumTests.swift */,
 				A9878099240A0D5E0007D5E1 /* TFoodDatumTests.swift */,
+				A930764A241224F700D1E376 /* TPumpSettingsDatumTests.swift */,
 				A9307649241224F700D1E376 /* TReportedStateDatumTests.swift */,
 				A9307659241224F700D1E376 /* TSMBGDatumTests.swift */,
 				A930765E241224F700D1E376 /* TWaterDatumTests.swift */,
@@ -832,6 +844,7 @@
 				A9116AD82406012600483021 /* Date.swift in Sources */,
 				A994916B23FB4D3200865738 /* TSession.swift in Sources */,
 				A9C57C2923FF3BFD00A5964D /* TAssociation.swift in Sources */,
+				A930762E241224C700D1E376 /* TPumpSettingsDatum.swift in Sources */,
 				A9BF06D0240EE47D005D5337 /* TDictionary.swift in Sources */,
 				A94300CC2416E63A00DDFAD4 /* TCarbohydrate.swift in Sources */,
 				A9116AD12405D81100483021 /* JSONDecoder.swift in Sources */,
@@ -840,6 +853,7 @@
 				A9116ACF2405CC3300483021 /* LegacyResponse.swift in Sources */,
 				A9C57C2A23FF3BFD00A5964D /* TOrigin.swift in Sources */,
 				A94D7D4523E243780087A9C0 /* UnfairLock.swift in Sources */,
+				A9307631241224C700D1E376 /* TCGMSettingsDatum.swift in Sources */,
 				A930762D241224C700D1E376 /* TBloodKetoneDatum.swift in Sources */,
 				A9307643241224C700D1E376 /* TWaterDatum.swift in Sources */,
 				A973CD2923D68FE000C44032 /* TAPI.swift in Sources */,
@@ -872,6 +886,8 @@
 				A94300CE2416F0F100DDFAD4 /* TCarbohydrateTests.swift in Sources */,
 				A98780B8240A0D5E0007D5E1 /* TOriginTests.swift in Sources */,
 				A98780DB240A14E80007D5E1 /* Date.swift in Sources */,
+				A9307667241224F800D1E376 /* TPumpSettingsDatumTests.swift in Sources */,
+				A9307678241224F800D1E376 /* TCGMSettingsDatumTests.swift in Sources */,
 				A9BF06D2240EEC87005D5337 /* TProfileTests.swift in Sources */,
 				A98780BD240A0D5E0007D5E1 /* TFoodDatumTests.swift in Sources */,
 				A98780BB240A0D5E0007D5E1 /* TLocationTests.swift in Sources */,
