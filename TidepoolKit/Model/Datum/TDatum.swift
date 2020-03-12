@@ -18,10 +18,12 @@ public class TDatum: Encodable {
         case cbg
         case cgmSettings
         case deviceEvent
+        case dosingDecision
         case food
         case insulin
         case physicalActivity
         case pumpSettings
+        case pumpStatus
         case reportedState
         case smbg
         case upload // DEPRECATED: Presence here allows decoding to ignore without failing

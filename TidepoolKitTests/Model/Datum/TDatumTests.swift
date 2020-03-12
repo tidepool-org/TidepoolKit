@@ -79,10 +79,12 @@ class TDatumDatumTypeTests: XCTestCase {
         XCTAssertEqual(TDatum.DatumType.cbg.rawValue, "cbg")
         XCTAssertEqual(TDatum.DatumType.cgmSettings.rawValue, "cgmSettings")
         XCTAssertEqual(TDatum.DatumType.deviceEvent.rawValue, "deviceEvent")
+        XCTAssertEqual(TDatum.DatumType.dosingDecision.rawValue, "dosingDecision")
         XCTAssertEqual(TDatum.DatumType.food.rawValue, "food")
         XCTAssertEqual(TDatum.DatumType.insulin.rawValue, "insulin")
         XCTAssertEqual(TDatum.DatumType.physicalActivity.rawValue, "physicalActivity")
         XCTAssertEqual(TDatum.DatumType.pumpSettings.rawValue, "pumpSettings")
+        XCTAssertEqual(TDatum.DatumType.pumpStatus.rawValue, "pumpStatus")
         XCTAssertEqual(TDatum.DatumType.reportedState.rawValue, "reportedState")
         XCTAssertEqual(TDatum.DatumType.smbg.rawValue, "smbg")
         XCTAssertEqual(TDatum.DatumType.upload.rawValue, "upload")
@@ -192,6 +194,8 @@ extension TDatum: Equatable {
             return lhs.isEqual(to: rhs)
         case let (lhs as TCGMSettingsDatum, rhs as TCGMSettingsDatum):
             return lhs.isEqual(to: rhs)
+        case let (lhs as TDosingDecisionDatum, rhs as TDosingDecisionDatum):
+            return lhs.isEqual(to: rhs)
         case let (lhs as TFoodDatum, rhs as TFoodDatum):
             return lhs.isEqual(to: rhs)
         case let (lhs as TInsulinDatum, rhs as TInsulinDatum):
@@ -199,6 +203,8 @@ extension TDatum: Equatable {
         case let (lhs as TPhysicalActivityDatum, rhs as TPhysicalActivityDatum):
             return lhs.isEqual(to: rhs)
         case let (lhs as TPumpSettingsDatum, rhs as TPumpSettingsDatum):
+            return lhs.isEqual(to: rhs)
+        case let (lhs as TPumpStatusDatum, rhs as TPumpStatusDatum):
             return lhs.isEqual(to: rhs)
         case let (lhs as TReportedStateDatum, rhs as TReportedStateDatum):
             return lhs.isEqual(to: rhs)
