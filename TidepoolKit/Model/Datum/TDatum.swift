@@ -10,6 +10,7 @@ import Foundation
 
 public class TDatum: Encodable {
     public enum DatumType: String, Codable {
+        case applicationSettings
         case basal
         case bloodKetone
         case bolus

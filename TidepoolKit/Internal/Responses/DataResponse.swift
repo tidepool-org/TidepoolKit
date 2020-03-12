@@ -25,10 +25,20 @@ struct DataResponse: Codable {
                 var datum: TDatum?
                 let type = try superContainer.decode(TDatum.DatumType.self, forKey: .type)
                 switch type {
+                case .applicationSettings:
+                    datum = try TApplicationSettingsDatum(from: superDecoder)
+                case .bloodKetone:
+                    datum = try TBloodKetoneDatum(from: superDecoder)
                 case .cbg:
                     datum = try TCBGDatum(from: superDecoder)
                 case .food:
                     datum = try TFoodDatum(from: superDecoder)
+                case .reportedState:
+                    datum = try TReportedStateDatum(from: superDecoder)
+                case .smbg:
+                    datum = try TSMBGDatum(from: superDecoder)
+                case .water:
+                    datum = try TWaterDatum(from: superDecoder)
                 default:
                     break // DEPRECATED: Ignore
                 }

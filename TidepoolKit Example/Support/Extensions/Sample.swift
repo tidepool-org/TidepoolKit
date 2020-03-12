@@ -13,6 +13,11 @@ struct Sample {
     struct Datum {
         static func data(fullAdorned: Bool = true) -> [TDatum] {
             var data: [TDatum] = [
+                TApplicationSettingsDatum(time: Date(),
+                                          name: "Sample Application",
+                                          version: "1.2.3"),
+                TBloodKetoneDatum(time: Date(),
+                                  value: 3.1),
                 TCBGDatum(time: Date(),
                           value: 123,
                           units: .milligramsPerDeciliter),
@@ -24,7 +29,16 @@ struct Sample {
                            meal: .other,
                            mealOther: "midnight snack",
                            nutrition: foodNutrition,
-                           ingredients: [foodIngredient, foodIngredient])
+                           ingredients: [foodIngredient, foodIngredient]),
+                TReportedStateDatum(time: Date(),
+                                    states: [TReportedStateDatum.State(.alcohol, severity: 5),
+                                             TReportedStateDatum.State(.other, stateOther: "confused")]),
+                TSMBGDatum(time: Date(),
+                           value: 10.3,
+                           units: .millimolesPerLiter,
+                           subType: .manual),
+                TWaterDatum(time: Date(),
+                            amount: TWaterDatum.Amount(1, .liters))
             ]
             
             if fullAdorned {
