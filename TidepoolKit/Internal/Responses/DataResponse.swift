@@ -8,9 +8,9 @@
 
 struct DataResponse: Codable {
     var data: [TDatum]
-    var malformed: [String: [String: Any]]
+    var malformed: TAPI.MalformedResult
 
-    init(data: [TDatum] = [], malformed: [String: [String: Any]] = [:]) {
+    init(data: [TDatum] = [], malformed: TAPI.MalformedResult = [:]) {
         self.data = data
         self.malformed = malformed
     }

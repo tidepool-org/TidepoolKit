@@ -197,7 +197,8 @@ public class TAPI {
 
     // MARK: - Datum
 
-    public typealias DataResult = Result<([TDatum], [String: [String:Any]]), TError>
+    public typealias MalformedResult = [String: [String: Any]]
+    public typealias DataResult = Result<([TDatum], MalformedResult), TError>
 
     /// List the data for the specified user id. If no user id is specified, then the session user id is used. A filter can
     /// be specified to reduce the data returned.
