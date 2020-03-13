@@ -66,7 +66,10 @@ class DNS {
         }
 
         // Pass handler as context to callback so that we have a way to pass the record result back to the caller
-        DNSServiceQueryRecord(serviceRef, 0, 0, domainName, UInt16(kDNSServiceType_SRV), UInt16(kDNSServiceClass_IN), callback, &handler)
+        let errorCode = DNSServiceQueryRecord(serviceRef, 0, 0, domainName, UInt16(kDNSServiceType_SRV), UInt16(kDNSServiceClass_IN), callback, &handler)
+        if errorCode != kDNSServiceErr_NoError {
+            completion(.failure(.error(errorCode, nil)))
+        }
 
         let serviceRefSockFD = DNSServiceRefSockFD(serviceRef.pointee)
         var serviceRefSockFDSet = fd_set()
@@ -80,8 +83,10 @@ class DNS {
         case 0:
             completion(.failure(DNSError.timeout))
         default:
-            DNSServiceProcessResult(serviceRef.pointee)
-            if let handlerError = handlerError {
+            let errorCode = DNSServiceProcessResult(serviceRef.pointee)
+            if errorCode != kDNSServiceErr_NoError {
+                completion(.failure(.error(errorCode, nil)))
+            } else if let handlerError = handlerError {
                 completion(.failure(handlerError))
             } else {
                 completion(.success(records))
