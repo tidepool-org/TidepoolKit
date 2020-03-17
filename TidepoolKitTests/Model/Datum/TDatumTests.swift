@@ -130,6 +130,55 @@ class TDatumFilterTests: XCTestCase {
     }
 }
 
+class TDatumSelectorTests: XCTestCase {
+    static let selector = TDatum.Selector(origin: TDatumSelectorOriginTests.origin)
+    static let selectorJSONDictionary: [String: Any] = [
+        "origin": TDatumSelectorOriginTests.originJSONDictionary
+    ]
+
+    func testInitializer() {
+        let selector = TDatumSelectorTests.selector
+        XCTAssertNil(selector.id)
+        XCTAssertEqual(selector.origin, TDatumSelectorOriginTests.origin)
+    }
+
+    func testInitializerWithId() {
+        let selector = TDatum.Selector(id: "abcdefghij")
+        XCTAssertEqual(selector.id, "abcdefghij")
+        XCTAssertNil(selector.origin)
+    }
+
+    func testCodableAsJSON() {
+        XCTAssertCodableAsJSON(TDatumSelectorTests.selector, TDatumSelectorTests.selectorJSONDictionary)
+    }
+
+    func testCodableAsJSONWithId() {
+        XCTAssertCodableAsJSON(TDatum.Selector(id: "abcdefghij"), ["id": "abcdefghij"])
+    }
+}
+
+class TDatumSelectorOriginTests: XCTestCase {
+    static let origin = TDatum.Selector.Origin(id: "1234567890")
+    static let originJSONDictionary: [String: Any] = [
+        "id": "1234567890",
+    ]
+
+    func testInitializer() {
+        let origin = TDatumSelectorOriginTests.origin
+        XCTAssertEqual(origin.id, "1234567890")
+    }
+
+    func testCodableAsJSON() {
+        XCTAssertCodableAsJSON(TDatumSelectorOriginTests.origin, TDatumSelectorOriginTests.originJSONDictionary)
+    }
+}
+
+class TDatumExtensionTests: XCTestCase {
+    func testSelector() {
+        XCTAssertEqual(TDatumTests.datum.selector, TDatum.Selector(id: "2345678901"))
+    }
+}
+
 extension TDatum: Equatable {
 
     // NOTE: Yes, a bit of a hack, but it is explicitly only used for tests.

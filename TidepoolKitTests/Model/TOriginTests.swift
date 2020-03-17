@@ -42,6 +42,7 @@ class TOriginTests: XCTestCase {
 
 class TOriginOriginTypeTests: XCTestCase {
     func testOriginType() {
+        XCTAssertEqual(TOrigin.OriginType.application.rawValue, "application")
         XCTAssertEqual(TOrigin.OriginType.device.rawValue, "device")
         XCTAssertEqual(TOrigin.OriginType.manual.rawValue, "manual")
         XCTAssertEqual(TOrigin.OriginType.service.rawValue, "service")

@@ -81,12 +81,14 @@ class TFoodDatumNutritionTests: XCTestCase {
     static let nutrition = TFoodDatum.Nutrition(carbohydrate: TFoodDatumNutritionCarbohydrateTests.carbohydrate,
                                                 fat: TFoodDatumNutritionFatTests.fat,
                                                 protein: TFoodDatumNutritionProteinTests.protein,
-                                                energy: TFoodDatumNutritionEnergyTests.energy)
+                                                energy: TFoodDatumNutritionEnergyTests.energy,
+                                                estimatedAbsorptionDuration: 12345)
     static let nutritionJSONDictionary: [String: Any] = [
         "carbohydrate": TFoodDatumNutritionCarbohydrateTests.carbohydrateJSONDictionary,
         "fat": TFoodDatumNutritionFatTests.fatJSONDictionary,
         "protein": TFoodDatumNutritionProteinTests.proteinJSONDictionary,
-        "energy": TFoodDatumNutritionEnergyTests.energyJSONDictionary
+        "energy": TFoodDatumNutritionEnergyTests.energyJSONDictionary,
+        "estimatedAbsorptionDuration": 12345
     ]
     
     func testInitializer() {
@@ -95,6 +97,7 @@ class TFoodDatumNutritionTests: XCTestCase {
         XCTAssertEqual(nutrition.fat, TFoodDatumNutritionFatTests.fat)
         XCTAssertEqual(nutrition.protein, TFoodDatumNutritionProteinTests.protein)
         XCTAssertEqual(nutrition.energy, TFoodDatumNutritionEnergyTests.energy)
+        XCTAssertEqual(nutrition.estimatedAbsorptionDuration, 12345)
     }
     
     func testCodableAsJSON() {

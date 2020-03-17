@@ -220,14 +220,19 @@ public class TAPI {
         }
     }
 
-    /// Create data for the specified user id. If no user id is specified, then the session user id is used.
+    /// Create data for the specified data set id.
     ///
     /// - Parameters:
     ///   - data: The data to create.
-    ///   - userId: The user id for which to create the data. If no user id is specified, then the session user id is used.
+    ///   - dataSetId: The data set id for which to create the data.
     ///   - session: The Tidepool API session to use.
     ///   - completion: The completion function to invoke with any error.
     public func createData(_ data: [TDatum], dataSetId: String, session: TSession, completion: @escaping (TError?) -> Void) {
+        guard !data.isEmpty else {
+            completion(nil)
+            return
+        }
+
         let request = createRequest(session: session, method: "POST", path: "/v1/data_sets/\(dataSetId)/data", body: data)
         performRequest(request) { (result: DecodableResult<LegacyResponse.Success<DataResponse>>) -> Void in
             switch result {
@@ -248,6 +253,23 @@ public class TAPI {
                 completion(nil)
             }
         }
+    }
+
+    /// Delete data from the specified data set id.
+    ///
+    /// - Parameters:
+    ///   - selectors: The selectors for the data to delete.
+    ///   - dataSetId: The data set id from which to delete the data.
+    ///   - session: The Tidepool API session to use.
+    ///   - completion: The completion function to invoke with any error.
+    public func deleteData(withSelectors selectors: [TDatum.Selector], dataSetId: String, session: TSession, completion: @escaping (TError?) -> Void) {
+        guard !selectors.isEmpty else {
+            completion(nil)
+            return
+        }
+        
+        let request = createRequest(session: session, method: "DELETE", path: "/v1/data_sets/\(dataSetId)/data", body: selectors)
+        performRequest(request, completion: completion)
     }
 
     // MARK: - Internal - Create Request

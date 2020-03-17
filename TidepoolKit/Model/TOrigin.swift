@@ -10,6 +10,7 @@ import Foundation
 
 public struct TOrigin: Codable, Equatable {
     public enum OriginType: String, Codable {
+        case application
         case device
         case manual
         case service

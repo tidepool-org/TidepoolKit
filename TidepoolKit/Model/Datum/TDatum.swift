@@ -212,4 +212,37 @@ extension TDatum {
             return queryItems
         }
     }
+
+    public struct Selector: Codable, Equatable {
+        public var id: String?
+        public var origin: Origin?
+
+        public init(id: String) {
+            self.id = id
+        }
+
+        public init(origin: Origin) {
+            self.origin = origin
+        }
+
+        public struct Origin: Codable, Equatable {
+            public var id: String
+
+            public init(id: String) {
+                self.id = id
+            }
+        }
+    }
+}
+
+extension TDatum {
+    public var selector: Selector? {
+        if let id = id {
+            return Selector(id: id)
+        } else if let originId = origin?.id {
+            return Selector(origin: Selector.Origin(id: originId))
+        } else {
+            return nil
+        }
+    }
 }

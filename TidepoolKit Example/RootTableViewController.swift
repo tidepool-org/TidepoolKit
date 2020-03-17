@@ -31,6 +31,14 @@ class RootTableViewController: UITableViewController {
     private var dataSetId: String? {
         didSet {
             UserDefaults.standard.dataSetId = dataSetId
+            if dataSetId == nil {
+                self.datumSelectors = nil
+            }
+            updateViews()
+        }
+    }
+    private var datumSelectors: [TDatum.Selector]? {
+        didSet {
             updateViews()
         }
     }
@@ -106,6 +114,7 @@ class RootTableViewController: UITableViewController {
     private enum Datum: Int, CaseIterable {
         case list
         case create
+        case delete
     }
 
     override func numberOfSections(in tableView: UITableView) -> Int {
@@ -198,6 +207,9 @@ class RootTableViewController: UITableViewController {
             case .create:
                 cell.textLabel?.text = NSLocalizedString("Create Data", comment: "The text label of the create data cell")
                 cell.isEnabled = session != nil && dataSetId != nil
+            case .delete:
+                cell.textLabel?.text = NSLocalizedString("Delete Data", comment: "The text label of the delete data cell")
+                cell.isEnabled = session != nil && dataSetId != nil && datumSelectors != nil
             }
             return cell
         }
@@ -218,6 +230,8 @@ class RootTableViewController: UITableViewController {
             switch Datum(rawValue: indexPath.row)! {
             case .create:
                 return session != nil && dataSetId != nil
+            case .delete:
+                return session != nil && dataSetId != nil && datumSelectors != nil
             default:
                 return session != nil
             }
@@ -262,6 +276,8 @@ class RootTableViewController: UITableViewController {
                 listData(completion: cell.stopLoading)
             case .create:
                 createData(completion: cell.stopLoading)
+            case .delete:
+                deleteData(completion: cell.stopLoading)
             }
         }
         tableView.deselectRow(at: indexPath, animated: true)
@@ -399,6 +415,21 @@ class RootTableViewController: UITableViewController {
                     } else {
                         self.present(UIAlertController(error: error), animated: true)
                     }
+                } else {
+                    self.datumSelectors = data.compactMap { $0.selector }
+                }
+                completion()
+            }
+        }
+    }
+
+    private func deleteData(completion: @escaping () -> Void) {
+        api.deleteData(withSelectors: datumSelectors!, dataSetId: dataSetId!, session: session!) { error in
+            DispatchQueue.main.async {
+                if let error = error {
+                    self.present(UIAlertController(error: error), animated: true)
+                } else {
+                    self.datumSelectors = nil
                 }
                 completion()
             }

@@ -11,7 +11,7 @@ import TidepoolKit
 
 struct Sample {
     struct Datum {
-        static func data(fullAdorned: Bool = true) -> [TDatum] {
+        static func data(fullyAdorned: Bool = true) -> [TDatum] {
             var data: [TDatum] = [
                 TApplicationSettingsDatum(time: Date(),
                                           name: "Sample Application",
@@ -41,8 +41,8 @@ struct Sample {
                             amount: TWaterDatum.Amount(1, .liters))
             ]
             
-            if fullAdorned {
-                data = adorn(data: data)
+            if fullyAdorned {
+                data = adorn(data: data, fullyAdorned: fullyAdorned)
             }
             return data
         }
@@ -76,7 +76,7 @@ struct Sample {
         }
 
         fileprivate static var origin: TOrigin {
-            return TOrigin(id: "3456789012",
+            return TOrigin(id: UUID().uuidString,
                            name: "Phone",
                            version: "1.2.3",
                            type: .device,
@@ -106,24 +106,28 @@ struct Sample {
             return ["First Tag", "Second Tag"]
         }
 
-        fileprivate static func adorn(data: [TDatum]) -> [TDatum] {
-            return data.map { adorn(datum: $0) }
+        fileprivate static func adorn(data: [TDatum], fullyAdorned: Bool = true) -> [TDatum] {
+            return data.map { adorn(datum: $0, fullyAdorned: fullyAdorned) }
         }
 
-        fileprivate static func adorn(datum: TDatum) -> TDatum {
-            datum.annotations = annotations
-            datum.associations = associations
-            datum.clockDriftOffset = 123456
-            datum.conversionOffset = 2345
-            datum.deviceId = "my-device-id"
-            datum.deviceTime = "1999-12-31T12:34:45"
-            datum.location = location
-            datum.notes = notes
-            datum.origin = origin
-            datum.payload = payload
-            datum.tags = tags
-            datum.timezone = "America/Los_Angeles"
-            datum.timezoneOffset = -480
+        fileprivate static func adorn(datum: TDatum, fullyAdorned: Bool = true) -> TDatum {
+            if fullyAdorned {
+                datum.annotations = annotations
+                datum.associations = associations
+                datum.clockDriftOffset = 123456
+                datum.conversionOffset = 2345
+                datum.deviceId = "my-device-id"
+                datum.deviceTime = "1999-12-31T12:34:45"
+                datum.location = location
+                datum.notes = notes
+                datum.origin = origin
+                datum.payload = payload
+                datum.tags = tags
+                datum.timezone = "America/Los_Angeles"
+                datum.timezoneOffset = -480
+            } else {
+                datum.origin = TOrigin(id: UUID().uuidString)
+            }
             return datum
         }
     }

@@ -79,12 +79,14 @@ public class TFoodDatum: TDatum, Decodable {
         public var fat: Fat?
         public var protein: Protein?
         public var energy: Energy?
+        public var estimatedAbsorptionDuration: Int?
 
-        public init(carbohydrate: Carbohydrate? = nil, fat: Fat? = nil, protein: Protein? = nil, energy: Energy? = nil) {
+        public init(carbohydrate: Carbohydrate? = nil, fat: Fat? = nil, protein: Protein? = nil, energy: Energy? = nil, estimatedAbsorptionDuration: Int? = nil) {
             self.carbohydrate = carbohydrate
             self.fat = fat
             self.protein = protein
             self.energy = energy
+            self.estimatedAbsorptionDuration = estimatedAbsorptionDuration
         }
 
         public struct Carbohydrate: Codable, Equatable {
