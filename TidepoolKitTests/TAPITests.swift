@@ -545,3 +545,55 @@ class TAPICreateDataTests: TAPISessionTests {
         return expectation.error
     }
 }
+
+class TAPIDeleteDataTests: TAPISessionTests {
+    let dataSetId = randomString
+    let selectors = [TDatum.Selector(id: randomString), TDatum.Selector(origin: TDatum.Selector.Origin(id: randomString))]
+
+    override func setUp() {
+        super.setUp()
+
+        URLProtocolMock.validator = URLProtocolMock.Validator(url: "https://test.org/v1/data_sets/\(dataSetId)/data", method: "DELETE", headers: headers, body: selectors)
+        URLProtocolMock.error = nil
+        URLProtocolMock.success = URLProtocolMock.Success(statusCode: 200, headers: headers, body: LegacyResponse.Success<DataResponse>(data: DataResponse()))
+    }
+
+    func testNetworkError() {
+        URLProtocolMock.error = TestError()
+        guard let error = performRequest(), case .network(let networkError) = error else {
+            XCTFail()
+            return
+        }
+        XCTAssertNotNil(networkError as? TestError)
+    }
+
+    func testRequestNotAuthenticated() {
+        URLProtocolMock.success?.statusCode = 401
+        guard let error = performRequest(), case .requestNotAuthenticated = error else {
+            XCTFail()
+            return
+        }
+    }
+
+    func testRequestNotAuthorized() {
+        URLProtocolMock.success?.statusCode = 403
+        guard let error = performRequest(), case .requestNotAuthorized = error else {
+            XCTFail()
+            return
+        }
+    }
+
+    func testSuccess() {
+        guard performRequest() == nil else {
+            XCTFail()
+            return
+        }
+    }
+
+    private func performRequest() -> TError? {
+        let expectation = XCTestExpectationWithError()
+        api.deleteData(withSelectors: selectors, dataSetId: dataSetId, session: session) { expectation.fulfill($0) }
+        XCTAssertNotEqual(XCTWaiter.wait(for: [expectation], timeout: 10), .timedOut)
+        return expectation.error
+    }
+}
