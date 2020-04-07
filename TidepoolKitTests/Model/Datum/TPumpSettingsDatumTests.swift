@@ -13,6 +13,7 @@ class TPumpSettingsDatumTests: XCTestCase {
     static let pumpSettings = TPumpSettingsDatum(
         time: Date.test,
         activeScheduleName: "Activated",
+        automatedDelivery: true,
         basal: TPumpSettingsDatumBasalTests.basal,
         basalRateSchedule: [TPumpSettingsDatumBasalRateStartTests.basalRateStart, TPumpSettingsDatumBasalRateStartTests.basalRateStart],
         basalRateSchedules: [
@@ -20,7 +21,8 @@ class TPumpSettingsDatumTests: XCTestCase {
             "one": [TPumpSettingsDatumBasalRateStartTests.basalRateStart],
             "two": [TPumpSettingsDatumBasalRateStartTests.basalRateStart, TPumpSettingsDatumBasalRateStartTests.basalRateStart]
         ],
-        basalRateSchedulesTimezoneOffset: -480,
+        bloodGlucoseSuspendThreshold: 123.45,
+        bloodGlucoseTargetPhysicalActivity: TBloodGlucoseTargetTests.target,
         bloodGlucoseTargetPreprandial: TBloodGlucoseTargetTests.target,
         bloodGlucoseTargetSchedule: [TBloodGlucoseStartTargetTests.startTarget, TBloodGlucoseStartTargetTests.startTarget],
         bloodGlucoseTargetSchedules: [
@@ -28,7 +30,6 @@ class TPumpSettingsDatumTests: XCTestCase {
             "one": [TBloodGlucoseStartTargetTests.startTarget],
             "two": [TBloodGlucoseStartTargetTests.startTarget, TBloodGlucoseStartTargetTests.startTarget]
         ],
-        bloodGlucoseTargetSchedulesTimezoneOffset: -420,
         bolus: TPumpSettingsDatumBolusTests.bolus,
         carbohydrateRatioSchedule: [TPumpSettingsDatumCarbohydrateRatioStartTests.carbohydrateRatioStart, TPumpSettingsDatumCarbohydrateRatioStartTests.carbohydrateRatioStart],
         carbohydrateRatioSchedules: [
@@ -36,27 +37,25 @@ class TPumpSettingsDatumTests: XCTestCase {
             "one": [TPumpSettingsDatumCarbohydrateRatioStartTests.carbohydrateRatioStart],
             "two": [TPumpSettingsDatumCarbohydrateRatioStartTests.carbohydrateRatioStart, TPumpSettingsDatumCarbohydrateRatioStartTests.carbohydrateRatioStart]
         ],
-        carbohydrateRatioSchedulesTimezoneOffset: -360,
         display: TPumpSettingsDatumDisplayTests.display,
-        dosingEnabled: true,
-        insulinModel: .rapidAdult,
+        insulinModel: TPumpSettingsDatumInsulinModelTests.insulinModel,
         insulinSensitivitySchedule: [TPumpSettingsDatumInsulinSensitivityStartTests.insulinSensitivityStart, TPumpSettingsDatumInsulinSensitivityStartTests.insulinSensitivityStart],
         insulinSensitivitySchedules: [
             "zero": [],
             "one": [TPumpSettingsDatumInsulinSensitivityStartTests.insulinSensitivityStart],
             "two": [TPumpSettingsDatumInsulinSensitivityStartTests.insulinSensitivityStart, TPumpSettingsDatumInsulinSensitivityStartTests.insulinSensitivityStart]
         ],
-        insulinSensitivitySchedulesTimezoneOffset: -300,
         manufacturers: ["Alfa", "Romeo"],
         model: "Spider",
+        scheduleTimeZoneOffset: -480,
         serialNumber: "1234567890",
-        suspendThreshold: TPumpSettingsDatumSuspendThresholdTests.suspendThreshold,
         units: TPumpSettingsDatumUnitsTests.units
     )
     static let pumpSettingsJSONDictionary: [String: Any] = [
         "type": "pumpSettings",
         "time": Date.testJSONString,
         "activeSchedule": "Activated",
+        "automatedDelivery": true,
         "basal": TPumpSettingsDatumBasalTests.basalJSONDictionary,
         "basalSchedule": [TPumpSettingsDatumBasalRateStartTests.basalRateStartJSONDictionary, TPumpSettingsDatumBasalRateStartTests.basalRateStartJSONDictionary],
         "basalSchedules": [
@@ -64,7 +63,8 @@ class TPumpSettingsDatumTests: XCTestCase {
             "one": [TPumpSettingsDatumBasalRateStartTests.basalRateStartJSONDictionary],
             "two": [TPumpSettingsDatumBasalRateStartTests.basalRateStartJSONDictionary, TPumpSettingsDatumBasalRateStartTests.basalRateStartJSONDictionary]
         ],
-        "basalSchedulesTimezoneOffset": -480,
+        "bgSuspendThreshold": 123.45,
+        "bgTargetPhysicalActivity": TBloodGlucoseTargetTests.targetJSONDictionary,
         "bgTargetPreprandial": TBloodGlucoseTargetTests.targetJSONDictionary,
         "bgTarget": [TBloodGlucoseStartTargetTests.startTargetJSONDictionary, TBloodGlucoseStartTargetTests.startTargetJSONDictionary],
         "bgTargets": [
@@ -72,7 +72,6 @@ class TPumpSettingsDatumTests: XCTestCase {
             "one": [TBloodGlucoseStartTargetTests.startTargetJSONDictionary],
             "two": [TBloodGlucoseStartTargetTests.startTargetJSONDictionary, TBloodGlucoseStartTargetTests.startTargetJSONDictionary]
         ],
-        "bgTargetsTimezoneOffset": -420,
         "bolus": TPumpSettingsDatumBolusTests.bolusJSONDictionary,
         "carbRatio": [TPumpSettingsDatumCarbohydrateRatioStartTests.carbohydrateRatioStartJSONDictionary, TPumpSettingsDatumCarbohydrateRatioStartTests.carbohydrateRatioStartJSONDictionary],
         "carbRatios": [
@@ -80,27 +79,25 @@ class TPumpSettingsDatumTests: XCTestCase {
             "one": [TPumpSettingsDatumCarbohydrateRatioStartTests.carbohydrateRatioStartJSONDictionary],
             "two": [TPumpSettingsDatumCarbohydrateRatioStartTests.carbohydrateRatioStartJSONDictionary, TPumpSettingsDatumCarbohydrateRatioStartTests.carbohydrateRatioStartJSONDictionary]
         ],
-        "carbRatiosTimezoneOffset": -360,
         "display": TPumpSettingsDatumDisplayTests.displayJSONDictionary,
-        "dosingEnabled": true,
-        "insulinModel": "rapidAdult",
+        "insulinModel": TPumpSettingsDatumInsulinModelTests.insulinModelJSONDictionary,
         "insulinSensitivity": [TPumpSettingsDatumInsulinSensitivityStartTests.insulinSensitivityStartJSONDictionary, TPumpSettingsDatumInsulinSensitivityStartTests.insulinSensitivityStartJSONDictionary],
         "insulinSensitivities": [
             "zero": [],
             "one": [TPumpSettingsDatumInsulinSensitivityStartTests.insulinSensitivityStartJSONDictionary],
             "two": [TPumpSettingsDatumInsulinSensitivityStartTests.insulinSensitivityStartJSONDictionary, TPumpSettingsDatumInsulinSensitivityStartTests.insulinSensitivityStartJSONDictionary]
         ],
-        "insulinSensitivitiesTimezoneOffset": -300,
         "manufacturers": ["Alfa", "Romeo"],
         "model": "Spider",
+        "scheduleTimeZoneOffset": -480,
         "serialNumber": "1234567890",
-        "suspendThreshold": TPumpSettingsDatumSuspendThresholdTests.suspendThresholdJSONDictionary,
         "units": TPumpSettingsDatumUnitsTests.unitsJSONDictionary
     ]
     
     func testInitializer() {
         let pumpSettings = TPumpSettingsDatumTests.pumpSettings
         XCTAssertEqual(pumpSettings.activeScheduleName, "Activated")
+        XCTAssertEqual(pumpSettings.automatedDelivery, true)
         XCTAssertEqual(pumpSettings.basal, TPumpSettingsDatumBasalTests.basal)
         XCTAssertEqual(pumpSettings.basalRateSchedule, [TPumpSettingsDatumBasalRateStartTests.basalRateStart, TPumpSettingsDatumBasalRateStartTests.basalRateStart])
         XCTAssertEqual(pumpSettings.basalRateSchedules, [
@@ -108,7 +105,8 @@ class TPumpSettingsDatumTests: XCTestCase {
             "one": [TPumpSettingsDatumBasalRateStartTests.basalRateStart],
             "two": [TPumpSettingsDatumBasalRateStartTests.basalRateStart, TPumpSettingsDatumBasalRateStartTests.basalRateStart]
         ])
-        XCTAssertEqual(pumpSettings.basalRateSchedulesTimezoneOffset, -480)
+        XCTAssertEqual(pumpSettings.bloodGlucoseSuspendThreshold, 123.45)
+        XCTAssertEqual(pumpSettings.bloodGlucoseTargetPhysicalActivity, TBloodGlucoseTargetTests.target)
         XCTAssertEqual(pumpSettings.bloodGlucoseTargetPreprandial, TBloodGlucoseTargetTests.target)
         XCTAssertEqual(pumpSettings.bloodGlucoseTargetSchedule, [TBloodGlucoseStartTargetTests.startTarget, TBloodGlucoseStartTargetTests.startTarget])
         XCTAssertEqual(pumpSettings.bloodGlucoseTargetSchedules, [
@@ -116,7 +114,6 @@ class TPumpSettingsDatumTests: XCTestCase {
             "one": [TBloodGlucoseStartTargetTests.startTarget],
             "two": [TBloodGlucoseStartTargetTests.startTarget, TBloodGlucoseStartTargetTests.startTarget]
         ])
-        XCTAssertEqual(pumpSettings.bloodGlucoseTargetSchedulesTimezoneOffset, -420)
         XCTAssertEqual(pumpSettings.bolus, TPumpSettingsDatumBolusTests.bolus)
         XCTAssertEqual(pumpSettings.carbohydrateRatioSchedule, [TPumpSettingsDatumCarbohydrateRatioStartTests.carbohydrateRatioStart, TPumpSettingsDatumCarbohydrateRatioStartTests.carbohydrateRatioStart])
         XCTAssertEqual(pumpSettings.carbohydrateRatioSchedules, [
@@ -124,34 +121,23 @@ class TPumpSettingsDatumTests: XCTestCase {
             "one": [TPumpSettingsDatumCarbohydrateRatioStartTests.carbohydrateRatioStart],
             "two": [TPumpSettingsDatumCarbohydrateRatioStartTests.carbohydrateRatioStart, TPumpSettingsDatumCarbohydrateRatioStartTests.carbohydrateRatioStart]
         ])
-        XCTAssertEqual(pumpSettings.carbohydrateRatioSchedulesTimezoneOffset, -360)
         XCTAssertEqual(pumpSettings.display, TPumpSettingsDatumDisplayTests.display)
-        XCTAssertEqual(pumpSettings.dosingEnabled, true)
-        XCTAssertEqual(pumpSettings.insulinModel, .rapidAdult)
+        XCTAssertEqual(pumpSettings.insulinModel, TPumpSettingsDatumInsulinModelTests.insulinModel)
         XCTAssertEqual(pumpSettings.insulinSensitivitySchedule, [TPumpSettingsDatumInsulinSensitivityStartTests.insulinSensitivityStart, TPumpSettingsDatumInsulinSensitivityStartTests.insulinSensitivityStart])
         XCTAssertEqual(pumpSettings.insulinSensitivitySchedules, [
             "zero": [],
             "one": [TPumpSettingsDatumInsulinSensitivityStartTests.insulinSensitivityStart],
             "two": [TPumpSettingsDatumInsulinSensitivityStartTests.insulinSensitivityStart, TPumpSettingsDatumInsulinSensitivityStartTests.insulinSensitivityStart]
         ])
-        XCTAssertEqual(pumpSettings.insulinSensitivitySchedulesTimezoneOffset, -300)
         XCTAssertEqual(pumpSettings.manufacturers, ["Alfa", "Romeo"])
         XCTAssertEqual(pumpSettings.model, "Spider")
+        XCTAssertEqual(pumpSettings.scheduleTimeZoneOffset, -480)
         XCTAssertEqual(pumpSettings.serialNumber, "1234567890")
-        XCTAssertEqual(pumpSettings.suspendThreshold, TPumpSettingsDatumSuspendThresholdTests.suspendThreshold)
         XCTAssertEqual(pumpSettings.units, TPumpSettingsDatumUnitsTests.units)
     }
     
     func testCodableAsJSON() {
         XCTAssertCodableAsJSON(TPumpSettingsDatumTests.pumpSettings, TPumpSettingsDatumTests.pumpSettingsJSONDictionary)
-    }
-}
-
-class TPumpSettingsDatumInsulinModelTests: XCTestCase {
-    func testUnits() {
-        XCTAssertEqual(TPumpSettingsDatum.InsulinModel.fiasp.rawValue, "fiasp")
-        XCTAssertEqual(TPumpSettingsDatum.InsulinModel.rapidAdult.rawValue, "rapidAdult")
-        XCTAssertEqual(TPumpSettingsDatum.InsulinModel.rapidChild.rawValue, "rapidChild")
     }
 }
 
@@ -394,6 +380,51 @@ class TPumpSettingsDatumDisplayBloodGlucoseTests: XCTestCase {
     }
 }
 
+class TPumpSettingsDatumInsulinModelTests: XCTestCase {
+    static let insulinModel = TPumpSettingsDatum.InsulinModel(modelType: .rapidAdult, actionDuration: 21600, actionPeakOffset: 3600)
+    static let insulinModelJSONDictionary: [String: Any] = [
+        "modelType": "rapidAdult",
+        "actionDuration": 21600,
+        "actionPeakOffset": 3600
+    ]
+
+    func testInitializer() {
+        let insulinModel = TPumpSettingsDatumInsulinModelTests.insulinModel
+        XCTAssertEqual(insulinModel.modelType, .rapidAdult)
+        XCTAssertEqual(insulinModel.actionDuration, 21600)
+        XCTAssertEqual(insulinModel.actionPeakOffset, 3600)
+    }
+
+    func testInitializerWithModelTypeOther() {
+        let insulinModel = TPumpSettingsDatum.InsulinModel(modelType: .other, modelTypeOther: "whatever")
+        XCTAssertEqual(insulinModel.modelType, .other)
+        XCTAssertEqual(insulinModel.modelTypeOther, "whatever")
+    }
+
+    func testCodableAsJSON() {
+        XCTAssertCodableAsJSON(TPumpSettingsDatumInsulinModelTests.insulinModel, TPumpSettingsDatumInsulinModelTests.insulinModelJSONDictionary)
+    }
+
+    func testCodableAsJSONWithModelTypeOther() {
+        let insulinModel = TPumpSettingsDatum.InsulinModel(modelType: .other, modelTypeOther: "whatever")
+        let insulinModelJSONDictionary: [String: Any] = [
+            "modelType": "other",
+            "modelTypeOther": "whatever"
+        ]
+        XCTAssertCodableAsJSON(insulinModel, insulinModelJSONDictionary)
+    }
+}
+
+class TPumpSettingsDatumInsulinModelModelTypeTests: XCTestCase {
+    func testUnits() {
+        XCTAssertEqual(TPumpSettingsDatum.InsulinModel.ModelType.fiasp.rawValue, "fiasp")
+        XCTAssertEqual(TPumpSettingsDatum.InsulinModel.ModelType.other.rawValue, "other")
+        XCTAssertEqual(TPumpSettingsDatum.InsulinModel.ModelType.rapidAdult.rawValue, "rapidAdult")
+        XCTAssertEqual(TPumpSettingsDatum.InsulinModel.ModelType.rapidChild.rawValue, "rapidChild")
+        XCTAssertEqual(TPumpSettingsDatum.InsulinModel.ModelType.walsh.rawValue, "walsh")
+    }
+}
+
 class TPumpSettingsDatumInsulinSensitivityStartTests: XCTestCase {
     static let insulinSensitivityStart = TPumpSettingsDatum.InsulinSensitivityStart(start: 12345678, amount: 45.67)
     static let insulinSensitivityStartJSONDictionary: [String: Any] = [
@@ -412,35 +443,19 @@ class TPumpSettingsDatumInsulinSensitivityStartTests: XCTestCase {
     }
 }
 
-class TPumpSettingsDatumSuspendThresholdTests: XCTestCase {
-    static let suspendThreshold = TPumpSettingsDatum.SuspendThreshold(80, .milligramsPerDeciliter)
-    static let suspendThresholdJSONDictionary: [String: Any] = [
-        "value": 80,
-        "units": "mg/dL"
-    ]
-
-    func testInitializer() {
-        let suspendThreshold = TPumpSettingsDatumSuspendThresholdTests.suspendThreshold
-        XCTAssertEqual(suspendThreshold.value, 80)
-        XCTAssertEqual(suspendThreshold.units, .milligramsPerDeciliter)
-    }
-
-    func testCodableAsJSON() {
-        XCTAssertCodableAsJSON(TPumpSettingsDatumSuspendThresholdTests.suspendThreshold, TPumpSettingsDatumSuspendThresholdTests.suspendThresholdJSONDictionary)
-    }
-}
-
 class TPumpSettingsDatumUnitsTests: XCTestCase {
-    static let units = TPumpSettingsDatum.Units(bloodGlucose: .milligramsPerDeciliter, carbohydrate: .grams)
+    static let units = TPumpSettingsDatum.Units(bloodGlucose: .milligramsPerDeciliter, carbohydrate: .grams, insulin: .units)
     static let unitsJSONDictionary: [String: Any] = [
         "bg": "mg/dL",
-        "carb": "grams"
+        "carb": "grams",
+        "insulin": "Units"
     ]
     
     func testInitializer() {
         let units = TPumpSettingsDatumUnitsTests.units
         XCTAssertEqual(units.bloodGlucose, .milligramsPerDeciliter)
         XCTAssertEqual(units.carbohydrate, .grams)
+        XCTAssertEqual(units.insulin, .units)
     }
     
     func testCodableAsJSON() {

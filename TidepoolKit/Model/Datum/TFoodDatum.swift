@@ -90,9 +90,7 @@ public class TFoodDatum: TDatum, Decodable {
         }
 
         public struct Carbohydrate: Codable, Equatable {
-            public enum Units: String, Codable {
-                case grams
-            }
+            public typealias Units = TCarbohydrate.Units
 
             public var net: Double?
             public var sugars: Double?

@@ -13,4 +13,8 @@ class TInsulinUnitsTests: XCTestCase {
     func testUnits() {
         XCTAssertEqual(TInsulin.Units.units.rawValue, "Units")
     }
+
+    func testRateUnits() {
+        XCTAssertEqual(TInsulin.RateUnits.unitsPerHour.rawValue, "Units/hour")
+    }
 }

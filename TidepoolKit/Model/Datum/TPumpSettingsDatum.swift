@@ -12,85 +12,73 @@ public class TPumpSettingsDatum: TDatum, Decodable {
     public typealias BloodGlucoseTarget = TBloodGlucose.Target
     public typealias BloodGlucoseStartTarget = TBloodGlucose.StartTarget
 
-    public enum InsulinModel: String, Codable {
-        case fiasp
-        case rapidAdult
-        case rapidChild
-    }
-
     public var activeScheduleName: String?
+    public var automatedDelivery: Bool?
     public var basal: Basal?
     public var basalRateSchedule: [BasalRateStart]?
     public var basalRateSchedules: [String: [BasalRateStart]]?
-    public var basalRateSchedulesTimezoneOffset: Int?
+    public var bloodGlucoseSuspendThreshold: Double?
+    public var bloodGlucoseTargetPhysicalActivity: BloodGlucoseTarget?
     public var bloodGlucoseTargetPreprandial: BloodGlucoseTarget?
     public var bloodGlucoseTargetSchedule: [BloodGlucoseStartTarget]?
     public var bloodGlucoseTargetSchedules: [String: [BloodGlucoseStartTarget]]?
-    public var bloodGlucoseTargetSchedulesTimezoneOffset: Int?
     public var bolus: Bolus?
     public var carbohydrateRatioSchedule: [CarbohydrateRatioStart]?
     public var carbohydrateRatioSchedules: [String: [CarbohydrateRatioStart]]?
-    public var carbohydrateRatioSchedulesTimezoneOffset: Int?
     public var display: Display?
-    public var dosingEnabled: Bool?
     public var insulinModel: InsulinModel?
     public var insulinSensitivitySchedule: [InsulinSensitivityStart]?
     public var insulinSensitivitySchedules: [String: [InsulinSensitivityStart]]?
-    public var insulinSensitivitySchedulesTimezoneOffset: Int?
     public var manufacturers: [String]?
     public var model: String?
+    public var scheduleTimeZoneOffset: Int?
     public var serialNumber: String?
-    public var suspendThreshold: SuspendThreshold?
     public var units: Units?
     
     public init(time: Date,
                 activeScheduleName: String? = nil,
+                automatedDelivery: Bool? = nil,
                 basal: Basal? = nil,
                 basalRateSchedule: [BasalRateStart]? = nil,
                 basalRateSchedules: [String: [BasalRateStart]]? = nil,
-                basalRateSchedulesTimezoneOffset: Int? = nil,
+                bloodGlucoseSuspendThreshold: Double? = nil,
+                bloodGlucoseTargetPhysicalActivity: BloodGlucoseTarget? = nil,
                 bloodGlucoseTargetPreprandial: BloodGlucoseTarget? = nil,
                 bloodGlucoseTargetSchedule: [BloodGlucoseStartTarget]? = nil,
                 bloodGlucoseTargetSchedules: [String: [BloodGlucoseStartTarget]]? = nil,
-                bloodGlucoseTargetSchedulesTimezoneOffset: Int? = nil,
                 bolus: Bolus? = nil,
                 carbohydrateRatioSchedule: [CarbohydrateRatioStart]? = nil,
                 carbohydrateRatioSchedules: [String: [CarbohydrateRatioStart]]? = nil,
-                carbohydrateRatioSchedulesTimezoneOffset: Int? = nil,
                 display: Display? = nil,
-                dosingEnabled: Bool? = nil,
                 insulinModel: InsulinModel? = nil,
                 insulinSensitivitySchedule: [InsulinSensitivityStart]? = nil,
                 insulinSensitivitySchedules: [String: [InsulinSensitivityStart]]? = nil,
-                insulinSensitivitySchedulesTimezoneOffset: Int? = nil,
                 manufacturers: [String]? = nil,
                 model: String? = nil,
+                scheduleTimeZoneOffset: Int? = nil,
                 serialNumber: String? = nil,
-                suspendThreshold: SuspendThreshold? = nil,
                 units: Units? = nil) {
         self.activeScheduleName = activeScheduleName
+        self.automatedDelivery = automatedDelivery
         self.basal = basal
         self.basalRateSchedule = basalRateSchedule
         self.basalRateSchedules = basalRateSchedules
-        self.basalRateSchedulesTimezoneOffset = basalRateSchedulesTimezoneOffset
+        self.bloodGlucoseSuspendThreshold = bloodGlucoseSuspendThreshold
+        self.bloodGlucoseTargetPhysicalActivity = bloodGlucoseTargetPhysicalActivity
         self.bloodGlucoseTargetPreprandial = bloodGlucoseTargetPreprandial
         self.bloodGlucoseTargetSchedule = bloodGlucoseTargetSchedule
         self.bloodGlucoseTargetSchedules = bloodGlucoseTargetSchedules
-        self.bloodGlucoseTargetSchedulesTimezoneOffset = bloodGlucoseTargetSchedulesTimezoneOffset
         self.bolus = bolus
         self.carbohydrateRatioSchedule = carbohydrateRatioSchedule
         self.carbohydrateRatioSchedules = carbohydrateRatioSchedules
-        self.carbohydrateRatioSchedulesTimezoneOffset = carbohydrateRatioSchedulesTimezoneOffset
         self.display = display
-        self.dosingEnabled = dosingEnabled
         self.insulinModel = insulinModel
         self.insulinSensitivitySchedule = insulinSensitivitySchedule
         self.insulinSensitivitySchedules = insulinSensitivitySchedules
-        self.insulinSensitivitySchedulesTimezoneOffset = insulinSensitivitySchedulesTimezoneOffset
         self.manufacturers = manufacturers
         self.model = model
+        self.scheduleTimeZoneOffset = scheduleTimeZoneOffset
         self.serialNumber = serialNumber
-        self.suspendThreshold = suspendThreshold
         self.units = units
         super.init(.pumpSettings, time: time)
     }
@@ -98,28 +86,26 @@ public class TPumpSettingsDatum: TDatum, Decodable {
     public required init(from decoder: Decoder) throws {
         let container = try decoder.container(keyedBy: CodingKeys.self)
         self.activeScheduleName = try container.decodeIfPresent(String.self, forKey: .activeScheduleName)
+        self.automatedDelivery = try container.decodeIfPresent(Bool.self, forKey: .automatedDelivery)
         self.basal = try container.decodeIfPresent(Basal.self, forKey: .basal)
         self.basalRateSchedule = try container.decodeIfPresent([BasalRateStart].self, forKey: .basalRateSchedule)
         self.basalRateSchedules = try container.decodeIfPresent([String: [BasalRateStart]].self, forKey: .basalRateSchedules)
-        self.basalRateSchedulesTimezoneOffset = try container.decodeIfPresent(Int.self, forKey: .basalRateSchedulesTimezoneOffset)
+        self.bloodGlucoseSuspendThreshold = try container.decodeIfPresent(Double.self, forKey: .bloodGlucoseSuspendThreshold)
+        self.bloodGlucoseTargetPhysicalActivity = try container.decodeIfPresent(BloodGlucoseTarget.self, forKey: .bloodGlucoseTargetPhysicalActivity)
         self.bloodGlucoseTargetPreprandial = try container.decodeIfPresent(BloodGlucoseTarget.self, forKey: .bloodGlucoseTargetPreprandial)
         self.bloodGlucoseTargetSchedule = try container.decodeIfPresent([BloodGlucoseStartTarget].self, forKey: .bloodGlucoseTargetSchedule)
         self.bloodGlucoseTargetSchedules = try container.decodeIfPresent([String: [BloodGlucoseStartTarget]].self, forKey: .bloodGlucoseTargetSchedules)
-        self.bloodGlucoseTargetSchedulesTimezoneOffset = try container.decodeIfPresent(Int.self, forKey: .bloodGlucoseTargetSchedulesTimezoneOffset)
         self.bolus = try container.decodeIfPresent(Bolus.self, forKey: .bolus)
         self.carbohydrateRatioSchedule = try container.decodeIfPresent([CarbohydrateRatioStart].self, forKey: .carbohydrateRatioSchedule)
         self.carbohydrateRatioSchedules = try container.decodeIfPresent([String: [CarbohydrateRatioStart]].self, forKey: .carbohydrateRatioSchedules)
-        self.carbohydrateRatioSchedulesTimezoneOffset = try container.decodeIfPresent(Int.self, forKey: .carbohydrateRatioSchedulesTimezoneOffset)
         self.display = try container.decodeIfPresent(Display.self, forKey: .display)
-        self.dosingEnabled = try container.decodeIfPresent(Bool.self, forKey: .dosingEnabled)
         self.insulinModel = try container.decodeIfPresent(InsulinModel.self, forKey: .insulinModel)
         self.insulinSensitivitySchedule = try container.decodeIfPresent([InsulinSensitivityStart].self, forKey: .insulinSensitivitySchedule)
         self.insulinSensitivitySchedules = try container.decodeIfPresent([String: [InsulinSensitivityStart]].self, forKey: .insulinSensitivitySchedules)
-        self.insulinSensitivitySchedulesTimezoneOffset = try container.decodeIfPresent(Int.self, forKey: .insulinSensitivitySchedulesTimezoneOffset)
         self.manufacturers = try container.decodeIfPresent([String].self, forKey: .manufacturers)
         self.model = try container.decodeIfPresent(String.self, forKey: .model)
+        self.scheduleTimeZoneOffset = try container.decodeIfPresent(Int.self, forKey: .scheduleTimeZoneOffset)
         self.serialNumber = try container.decodeIfPresent(String.self, forKey: .serialNumber)
-        self.suspendThreshold = try container.decodeIfPresent(SuspendThreshold.self, forKey: .suspendThreshold)
         self.units = try container.decodeIfPresent(Units.self, forKey: .units)
         try super.init(.pumpSettings, from: decoder)
     }
@@ -127,28 +113,26 @@ public class TPumpSettingsDatum: TDatum, Decodable {
     public override func encode(to encoder: Encoder) throws {
         var container = encoder.container(keyedBy: CodingKeys.self)
         try container.encodeIfPresent(activeScheduleName, forKey: .activeScheduleName)
+        try container.encodeIfPresent(automatedDelivery, forKey: .automatedDelivery)
         try container.encodeIfPresent(basal, forKey: .basal)
         try container.encodeIfPresent(basalRateSchedule, forKey: .basalRateSchedule)
         try container.encodeIfPresent(basalRateSchedules, forKey: .basalRateSchedules)
-        try container.encodeIfPresent(basalRateSchedulesTimezoneOffset, forKey: .basalRateSchedulesTimezoneOffset)
+        try container.encodeIfPresent(bloodGlucoseSuspendThreshold, forKey: .bloodGlucoseSuspendThreshold)
+        try container.encodeIfPresent(bloodGlucoseTargetPhysicalActivity, forKey: .bloodGlucoseTargetPhysicalActivity)
         try container.encodeIfPresent(bloodGlucoseTargetPreprandial, forKey: .bloodGlucoseTargetPreprandial)
         try container.encodeIfPresent(bloodGlucoseTargetSchedule, forKey: .bloodGlucoseTargetSchedule)
         try container.encodeIfPresent(bloodGlucoseTargetSchedules, forKey: .bloodGlucoseTargetSchedules)
-        try container.encodeIfPresent(bloodGlucoseTargetSchedulesTimezoneOffset, forKey: .bloodGlucoseTargetSchedulesTimezoneOffset)
         try container.encodeIfPresent(bolus, forKey: .bolus)
         try container.encodeIfPresent(carbohydrateRatioSchedule, forKey: .carbohydrateRatioSchedule)
         try container.encodeIfPresent(carbohydrateRatioSchedules, forKey: .carbohydrateRatioSchedules)
-        try container.encodeIfPresent(carbohydrateRatioSchedulesTimezoneOffset, forKey: .carbohydrateRatioSchedulesTimezoneOffset)
         try container.encodeIfPresent(display, forKey: .display)
-        try container.encodeIfPresent(dosingEnabled, forKey: .dosingEnabled)
         try container.encodeIfPresent(insulinModel, forKey: .insulinModel)
         try container.encodeIfPresent(insulinSensitivitySchedule, forKey: .insulinSensitivitySchedule)
         try container.encodeIfPresent(insulinSensitivitySchedules, forKey: .insulinSensitivitySchedules)
-        try container.encodeIfPresent(insulinSensitivitySchedulesTimezoneOffset, forKey: .insulinSensitivitySchedulesTimezoneOffset)
         try container.encodeIfPresent(manufacturers, forKey: .manufacturers)
         try container.encodeIfPresent(model, forKey: .model)
+        try container.encodeIfPresent(scheduleTimeZoneOffset, forKey: .scheduleTimeZoneOffset)
         try container.encodeIfPresent(serialNumber, forKey: .serialNumber)
-        try container.encodeIfPresent(suspendThreshold, forKey: .suspendThreshold)
         try container.encodeIfPresent(units, forKey: .units)
         try super.encode(to: encoder)
     }
@@ -163,10 +147,8 @@ public class TPumpSettingsDatum: TDatum, Decodable {
         }
         
         public struct RateMaximum: Codable, Equatable {
-            public enum Units: String, Codable {
-                case unitsPerHour = "Units/hour"
-            }
-            
+            public typealias Units = TInsulin.RateUnits
+
             public var value: Double?
             public var units: Units?
             
@@ -286,6 +268,28 @@ public class TPumpSettingsDatum: TDatum, Decodable {
             }
         }
     }
+
+    public struct InsulinModel: Codable, Equatable {
+        public enum ModelType: String, Codable {
+            case fiasp
+            case other
+            case rapidAdult
+            case rapidChild
+            case walsh
+        }
+
+        public var modelType: ModelType?
+        public var modelTypeOther: String?
+        public var actionDuration: Int?
+        public var actionPeakOffset: Int?
+
+        public init(modelType: ModelType? = nil, modelTypeOther: String? = nil, actionDuration: Int? = nil, actionPeakOffset: Int? = nil) {
+            self.modelType = modelType
+            self.modelTypeOther = modelTypeOther
+            self.actionDuration = actionDuration
+            self.actionPeakOffset = actionPeakOffset
+        }
+    }
     
     public struct InsulinSensitivityStart: Codable, Equatable {
         public var start: Int?
@@ -296,61 +300,51 @@ public class TPumpSettingsDatum: TDatum, Decodable {
             self.amount = amount
         }
     }
-    
-    public struct SuspendThreshold: Codable, Equatable {
-        public typealias Units = TBloodGlucose.Units
-
-        public var value: Double?
-        public var units: Units?
-
-        public init(_ value: Double, _ units: Units) {
-            self.value = value
-            self.units = units
-        }
-    }
 
     public struct Units: Codable, Equatable {
         public typealias BloodGlucoseUnits = TBloodGlucose.Units
         public typealias CarbohydrateUnits = TCarbohydrate.Units
+        public typealias InsulinUnits = TInsulin.Units
         
         public var bloodGlucose: BloodGlucoseUnits?
         public var carbohydrate: CarbohydrateUnits?
+        public var insulin: InsulinUnits?
         
-        public init(bloodGlucose: BloodGlucoseUnits? = nil, carbohydrate: CarbohydrateUnits? = nil) {
+        public init(bloodGlucose: BloodGlucoseUnits? = nil, carbohydrate: CarbohydrateUnits? = nil, insulin: InsulinUnits? = nil) {
             self.bloodGlucose = bloodGlucose
             self.carbohydrate = carbohydrate
+            self.insulin = insulin
         }
         
         private enum CodingKeys: String, CodingKey {
             case bloodGlucose = "bg"
             case carbohydrate = "carb"
+            case insulin
         }
     }
     
     private enum CodingKeys: String, CodingKey {
         case activeScheduleName = "activeSchedule"
+        case automatedDelivery
         case basal
         case basalRateSchedule = "basalSchedule"
         case basalRateSchedules = "basalSchedules"
-        case basalRateSchedulesTimezoneOffset = "basalSchedulesTimezoneOffset"
+        case bloodGlucoseSuspendThreshold = "bgSuspendThreshold"
+        case bloodGlucoseTargetPhysicalActivity = "bgTargetPhysicalActivity"
         case bloodGlucoseTargetPreprandial = "bgTargetPreprandial"
         case bloodGlucoseTargetSchedule = "bgTarget"
         case bloodGlucoseTargetSchedules = "bgTargets"
-        case bloodGlucoseTargetSchedulesTimezoneOffset = "bgTargetsTimezoneOffset"
         case bolus
         case carbohydrateRatioSchedule = "carbRatio"
         case carbohydrateRatioSchedules = "carbRatios"
-        case carbohydrateRatioSchedulesTimezoneOffset = "carbRatiosTimezoneOffset"
         case display
-        case dosingEnabled
         case insulinModel
         case insulinSensitivitySchedule = "insulinSensitivity"
         case insulinSensitivitySchedules = "insulinSensitivities"
-        case insulinSensitivitySchedulesTimezoneOffset = "insulinSensitivitiesTimezoneOffset"
         case manufacturers
         case model
+        case scheduleTimeZoneOffset
         case serialNumber
-        case suspendThreshold
         case units
     }
 }

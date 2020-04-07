@@ -11,26 +11,28 @@ import TidepoolKit
 
 class TDosingDecisionDatumTests: XCTestCase {
     static let dosingDecision = TDosingDecisionDatum(time: Date.test,
-                                                     alerts: ["Red Alert", "Yellow Alert"],
+                                                     errors: ["Red Alert", "Yellow Alert"],
                                                      insulinOnBoard: TDosingDecisionDatumInsulinOnBoardTests.insulinOnBoard,
                                                      carbohydratesOnBoard: TDosingDecisionDatumCarbohydratesOnBoardTests.carbohydratesOnBoard,
-                                                     bloodGlucoseTargetRangeSchedule: [TBloodGlucoseStartTargetTests.startTarget,
-                                                                                       TBloodGlucoseStartTargetTests.startTarget],
+                                                     bloodGlucoseTargetSchedule: [TBloodGlucoseStartTargetTests.startTarget,
+                                                                                  TBloodGlucoseStartTargetTests.startTarget],
                                                      bloodGlucoseForecast: [TDosingDecisionDatumBloodGlucoseForecastTests.bloodGlucoseForecast,
                                                                             TDosingDecisionDatumBloodGlucoseForecastTests.bloodGlucoseForecast],
+                                                     bloodGlucoseForecastIncludingPendingInsulin: [TDosingDecisionDatumBloodGlucoseForecastTests.bloodGlucoseForecast],
                                                      recommendedBasal: TDosingDecisionDatumRecommendedBasalTests.recommendedBasal,
                                                      recommendedBolus: TDosingDecisionDatumRecommendedBolusTests.recommendedBolus,
                                                      units: TDosingDecisionDatumUnitsTests.units)
     static let dosingDecisionJSONDictionary: [String: Any] = [
         "type": "dosingDecision",
         "time": Date.testJSONString,
-        "alerts": ["Red Alert", "Yellow Alert"],
+        "errors": ["Red Alert", "Yellow Alert"],
         "insulinOnBoard": TDosingDecisionDatumInsulinOnBoardTests.insulinOnBoardJSONDictionary,
         "carbohydratesOnBoard": TDosingDecisionDatumCarbohydratesOnBoardTests.carbohydratesOnBoardJSONDictionary,
-        "bloodGlucoseTargetRangeSchedule": [TBloodGlucoseStartTargetTests.startTargetJSONDictionary,
-                                            TBloodGlucoseStartTargetTests.startTargetJSONDictionary],
+        "bloodGlucoseTargetSchedule": [TBloodGlucoseStartTargetTests.startTargetJSONDictionary,
+                                       TBloodGlucoseStartTargetTests.startTargetJSONDictionary],
         "bloodGlucoseForecast": [TDosingDecisionDatumBloodGlucoseForecastTests.bloodGlucoseForecastJSONDictionary,
                                  TDosingDecisionDatumBloodGlucoseForecastTests.bloodGlucoseForecastJSONDictionary],
+        "bloodGlucoseForecastIncludingPendingInsulin": [TDosingDecisionDatumBloodGlucoseForecastTests.bloodGlucoseForecastJSONDictionary],
         "recommendedBasal": TDosingDecisionDatumRecommendedBasalTests.recommendedBasalJSONDictionary,
         "recommendedBolus": TDosingDecisionDatumRecommendedBolusTests.recommendedBolusJSONDictionary,
         "units": TDosingDecisionDatumUnitsTests.unitsJSONDictionary
@@ -38,13 +40,14 @@ class TDosingDecisionDatumTests: XCTestCase {
     
     func testInitializer() {
         let dosingDecision = TDosingDecisionDatumTests.dosingDecision
-        XCTAssertEqual(dosingDecision.alerts, ["Red Alert", "Yellow Alert"])
+        XCTAssertEqual(dosingDecision.errors, ["Red Alert", "Yellow Alert"])
         XCTAssertEqual(dosingDecision.insulinOnBoard, TDosingDecisionDatumInsulinOnBoardTests.insulinOnBoard)
         XCTAssertEqual(dosingDecision.carbohydratesOnBoard, TDosingDecisionDatumCarbohydratesOnBoardTests.carbohydratesOnBoard)
-        XCTAssertEqual(dosingDecision.bloodGlucoseTargetRangeSchedule, [TBloodGlucoseStartTargetTests.startTarget,
-                                                                        TBloodGlucoseStartTargetTests.startTarget])
+        XCTAssertEqual(dosingDecision.bloodGlucoseTargetSchedule, [TBloodGlucoseStartTargetTests.startTarget,
+                                                                   TBloodGlucoseStartTargetTests.startTarget])
         XCTAssertEqual(dosingDecision.bloodGlucoseForecast, [TDosingDecisionDatumBloodGlucoseForecastTests.bloodGlucoseForecast,
                                                              TDosingDecisionDatumBloodGlucoseForecastTests.bloodGlucoseForecast])
+        XCTAssertEqual(dosingDecision.bloodGlucoseForecastIncludingPendingInsulin, [TDosingDecisionDatumBloodGlucoseForecastTests.bloodGlucoseForecast])
         XCTAssertEqual(dosingDecision.recommendedBasal, TDosingDecisionDatumRecommendedBasalTests.recommendedBasal)
         XCTAssertEqual(dosingDecision.recommendedBolus, TDosingDecisionDatumRecommendedBolusTests.recommendedBolus)
         XCTAssertEqual(dosingDecision.units, TDosingDecisionDatumUnitsTests.units)
@@ -112,16 +115,18 @@ class TDosingDecisionDatumBloodGlucoseForecastTests: XCTestCase {
 }
 
 class TDosingDecisionDatumRecommendedBasalTests: XCTestCase {
-    static let recommendedBasal = TDosingDecisionDatum.RecommendedBasal(rate: 1.23, duration: 1800000)
+    static let recommendedBasal = TDosingDecisionDatum.RecommendedBasal(time: Date.test, rate: 1.23, duration: 1800)
     static let recommendedBasalJSONDictionary: [String: Any] = [
+        "time": Date.testJSONString,
         "rate": 1.23,
-        "duration": 1800000
+        "duration": 1800
     ]
     
     func testInitializer() {
         let recommendedBasal = TDosingDecisionDatumRecommendedBasalTests.recommendedBasal
+        XCTAssertEqual(recommendedBasal.time, Date.test)
         XCTAssertEqual(recommendedBasal.rate, 1.23)
-        XCTAssertEqual(recommendedBasal.duration, 1800000)
+        XCTAssertEqual(recommendedBasal.duration, 1800)
     }
     
     func testCodableAsJSON() {
@@ -130,13 +135,15 @@ class TDosingDecisionDatumRecommendedBasalTests: XCTestCase {
 }
 
 class TDosingDecisionDatumRecommendedBolusTests: XCTestCase {
-    static let recommendedBolus = TDosingDecisionDatum.RecommendedBolus(amount: 1.23)
+    static let recommendedBolus = TDosingDecisionDatum.RecommendedBolus(time: Date.test, amount: 1.23)
     static let recommendedBolusJSONDictionary: [String: Any] = [
+        "time": Date.testJSONString,
         "amount": 1.23
     ]
     
     func testInitializer() {
         let recommendedBolus = TDosingDecisionDatumRecommendedBolusTests.recommendedBolus
+        XCTAssertEqual(recommendedBolus.time, Date.test)
         XCTAssertEqual(recommendedBolus.amount, 1.23)
     }
     
@@ -168,11 +175,12 @@ class TDosingDecisionDatumUnitsTests: XCTestCase {
 extension TDosingDecisionDatum {
     func isEqual(to other: TDosingDecisionDatum) -> Bool {
         return super.isEqual(to: other) &&
-            self.alerts == other.alerts &&
+            self.errors == other.errors &&
             self.insulinOnBoard == other.insulinOnBoard &&
             self.carbohydratesOnBoard == other.carbohydratesOnBoard &&
-            self.bloodGlucoseTargetRangeSchedule == other.bloodGlucoseTargetRangeSchedule &&
+            self.bloodGlucoseTargetSchedule == other.bloodGlucoseTargetSchedule &&
             self.bloodGlucoseForecast == other.bloodGlucoseForecast &&
+            self.bloodGlucoseForecastIncludingPendingInsulin == other.bloodGlucoseForecastIncludingPendingInsulin &&
             self.recommendedBasal == other.recommendedBasal &&
             self.recommendedBolus == other.recommendedBolus &&
             self.units == other.units

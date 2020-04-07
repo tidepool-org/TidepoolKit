@@ -11,29 +11,32 @@ import Foundation
 public class TDosingDecisionDatum: TDatum, Decodable {
     public typealias BloodGlucoseStartTarget = TBloodGlucose.StartTarget
 
-    public var alerts: [String]?
+    public var errors: [String]?
     public var insulinOnBoard: InsulinOnBoard?
     public var carbohydratesOnBoard: CarbohydratesOnBoard?
-    public var bloodGlucoseTargetRangeSchedule: [BloodGlucoseStartTarget]?
+    public var bloodGlucoseTargetSchedule: [BloodGlucoseStartTarget]?
     public var bloodGlucoseForecast: [BloodGlucoseForecast]?
+    public var bloodGlucoseForecastIncludingPendingInsulin: [BloodGlucoseForecast]?
     public var recommendedBasal: RecommendedBasal?
     public var recommendedBolus: RecommendedBolus?
     public var units: Units?
 
     public init(time: Date,
-                alerts: [String]? = nil,
+                errors: [String]? = nil,
                 insulinOnBoard: InsulinOnBoard? = nil,
                 carbohydratesOnBoard: CarbohydratesOnBoard? = nil,
-                bloodGlucoseTargetRangeSchedule: [BloodGlucoseStartTarget]? = nil,
+                bloodGlucoseTargetSchedule: [BloodGlucoseStartTarget]? = nil,
                 bloodGlucoseForecast: [BloodGlucoseForecast]? = nil,
+                bloodGlucoseForecastIncludingPendingInsulin: [BloodGlucoseForecast]? = nil,
                 recommendedBasal: RecommendedBasal? = nil,
                 recommendedBolus: RecommendedBolus? = nil,
                 units: Units) {
-        self.alerts = alerts
+        self.errors = errors
         self.insulinOnBoard = insulinOnBoard
         self.carbohydratesOnBoard = carbohydratesOnBoard
-        self.bloodGlucoseTargetRangeSchedule = bloodGlucoseTargetRangeSchedule
+        self.bloodGlucoseTargetSchedule = bloodGlucoseTargetSchedule
         self.bloodGlucoseForecast = bloodGlucoseForecast
+        self.bloodGlucoseForecastIncludingPendingInsulin = bloodGlucoseForecastIncludingPendingInsulin
         self.recommendedBasal = recommendedBasal
         self.recommendedBolus = recommendedBolus
         self.units = units
@@ -42,11 +45,12 @@ public class TDosingDecisionDatum: TDatum, Decodable {
 
     public required init(from decoder: Decoder) throws {
         let container = try decoder.container(keyedBy: CodingKeys.self)
-        self.alerts = try container.decodeIfPresent([String].self, forKey: .alerts)
+        self.errors = try container.decodeIfPresent([String].self, forKey: .errors)
         self.insulinOnBoard = try container.decodeIfPresent(InsulinOnBoard.self, forKey: .insulinOnBoard)
         self.carbohydratesOnBoard = try container.decodeIfPresent(CarbohydratesOnBoard.self, forKey: .carbohydratesOnBoard)
-        self.bloodGlucoseTargetRangeSchedule = try container.decodeIfPresent([BloodGlucoseStartTarget].self, forKey: .bloodGlucoseTargetRangeSchedule)
+        self.bloodGlucoseTargetSchedule = try container.decodeIfPresent([BloodGlucoseStartTarget].self, forKey: .bloodGlucoseTargetSchedule)
         self.bloodGlucoseForecast = try container.decodeIfPresent([BloodGlucoseForecast].self, forKey: .bloodGlucoseForecast)
+        self.bloodGlucoseForecastIncludingPendingInsulin = try container.decodeIfPresent([BloodGlucoseForecast].self, forKey: .bloodGlucoseForecastIncludingPendingInsulin)
         self.recommendedBasal = try container.decodeIfPresent(RecommendedBasal.self, forKey: .recommendedBasal)
         self.recommendedBolus = try container.decodeIfPresent(RecommendedBolus.self, forKey: .recommendedBolus)
         self.units = try container.decodeIfPresent(Units.self, forKey: .units)
@@ -55,11 +59,12 @@ public class TDosingDecisionDatum: TDatum, Decodable {
 
     public override func encode(to encoder: Encoder) throws {
         var container = encoder.container(keyedBy: CodingKeys.self)
-        try container.encodeIfPresent(alerts, forKey: .alerts)
+        try container.encodeIfPresent(errors, forKey: .errors)
         try container.encodeIfPresent(insulinOnBoard, forKey: .insulinOnBoard)
         try container.encodeIfPresent(carbohydratesOnBoard, forKey: .carbohydratesOnBoard)
-        try container.encodeIfPresent(bloodGlucoseTargetRangeSchedule, forKey: .bloodGlucoseTargetRangeSchedule)
+        try container.encodeIfPresent(bloodGlucoseTargetSchedule, forKey: .bloodGlucoseTargetSchedule)
         try container.encodeIfPresent(bloodGlucoseForecast, forKey: .bloodGlucoseForecast)
+        try container.encodeIfPresent(bloodGlucoseForecastIncludingPendingInsulin, forKey: .bloodGlucoseForecastIncludingPendingInsulin)
         try container.encodeIfPresent(recommendedBasal, forKey: .recommendedBasal)
         try container.encodeIfPresent(recommendedBolus, forKey: .recommendedBolus)
         try container.encodeIfPresent(units, forKey: .units)
@@ -99,19 +104,23 @@ public class TDosingDecisionDatum: TDatum, Decodable {
     }
 
     public struct RecommendedBasal: Codable, Equatable {
+        public var time: Date?
         public var rate: Double?
         public var duration: Int?
 
-        public init(rate: Double, duration: Int) {
+        public init(time: Date, rate: Double, duration: Int) {
+            self.time = time
             self.rate = rate
             self.duration = duration
         }
     }
 
     public struct RecommendedBolus: Codable, Equatable {
+        public var time: Date?
         public var amount: Double?
 
-        public init(amount: Double) {
+        public init(time: Date, amount: Double) {
+            self.time = time
             self.amount = amount
         }
     }
@@ -133,11 +142,12 @@ public class TDosingDecisionDatum: TDatum, Decodable {
     }
 
     private enum CodingKeys: String, CodingKey {
-        case alerts
+        case errors
         case insulinOnBoard
         case carbohydratesOnBoard
-        case bloodGlucoseTargetRangeSchedule
+        case bloodGlucoseTargetSchedule
         case bloodGlucoseForecast
+        case bloodGlucoseForecastIncludingPendingInsulin
         case recommendedBasal
         case recommendedBolus
         case units

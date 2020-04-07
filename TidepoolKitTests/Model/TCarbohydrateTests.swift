@@ -11,7 +11,6 @@ import TidepoolKit
 
 class TCarbohydrateUnitsTests: XCTestCase {
     func testUnits() {
-        XCTAssertEqual(TCarbohydrate.Units.exchanges.rawValue, "exchanges")
         XCTAssertEqual(TCarbohydrate.Units.grams.rawValue, "grams")
     }
 }
