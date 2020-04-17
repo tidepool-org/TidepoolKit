@@ -466,10 +466,12 @@ class RootTableViewController: UITableViewController {
 }
 
 extension RootTableViewController: TLoginSignupDelegate {
-    func loginSignup(_ loginSignup: TLoginSignup, didCreateSession session: TSession) -> Error? {
-        self.environment = session.environment
-        self.session = session
-        navigationController?.popViewController(animated: true)
-        return nil
+    func loginSignup(_ loginSignup: TLoginSignup, didCreateSession session: TSession, completion: @escaping (Error?) -> Void) {
+        DispatchQueue.main.async {
+            self.environment = session.environment
+            self.session = session
+            self.navigationController?.popViewController(animated: true)
+            completion(nil)
+        }
     }
 }

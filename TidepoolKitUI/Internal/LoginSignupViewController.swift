@@ -74,13 +74,13 @@ class LoginSignupViewController: UIViewController, TLoginSignup {
                     self.feedbackLabel.text = self.loginFeedback(error: error)
                 }
             case .success(let session):
-                DispatchQueue.main.async {
-                    self.activityIndicatorView.stopAnimating()
-                    if let error = self.delegate?.loginSignup(self, didCreateSession: session) {
-                        TSharedLogging.error((error as CustomDebugStringConvertible).debugDescription)
-                        DispatchQueue.main.async {
+                self.delegate!.loginSignup(self, didCreateSession: session) { error in
+                    DispatchQueue.main.async {
+                        if let error = error {
+                            TSharedLogging.error((error as CustomDebugStringConvertible).debugDescription)
                             self.feedbackLabel.text = error.localizedDescription
                         }
+                        self.activityIndicatorView.stopAnimating()
                     }
                 }
             }

@@ -108,7 +108,7 @@ struct Sample {
                                             method: .automatic),
                 TDosingDecisionDatum(time: Date(),
                                      errors: ["Alert 1", "Alert 2"],
-                                     insulinOnBoard: TDosingDecisionDatum.InsulinOnBoard(startTime: Date(), amount: 1.23),
+                                     insulinOnBoard: TDosingDecisionDatum.InsulinOnBoard(startTime: Date(), amount: -1.23),
                                      carbohydratesOnBoard: TDosingDecisionDatum.CarbohydratesOnBoard(startTime: Date(), endTime: Date(), amount: 2.34),
                                      bloodGlucoseTargetSchedule: [TBloodGlucose.StartTarget(start: 0, low: 100, high: 110),
                                                                   TBloodGlucose.StartTarget(start: 43200000, low: 110, high: 120)],

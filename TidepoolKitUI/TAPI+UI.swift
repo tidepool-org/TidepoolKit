@@ -16,8 +16,8 @@ public protocol TLoginSignupDelegate: AnyObject {
     /// - Parameters:
     ///   - loginSignup: The login signup that invoked the delegate
     ///   - session: The newly created session
-    /// - Returns: Any error the login signup should display
-    func loginSignup(_ loginSignup: TLoginSignup, didCreateSession session: TSession) -> Error?
+    ///   - completion: The completion function to invoke with any error.
+    func loginSignup(_ loginSignup: TLoginSignup, didCreateSession session: TSession, completion: @escaping (Error?) -> Void)
 }
 
 /// The Tidepool login and signup UI requirements.
