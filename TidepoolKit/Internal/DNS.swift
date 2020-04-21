@@ -44,29 +44,10 @@ extension DNSSRVRecord: Comparable {
 
 class DNS {
     static func lookupSRVRecords(for domainName: String, timeout: Int = 10, completion: @escaping (Result<[DNSSRVRecord], DNSError>) -> Void) {
-        var records: [DNSSRVRecord] = []
-
         let serviceRef: UnsafeMutablePointer<DNSServiceRef?> = UnsafeMutablePointer.allocate(capacity: MemoryLayout<DNSServiceRef>.size)
-        let callback: DNSServiceQueryRecordReply = { (_, _, _, errorCode, _, _, _, rawDataLength, rawData, _, context) -> Void in
-            context?.assumingMemoryBound(to: DNSSRVRecordHandler.self).pointee(errorCode, rawDataLength, rawData)
-        }
-        var handlerError: DNSError?
-        var handler: DNSSRVRecordHandler = { (errorCode, rawDataLength, rawData) in
-            guard handlerError == nil else {
-                return
-            }
-            guard errorCode == kDNSServiceErr_NoError else {
-                handlerError = .error(errorCode, nil)
-                return
-            }
-            guard let rawData = rawData, rawDataLength > 0 else {
-                return
-            }
-            records.append(DNSSRVRecord(data: Data(bytes: rawData, count: Int(rawDataLength))))
-        }
+        var context = DNSSRVRecordContext()
 
-        // Pass handler as context to callback so that we have a way to pass the record result back to the caller
-        let errorCode = DNSServiceQueryRecord(serviceRef, 0, 0, domainName, UInt16(kDNSServiceType_SRV), UInt16(kDNSServiceClass_IN), callback, &handler)
+        let errorCode = DNSServiceQueryRecord(serviceRef, 0, 0, domainName, UInt16(kDNSServiceType_SRV), UInt16(kDNSServiceClass_IN), DNSSRVRecordCallback, &context)
         if errorCode != kDNSServiceErr_NoError {
             completion(.failure(.error(errorCode, nil)))
         }
@@ -86,10 +67,10 @@ class DNS {
             let errorCode = DNSServiceProcessResult(serviceRef.pointee)
             if errorCode != kDNSServiceErr_NoError {
                 completion(.failure(.error(errorCode, nil)))
-            } else if let handlerError = handlerError {
-                completion(.failure(handlerError))
+            } else if let error = context.error {
+                completion(.failure(error))
             } else {
-                completion(.success(records))
+                completion(.success(context.records))
             }
         }
 
@@ -170,8 +151,28 @@ class DNS {
             break
         }
     }
+}
 
-    private typealias DNSSRVRecordHandler = (DNSServiceErrorType, UInt16, UnsafeRawPointer?) -> Void
+private class DNSSRVRecordContext {
+    var error: DNSError? = nil
+    var records: [DNSSRVRecord] = []
+}
+
+private func DNSSRVRecordCallback(_: DNSServiceRef?, _: DNSServiceFlags, _: UInt32, errorCode: DNSServiceErrorType, _: UnsafePointer<Int8>?, _: UInt16, _: UInt16, readLength: UInt16, readBytes: UnsafeRawPointer?, _: UInt32, context: UnsafeMutableRawPointer?) -> Void {
+    guard let context = context?.assumingMemoryBound(to: DNSSRVRecordContext.self).pointee else {
+        return
+    }
+    guard context.error == nil else {
+        return
+    }
+    guard errorCode == kDNSServiceErr_NoError else {
+        context.error = .error(errorCode, nil)
+        return
+    }
+    guard let readBytes = readBytes, readLength > 0 else {
+        return
+    }
+    context.records.append(DNSSRVRecord(data: Data(bytes: readBytes, count: Int(readLength))))
 }
 
 private extension DNSSRVRecord {
