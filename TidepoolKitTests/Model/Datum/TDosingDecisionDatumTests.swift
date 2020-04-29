@@ -16,9 +16,7 @@ class TDosingDecisionDatumTests: XCTestCase {
                                                      carbohydratesOnBoard: TDosingDecisionDatumCarbohydratesOnBoardTests.carbohydratesOnBoard,
                                                      bloodGlucoseTargetSchedule: [TBloodGlucoseStartTargetTests.startTarget,
                                                                                   TBloodGlucoseStartTargetTests.startTarget],
-                                                     bloodGlucoseForecast: [TDosingDecisionDatumBloodGlucoseForecastTests.bloodGlucoseForecast,
-                                                                            TDosingDecisionDatumBloodGlucoseForecastTests.bloodGlucoseForecast],
-                                                     bloodGlucoseForecastIncludingPendingInsulin: [TDosingDecisionDatumBloodGlucoseForecastTests.bloodGlucoseForecast],
+                                                     bloodGlucoseForecast: TDosingDecisionDatumBloodGlucoseForecastTests.bloodGlucoseForecast,
                                                      recommendedBasal: TDosingDecisionDatumRecommendedBasalTests.recommendedBasal,
                                                      recommendedBolus: TDosingDecisionDatumRecommendedBolusTests.recommendedBolus,
                                                      units: TDosingDecisionDatumUnitsTests.units)
@@ -30,9 +28,7 @@ class TDosingDecisionDatumTests: XCTestCase {
         "carbohydratesOnBoard": TDosingDecisionDatumCarbohydratesOnBoardTests.carbohydratesOnBoardJSONDictionary,
         "bloodGlucoseTargetSchedule": [TBloodGlucoseStartTargetTests.startTargetJSONDictionary,
                                        TBloodGlucoseStartTargetTests.startTargetJSONDictionary],
-        "bloodGlucoseForecast": [TDosingDecisionDatumBloodGlucoseForecastTests.bloodGlucoseForecastJSONDictionary,
-                                 TDosingDecisionDatumBloodGlucoseForecastTests.bloodGlucoseForecastJSONDictionary],
-        "bloodGlucoseForecastIncludingPendingInsulin": [TDosingDecisionDatumBloodGlucoseForecastTests.bloodGlucoseForecastJSONDictionary],
+        "bloodGlucoseForecast": TDosingDecisionDatumBloodGlucoseForecastTests.bloodGlucoseForecastJSONDictionary,
         "recommendedBasal": TDosingDecisionDatumRecommendedBasalTests.recommendedBasalJSONDictionary,
         "recommendedBolus": TDosingDecisionDatumRecommendedBolusTests.recommendedBolusJSONDictionary,
         "units": TDosingDecisionDatumUnitsTests.unitsJSONDictionary
@@ -45,9 +41,7 @@ class TDosingDecisionDatumTests: XCTestCase {
         XCTAssertEqual(dosingDecision.carbohydratesOnBoard, TDosingDecisionDatumCarbohydratesOnBoardTests.carbohydratesOnBoard)
         XCTAssertEqual(dosingDecision.bloodGlucoseTargetSchedule, [TBloodGlucoseStartTargetTests.startTarget,
                                                                    TBloodGlucoseStartTargetTests.startTarget])
-        XCTAssertEqual(dosingDecision.bloodGlucoseForecast, [TDosingDecisionDatumBloodGlucoseForecastTests.bloodGlucoseForecast,
-                                                             TDosingDecisionDatumBloodGlucoseForecastTests.bloodGlucoseForecast])
-        XCTAssertEqual(dosingDecision.bloodGlucoseForecastIncludingPendingInsulin, [TDosingDecisionDatumBloodGlucoseForecastTests.bloodGlucoseForecast])
+        XCTAssertEqual(dosingDecision.bloodGlucoseForecast, TDosingDecisionDatumBloodGlucoseForecastTests.bloodGlucoseForecast)
         XCTAssertEqual(dosingDecision.recommendedBasal, TDosingDecisionDatumRecommendedBasalTests.recommendedBasal)
         XCTAssertEqual(dosingDecision.recommendedBolus, TDosingDecisionDatumRecommendedBolusTests.recommendedBolus)
         XCTAssertEqual(dosingDecision.units, TDosingDecisionDatumUnitsTests.units)
@@ -97,16 +91,23 @@ class TDosingDecisionDatumCarbohydratesOnBoardTests: XCTestCase {
 }
 
 class TDosingDecisionDatumBloodGlucoseForecastTests: XCTestCase {
-    static let bloodGlucoseForecast = TDosingDecisionDatum.BloodGlucoseForecast(time: Date.test, value: 1.23)
+    static let bloodGlucoseForecast = TDosingDecisionDatum.BloodGlucoseForecast(startTime: Date.test,
+                                                                                timeOffset: 300,
+                                                                                net: [1.23, 2.34, 3.45],
+                                                                                netIncludingPendingInsulin: [4.56, 5.67, 6.78])
     static let bloodGlucoseForecastJSONDictionary: [String: Any] = [
-        "time": Date.testJSONString,
-        "value": 1.23,
+        "startTime": Date.testJSONString,
+        "timeOffset": 300,
+        "net": [1.23, 2.34, 3.45],
+        "netIncludingPendingInsulin": [4.56, 5.67, 6.78],
     ]
     
     func testInitializer() {
         let bloodGlucoseForecast = TDosingDecisionDatumBloodGlucoseForecastTests.bloodGlucoseForecast
-        XCTAssertEqual(bloodGlucoseForecast.time, Date.test)
-        XCTAssertEqual(bloodGlucoseForecast.value, 1.23)
+        XCTAssertEqual(bloodGlucoseForecast.startTime, Date.test)
+        XCTAssertEqual(bloodGlucoseForecast.timeOffset, 300)
+        XCTAssertEqual(bloodGlucoseForecast.net, [1.23, 2.34, 3.45])
+        XCTAssertEqual(bloodGlucoseForecast.netIncludingPendingInsulin, [4.56, 5.67, 6.78])
     }
     
     func testCodableAsJSON() {
@@ -180,7 +181,6 @@ extension TDosingDecisionDatum {
             self.carbohydratesOnBoard == other.carbohydratesOnBoard &&
             self.bloodGlucoseTargetSchedule == other.bloodGlucoseTargetSchedule &&
             self.bloodGlucoseForecast == other.bloodGlucoseForecast &&
-            self.bloodGlucoseForecastIncludingPendingInsulin == other.bloodGlucoseForecastIncludingPendingInsulin &&
             self.recommendedBasal == other.recommendedBasal &&
             self.recommendedBolus == other.recommendedBolus &&
             self.units == other.units

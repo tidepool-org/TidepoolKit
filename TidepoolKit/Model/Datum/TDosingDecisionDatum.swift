@@ -15,8 +15,7 @@ public class TDosingDecisionDatum: TDatum, Decodable {
     public var insulinOnBoard: InsulinOnBoard?
     public var carbohydratesOnBoard: CarbohydratesOnBoard?
     public var bloodGlucoseTargetSchedule: [BloodGlucoseStartTarget]?
-    public var bloodGlucoseForecast: [BloodGlucoseForecast]?
-    public var bloodGlucoseForecastIncludingPendingInsulin: [BloodGlucoseForecast]?
+    public var bloodGlucoseForecast: BloodGlucoseForecast?
     public var recommendedBasal: RecommendedBasal?
     public var recommendedBolus: RecommendedBolus?
     public var units: Units?
@@ -26,8 +25,7 @@ public class TDosingDecisionDatum: TDatum, Decodable {
                 insulinOnBoard: InsulinOnBoard? = nil,
                 carbohydratesOnBoard: CarbohydratesOnBoard? = nil,
                 bloodGlucoseTargetSchedule: [BloodGlucoseStartTarget]? = nil,
-                bloodGlucoseForecast: [BloodGlucoseForecast]? = nil,
-                bloodGlucoseForecastIncludingPendingInsulin: [BloodGlucoseForecast]? = nil,
+                bloodGlucoseForecast: BloodGlucoseForecast? = nil,
                 recommendedBasal: RecommendedBasal? = nil,
                 recommendedBolus: RecommendedBolus? = nil,
                 units: Units) {
@@ -36,7 +34,6 @@ public class TDosingDecisionDatum: TDatum, Decodable {
         self.carbohydratesOnBoard = carbohydratesOnBoard
         self.bloodGlucoseTargetSchedule = bloodGlucoseTargetSchedule
         self.bloodGlucoseForecast = bloodGlucoseForecast
-        self.bloodGlucoseForecastIncludingPendingInsulin = bloodGlucoseForecastIncludingPendingInsulin
         self.recommendedBasal = recommendedBasal
         self.recommendedBolus = recommendedBolus
         self.units = units
@@ -49,8 +46,7 @@ public class TDosingDecisionDatum: TDatum, Decodable {
         self.insulinOnBoard = try container.decodeIfPresent(InsulinOnBoard.self, forKey: .insulinOnBoard)
         self.carbohydratesOnBoard = try container.decodeIfPresent(CarbohydratesOnBoard.self, forKey: .carbohydratesOnBoard)
         self.bloodGlucoseTargetSchedule = try container.decodeIfPresent([BloodGlucoseStartTarget].self, forKey: .bloodGlucoseTargetSchedule)
-        self.bloodGlucoseForecast = try container.decodeIfPresent([BloodGlucoseForecast].self, forKey: .bloodGlucoseForecast)
-        self.bloodGlucoseForecastIncludingPendingInsulin = try container.decodeIfPresent([BloodGlucoseForecast].self, forKey: .bloodGlucoseForecastIncludingPendingInsulin)
+        self.bloodGlucoseForecast = try container.decodeIfPresent(BloodGlucoseForecast.self, forKey: .bloodGlucoseForecast)
         self.recommendedBasal = try container.decodeIfPresent(RecommendedBasal.self, forKey: .recommendedBasal)
         self.recommendedBolus = try container.decodeIfPresent(RecommendedBolus.self, forKey: .recommendedBolus)
         self.units = try container.decodeIfPresent(Units.self, forKey: .units)
@@ -64,7 +60,6 @@ public class TDosingDecisionDatum: TDatum, Decodable {
         try container.encodeIfPresent(carbohydratesOnBoard, forKey: .carbohydratesOnBoard)
         try container.encodeIfPresent(bloodGlucoseTargetSchedule, forKey: .bloodGlucoseTargetSchedule)
         try container.encodeIfPresent(bloodGlucoseForecast, forKey: .bloodGlucoseForecast)
-        try container.encodeIfPresent(bloodGlucoseForecastIncludingPendingInsulin, forKey: .bloodGlucoseForecastIncludingPendingInsulin)
         try container.encodeIfPresent(recommendedBasal, forKey: .recommendedBasal)
         try container.encodeIfPresent(recommendedBolus, forKey: .recommendedBolus)
         try container.encodeIfPresent(units, forKey: .units)
@@ -94,12 +89,16 @@ public class TDosingDecisionDatum: TDatum, Decodable {
     }
 
     public struct BloodGlucoseForecast: Codable, Equatable {
-        public var time: Date?
-        public var value: Double?
+        public var startTime: Date?
+        public var timeOffset: Int?
+        public var net: [Double]?
+        public var netIncludingPendingInsulin: [Double]?
 
-        public init(time: Date, value: Double) {
-            self.time = time
-            self.value = value
+        public init(startTime: Date, timeOffset: Int, net: [Double]? = nil, netIncludingPendingInsulin: [Double]? = nil) {
+            self.startTime = startTime
+            self.timeOffset = timeOffset
+            self.net = net
+            self.netIncludingPendingInsulin = netIncludingPendingInsulin
         }
     }
 
@@ -147,7 +146,6 @@ public class TDosingDecisionDatum: TDatum, Decodable {
         case carbohydratesOnBoard
         case bloodGlucoseTargetSchedule
         case bloodGlucoseForecast
-        case bloodGlucoseForecastIncludingPendingInsulin
         case recommendedBasal
         case recommendedBolus
         case units
