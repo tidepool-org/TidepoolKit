@@ -44,7 +44,7 @@ public struct TDataSet: Codable, Equatable {
     public var timeProcessing: TimeProcessing?
     public var timezone: String?
     public var timezoneOffset: Int?
-    public let type: String = "upload"
+    public let type: String
     public var uploadId: String?
     public var version: String?
 
@@ -52,6 +52,7 @@ public struct TDataSet: Codable, Equatable {
         self.dataSetType = dataSetType
         self.client = client
         self.deduplicator = deduplicator
+        self.type = "upload"
     }
 
     public init(byUser: String? = nil,
@@ -92,6 +93,7 @@ public struct TDataSet: Codable, Equatable {
         self.timeProcessing = timeProcessing
         self.timezone = timezone
         self.timezoneOffset = timezoneOffset
+        self.type = "upload"
         self.uploadId = uploadId
         self.version = version
     }

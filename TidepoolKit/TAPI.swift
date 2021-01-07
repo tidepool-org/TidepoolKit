@@ -93,7 +93,7 @@ public class TAPI {
                 default:
                     completion(.failure(error))
                 }
-            case .success(let response, let data, let loginResponse):
+            case .success((let response, let data, let loginResponse)):
                 if let authenticationToken = response.value(forHTTPHeaderField: "X-Tidepool-Session-Token"), !authenticationToken.isEmpty {
                     if loginResponse.termsAccepted?.isEmpty == false {     // CUSTOM: Backend does not currently explicitly check if terms are accepted
                         completion(.success(TSession(environment: environment, authenticationToken: authenticationToken, userId: loginResponse.userId)))
@@ -128,7 +128,7 @@ public class TAPI {
             switch result {
             case .failure(let error):
                 completion(.failure(error))
-            case .success(let response, let data):
+            case .success((let response, let data)):
                 if let authenticationToken = response.value(forHTTPHeaderField: "X-Tidepool-Session-Token"), !authenticationToken.isEmpty {
                     completion(.success(TSession(environment: session.environment, authenticationToken: authenticationToken, userId: session.userId, trace: session.trace)))
                 } else {
@@ -314,7 +314,7 @@ public class TAPI {
             switch result {
             case .failure(let error):
                 completion(.failure(error))
-            case .success(_, _, let decoded):
+            case .success((_, _, let decoded)):
                 completion(.success(decoded))
             }
         }
@@ -327,7 +327,7 @@ public class TAPI {
             switch result {
             case .failure(let error):
                 completion(.failure(error))
-            case .success(let response, let data):
+            case .success((let response, let data)):
                 if let data = data {
                     do {
                         completion(.success((response, data, try JSONDecoder.tidepool.decode(D.self, from: data))))

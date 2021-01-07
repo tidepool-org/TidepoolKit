@@ -66,7 +66,7 @@ class TAPILoginTests: TAPITests {
             XCTFail()
             return
         }
-        XCTAssertNotNil(networkError as? TestError)
+        XCTAssertNotNil(networkError)
     }
 
     func testRequestNotAuthenticated() {
@@ -157,7 +157,7 @@ class TAPIRefreshTests: TAPISessionTests {
             XCTFail()
             return
         }
-        XCTAssertNotNil(networkError as? TestError)
+        XCTAssertNotNil(networkError)
     }
 
     func testRequestNotAuthenticated() {
@@ -210,7 +210,7 @@ class TAPILogoutTests: TAPISessionTests {
             XCTFail()
             return
         }
-        XCTAssertNotNil(networkError as? TestError)
+        XCTAssertNotNil(networkError)
     }
 
     func testRequestNotAuthenticated() {
@@ -251,7 +251,7 @@ class TAPIGetProfileTests: TAPISessionTests {
             XCTFail()
             return
         }
-        XCTAssertNotNil(networkError as? TestError)
+        XCTAssertNotNil(networkError)
     }
 
     func testRequestNotAuthenticated() {
@@ -310,7 +310,7 @@ class TAPIListDataSetsTests: TAPISessionTests {
             XCTFail()
             return
         }
-        XCTAssertNotNil(networkError as? TestError)
+        XCTAssertNotNil(networkError)
     }
 
     func testRequestNotAuthenticated() {
@@ -371,7 +371,7 @@ class TAPICreateDataSetTests: TAPISessionTests {
             XCTFail()
             return
         }
-        XCTAssertNotNil(networkError as? TestError)
+        XCTAssertNotNil(networkError)
     }
 
     func testRequestNotAuthenticated() {
@@ -430,7 +430,7 @@ class TAPIListDataTests: TAPISessionTests {
             XCTFail()
             return
         }
-        XCTAssertNotNil(networkError as? TestError)
+        XCTAssertNotNil(networkError)
     }
 
     func testRequestNotAuthenticated() {
@@ -492,7 +492,7 @@ class TAPICreateDataTests: TAPISessionTests {
             XCTFail()
             return
         }
-        XCTAssertNotNil(networkError as? TestError)
+        XCTAssertNotNil(networkError)
     }
 
     func testRequestNotAuthenticated() {
@@ -564,7 +564,7 @@ class TAPIDeleteDataTests: TAPISessionTests {
             XCTFail()
             return
         }
-        XCTAssertNotNil(networkError as? TestError)
+        XCTAssertNotNil(networkError)
     }
 
     func testRequestNotAuthenticated() {
