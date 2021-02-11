@@ -10,7 +10,7 @@ jobs:
           name: Build TidepoolKit
           command: set -o pipefail && time xcrun xcodebuild -project 'TidepoolKit.xcodeproj' -scheme 'Shared' build -destination 'name=iPhone 8' build | xcpretty
       - run:
-          name: Run TidepoolKit Unit Tests
+          name: Run TidepoolKit unit tests
           command: set -o pipefail && time xcrun xcodebuild -project 'TidepoolKit.xcodeproj' -scheme 'Shared' build -destination 'name=iPhone 8' test | xcpretty
       - run:
           name: Build TidepoolKit Example
