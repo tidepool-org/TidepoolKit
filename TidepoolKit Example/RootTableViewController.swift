@@ -287,7 +287,7 @@ class RootTableViewController: UITableViewController {
 
     private func login(completion: @escaping () -> Void) {
         var loginSignupViewController = api.loginSignupViewController()
-        loginSignupViewController.delegate = self
+        loginSignupViewController.loginSignupDelegate = self
         loginSignupViewController.environment = environment
         navigationController?.pushViewController(loginSignupViewController, animated: true)
         completion()
@@ -472,6 +472,12 @@ extension RootTableViewController: TLoginSignupDelegate {
             self.session = session
             self.navigationController?.popViewController(animated: true)
             completion(nil)
+        }
+    }
+
+    func loginSignupCancelled() {
+        DispatchQueue.main.async {
+            self.navigationController?.popViewController(animated: true)
         }
     }
 }

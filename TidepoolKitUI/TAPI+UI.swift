@@ -18,13 +18,16 @@ public protocol TLoginSignupDelegate: AnyObject {
     ///   - session: The newly created session
     ///   - completion: The completion function to invoke with any error.
     func loginSignup(_ loginSignup: TLoginSignup, didCreateSession session: TSession, completion: @escaping (Error?) -> Void)
+
+    /// Notify the delegate that the login or signup was cancelled.
+    func loginSignupCancelled()
 }
 
 /// The Tidepool login and signup UI requirements.
 public protocol TLoginSignup {
 
     /// The delegate to this login signup
-    var delegate: TLoginSignupDelegate? { get set }
+    var loginSignupDelegate: TLoginSignupDelegate? { get set }
 
     /// The environment to use for this login signup
     var environment: TEnvironment? { get set }
@@ -33,10 +36,5 @@ public protocol TLoginSignup {
 public extension TAPI {
 
     /// Create the login and signup view controller.
-    func loginSignupViewController() -> (UIViewController & TLoginSignup) {
-        let storyboard = UIStoryboard(name: "LoginSignup", bundle: Bundle(for: LoginSignupViewController.self))
-        let loginSignupViewController = storyboard.instantiateInitialViewController() as! LoginSignupViewController
-        loginSignupViewController.api = self
-        return loginSignupViewController
-    }
+    func loginSignupViewController() -> (UIViewController & TLoginSignup) { LoginSignupNavigationController(api: self) }
 }

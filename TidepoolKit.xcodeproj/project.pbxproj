@@ -18,6 +18,9 @@
 		A9116AE224083C1100483021 /* TDataSet.swift in Sources */ = {isa = PBXBuildFile; fileRef = A9116AE024083C1100483021 /* TDataSet.swift */; };
 		A9116AF32409D8C400483021 /* TDatum.swift in Sources */ = {isa = PBXBuildFile; fileRef = A9116AF12409D8C400483021 /* TDatum.swift */; };
 		A9116AF62409D8E000483021 /* DataResponse.swift in Sources */ = {isa = PBXBuildFile; fileRef = A9116AF52409D8E000483021 /* DataResponse.swift */; };
+		A9285746262B920E00AC3460 /* LoginSignupNavigationController.swift in Sources */ = {isa = PBXBuildFile; fileRef = A9285745262B920E00AC3460 /* LoginSignupNavigationController.swift */; };
+		A9285750262B923700AC3460 /* LoginSignupViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = A928574F262B923700AC3460 /* LoginSignupViewModel.swift */; };
+		A9285756262B926B00AC3460 /* LoginSignupView.swift in Sources */ = {isa = PBXBuildFile; fileRef = A9285755262B926B00AC3460 /* LoginSignupView.swift */; };
 		A929A90D2411DDB300742B08 /* URLProtocolMock.swift in Sources */ = {isa = PBXBuildFile; fileRef = A929A90C2411DDB300742B08 /* URLProtocolMock.swift */; };
 		A92F62D223D7D0E3007B3CA6 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = A92F62D123D7D0E3007B3CA6 /* Assets.xcassets */; };
 		A930762D241224C700D1E376 /* TBloodKetoneDatum.swift in Sources */ = {isa = PBXBuildFile; fileRef = A9307610241224C600D1E376 /* TBloodKetoneDatum.swift */; };
@@ -91,7 +94,6 @@
 		A96633DE2409E99F007B68C1 /* TFoodDatum.swift in Sources */ = {isa = PBXBuildFile; fileRef = A96633C22409E99F007B68C1 /* TFoodDatum.swift */; };
 		A96633E32409E99F007B68C1 /* TCBGDatum.swift in Sources */ = {isa = PBXBuildFile; fileRef = A96633C82409E99F007B68C1 /* TCBGDatum.swift */; };
 		A973CD2323D68B6400C44032 /* TLogging.swift in Sources */ = {isa = PBXBuildFile; fileRef = A973CD2223D68B6400C44032 /* TLogging.swift */; };
-		A973CD2523D68E9D00C44032 /* LoginSignupViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = A973CD2423D68E9D00C44032 /* LoginSignupViewController.swift */; };
 		A973CD2723D68FC300C44032 /* TAPI+UI.swift in Sources */ = {isa = PBXBuildFile; fileRef = A973CD2623D68FC300C44032 /* TAPI+UI.swift */; };
 		A973CD2923D68FE000C44032 /* TAPI.swift in Sources */ = {isa = PBXBuildFile; fileRef = A973CD2823D68FE000C44032 /* TAPI.swift */; };
 		A973CD2B23D6916300C44032 /* TidepoolKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = A943535023C932A10093CFA3 /* TidepoolKit.framework */; };
@@ -99,7 +101,6 @@
 		A973CD3123D6916C00C44032 /* TidepoolKit.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = A943535023C932A10093CFA3 /* TidepoolKit.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
 		A973CD3423D6916C00C44032 /* TidepoolKitUI.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = A943536F23C932BF0093CFA3 /* TidepoolKitUI.framework */; };
 		A973CD3523D6916C00C44032 /* TidepoolKitUI.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = A943536F23C932BF0093CFA3 /* TidepoolKitUI.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
-		A973CD3B23D692D600C44032 /* LoginSignup.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = A973CD3D23D692D600C44032 /* LoginSignup.storyboard */; };
 		A98780B8240A0D5E0007D5E1 /* TOriginTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = A9878093240A0D5E0007D5E1 /* TOriginTests.swift */; };
 		A98780B9240A0D5E0007D5E1 /* TAsssociationTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = A9878094240A0D5E0007D5E1 /* TAsssociationTests.swift */; };
 		A98780BA240A0D5E0007D5E1 /* TBloodGlucoseTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = A9878095240A0D5E0007D5E1 /* TBloodGlucoseTests.swift */; };
@@ -143,6 +144,10 @@
 		A9DA2ABD24130B380083298B /* TPumpStatusDatum.swift in Sources */ = {isa = PBXBuildFile; fileRef = A9DA2ABC24130B380083298B /* TPumpStatusDatum.swift */; };
 		A9DA2ABF24130D050083298B /* TPumpStatusDatumTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = A9DA2ABE24130D050083298B /* TPumpStatusDatumTests.swift */; };
 		A9DA2AC124130D1D0083298B /* TDosingDecisionDatumTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = A9DA2AC024130D1D0083298B /* TDosingDecisionDatumTests.swift */; };
+		A9DCED14262779290057359F /* ActionButtonStyle.swift in Sources */ = {isa = PBXBuildFile; fileRef = A9DCED12262779290057359F /* ActionButtonStyle.swift */; };
+		A9DCED15262779290057359F /* LocalizedString.swift in Sources */ = {isa = PBXBuildFile; fileRef = A9DCED13262779290057359F /* LocalizedString.swift */; };
+		A9DCED1B2627792F0057359F /* Image.swift in Sources */ = {isa = PBXBuildFile; fileRef = A9DCED1A2627792F0057359F /* Image.swift */; };
+		A9DCED21262779350057359F /* ContentPreview.swift in Sources */ = {isa = PBXBuildFile; fileRef = A9DCED20262779350057359F /* ContentPreview.swift */; };
 		A9EAB8E823DFC77E00874D2A /* DNS.swift in Sources */ = {isa = PBXBuildFile; fileRef = A9EAB8E723DFC77E00874D2A /* DNS.swift */; };
 /* End PBXBuildFile section */
 
@@ -239,6 +244,9 @@
 		A9116AE024083C1100483021 /* TDataSet.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TDataSet.swift; sourceTree = "<group>"; };
 		A9116AF12409D8C400483021 /* TDatum.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TDatum.swift; sourceTree = "<group>"; };
 		A9116AF52409D8E000483021 /* DataResponse.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = DataResponse.swift; sourceTree = "<group>"; };
+		A9285745262B920E00AC3460 /* LoginSignupNavigationController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LoginSignupNavigationController.swift; sourceTree = "<group>"; };
+		A928574F262B923700AC3460 /* LoginSignupViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LoginSignupViewModel.swift; sourceTree = "<group>"; };
+		A9285755262B926B00AC3460 /* LoginSignupView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LoginSignupView.swift; sourceTree = "<group>"; };
 		A929A90C2411DDB300742B08 /* URLProtocolMock.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = URLProtocolMock.swift; sourceTree = "<group>"; };
 		A92F62D123D7D0E3007B3CA6 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		A9307610241224C600D1E376 /* TBloodKetoneDatum.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TBloodKetoneDatum.swift; sourceTree = "<group>"; };
@@ -320,10 +328,8 @@
 		A96633C22409E99F007B68C1 /* TFoodDatum.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TFoodDatum.swift; sourceTree = "<group>"; };
 		A96633C82409E99F007B68C1 /* TCBGDatum.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TCBGDatum.swift; sourceTree = "<group>"; };
 		A973CD2223D68B6400C44032 /* TLogging.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TLogging.swift; sourceTree = "<group>"; };
-		A973CD2423D68E9D00C44032 /* LoginSignupViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LoginSignupViewController.swift; sourceTree = "<group>"; };
 		A973CD2623D68FC300C44032 /* TAPI+UI.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "TAPI+UI.swift"; sourceTree = "<group>"; };
 		A973CD2823D68FE000C44032 /* TAPI.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TAPI.swift; sourceTree = "<group>"; };
-		A973CD3C23D692D600C44032 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/LoginSignup.storyboard; sourceTree = "<group>"; };
 		A9878093240A0D5E0007D5E1 /* TOriginTests.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TOriginTests.swift; sourceTree = "<group>"; };
 		A9878094240A0D5E0007D5E1 /* TAsssociationTests.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TAsssociationTests.swift; sourceTree = "<group>"; };
 		A9878095240A0D5E0007D5E1 /* TBloodGlucoseTests.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TBloodGlucoseTests.swift; sourceTree = "<group>"; };
@@ -367,6 +373,10 @@
 		A9DA2ABC24130B380083298B /* TPumpStatusDatum.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TPumpStatusDatum.swift; sourceTree = "<group>"; };
 		A9DA2ABE24130D050083298B /* TPumpStatusDatumTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TPumpStatusDatumTests.swift; sourceTree = "<group>"; };
 		A9DA2AC024130D1D0083298B /* TDosingDecisionDatumTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TDosingDecisionDatumTests.swift; sourceTree = "<group>"; };
+		A9DCED12262779290057359F /* ActionButtonStyle.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ActionButtonStyle.swift; sourceTree = "<group>"; };
+		A9DCED13262779290057359F /* LocalizedString.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = LocalizedString.swift; sourceTree = "<group>"; };
+		A9DCED1A2627792F0057359F /* Image.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Image.swift; sourceTree = "<group>"; };
+		A9DCED20262779350057359F /* ContentPreview.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ContentPreview.swift; sourceTree = "<group>"; };
 		A9EAB8E723DFC77E00874D2A /* DNS.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DNS.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
@@ -437,6 +447,30 @@
 				A9307615241224C600D1E376 /* DeviceEventDatum */,
 			);
 			path = Datum;
+			sourceTree = "<group>";
+		};
+		A9285742262B91E500AC3460 /* View Controllers */ = {
+			isa = PBXGroup;
+			children = (
+				A9285745262B920E00AC3460 /* LoginSignupNavigationController.swift */,
+			);
+			path = "View Controllers";
+			sourceTree = "<group>";
+		};
+		A9285743262B91ED00AC3460 /* View Models */ = {
+			isa = PBXGroup;
+			children = (
+				A928574F262B923700AC3460 /* LoginSignupViewModel.swift */,
+			);
+			path = "View Models";
+			sourceTree = "<group>";
+		};
+		A9285744262B91F800AC3460 /* Views */ = {
+			isa = PBXGroup;
+			children = (
+				A9285755262B926B00AC3460 /* LoginSignupView.swift */,
+			);
+			path = Views;
 			sourceTree = "<group>";
 		};
 		A9307615241224C600D1E376 /* DeviceEventDatum */ = {
@@ -675,9 +709,13 @@
 		A994917023FB61E400865738 /* Internal */ = {
 			isa = PBXGroup;
 			children = (
-				A973CD2423D68E9D00C44032 /* LoginSignupViewController.swift */,
 				A92F62D123D7D0E3007B3CA6 /* Assets.xcassets */,
-				A973CD3D23D692D600C44032 /* LoginSignup.storyboard */,
+				A9FD367F26265A77008DE1D8 /* Common */,
+				A9FD367826265A53008DE1D8 /* Extensions */,
+				A9FD368C26265C6B008DE1D8 /* Previews */,
+				A9285742262B91E500AC3460 /* View Controllers */,
+				A9285743262B91ED00AC3460 /* View Models */,
+				A9285744262B91F800AC3460 /* Views */,
 			);
 			path = Internal;
 			sourceTree = "<group>";
@@ -774,6 +812,31 @@
 				A9C9D2532400CC6500D66F16 /* UserDefaults.swift */,
 			);
 			path = Extensions;
+			sourceTree = "<group>";
+		};
+		A9FD367826265A53008DE1D8 /* Extensions */ = {
+			isa = PBXGroup;
+			children = (
+				A9DCED1A2627792F0057359F /* Image.swift */,
+			);
+			path = Extensions;
+			sourceTree = "<group>";
+		};
+		A9FD367F26265A77008DE1D8 /* Common */ = {
+			isa = PBXGroup;
+			children = (
+				A9DCED12262779290057359F /* ActionButtonStyle.swift */,
+				A9DCED13262779290057359F /* LocalizedString.swift */,
+			);
+			path = Common;
+			sourceTree = "<group>";
+		};
+		A9FD368C26265C6B008DE1D8 /* Previews */ = {
+			isa = PBXGroup;
+			children = (
+				A9DCED20262779350057359F /* ContentPreview.swift */,
+			);
+			path = Previews;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -965,7 +1028,6 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				A973CD3B23D692D600C44032 /* LoginSignup.storyboard in Resources */,
 				A92F62D223D7D0E3007B3CA6 /* Assets.xcassets in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -1115,8 +1177,14 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				A973CD2523D68E9D00C44032 /* LoginSignupViewController.swift in Sources */,
+				A9285756262B926B00AC3460 /* LoginSignupView.swift in Sources */,
+				A9285750262B923700AC3460 /* LoginSignupViewModel.swift in Sources */,
+				A9DCED21262779350057359F /* ContentPreview.swift in Sources */,
+				A9285746262B920E00AC3460 /* LoginSignupNavigationController.swift in Sources */,
 				A973CD2723D68FC300C44032 /* TAPI+UI.swift in Sources */,
+				A9DCED15262779290057359F /* LocalizedString.swift in Sources */,
+				A9DCED14262779290057359F /* ActionButtonStyle.swift in Sources */,
+				A9DCED1B2627792F0057359F /* Image.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -1215,14 +1283,6 @@
 			name = LaunchScreen.storyboard;
 			sourceTree = "<group>";
 		};
-		A973CD3D23D692D600C44032 /* LoginSignup.storyboard */ = {
-			isa = PBXVariantGroup;
-			children = (
-				A973CD3C23D692D600C44032 /* Base */,
-			);
-			name = LoginSignup.storyboard;
-			sourceTree = "<group>";
-		};
 /* End PBXVariantGroup section */
 
 /* Begin XCBuildConfiguration section */
@@ -1316,7 +1376,7 @@
 				GCC_WARN_UNUSED_LABEL = YES;
 				GCC_WARN_UNUSED_PARAMETER = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
-				IPHONEOS_DEPLOYMENT_TARGET = 13.0;
+				IPHONEOS_DEPLOYMENT_TARGET = 14.0;
 				MTL_ENABLE_DEBUG_INFO = INCLUDE_SOURCE;
 				MTL_FAST_MATH = YES;
 				ONLY_ACTIVE_ARCH = YES;
@@ -1413,7 +1473,7 @@
 				GCC_WARN_UNUSED_LABEL = YES;
 				GCC_WARN_UNUSED_PARAMETER = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
-				IPHONEOS_DEPLOYMENT_TARGET = 13.0;
+				IPHONEOS_DEPLOYMENT_TARGET = 14.0;
 				MTL_ENABLE_DEBUG_INFO = NO;
 				MTL_FAST_MATH = YES;
 				SDKROOT = iphoneos;
