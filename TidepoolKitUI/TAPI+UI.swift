@@ -11,13 +11,11 @@ import TidepoolKit
 /// The delegate for the Tidepool login and signup UI.
 public protocol TLoginSignupDelegate: AnyObject {
 
-    /// Notify the delegate that the login or signup was successful and a session was created.
+    /// Notify the delegate that the login or signup did complete.
     ///
     /// - Parameters:
-    ///   - loginSignup: The login signup that invoked the delegate
-    ///   - session: The newly created session
     ///   - completion: The completion function to invoke with any error.
-    func loginSignup(_ loginSignup: TLoginSignup, didCreateSession session: TSession, completion: @escaping (Error?) -> Void)
+    func loginSignupDidComplete(completion: @escaping (Error?) -> Void)
 
     /// Notify the delegate that the login or signup was cancelled.
     func loginSignupCancelled()

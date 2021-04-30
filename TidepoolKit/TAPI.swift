@@ -8,6 +8,16 @@
 
 import Foundation
 
+/// Observer of the Tidepool API
+public protocol TAPIObserver: AnyObject {
+
+    /// Informs the observer that the API updated the session.
+    ///
+    /// - Parameters:
+    ///     - session: The session.
+    func apiDidUpdateSession(_ session: TSession?)
+}
+
 /// The Tidepool API
 public class TAPI {
 
@@ -28,17 +38,49 @@ public class TAPI {
         }
     }
 
+    /// The session used for all requests.
+    public var session: TSession? {
+        get {
+            return sessionLocked.value
+        }
+        set {
+            sessionLocked.mutate { $0 = newValue }
+            observers.forEach { $0.apiDidUpdateSession(newValue) }
+        }
+    }
+
+    private var observers = WeakSynchronizedSet<TAPIObserver>()
+
     /// Create a new instance of TAPI. Automatically lookup additional environments in the background.
     ///
     /// - Parameters:
+    ///   - session: The initial session to use, if any.
     ///   - automaticallyFetchEnvironments: Automatically fetch an updated list of environments when created.
-    public init(automaticallyFetchEnvironments: Bool = true) {
+    public init(session: TSession? = nil, automaticallyFetchEnvironments: Bool = true) {
         self.environmentsLocked = Locked(TAPI.defaultEnvironments)
         self.urlSessionConfigurationLocked = Locked(TAPI.defaultURLSessionConfiguration)
         self.urlSessionLocked = Locked(nil)
+        self.sessionLocked = Locked(session)
         if automaticallyFetchEnvironments {
             fetchEnvironments()
         }
+    }
+
+    /// Start observing the API.
+    ///
+    /// - Parameters:
+    ///     - observer: The observer observing the API.
+    ///     - queue: The Dispatch queue upon which to notify the observer of API changes.
+    public func addObserver(_ observer: TAPIObserver, queue: DispatchQueue = .main) {
+        observers.insert(observer, queue: queue)
+    }
+
+    /// Stop observing the API.
+    ///
+    /// - Parameters:
+    ///     - observer: The observer observing the API.
+    public func removeObserver(_ observer: TAPIObserver) {
+        observers.removeElement(observer)
     }
 
     // MARK: - Environment
@@ -80,28 +122,29 @@ public class TAPI {
     ///   - environment: The environment to login.
     ///   - email: The email to use for login.
     ///   - password: The password to use for login.
-    ///   - completion: The completion function to invoke with the newly created session or an error.
-    public func login(environment: TEnvironment, email: String, password: String, completion: @escaping (Result<TSession, TError>) -> Void) {
+    ///   - completion: The completion function to invoke with any error.
+    public func login(environment: TEnvironment, email: String, password: String, completion: @escaping (TError?) -> Void) {
         var request = createRequest(environment: environment, method: "POST", path: "/auth/login")
         request?.setValue(basicAuthorizationFromCredentials(email: email, password: password), forHTTPHeaderField: HTTPHeaderField.authorization.rawValue)
-        performRequest(request) { (result: DecodableHTTPResult<LoginResponse>) -> Void in
+        performRequest(request, allowSessionRefresh: false) { (result: DecodableHTTPResult<LoginResponse>) -> Void in
             switch result {
             case .failure(let error):
                 switch error {
                 case .requestNotAuthorized(let response, let data):     // CUSTOM: Backend currently returns status code 403 to imply email not verified
-                    completion(.failure(.requestEmailNotVerified(response, data)))
+                    completion(.requestEmailNotVerified(response, data))
                 default:
-                    completion(.failure(error))
+                    completion(error)
                 }
             case .success((let response, let data, let loginResponse)):
                 if let authenticationToken = response.value(forHTTPHeaderField: "X-Tidepool-Session-Token"), !authenticationToken.isEmpty {
                     if loginResponse.termsAccepted?.isEmpty == false {     // CUSTOM: Backend does not currently explicitly check if terms are accepted
-                        completion(.success(TSession(environment: environment, authenticationToken: authenticationToken, userId: loginResponse.userId)))
+                        self.session = TSession(environment: environment, authenticationToken: authenticationToken, userId: loginResponse.userId)
+                        completion(nil)
                     } else {
-                        completion(.failure(.requestTermsOfServiceNotAccepted(response, data)))
+                        completion(.requestTermsOfServiceNotAccepted(response, data))
                     }
                 } else {
-                    completion(.failure(.responseNotAuthenticated(response, data)))
+                    completion(.responseNotAuthenticated(response, data))
                 }
             }
         }
@@ -112,40 +155,55 @@ public class TAPI {
         return "Basic \(encodedCredentials)"
     }
 
-    /// Refresh the given Tidepool API session. If successful, the completion handler should replace
-    /// the old session with the new session. Upon failure, the completion handler should forget the
-    /// old session.
+    /// Refresh the Tidepool API session.
     ///
-    /// An .unauthenticated error indicates that the old session is no longer valid. All other errors
+    /// An .requestNotAuthenticated error indicates that the old session is no longer valid. All other errors
     /// indicate that the old session is still valid and refresh can be retried.
     ///
     /// - Parameters:
-    ///   - session: The Tidepool API session to refresh.
-    ///   - completion: The completion function to invoke with the updated session or any error.
-    public func refresh(session: TSession, completion: @escaping (Result<TSession, TError>) -> Void) {
-        let request = createRequest(session: session, method: "GET", path: "/auth/login")
-        performRequest(request) { (result: HTTPResult) -> Void in
+    ///   - completion: The completion function to invoke with any error.
+    public func refreshSession(completion: @escaping (TError?) -> Void) {
+        guard let session = session else {
+            completion(.sessionMissing)
+            return
+        }
+
+        let request = createRequest(method: "GET", path: "/auth/login")
+        performRequest(request, allowSessionRefresh: false) { (result: HTTPResult) -> Void in
             switch result {
             case .failure(let error):
-                completion(.failure(error))
+                if case .requestNotAuthenticated = error {
+                    self.session = nil
+                }
+                completion(error)
             case .success((let response, let data)):
                 if let authenticationToken = response.value(forHTTPHeaderField: "X-Tidepool-Session-Token"), !authenticationToken.isEmpty {
-                    completion(.success(TSession(environment: session.environment, authenticationToken: authenticationToken, userId: session.userId, trace: session.trace)))
+                    self.session = TSession(session: session, authenticationToken: authenticationToken)
+                    completion(nil)
                 } else {
-                    completion(.failure(.responseNotAuthenticated(response, data)))
+                    completion(.responseNotAuthenticated(response, data))
                 }
             }
         }
     }
 
-    /// Logout the given Tidepool API session. The completion handler should forget the old session.
+    /// Logout the Tidepool API session.
     ///
     /// - Parameters:
-    ///   - session: The Tidepool API session to logout.
     ///   - completion: The completion function to invoke with any error.
-    public func logout(session: TSession, completion: @escaping (TError?) -> Void) {
-        let request = createRequest(session: session, method: "POST", path: "/auth/logout")
-        performRequest(request, completion: completion)
+    public func logout(completion: @escaping (TError?) -> Void) {
+        guard session != nil else {
+            completion(.sessionMissing)
+            return
+        }
+
+        let request = createRequest(method: "POST", path: "/auth/logout")
+        performRequest(request, allowSessionRefresh: false) { (error: TError?) -> Void in
+            if error == nil {
+                self.session = nil
+            }
+            completion(error)
+        }
     }
 
     // MARK: - Profile
@@ -154,10 +212,31 @@ public class TAPI {
     ///
     /// - Parameters:
     ///   - userId: The user id for which to get the profile. If no user id is specified, then the session user id is used.
-    ///   - session: The Tidepool API session to use.
     ///   - completion: The completion function to invoke with any error.
-    public func getProfile(userId: String? = nil, session: TSession, completion: @escaping (Result<TProfile, TError>) -> Void) {
-        let request = createRequest(session: session, method: "GET", path: "/metadata/\(userId ?? session.userId)/profile")
+    public func getProfile(userId: String? = nil, completion: @escaping (Result<TProfile, TError>) -> Void) {
+        guard let session = session else {
+            completion(.failure(.sessionMissing))
+            return
+        }
+
+        let request = createRequest(method: "GET", path: "/metadata/\(userId ?? session.userId)/profile")
+        performRequest(request, completion: completion)
+    }
+
+    // MARK: - Prescriptions
+
+    /// Claim the prescription for the session user id.
+    ///
+    /// - Parameters:
+    ///   - prescriptionClaim: The prescription claim to submit.
+    ///   - completion: The completion function to invoke with any error.
+    public func claimPrescription(prescriptionClaim: TPrescriptionClaim, completion: @escaping (Result<TPrescription, TError>) -> Void) {
+        guard session != nil else {
+            completion(.failure(.sessionMissing))
+            return
+        }
+
+        let request = createRequest(method: "POST", path: "/v1/prescriptions/claim", body: prescriptionClaim)
         performRequest(request, completion: completion)
     }
 
@@ -169,10 +248,14 @@ public class TAPI {
     /// - Parameters:
     ///   - filter: The filter to use when requesting the data sets.
     ///   - userId: The user id for which to get the data sets. If no user id is specified, then the session user id is used.
-    ///   - session: The Tidepool API session to use.
     ///   - completion: The completion function to invoke with any error.
-    public func listDataSets(filter: TDataSet.Filter? = nil, userId: String? = nil, session: TSession, completion: @escaping (Result<[TDataSet], TError>) -> Void) {
-        let request = createRequest(session: session, method: "GET", path: "/v1/users/\(userId ?? session.userId)/data_sets", queryItems: filter?.queryItems)
+    public func listDataSets(filter: TDataSet.Filter? = nil, userId: String? = nil, completion: @escaping (Result<[TDataSet], TError>) -> Void) {
+        guard let session = session else {
+            completion(.failure(.sessionMissing))
+            return
+        }
+
+        let request = createRequest(method: "GET", path: "/v1/users/\(userId ?? session.userId)/data_sets", queryItems: filter?.queryItems)
         performRequest(request, completion: completion)
     }
 
@@ -181,10 +264,14 @@ public class TAPI {
     /// - Parameters:
     ///   - dataSet: The data set to create.
     ///   - userId: The user id for which to create the data set. If no user id is specified, then the session user id is used.
-    ///   - session: The Tidepool API session to use.
     ///   - completion: The completion function to invoke with any error.
-    public func createDataSet(_ dataSet: TDataSet, userId: String? = nil, session: TSession, completion: @escaping (Result<TDataSet, TError>) -> Void) {
-        let request = createRequest(session: session, method: "POST", path: "/v1/users/\(userId ?? session.userId)/data_sets", body: dataSet)
+    public func createDataSet(_ dataSet: TDataSet, userId: String? = nil, completion: @escaping (Result<TDataSet, TError>) -> Void) {
+        guard let session = session else {
+            completion(.failure(.sessionMissing))
+            return
+        }
+
+        let request = createRequest(method: "POST", path: "/v1/users/\(userId ?? session.userId)/data_sets", body: dataSet)
         performRequest(request) { (result: DecodableResult<LegacyResponse.Success<TDataSet>>) -> Void in
             switch result {
             case .failure(let error):
@@ -206,10 +293,14 @@ public class TAPI {
     /// - Parameters:
     ///   - filter: The filter to use when requesting the data.
     ///   - userId: The user id for which to get the data. If no user id is specified, then the session user id is used.
-    ///   - session: The Tidepool API session to use.
     ///   - completion: The completion function to invoke with any error.
-    public func listData(filter: TDatum.Filter? = nil, userId: String? = nil, session: TSession, completion: @escaping (DataResult) -> Void) {
-        let request = createRequest(session: session, method: "GET", path: "/data/\(userId ?? session.userId)", queryItems: filter?.queryItems)
+    public func listData(filter: TDatum.Filter? = nil, userId: String? = nil, completion: @escaping (DataResult) -> Void) {
+        guard let session = session else {
+            completion(.failure(.sessionMissing))
+            return
+        }
+
+        let request = createRequest(method: "GET", path: "/data/\(userId ?? session.userId)", queryItems: filter?.queryItems)
         performRequest(request) { (result: DecodableResult<DataResponse>) -> Void in
             switch result {
             case .failure(let error):
@@ -225,15 +316,18 @@ public class TAPI {
     /// - Parameters:
     ///   - data: The data to create.
     ///   - dataSetId: The data set id for which to create the data.
-    ///   - session: The Tidepool API session to use.
     ///   - completion: The completion function to invoke with any error.
-    public func createData(_ data: [TDatum], dataSetId: String, session: TSession, completion: @escaping (TError?) -> Void) {
+    public func createData(_ data: [TDatum], dataSetId: String, completion: @escaping (TError?) -> Void) {
+        guard session != nil else {
+            completion(.sessionMissing)
+            return
+        }
         guard !data.isEmpty else {
             completion(nil)
             return
         }
 
-        let request = createRequest(session: session, method: "POST", path: "/v1/data_sets/\(dataSetId)/data", body: data)
+        let request = createRequest(method: "POST", path: "/v1/data_sets/\(dataSetId)/data", body: data)
         performRequest(request) { (result: DecodableResult<LegacyResponse.Success<DataResponse>>) -> Void in
             switch result {
             case .failure(let error):
@@ -260,22 +354,25 @@ public class TAPI {
     /// - Parameters:
     ///   - selectors: The selectors for the data to delete.
     ///   - dataSetId: The data set id from which to delete the data.
-    ///   - session: The Tidepool API session to use.
     ///   - completion: The completion function to invoke with any error.
-    public func deleteData(withSelectors selectors: [TDatum.Selector], dataSetId: String, session: TSession, completion: @escaping (TError?) -> Void) {
+    public func deleteData(withSelectors selectors: [TDatum.Selector], dataSetId: String, completion: @escaping (TError?) -> Void) {
+        guard session != nil else {
+            completion(.sessionMissing)
+            return
+        }
         guard !selectors.isEmpty else {
             completion(nil)
             return
         }
         
-        let request = createRequest(session: session, method: "DELETE", path: "/v1/data_sets/\(dataSetId)/data", body: selectors)
+        let request = createRequest(method: "DELETE", path: "/v1/data_sets/\(dataSetId)/data", body: selectors)
         performRequest(request, completion: completion)
     }
 
     // MARK: - Internal - Create Request
 
-    private func createRequest<E>(session: TSession, method: String, path: String, body: E) -> URLRequest? where E: Encodable {
-        var request = createRequest(session: session, method: method, path: path)
+    private func createRequest<E>(method: String, path: String, body: E) -> URLRequest? where E: Encodable {
+        var request = createRequest(method: method, path: path)
         request?.setValue("application/json; charset=utf-8", forHTTPHeaderField: HTTPHeaderField.contentType.rawValue)
         do {
             request?.httpBody = try JSONEncoder.tidepool.encode(body)
@@ -286,7 +383,11 @@ public class TAPI {
         return request
     }
 
-    private func createRequest(session: TSession, method: String, path: String, queryItems: [URLQueryItem]? = nil) -> URLRequest? {
+    private func createRequest(method: String, path: String, queryItems: [URLQueryItem]? = nil) -> URLRequest? {
+        guard let session = session else {
+            return nil
+        }
+
         var request = createRequest(environment: session.environment, method: method, path: path, queryItems: queryItems)
         request?.setValue(session.authenticationToken, forHTTPHeaderField: HTTPHeaderField.tidepoolSessionToken.rawValue)
         if let trace = session.trace {
@@ -309,8 +410,8 @@ public class TAPI {
 
     private typealias DecodableResult<D> = Result<D, TError> where D: Decodable
 
-    private func performRequest<D>(_ request: URLRequest?, completion: @escaping (DecodableResult<D>) -> Void) where D: Decodable {
-        performRequest(request) { (result: DecodableHTTPResult<D>) -> Void in
+    private func performRequest<D>(_ request: URLRequest?, allowSessionRefresh: Bool = true, completion: @escaping (DecodableResult<D>) -> Void) where D: Decodable {
+        performRequest(request, allowSessionRefresh: allowSessionRefresh) { (result: DecodableHTTPResult<D>) -> Void in
             switch result {
             case .failure(let error):
                 completion(.failure(error))
@@ -322,8 +423,8 @@ public class TAPI {
 
     private typealias DecodableHTTPResult<D> = Result<(HTTPURLResponse, Data, D), TError> where D: Decodable
 
-    private func performRequest<D>(_ request: URLRequest?, completion: @escaping (DecodableHTTPResult<D>) -> Void) where D: Decodable {
-        performRequest(request) { (result: HTTPResult) -> Void in
+    private func performRequest<D>(_ request: URLRequest?, allowSessionRefresh: Bool = true, completion: @escaping (DecodableHTTPResult<D>) -> Void) where D: Decodable {
+        performRequest(request, allowSessionRefresh: allowSessionRefresh) { (result: HTTPResult) -> Void in
             switch result {
             case .failure(let error):
                 completion(.failure(error))
@@ -341,8 +442,8 @@ public class TAPI {
         }
     }
 
-    private func performRequest(_ request: URLRequest?, completion: @escaping (TError?) -> Void) {
-        performRequest(request) { (result: HTTPResult) -> Void in
+    private func performRequest(_ request: URLRequest?, allowSessionRefresh: Bool = true, completion: @escaping (TError?) -> Void) {
+        performRequest(request, allowSessionRefresh: allowSessionRefresh) { (result: HTTPResult) -> Void in
             switch result {
             case .failure(let error):
                 completion(error)
@@ -354,7 +455,15 @@ public class TAPI {
 
     private typealias HTTPResult = Result<(HTTPURLResponse, Data?), TError>
 
-    private func performRequest(_ request: URLRequest?, completion: @escaping (HTTPResult) -> Void) {
+    private func performRequest(_ request: URLRequest?, allowSessionRefresh: Bool = true, completion: @escaping (HTTPResult) -> Void) {
+        if allowSessionRefresh, let session = session, session.wantsRefresh {
+            refreshSessionAndPerformRequest(request, completion: completion)
+        } else {
+            performRequest(request, allowSessionRefreshAfterFailure: allowSessionRefresh, completion: completion)
+        }
+    }
+
+    private func performRequest(_ request: URLRequest?, allowSessionRefreshAfterFailure: Bool, completion: @escaping (HTTPResult) -> Void) {
         guard let request = request else {
             completion(.failure(.requestInvalid))
             return
@@ -364,12 +473,34 @@ public class TAPI {
             if let error = error {
                 completion(.failure(.network(error)))
             } else if let response = response as? HTTPURLResponse {
-                completion(self.processStatusCode(response: response, data: data))
+                if allowSessionRefreshAfterFailure, response.statusCode == 401 {
+                    self.refreshSessionAndPerformRequest(request, completion: completion)
+                } else {
+                    completion(self.processStatusCode(response: response, data: data))
+                }
             } else {
                 completion(.failure(.responseUnexpected(response, data)))
             }
         }
         task.resume()
+    }
+
+    private func refreshSessionAndPerformRequest(_ request: URLRequest?, completion: @escaping (HTTPResult) -> Void) {
+        refreshSession() { error in
+            if let error = error {
+                completion(.failure(error))
+                return
+            }
+
+            guard let session = self.session else {
+                completion(.failure(.sessionMissing))
+                return
+            }
+
+            var request = request
+            request?.setValue(session.authenticationToken, forHTTPHeaderField: HTTPHeaderField.tidepoolSessionToken.rawValue)
+            self.performRequest(request, allowSessionRefreshAfterFailure: false, completion: completion)
+        }
     }
 
     private func processStatusCode(response: HTTPURLResponse, data: Data?) -> HTTPResult {
@@ -416,6 +547,8 @@ public class TAPI {
     }
 
     private var urlSessionLocked: Locked<URLSession?>
+
+    private var sessionLocked: Locked<TSession?>
 
     private static var defaultEnvironments: [TEnvironment] {
         return DNSSRVRecordsImplicit.environments

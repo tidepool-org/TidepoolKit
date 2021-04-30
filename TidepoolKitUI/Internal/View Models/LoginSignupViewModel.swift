@@ -23,13 +23,12 @@ class LoginSignupViewModel: TLoginSignup {
     var resolvedEnvironment: TEnvironment { environment ?? environments.first! }
 
     func login(email: String, password: String, completion: @escaping (Error?) -> Void) {
-        api.login(environment: resolvedEnvironment, email: email, password: password) { result in
-            switch result {
-            case .failure(let error):
+        api.login(environment: resolvedEnvironment, email: email, password: password) { error in
+            if let error = error {
                 completion(error)
-            case .success(let session):
-                self.loginSignupDelegate?.loginSignup(self, didCreateSession: session, completion: completion)
+                return
             }
+            self.loginSignupDelegate?.loginSignupDidComplete(completion: completion)
         }
     }
 

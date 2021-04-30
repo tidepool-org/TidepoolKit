@@ -14,6 +14,9 @@ public enum TError: Error {
     /// A general network error not covered by another more specific error. May include a more detailed OS-level error.
     case network(Error?)
 
+    /// The session is missing.
+    case sessionMissing
+
     /// The request was invalid and not sent.
     case requestInvalid
 
@@ -79,6 +82,8 @@ extension TError: LocalizedError {
         switch self {
         case .network:
             return NSLocalizedString("A network error occurred.", comment: "The default localized description of the network error")
+        case .sessionMissing:
+            return NSLocalizedString("The session is missing.", comment: "The default localized description of the session missing error")
         case .requestInvalid:
             return NSLocalizedString("The request was invalid.", comment: "The default localized description of the request invalid error")
         case .requestMalformed:

@@ -10,35 +10,65 @@ import Foundation
 import XCTest
 
 class URLProtocolMock: URLProtocol {
-    static var validator: Validator?
-    static var error: Error?
-    static var success: Success?
+    static var handlers: [Handler] = []
 
     override class func canInit(with request: URLRequest) -> Bool { true }
 
     override class func canonicalRequest(for request: URLRequest) -> URLRequest { request }
 
     override func startLoading() {
-        Self.validator?.validate(request: request)
-
-        if let error = Self.error {
-            client?.urlProtocol(self, didFailWithError: error)
-        } else if let url = request.url, let success = Self.success, let urlResponse = success.response(for: url) {
-            client?.urlProtocol(self, didReceive: urlResponse, cacheStoragePolicy: .notAllowed)
-            if let body = success.body {
-                client?.urlProtocol(self, didLoad: body)
-            }
+        guard !Self.handlers.isEmpty else {
+            XCTFail("Unexpected request")
+            return
         }
-        client?.urlProtocolDidFinishLoading(self)
+
+        Self.handlers.removeFirst().handle(self)
     }
 
     override func stopLoading() {}
 
+    struct Handler {
+        var validator: Validator
+        var error: Error?
+        var success: Success?
+
+        init(validator: Validator, error: Error) {
+            self.validator = validator
+            self.error = error
+            self.success = nil
+        }
+
+        init(validator: Validator, success: Success) {
+            self.validator = validator
+            self.error = nil
+            self.success = success
+        }
+
+        func handle(_ urlProtocol: URLProtocol) {
+            guard let client = urlProtocol.client else {
+                return
+            }
+
+            validator.validate(request: urlProtocol.request)
+
+            if let error = error {
+                client.urlProtocol(urlProtocol, didFailWithError: error)
+            } else if let success = success, let url = urlProtocol.request.url, let urlResponse = success.response(for: url) {
+                client.urlProtocol(urlProtocol, didReceive: urlResponse, cacheStoragePolicy: .notAllowed)
+                if let body = success.body {
+                    client.urlProtocol(urlProtocol, didLoad: body)
+                }
+            }
+
+            client.urlProtocolDidFinishLoading(urlProtocol)
+        }
+    }
+
     struct Validator {
-        let url: URL
-        let method: String
-        let headers: [String: String]?
-        let body: Data?
+        var url: URL
+        var method: String
+        var headers: [String: String]?
+        var body: Data?
 
         init(url: String, method: String, headers: [String: String]? = nil, body: Data? = nil) {
             self.url = URL(string: url)!

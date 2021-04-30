@@ -22,12 +22,26 @@ public struct TSession: Codable, Equatable {
 
     // The value of the optional X-Tidepool-Trace-Session header added to any future API network requests. The default UUID string
     // is usually sufficient, but can be changed or removed.
-    public var trace: String?
+    public let trace: String?
+
+    // The date the session was created
+    public let createdDate: Date
     
-    public init(environment: TEnvironment, authenticationToken: String, userId: String, trace: String? = UUID().uuidString) {
+    public init(environment: TEnvironment, authenticationToken: String, userId: String, trace: String? = UUID().uuidString, createdDate: Date = Date()) {
         self.environment = environment
         self.authenticationToken = authenticationToken
         self.userId = userId
         self.trace = trace
+        self.createdDate = createdDate
+    }
+
+    public var wantsRefresh: Bool { createdDate.addingTimeInterval(Self.refreshInterval) < Date() }
+
+    public static let refreshInterval: TimeInterval = .minutes(5)
+}
+
+extension TSession {
+    public init(session: TSession, authenticationToken: String) {
+        self.init(environment: session.environment, authenticationToken: authenticationToken, userId: session.userId, trace: session.trace)
     }
 }
