@@ -11,20 +11,11 @@ import UIKit
 import TidepoolKit
 import TidepoolKitUI
 
-class RootTableViewController: UITableViewController {
-    private let api = TAPI()
+class RootTableViewController: UITableViewController, TAPIObserver {
+    private let api: TAPI
     private var environment: TEnvironment? {
         didSet {
             UserDefaults.standard.environment = environment
-            updateViews()
-        }
-    }
-    private var session: TSession? {
-        didSet {
-            UserDefaults.standard.session = session
-            if session == nil {
-                self.dataSetId = nil
-            }
             updateViews()
         }
     }
@@ -44,11 +35,27 @@ class RootTableViewController: UITableViewController {
     }
 
     required init?(coder: NSCoder) {
-        super.init(coder: coder)
-
-        self.session = UserDefaults.standard.session
+        self.api = TAPI(session: UserDefaults.standard.session)
         self.environment = UserDefaults.standard.environment
         self.dataSetId = UserDefaults.standard.dataSetId
+
+        super.init(coder: coder)
+
+        api.addObserver(self)
+    }
+
+    deinit {
+        api.removeObserver(self)
+    }
+
+    func apiDidUpdateSession(_ session: TSession?) {
+        UserDefaults.standard.session = session
+        if let session = session {
+            self.environment = session.environment
+        } else {
+            self.dataSetId = nil
+        }
+        updateViews()
     }
 
     override func viewDidLoad() {
@@ -63,7 +70,7 @@ class RootTableViewController: UITableViewController {
 
     private func updateViews() {
         tableView.reloadData()
-        navigationItem.rightBarButtonItem?.isEnabled = session != nil
+        navigationItem.rightBarButtonItem?.isEnabled = api.session != nil
     }
 
     private struct SharedStatus: Codable, Equatable {
@@ -72,7 +79,7 @@ class RootTableViewController: UITableViewController {
     }
 
     @objc func share() {
-        guard let session = session,
+        guard let session = api.session,
             let data = try? JSONEncoder.pretty.encode(SharedStatus(session: session, dataSetId: dataSetId)),
             let text = String(data: data, encoding: .utf8) else
         {
@@ -158,8 +165,8 @@ class RootTableViewController: UITableViewController {
         case .status:
             let cell = tableView.dequeueReusableCell(withIdentifier: StatusTableViewCell.className, for: indexPath) as! StatusTableViewCell
             cell.environmentLabel?.text = environment?.description ?? defaultStatusLabelText
-            cell.authenticationTokenLabel?.text = session?.authenticationToken ?? defaultStatusLabelText
-            cell.userIdLabel?.text = session?.userId ?? defaultStatusLabelText
+            cell.authenticationTokenLabel?.text = api.session?.authenticationToken ?? defaultStatusLabelText
+            cell.userIdLabel?.text = api.session?.userId ?? defaultStatusLabelText
             cell.dataSetIdLabel?.text = dataSetId ?? defaultStatusLabelText
             return cell
         case .authentication:
@@ -168,19 +175,19 @@ class RootTableViewController: UITableViewController {
             case .login:
                 cell.textLabel?.text = NSLocalizedString("Login", comment: "The text label of the authentication login cell")
                 cell.accessoryType = .disclosureIndicator
-                cell.isEnabled = session == nil
+                cell.isEnabled = api.session == nil
             case .refresh:
                 cell.textLabel?.text = NSLocalizedString("Refresh", comment: "The text label of the authentication refresh cell")
-                cell.isEnabled = session != nil
+                cell.isEnabled = api.session != nil
             case .logout:
                 cell.textLabel?.text = NSLocalizedString("Logout", comment: "The text label of the authentication logout cell")
-                cell.isEnabled = session != nil
+                cell.isEnabled = api.session != nil
             }
             return cell
         case .profile:
             let cell = tableView.dequeueReusableCell(withIdentifier: TextButtonTableViewCell.className, for: indexPath) as! TextButtonTableViewCell
             cell.accessoryType = .disclosureIndicator
-            cell.isEnabled = session != nil
+            cell.isEnabled = api.session != nil
             switch Profile(rawValue: indexPath.row)! {
             case .get:
                 cell.textLabel?.text = NSLocalizedString("Get Profile", comment: "The text label of the get profile cell")
@@ -189,7 +196,7 @@ class RootTableViewController: UITableViewController {
         case .dataSet:
             let cell = tableView.dequeueReusableCell(withIdentifier: TextButtonTableViewCell.className, for: indexPath) as! TextButtonTableViewCell
             cell.accessoryType = .disclosureIndicator
-            cell.isEnabled = session != nil
+            cell.isEnabled = api.session != nil
             switch DataSet(rawValue: indexPath.row)! {
             case .list:
                 cell.textLabel?.text = NSLocalizedString("List Data Sets", comment: "The text label of the list data sets cell")
@@ -203,13 +210,13 @@ class RootTableViewController: UITableViewController {
             switch Datum(rawValue: indexPath.row)! {
             case .list:
                 cell.textLabel?.text = NSLocalizedString("List Data", comment: "The text label of the list data cell")
-                cell.isEnabled = session != nil
+                cell.isEnabled = api.session != nil
             case .create:
                 cell.textLabel?.text = NSLocalizedString("Create Data", comment: "The text label of the create data cell")
-                cell.isEnabled = session != nil && dataSetId != nil
+                cell.isEnabled = api.session != nil && dataSetId != nil
             case .delete:
                 cell.textLabel?.text = NSLocalizedString("Delete Data", comment: "The text label of the delete data cell")
-                cell.isEnabled = session != nil && dataSetId != nil && datumSelectors != nil
+                cell.isEnabled = api.session != nil && dataSetId != nil && datumSelectors != nil
             }
             return cell
         }
@@ -222,21 +229,21 @@ class RootTableViewController: UITableViewController {
         case .authentication:
             switch Authentication(rawValue: indexPath.row)! {
             case .login:
-                return session == nil
+                return api.session == nil
             default:
-                return session != nil
+                return api.session != nil
             }
         case .datum:
             switch Datum(rawValue: indexPath.row)! {
             case .create:
-                return session != nil && dataSetId != nil
+                return api.session != nil && dataSetId != nil
             case .delete:
-                return session != nil && dataSetId != nil && datumSelectors != nil
+                return api.session != nil && dataSetId != nil && datumSelectors != nil
             default:
-                return session != nil
+                return api.session != nil
             }
         default:
-            return session != nil
+            return api.session != nil
         }
     }
 
@@ -289,23 +296,15 @@ class RootTableViewController: UITableViewController {
         var loginSignupViewController = api.loginSignupViewController()
         loginSignupViewController.loginSignupDelegate = self
         loginSignupViewController.environment = environment
-        navigationController?.pushViewController(loginSignupViewController, animated: true)
+        present(loginSignupViewController, animated: true)
         completion()
     }
 
     private func refresh(completion: @escaping () -> Void) {
-        api.refresh(session: session!) { result in
+        api.refreshSession() { error in
             DispatchQueue.main.async {
-                switch result {
-                case .failure(let error):
-                    let alert = UIAlertController(error: error) {
-                        if case .requestNotAuthenticated = error {
-                            self.session = nil
-                        }
-                    }
-                    self.present(alert, animated: true)
-                case .success(let session):
-                    self.session = session
+                if let error = error {
+                    self.present(UIAlertController(error: error), animated: true)
                 }
                 completion()
             }
@@ -313,15 +312,10 @@ class RootTableViewController: UITableViewController {
     }
 
     private func logout(completion: @escaping () -> Void) {
-        api.logout(session: session!) { error in
+        api.logout() { error in
             DispatchQueue.main.async {
                 if let error = error {
-                    let alert = UIAlertController(error: error) {
-                        self.session = nil
-                    }
-                    self.present(alert, animated: true)
-                } else {
-                    self.session = nil
+                    self.present(UIAlertController(error: error), animated: true)
                 }
                 completion()
             }
@@ -331,7 +325,7 @@ class RootTableViewController: UITableViewController {
     // MARK: - Profile
 
     private func getProfile(completion: @escaping () -> Void) {
-        api.getProfile(session: session!) { result in
+        api.getProfile() { result in
             DispatchQueue.main.async {
                 switch result {
                 case .failure(let error):
@@ -348,7 +342,7 @@ class RootTableViewController: UITableViewController {
 
     private func listDataSets(completion: @escaping () -> Void) {
         let filter = TDataSet.Filter(clientName: Bundle.main.bundleIdentifier)
-        api.listDataSets(filter: filter, session: session!) { result in
+        api.listDataSets(filter: filter) { result in
             DispatchQueue.main.async {
                 switch result {
                 case .failure(let error):
@@ -366,7 +360,7 @@ class RootTableViewController: UITableViewController {
         let client = TDataSet.Client(name: Bundle.main.bundleIdentifier!, version: Bundle.main.semanticVersion!)
         let deduplicator = TDataSet.Deduplicator(name: .none)
         let dataSet = TDataSet(dataSetType: .continuous, client: client, deduplicator: deduplicator)
-        api.createDataSet(dataSet, session: session!) { result in
+        api.createDataSet(dataSet) { result in
             DispatchQueue.main.async {
                 switch result {
                 case .failure(let error):
@@ -384,7 +378,7 @@ class RootTableViewController: UITableViewController {
 
     private func listData(completion: @escaping () -> Void) {
         let filter = TDatum.Filter(dataSetId: dataSetId)
-        api.listData(filter: filter, session: session!) { result in
+        api.listData(filter: filter) { result in
             DispatchQueue.main.async {
                 switch result {
                 case .failure(let error):
@@ -405,7 +399,7 @@ class RootTableViewController: UITableViewController {
 
     private func createData(completion: @escaping () -> Void) {
         let data = Sample.Datum.data()
-        api.createData(data, dataSetId: dataSetId!, session: session!) { error in
+        api.createData(data, dataSetId: dataSetId!) { error in
             DispatchQueue.main.async {
                 if let error = error {
                     if case .requestMalformedJSON(_, _, let errors) = error {
@@ -424,7 +418,7 @@ class RootTableViewController: UITableViewController {
     }
 
     private func deleteData(completion: @escaping () -> Void) {
-        api.deleteData(withSelectors: datumSelectors!, dataSetId: dataSetId!, session: session!) { error in
+        api.deleteData(withSelectors: datumSelectors!, dataSetId: dataSetId!) { error in
             DispatchQueue.main.async {
                 if let error = error {
                     self.present(UIAlertController(error: error), animated: true)
@@ -466,18 +460,16 @@ class RootTableViewController: UITableViewController {
 }
 
 extension RootTableViewController: TLoginSignupDelegate {
-    func loginSignup(_ loginSignup: TLoginSignup, didCreateSession session: TSession, completion: @escaping (Error?) -> Void) {
+    func loginSignupDidComplete(completion: @escaping (Error?) -> Void) {
         DispatchQueue.main.async {
-            self.environment = session.environment
-            self.session = session
-            self.navigationController?.popViewController(animated: true)
+            self.dismiss(animated: true)
             completion(nil)
         }
     }
 
     func loginSignupCancelled() {
         DispatchQueue.main.async {
-            self.navigationController?.popViewController(animated: true)
+            self.dismiss(animated: true)
         }
     }
 }
