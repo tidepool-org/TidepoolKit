@@ -527,7 +527,6 @@ public class TAPI {
 
     private static var defaultURLSessionConfiguration: URLSessionConfiguration {
         let urlSessionConfiguration = URLSessionConfiguration.ephemeral
-        urlSessionConfiguration.waitsForConnectivity = true
         if urlSessionConfiguration.httpAdditionalHeaders == nil {
             urlSessionConfiguration.httpAdditionalHeaders = [:]
         }
