@@ -63,7 +63,6 @@ class TAPIEnvironmentTests: TAPITests {
 class TAPIURLSessionConfigurationTests: TAPITests {
     func testDefaultURLSessionConfiguration() {
         let urlSessionConfiguration = api.urlSessionConfiguration
-        XCTAssertEqual(urlSessionConfiguration.waitsForConnectivity, true)
         XCTAssertNotNil(urlSessionConfiguration.httpAdditionalHeaders)
         XCTAssertNotNil(urlSessionConfiguration.httpAdditionalHeaders?["User-Agent"])
         XCTAssertNotNil(urlSessionConfiguration.protocolClasses)
