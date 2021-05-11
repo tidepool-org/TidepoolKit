@@ -11,7 +11,7 @@ import Foundation
 
 /// A set-like collection of weak types, providing closure-based iteration on a client-specified queue
 /// Mutations and iterations are thread-safe
-public class WeakSynchronizedSet<Element> {
+class WeakSynchronizedSet<Element> {
     private typealias Identifier = ObjectIdentifier
     private typealias ElementContainer = ElementDispatchContainer<Element>
 
