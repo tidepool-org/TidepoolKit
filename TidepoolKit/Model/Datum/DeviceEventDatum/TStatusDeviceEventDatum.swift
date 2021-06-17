@@ -15,11 +15,11 @@ public class TStatusDeviceEventDatum: TDeviceEventDatum, Decodable {
     }
 
     public var name: Name?
-    public var duration: Int?
-    public var expectedDuration: Int?
+    public var duration: TimeInterval?
+    public var expectedDuration: TimeInterval?
     public var reason: TDictionary?
 
-    public init(time: Date, name: Name? = nil, duration: Int? = nil, expectedDuration: Int? = nil, reason: TDictionary? = nil) {
+    public init(time: Date, name: Name? = nil, duration: TimeInterval? = nil, expectedDuration: TimeInterval? = nil, reason: TDictionary? = nil) {
         self.name = name
         self.duration = duration
         self.expectedDuration = expectedDuration
@@ -30,8 +30,8 @@ public class TStatusDeviceEventDatum: TDeviceEventDatum, Decodable {
     public required init(from decoder: Decoder) throws {
         let container = try decoder.container(keyedBy: CodingKeys.self)
         self.name = try container.decodeIfPresent(Name.self, forKey: .name)
-        self.duration = try container.decodeIfPresent(Int.self, forKey: .duration)
-        self.expectedDuration = try container.decodeIfPresent(Int.self, forKey: .expectedDuration)
+        self.duration = try container.decodeIfPresent(Int.self, forKey: .duration).map { .milliseconds($0) }
+        self.expectedDuration = try container.decodeIfPresent(Int.self, forKey: .expectedDuration).map { .milliseconds($0) }
         self.reason = try container.decodeIfPresent(TDictionary.self, forKey: .reason)
         try super.init(.status, from: decoder)
     }
@@ -39,8 +39,8 @@ public class TStatusDeviceEventDatum: TDeviceEventDatum, Decodable {
     public override func encode(to encoder: Encoder) throws {
         var container = encoder.container(keyedBy: CodingKeys.self)
         try container.encodeIfPresent(name, forKey: .name)
-        try container.encodeIfPresent(duration, forKey: .duration)
-        try container.encodeIfPresent(expectedDuration, forKey: .expectedDuration)
+        try container.encodeIfPresent(duration.map { Int($0.milliseconds) }, forKey: .duration)
+        try container.encodeIfPresent(expectedDuration.map { Int($0.milliseconds) }, forKey: .expectedDuration)
         try container.encodeIfPresent(reason, forKey: .reason)
         try super.encode(to: encoder)
     }

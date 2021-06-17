@@ -10,7 +10,7 @@ import XCTest
 import TidepoolKit
 
 class TBasalDatumTests: XCTestCase {
-    static let basal = TBasalDatum(.scheduled, time: Date.test, duration: 123456, expectedDuration: 234567)
+    static let basal = TBasalDatum(.scheduled, time: Date.test, duration: 123.456, expectedDuration: 234.567)
     static let basalJSONDictionary: [String: Any] = [
         "type": "basal",
         "deliveryType": "scheduled",
@@ -22,8 +22,8 @@ class TBasalDatumTests: XCTestCase {
     func testInitializer() {
         let basal = TBasalDatumTests.basal
         XCTAssertEqual(basal.deliveryType, .scheduled)
-        XCTAssertEqual(basal.duration, 123456)
-        XCTAssertEqual(basal.expectedDuration, 234567)
+        XCTAssertEqual(basal.duration, 123.456)
+        XCTAssertEqual(basal.expectedDuration, 234.567)
     }
 }
 

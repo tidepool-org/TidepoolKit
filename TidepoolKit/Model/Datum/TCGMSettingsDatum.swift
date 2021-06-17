@@ -169,38 +169,101 @@ public class TCGMSettingsDatum: TDatum, Decodable {
     public struct ScheduledAlert: Codable, Equatable {
         public var name: String?
         public var days: [String]?
-        public var start: Int?
-        public var end: Int?
+        public var start: TimeInterval?
+        public var end: TimeInterval?
         public var alerts: Alerts?
 
-        public init(name: String? = nil, days: [String]? = nil, start: Int? = nil, end: Int? = nil, alerts: Alerts? = nil) {
+        public init(name: String? = nil, days: [String]? = nil, start: TimeInterval? = nil, end: TimeInterval? = nil, alerts: Alerts? = nil) {
             self.name = name
             self.days = days
             self.start = start
             self.end = end
             self.alerts = alerts
         }
+
+        public init(from decoder: Decoder) throws {
+            let container = try decoder.container(keyedBy: CodingKeys.self)
+            self.name = try container.decodeIfPresent(String.self, forKey: .name)
+            self.days = try container.decodeIfPresent([String].self, forKey: .days)
+            self.start = try container.decodeIfPresent(Int.self, forKey: .start).map { .milliseconds($0) }
+            self.end = try container.decodeIfPresent(Int.self, forKey: .end).map { .milliseconds($0) }
+            self.alerts = try container.decodeIfPresent(Alerts.self, forKey: .alerts)
+        }
+
+        public func encode(to encoder: Encoder) throws {
+            var container = encoder.container(keyedBy: CodingKeys.self)
+            try container.encodeIfPresent(name, forKey: .name)
+            try container.encodeIfPresent(days, forKey: .days)
+            try container.encodeIfPresent(start.map { Int($0.milliseconds) }, forKey: .start)
+            try container.encodeIfPresent(end.map { Int($0.milliseconds) }, forKey: .end)
+            try container.encodeIfPresent(alerts, forKey: .alerts)
+        }
+
+        private enum CodingKeys: String, CodingKey {
+            case name
+            case days
+            case start
+            case end
+            case alerts
+        }
     }
 
     public struct LevelAlertsDEPRECATED: Codable, Equatable {
         public var enabled: Bool?
         public var level: Double?
-        public var snooze: Int?
+        public var snooze: TimeInterval?
 
-        public init(enabled: Bool? = nil, level: Double? = nil, snooze: Int? = nil) {
+        public init(enabled: Bool? = nil, level: Double? = nil, snooze: TimeInterval? = nil) {
             self.enabled = enabled
             self.level = level
             self.snooze = snooze
+        }
+
+        public init(from decoder: Decoder) throws {
+            let container = try decoder.container(keyedBy: CodingKeys.self)
+            self.enabled = try container.decodeIfPresent(Bool.self, forKey: .enabled)
+            self.level = try container.decodeIfPresent(Double.self, forKey: .level)
+            self.snooze = try container.decodeIfPresent(Int.self, forKey: .snooze).map { .milliseconds($0) }
+        }
+
+        public func encode(to encoder: Encoder) throws {
+            var container = encoder.container(keyedBy: CodingKeys.self)
+            try container.encodeIfPresent(enabled, forKey: .enabled)
+            try container.encodeIfPresent(level, forKey: .level)
+            try container.encodeIfPresent(snooze.map { Int($0.milliseconds) }, forKey: .snooze)
+        }
+
+        private enum CodingKeys: String, CodingKey {
+            case enabled
+            case level
+            case snooze
         }
     }
 
     public struct OutOfRangeAlertsDEPRECATED: Codable, Equatable {
         public var enabled: Bool?
-        public var snooze: Int?
+        public var snooze: TimeInterval?
 
-        public init(enabled: Bool? = nil, snooze: Int? = nil) {
+        public init(enabled: Bool? = nil, snooze: TimeInterval? = nil) {
             self.enabled = enabled
             self.snooze = snooze
+        }
+
+        public init(from decoder: Decoder) throws {
+            let container = try decoder.container(keyedBy: CodingKeys.self)
+            self.enabled = try container.decodeIfPresent(Bool.self, forKey: .enabled)
+            self.snooze = try container.decodeIfPresent(Int.self, forKey: .snooze).map { .milliseconds($0) }
+        }
+
+        public func encode(to encoder: Encoder) throws {
+            var container = encoder.container(keyedBy: CodingKeys.self)
+            try container.encodeIfPresent(enabled, forKey: .enabled)
+            try container.encodeIfPresent(snooze.map { Int($0.milliseconds) }, forKey: .snooze)
+        }
+
+        private enum CodingKeys: String, CodingKey {
+            case enabled
+            case snooze
         }
     }
 

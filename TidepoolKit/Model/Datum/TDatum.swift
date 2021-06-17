@@ -35,8 +35,8 @@ public class TDatum: Encodable {
 
     public var annotations: [TDictionary]?
     public var associations: [TAssociation]?
-    public var clockDriftOffset: Int?
-    public var conversionOffset: Int?
+    public var clockDriftOffset: TimeInterval?
+    public var conversionOffset: TimeInterval?
     public var dataSetId: String?
     public var deviceId: String?
     public var deviceTime: String?
@@ -47,14 +47,14 @@ public class TDatum: Encodable {
     public var payload: TDictionary?
     public var tags: [String]?
     public var timezone: String?
-    public var timezoneOffset: Int?
+    public var timezoneOffset: TimeInterval?
 
     public init(_ type: DatumType,
                 time: Date,
                 annotations: [TDictionary]? = nil,
                 associations: [TAssociation]? = nil,
-                clockDriftOffset: Int? = nil,
-                conversionOffset: Int? = nil,
+                clockDriftOffset: TimeInterval? = nil,
+                conversionOffset: TimeInterval? = nil,
                 dataSetId: String? = nil,
                 deviceId: String? = nil,
                 deviceTime: String? = nil,
@@ -65,7 +65,7 @@ public class TDatum: Encodable {
                 payload: TDictionary? = nil,
                 tags: [String]? = nil,
                 timezone: String? = nil,
-                timezoneOffset: Int? = nil) {
+                timezoneOffset: TimeInterval? = nil) {
         self.type = type
         self.time = time
         self.annotations = annotations
@@ -94,8 +94,8 @@ public class TDatum: Encodable {
         self.time = try container.decode(Date.self, forKey: .time)
         self.annotations = try container.decodeIfPresent([TDictionary].self, forKey: .annotations)
         self.associations = try container.decodeIfPresent([TAssociation].self, forKey: .associations)
-        self.clockDriftOffset = try container.decodeIfPresent(Int.self, forKey: .clockDriftOffset)
-        self.conversionOffset = try container.decodeIfPresent(Int.self, forKey: .conversionOffset)
+        self.clockDriftOffset = try container.decodeIfPresent(Int.self, forKey: .clockDriftOffset).map { .milliseconds($0) }
+        self.conversionOffset = try container.decodeIfPresent(Int.self, forKey: .conversionOffset).map { .milliseconds($0) }
         self.dataSetId = try container.decodeIfPresent(String.self, forKey: .dataSetId)
         self.deviceId = try container.decodeIfPresent(String.self, forKey: .deviceId)
         self.deviceTime = try container.decodeIfPresent(String.self, forKey: .deviceTime)
@@ -106,7 +106,7 @@ public class TDatum: Encodable {
         self.payload = try container.decodeIfPresent(TDictionary.self, forKey: .payload)
         self.tags = try container.decodeIfPresent([String].self, forKey: .tags)
         self.timezone = try container.decodeIfPresent(String.self, forKey: .timezone)
-        self.timezoneOffset = try container.decodeIfPresent(Int.self, forKey: .timezoneOffset)
+        self.timezoneOffset = try container.decodeIfPresent(Int.self, forKey: .timezoneOffset).map { .minutes($0) }
     }
 
     public func encode(to encoder: Encoder) throws {
@@ -115,8 +115,8 @@ public class TDatum: Encodable {
         try container.encode(time, forKey: .time)
         try container.encodeIfPresent(annotations, forKey: .annotations)
         try container.encodeIfPresent(associations, forKey: .associations)
-        try container.encodeIfPresent(clockDriftOffset, forKey: .clockDriftOffset)
-        try container.encodeIfPresent(conversionOffset, forKey: .conversionOffset)
+        try container.encodeIfPresent(clockDriftOffset.map { Int($0.milliseconds) }, forKey: .clockDriftOffset)
+        try container.encodeIfPresent(conversionOffset.map { Int($0.milliseconds) }, forKey: .conversionOffset)
         try container.encodeIfPresent(dataSetId, forKey: .dataSetId)
         try container.encodeIfPresent(deviceId, forKey: .deviceId)
         try container.encodeIfPresent(deviceTime, forKey: .deviceTime)
@@ -127,7 +127,7 @@ public class TDatum: Encodable {
         try container.encodeIfPresent(payload, forKey: .payload)
         try container.encodeIfPresent(tags, forKey: .tags)
         try container.encodeIfPresent(timezone, forKey: .timezone)
-        try container.encodeIfPresent(timezoneOffset, forKey: .timezoneOffset)
+        try container.encodeIfPresent(timezoneOffset.map { Int($0.minutes) }, forKey: .timezoneOffset)
     }
 
     private enum CodingKeys: String, CodingKey {

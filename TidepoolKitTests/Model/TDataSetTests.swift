@@ -13,7 +13,7 @@ class TDataSetTests: XCTestCase {
     static let dataSet = TDataSet(byUser: "1234567890",
                                   client: TDataSetClientTests.client,
                                   computerTime: "2020-01-01T12:34:56",
-                                  conversionOffset: 123456,
+                                  conversionOffset: 123.456,
                                   createdTime: Date.test,
                                   dataSetType: .normal,
                                   deduplicator: TDataSetDeduplicatorTests.deduplicator,
@@ -27,7 +27,7 @@ class TDataSetTests: XCTestCase {
                                   time: Date.test,
                                   timeProcessing: .acrossTheBoardTimezone,
                                   timezone: "Americas/Los_Angeles",
-                                  timezoneOffset: 234567,
+                                  timezoneOffset: -28800,
                                   uploadId: "3456789012",
                                   version: "1.2.3")
     static let dataSetJSONDictionary: [String: Any] = [
@@ -48,7 +48,7 @@ class TDataSetTests: XCTestCase {
         "time": Date.testJSONString,
         "timeProcessing": "across-the-board-timezone",
         "timezone": "Americas/Los_Angeles",
-        "timezoneOffset": 234567,
+        "timezoneOffset": -480,
         "type": "upload",
         "uploadId": "3456789012",
         "version": "1.2.3"
@@ -59,7 +59,7 @@ class TDataSetTests: XCTestCase {
         XCTAssertEqual(dataSet.byUser, "1234567890")
         XCTAssertEqual(dataSet.client, TDataSetClientTests.client)
         XCTAssertEqual(dataSet.computerTime, "2020-01-01T12:34:56")
-        XCTAssertEqual(dataSet.conversionOffset, 123456)
+        XCTAssertEqual(dataSet.conversionOffset, 123.456)
         XCTAssertEqual(dataSet.createdTime, Date.test)
         XCTAssertEqual(dataSet.dataSetType, .normal)
         XCTAssertEqual(dataSet.deduplicator, TDataSetDeduplicatorTests.deduplicator)
@@ -73,7 +73,7 @@ class TDataSetTests: XCTestCase {
         XCTAssertEqual(dataSet.time, Date.test)
         XCTAssertEqual(dataSet.timeProcessing, .acrossTheBoardTimezone)
         XCTAssertEqual(dataSet.timezone, "Americas/Los_Angeles")
-        XCTAssertEqual(dataSet.timezoneOffset, 234567)
+        XCTAssertEqual(dataSet.timezoneOffset, -28800)
         XCTAssertEqual(dataSet.uploadId, "3456789012")
         XCTAssertEqual(dataSet.version, "1.2.3")
     }

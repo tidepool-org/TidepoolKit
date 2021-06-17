@@ -67,56 +67,56 @@ class TBloodGlucoseTargetTests: XCTestCase {
 }
 
 class TBloodGlucoseStartTargetTests: XCTestCase {
-    static let startTarget = TBloodGlucose.StartTarget(start: 12345678, target: 1.23)
+    static let startTarget = TBloodGlucose.StartTarget(start: 12345.678, target: 1.23)
     static let startTargetJSONDictionary: [String: Any] = [
         "start": 12345678,
         "target": 1.23
     ]
 
     func testInitializerWithTarget() {
-        let startTarget = TBloodGlucose.StartTarget(start: 12345678, target: 1.23)
-        XCTAssertEqual(startTarget.start, 12345678)
+        let startTarget = TBloodGlucose.StartTarget(start: 12345.678, target: 1.23)
+        XCTAssertEqual(startTarget.start, 12345.678)
         XCTAssertEqual(startTarget.target, 1.23)
     }
 
     func testInitializerWithTargetAndRange() {
-        let startTarget = TBloodGlucose.StartTarget(start: 12345678, target: 1.23, range: 2.34)
-        XCTAssertEqual(startTarget.start, 12345678)
+        let startTarget = TBloodGlucose.StartTarget(start: 12345.678, target: 1.23, range: 2.34)
+        XCTAssertEqual(startTarget.start, 12345.678)
         XCTAssertEqual(startTarget.target, 1.23)
         XCTAssertEqual(startTarget.range, 2.34)
     }
 
     func testInitializerWithTargetAndHigh() {
-        let startTarget = TBloodGlucose.StartTarget(start: 12345678, target: 1.23, high: 2.34)
-        XCTAssertEqual(startTarget.start, 12345678)
+        let startTarget = TBloodGlucose.StartTarget(start: 12345.678, target: 1.23, high: 2.34)
+        XCTAssertEqual(startTarget.start, 12345.678)
         XCTAssertEqual(startTarget.target, 1.23)
         XCTAssertEqual(startTarget.high, 2.34)
     }
 
     func testInitializerWithLowAndHigh() {
-        let startTarget = TBloodGlucose.StartTarget(start: 12345678, low: 1.23, high: 2.34)
-        XCTAssertEqual(startTarget.start, 12345678)
+        let startTarget = TBloodGlucose.StartTarget(start: 12345.678, low: 1.23, high: 2.34)
+        XCTAssertEqual(startTarget.start, 12345.678)
         XCTAssertEqual(startTarget.low, 1.23)
         XCTAssertEqual(startTarget.high, 2.34)
     }
 
     func testCodableAsJSONWithTarget() {
-        let startTarget = TBloodGlucose.StartTarget(start: 12345678, target: 1.23)
+        let startTarget = TBloodGlucose.StartTarget(start: 12345.678, target: 1.23)
         XCTAssertCodableAsJSON(startTarget, ["start": 12345678, "target": 1.23])
     }
 
     func testCodableAsJSONWithTargetAndRange() {
-        let startTarget = TBloodGlucose.StartTarget(start: 12345678, target: 1.23, range: 2.34)
+        let startTarget = TBloodGlucose.StartTarget(start: 12345.678, target: 1.23, range: 2.34)
         XCTAssertCodableAsJSON(startTarget, ["start": 12345678, "target": 1.23, "range": 2.34])
     }
 
     func testCodableAsJSONWithTargetAndHigh() {
-        let startTarget = TBloodGlucose.StartTarget(start: 12345678, target: 1.23, high: 2.34)
+        let startTarget = TBloodGlucose.StartTarget(start: 12345.678, target: 1.23, high: 2.34)
         XCTAssertCodableAsJSON(startTarget, ["start": 12345678, "target": 1.23, "high": 2.34])
     }
 
     func testCodableAsJSONWithLowAndHigh() {
-        let startTarget = TBloodGlucose.StartTarget(start: 12345678, low: 1.23, high: 2.34)
+        let startTarget = TBloodGlucose.StartTarget(start: 12345.678, low: 1.23, high: 2.34)
         XCTAssertCodableAsJSON(startTarget, ["start": 12345678, "low": 1.23, "high": 2.34])
     }
 }

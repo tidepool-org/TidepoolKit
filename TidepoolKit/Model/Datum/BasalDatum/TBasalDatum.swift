@@ -17,10 +17,10 @@ public class TBasalDatum: TDatum {
     }
     
     public let deliveryType: DeliveryType
-    public var duration: Int?
-    public var expectedDuration: Int?
+    public var duration: TimeInterval?
+    public var expectedDuration: TimeInterval?
     
-    public init(_ deliveryType: DeliveryType, time: Date, duration: Int, expectedDuration: Int? = nil) {
+    public init(_ deliveryType: DeliveryType, time: Date, duration: TimeInterval, expectedDuration: TimeInterval? = nil) {
         self.deliveryType = deliveryType
         self.duration = duration
         self.expectedDuration = expectedDuration
@@ -33,16 +33,16 @@ public class TBasalDatum: TDatum {
         guard self.deliveryType == expectedDeliveryType else {
             throw DecodingError.dataCorruptedError(forKey: .deliveryType, in: container, debugDescription: "Unexpected deliveryType '\(self.deliveryType)'")
         }
-        self.duration = try container.decodeIfPresent(Int.self, forKey: .duration)
-        self.expectedDuration = try container.decodeIfPresent(Int.self, forKey: .expectedDuration)
+        self.duration = try container.decodeIfPresent(Int.self, forKey: .duration).map { .milliseconds($0) }
+        self.expectedDuration = try container.decodeIfPresent(Int.self, forKey: .expectedDuration).map { .milliseconds($0) }
         try super.init(.basal, from: decoder)
     }
 
     public override func encode(to encoder: Encoder) throws {
         var container = encoder.container(keyedBy: CodingKeys.self)
         try container.encode(deliveryType, forKey: .deliveryType)
-        try container.encodeIfPresent(duration, forKey: .duration)
-        try container.encodeIfPresent(expectedDuration, forKey: .expectedDuration)
+        try container.encodeIfPresent(duration.map { Int($0.milliseconds) }, forKey: .duration)
+        try container.encodeIfPresent(expectedDuration.map { Int($0.milliseconds) }, forKey: .expectedDuration)
         try super.encode(to: encoder)
     }
 

@@ -11,21 +11,21 @@ import Foundation
 public class TSuspendedBasalDatum: TBasalDatum, Decodable {
     public var suppressed: SuppressedBasal?
 
-    public init(time: Date, duration: Int, expectedDuration: Int? = nil) {
+    public init(time: Date, duration: TimeInterval, expectedDuration: TimeInterval? = nil) {
         super.init(.suspended, time: time, duration: duration, expectedDuration: expectedDuration)
     }
     
-    public convenience init(time: Date, duration: Int, expectedDuration: Int? = nil, suppressed: TAutomatedBasalDatum.Suppressed) {
+    public convenience init(time: Date, duration: TimeInterval, expectedDuration: TimeInterval? = nil, suppressed: TAutomatedBasalDatum.Suppressed) {
         self.init(time: time, duration: duration, expectedDuration: expectedDuration)
         self.suppressed = suppressed
     }
 
-    public convenience init(time: Date, duration: Int, expectedDuration: Int? = nil, suppressed: TScheduledBasalDatum.Suppressed) {
+    public convenience init(time: Date, duration: TimeInterval, expectedDuration: TimeInterval? = nil, suppressed: TScheduledBasalDatum.Suppressed) {
         self.init(time: time, duration: duration, expectedDuration: expectedDuration)
         self.suppressed = suppressed
     }
 
-    public convenience init(time: Date, duration: Int, expectedDuration: Int? = nil, suppressed: TTemporaryBasalDatum.Suppressed) {
+    public convenience init(time: Date, duration: TimeInterval, expectedDuration: TimeInterval? = nil, suppressed: TTemporaryBasalDatum.Suppressed) {
         self.init(time: time, duration: duration, expectedDuration: expectedDuration)
         self.suppressed = suppressed
     }

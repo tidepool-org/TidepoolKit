@@ -29,7 +29,7 @@ public struct TDataSet: Codable, Equatable {
     public var byUser: String?
     public var client: Client?
     public var computerTime: String?
-    public var conversionOffset: Int?
+    public var conversionOffset: TimeInterval?
     public var createdTime: Date?
     public var dataSetType: DataSetType?
     public var deduplicator: Deduplicator?
@@ -43,7 +43,7 @@ public struct TDataSet: Codable, Equatable {
     public var time: Date?
     public var timeProcessing: TimeProcessing?
     public var timezone: String?
-    public var timezoneOffset: Int?
+    public var timezoneOffset: TimeInterval?
     public let type: String
     public var uploadId: String?
     public var version: String?
@@ -58,7 +58,7 @@ public struct TDataSet: Codable, Equatable {
     public init(byUser: String? = nil,
                 client: Client? = nil,
                 computerTime: String? = nil,
-                conversionOffset: Int? = nil,
+                conversionOffset: TimeInterval? = nil,
                 createdTime: Date? = nil,
                 dataSetType: DataSetType? = nil,
                 deduplicator: Deduplicator? = nil,
@@ -72,7 +72,7 @@ public struct TDataSet: Codable, Equatable {
                 time: Date? = nil,
                 timeProcessing: TimeProcessing? = nil,
                 timezone: String? = nil,
-                timezoneOffset: Int? = nil,
+                timezoneOffset: TimeInterval? = nil,
                 uploadId: String? = nil,
                 version: String? = nil) {
         self.byUser = byUser
@@ -96,6 +96,56 @@ public struct TDataSet: Codable, Equatable {
         self.type = "upload"
         self.uploadId = uploadId
         self.version = version
+    }
+
+    public init(from decoder: Decoder) throws {
+        let container = try decoder.container(keyedBy: CodingKeys.self)
+        self.byUser = try container.decodeIfPresent(String.self, forKey: .byUser)
+        self.client = try container.decodeIfPresent(Client.self, forKey: .client)
+        self.computerTime = try container.decodeIfPresent(String.self, forKey: .computerTime)
+        self.conversionOffset = try container.decodeIfPresent(Int.self, forKey: .conversionOffset).map { .milliseconds($0) }
+        self.createdTime = try container.decodeIfPresent(Date.self, forKey: .createdTime)
+        self.dataSetType = try container.decodeIfPresent(DataSetType.self, forKey: .dataSetType)
+        self.deduplicator = try container.decodeIfPresent(Deduplicator.self, forKey: .deduplicator)
+        self.deviceId = try container.decodeIfPresent(String.self, forKey: .deviceId)
+        self.deviceManufacturers = try container.decodeIfPresent([String].self, forKey: .deviceManufacturers)
+        self.deviceModel = try container.decodeIfPresent(String.self, forKey: .deviceModel)
+        self.deviceSerialNumber = try container.decodeIfPresent(String.self, forKey: .deviceSerialNumber)
+        self.deviceTags = try container.decodeIfPresent([DeviceTag].self, forKey: .deviceTags)
+        self.id = try container.decodeIfPresent(String.self, forKey: .id)
+        self.modifiedTime = try container.decodeIfPresent(Date.self, forKey: .modifiedTime)
+        self.time = try container.decodeIfPresent(Date.self, forKey: .time)
+        self.timeProcessing = try container.decodeIfPresent(TimeProcessing.self, forKey: .timeProcessing)
+        self.timezone = try container.decodeIfPresent(String.self, forKey: .timezone)
+        self.timezoneOffset = try container.decodeIfPresent(Int.self, forKey: .timezoneOffset).map { .minutes($0) }
+        self.type = try container.decode(String.self, forKey: .type)
+        self.uploadId = try container.decodeIfPresent(String.self, forKey: .uploadId)
+        self.version = try container.decodeIfPresent(String.self, forKey: .version)
+    }
+
+    public func encode(to encoder: Encoder) throws {
+        var container = encoder.container(keyedBy: CodingKeys.self)
+        try container.encodeIfPresent(byUser, forKey: .byUser)
+        try container.encodeIfPresent(client, forKey: .client)
+        try container.encodeIfPresent(computerTime, forKey: .computerTime)
+        try container.encodeIfPresent(conversionOffset.map { Int($0.milliseconds) }, forKey: .conversionOffset)
+        try container.encodeIfPresent(createdTime, forKey: .createdTime)
+        try container.encodeIfPresent(dataSetType, forKey: .dataSetType)
+        try container.encodeIfPresent(deduplicator, forKey: .deduplicator)
+        try container.encodeIfPresent(deviceId, forKey: .deviceId)
+        try container.encodeIfPresent(deviceManufacturers, forKey: .deviceManufacturers)
+        try container.encodeIfPresent(deviceModel, forKey: .deviceModel)
+        try container.encodeIfPresent(deviceSerialNumber, forKey: .deviceSerialNumber)
+        try container.encodeIfPresent(deviceTags, forKey: .deviceTags)
+        try container.encodeIfPresent(id, forKey: .id)
+        try container.encodeIfPresent(modifiedTime, forKey: .modifiedTime)
+        try container.encodeIfPresent(time, forKey: .time)
+        try container.encodeIfPresent(timeProcessing, forKey: .timeProcessing)
+        try container.encodeIfPresent(timezone, forKey: .timezone)
+        try container.encodeIfPresent(timezoneOffset.map { Int($0.minutes) }, forKey: .timezoneOffset)
+        try container.encode(type, forKey: .type)
+        try container.encodeIfPresent(uploadId, forKey: .uploadId)
+        try container.encodeIfPresent(version, forKey: .version)
     }
 
     public struct Client: Codable, Equatable {
@@ -150,6 +200,30 @@ public struct TDataSet: Codable, Equatable {
             "org.tidepool.truncate": .deviceTruncateDataSet,
             "org.tidepool.continuous": .none
         ]
+    }
+
+    private enum CodingKeys: String, CodingKey {
+        case byUser
+        case client
+        case computerTime
+        case conversionOffset
+        case createdTime
+        case dataSetType
+        case deduplicator
+        case deviceId
+        case deviceManufacturers
+        case deviceModel
+        case deviceSerialNumber
+        case deviceTags
+        case id
+        case modifiedTime
+        case time
+        case timeProcessing
+        case timezone
+        case timezoneOffset
+        case type
+        case uploadId
+        case version
     }
 }
 

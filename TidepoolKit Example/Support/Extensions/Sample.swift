@@ -46,13 +46,13 @@ struct Sample {
                                        expectedNormal: 2.0,
                                        extended: 0.0,
                                        expectedExtended: 3.0,
-                                       duration: 0,
-                                       expectedDuration: 1800000),
+                                       duration: .minutes(0),
+                                       expectedDuration: .minutes(30)),
                 TExtendedBolusDatum(time: Date(),
                                     extended: 1.0,
                                     expectedExtended: 3.0,
-                                    duration: 600000,
-                                    expectedDuration: 1800000),
+                                    duration: .minutes(10),
+                                    expectedDuration: .minutes(30)),
                 TNormalBolusDatum(time: Date(),
                                   normal: 1.25,
                                   expectedNormal: 2.5),
@@ -99,8 +99,8 @@ struct Sample {
                                                  status: statusDeviceEventDatum),
                 TStatusDeviceEventDatum(time: Date(),
                                         name: .resumed,
-                                        duration: 500000,
-                                        expectedDuration: 1000000,
+                                        duration: .seconds(500),
+                                        expectedDuration: .seconds(1000),
                                         reason: TDictionary(["five": 5])),
                 TTimeChangeDeviceEventDatum(time: Date(),
                                             from: TTimeChangeDeviceEventDatum.Info(timeZoneName: "America/Los_Angeles"),
@@ -110,15 +110,15 @@ struct Sample {
                                      errors: ["Alert 1", "Alert 2"],
                                      insulinOnBoard: TDosingDecisionDatum.InsulinOnBoard(startTime: Date(), amount: -1.23),
                                      carbohydratesOnBoard: TDosingDecisionDatum.CarbohydratesOnBoard(startTime: Date(), endTime: Date(), amount: 2.34),
-                                     bloodGlucoseTargetSchedule: [TBloodGlucose.StartTarget(start: 0, low: 100, high: 110),
-                                                                  TBloodGlucose.StartTarget(start: 43200000, low: 110, high: 120)],
+                                     bloodGlucoseTargetSchedule: [TBloodGlucose.StartTarget(start: .hours(0), low: 100, high: 110),
+                                                                  TBloodGlucose.StartTarget(start: .hours(12), low: 110, high: 120)],
                                      bloodGlucoseForecast: [TDosingDecisionDatum.BloodGlucoseForecast(time: Date(), value: 123),
                                                             TDosingDecisionDatum.BloodGlucoseForecast(time: Date(), value: 134),
                                                             TDosingDecisionDatum.BloodGlucoseForecast(time: Date(), value: 145)],
                                      bloodGlucoseForecastIncludingPendingInsulin: [TDosingDecisionDatum.BloodGlucoseForecast(time: Date(), value: 78),
                                                                                    TDosingDecisionDatum.BloodGlucoseForecast(time: Date(), value: 89),
                                                                                    TDosingDecisionDatum.BloodGlucoseForecast(time: Date(), value: 90)],
-                                     recommendedBasal: TDosingDecisionDatum.RecommendedBasal(time: Date(), rate: 0.12, duration: 1800),
+                                     recommendedBasal: TDosingDecisionDatum.RecommendedBasal(time: Date(), rate: 0.12, duration: .minutes(30)),
                                      recommendedBolus: TDosingDecisionDatum.RecommendedBolus(time: Date(), amount: 3.45),
                                      units: TDosingDecisionDatum.Units(bloodGlucose: .milligramsPerDeciliter, carbohydrate: .grams, insulin: .units)),
                 TFoodDatum(time: Date(),
@@ -155,23 +155,23 @@ struct Sample {
                                    automatedDelivery: true,
                                    basal: TPumpSettingsDatum.Basal(rateMaximum: TPumpSettingsDatum.Basal.RateMaximum(3),
                                                                    temporary: TPumpSettingsDatum.Basal.Temporary(.unitsPerHour)),
-                                   basalRateSchedules: ["Default": [TPumpSettingsDatum.BasalRateStart(start: 0, rate: 1.0),
-                                                                    TPumpSettingsDatum.BasalRateStart(start: 43200000, rate: 1.5)]],
+                                   basalRateSchedules: ["Default": [TPumpSettingsDatum.BasalRateStart(start: .hours(0), rate: 1.0),
+                                                                    TPumpSettingsDatum.BasalRateStart(start: .hours(12), rate: 1.5)]],
                                    bloodGlucoseSuspendThreshold: 70,
                                    bloodGlucoseTargetPhysicalActivity: TBloodGlucose.Target(low: 150, high: 160),
                                    bloodGlucoseTargetPreprandial: TBloodGlucose.Target(low: 80, high: 90),
-                                   bloodGlucoseTargetSchedules: ["Default": [TBloodGlucose.StartTarget(start: 0, low: 100, high: 110),
-                                                                             TBloodGlucose.StartTarget(start: 43200000, low: 110, high: 120)]],
+                                   bloodGlucoseTargetSchedules: ["Default": [TBloodGlucose.StartTarget(start: .hours(0), low: 100, high: 110),
+                                                                             TBloodGlucose.StartTarget(start: .hours(12), low: 110, high: 120)]],
                                    bolus: TPumpSettingsDatum.Bolus(amountMaximum: TPumpSettingsDatum.Bolus.AmountMaximum(10),
                                                                    calculator: TPumpSettingsDatum.Bolus.Calculator(enabled: true,
                                                                                                                    insulin: TPumpSettingsDatum.Bolus.Calculator.Insulin(5, .hours)),
                                                                    extended: TPumpSettingsDatum.Bolus.Extended(enabled: true)),
-                                   carbohydrateRatioSchedules: ["Default": [TPumpSettingsDatum.CarbohydrateRatioStart(start: 0, amount: 15),
-                                                                            TPumpSettingsDatum.CarbohydrateRatioStart(start: 43200000, amount: 20)]],
+                                   carbohydrateRatioSchedules: ["Default": [TPumpSettingsDatum.CarbohydrateRatioStart(start: .hours(0), amount: 15),
+                                                                            TPumpSettingsDatum.CarbohydrateRatioStart(start: .hours(12), amount: 20)]],
                                    display: TPumpSettingsDatum.Display(bloodGlucose: TPumpSettingsDatum.Display.BloodGlucose(.milligramsPerDeciliter)),
-                                   insulinModel: TPumpSettingsDatum.InsulinModel(modelType: .rapidAdult, actionDuration: 21600, actionPeakOffset: 3600),
-                                   insulinSensitivitySchedules: ["Default": [TPumpSettingsDatum.InsulinSensitivityStart(start: 0, amount: 45),
-                                                                             TPumpSettingsDatum.InsulinSensitivityStart(start: 43200000, amount: 60)]],
+                                   insulinModel: TPumpSettingsDatum.InsulinModel(modelType: .rapidAdult, actionDuration: .hours(6), actionPeakOffset: .hours(1)),
+                                   insulinSensitivitySchedules: ["Default": [TPumpSettingsDatum.InsulinSensitivityStart(start: .hours(0), amount: 45),
+                                                                             TPumpSettingsDatum.InsulinSensitivityStart(start: .hours(12), amount: 60)]],
                                    manufacturers: ["Acme Pump"],
                                    model: "Ultra Deluxe",
                                    scheduleTimeZoneOffset: -480,
@@ -231,8 +231,8 @@ struct Sample {
         fileprivate static var statusDeviceEventDatum: TStatusDeviceEventDatum {
             return TStatusDeviceEventDatum(time: Date(),
                                            name: .suspended,
-                                           duration: 360000,
-                                           expectedDuration: 720000,
+                                           duration: .minutes(6),
+                                           expectedDuration: .minutes(12),
                                            reason: TDictionary(["one": 1]))
         }
 
@@ -325,8 +325,8 @@ struct Sample {
             if fullyAdorned {
                 datum.annotations = annotations
                 datum.associations = associations
-                datum.clockDriftOffset = 123456
-                datum.conversionOffset = 2345
+                datum.clockDriftOffset = 123.456
+                datum.conversionOffset = 2.345
                 datum.deviceId = "my-device-id"
                 datum.deviceTime = "1999-12-31T12:34:45"
                 datum.location = location
@@ -335,7 +335,7 @@ struct Sample {
                 datum.payload = payload
                 datum.tags = tags
                 datum.timezone = "America/Los_Angeles"
-                datum.timezoneOffset = -480
+                datum.timezoneOffset = .minutes(-480)
             } else {
                 datum.origin = TOrigin(id: UUID().uuidString)
             }

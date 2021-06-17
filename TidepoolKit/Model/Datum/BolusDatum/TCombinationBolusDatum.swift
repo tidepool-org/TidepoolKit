@@ -13,10 +13,10 @@ public class TCombinationBolusDatum: TBolusDatum, Decodable {
     public var expectedNormal: Double?
     public var extended: Double?
     public var expectedExtended: Double?
-    public var duration: Int?
-    public var expectedDuration: Int?
+    public var duration: TimeInterval?
+    public var expectedDuration: TimeInterval?
 
-    public init(time: Date, normal: Double, expectedNormal: Double? = nil, extended: Double, expectedExtended: Double? = nil, duration: Int, expectedDuration: Int? = nil) {
+    public init(time: Date, normal: Double, expectedNormal: Double? = nil, extended: Double, expectedExtended: Double? = nil, duration: TimeInterval, expectedDuration: TimeInterval? = nil) {
         self.normal = normal
         self.expectedNormal = expectedNormal
         self.extended = extended
@@ -32,8 +32,8 @@ public class TCombinationBolusDatum: TBolusDatum, Decodable {
         self.expectedNormal = try container.decodeIfPresent(Double.self, forKey: .expectedNormal)
         self.extended = try container.decodeIfPresent(Double.self, forKey: .extended)
         self.expectedExtended = try container.decodeIfPresent(Double.self, forKey: .expectedExtended)
-        self.duration = try container.decodeIfPresent(Int.self, forKey: .duration)
-        self.expectedDuration = try container.decodeIfPresent(Int.self, forKey: .expectedDuration)
+        self.duration = try container.decodeIfPresent(Int.self, forKey: .duration).map { .milliseconds($0) }
+        self.expectedDuration = try container.decodeIfPresent(Int.self, forKey: .expectedDuration).map { .milliseconds($0) }
         try super.init(.combination, from: decoder)
     }
 
@@ -43,8 +43,8 @@ public class TCombinationBolusDatum: TBolusDatum, Decodable {
         try container.encodeIfPresent(expectedNormal, forKey: .expectedNormal)
         try container.encodeIfPresent(extended, forKey: .extended)
         try container.encodeIfPresent(expectedExtended, forKey: .expectedExtended)
-        try container.encodeIfPresent(duration, forKey: .duration)
-        try container.encodeIfPresent(expectedDuration, forKey: .expectedDuration)
+        try container.encodeIfPresent(duration.map { Int($0.milliseconds) }, forKey: .duration)
+        try container.encodeIfPresent(expectedDuration.map { Int($0.milliseconds) }, forKey: .expectedDuration)
         try super.encode(to: encoder)
     }
 

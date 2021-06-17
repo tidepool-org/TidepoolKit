@@ -15,7 +15,7 @@ public class TAutomatedBasalDatum: TBasalDatum, Decodable {
     public var scheduleName: String?
     public var insulinFormulation: InsulinFormulation?
     
-    public init(time: Date, duration: Int, expectedDuration: Int? = nil, rate: Double, scheduleName: String? = nil, insulinFormulation: InsulinFormulation? = nil) {
+    public init(time: Date, duration: TimeInterval, expectedDuration: TimeInterval? = nil, rate: Double, scheduleName: String? = nil, insulinFormulation: InsulinFormulation? = nil) {
         self.rate = rate
         self.scheduleName = scheduleName
         self.insulinFormulation = insulinFormulation

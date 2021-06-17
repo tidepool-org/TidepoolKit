@@ -11,8 +11,8 @@ import TidepoolKit
 
 class TTemporaryBasalDatumTests: XCTestCase {
     static let temporaryBasal = TTemporaryBasalDatum(time: Date.test,
-                                                     duration: 123456,
-                                                     expectedDuration: 234567,
+                                                     duration: 123.456,
+                                                     expectedDuration: 234.567,
                                                      rate: 1.23,
                                                      percent: 0.75,
                                                      insulinFormulation: TInsulinDatumFormulationTests.formulation,
@@ -31,8 +31,8 @@ class TTemporaryBasalDatumTests: XCTestCase {
     
     func testInitializer() {
         let temporaryBasal = TTemporaryBasalDatumTests.temporaryBasal
-        XCTAssertEqual(temporaryBasal.duration, 123456)
-        XCTAssertEqual(temporaryBasal.expectedDuration, 234567)
+        XCTAssertEqual(temporaryBasal.duration, 123.456)
+        XCTAssertEqual(temporaryBasal.expectedDuration, 234.567)
         XCTAssertEqual(temporaryBasal.rate, 1.23)
         XCTAssertEqual(temporaryBasal.percent, 0.75)
         XCTAssertEqual(temporaryBasal.insulinFormulation, TInsulinDatumFormulationTests.formulation)

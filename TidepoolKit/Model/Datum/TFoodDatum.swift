@@ -79,14 +79,32 @@ public class TFoodDatum: TDatum, Decodable {
         public var fat: Fat?
         public var protein: Protein?
         public var energy: Energy?
-        public var estimatedAbsorptionDuration: Int?
+        public var estimatedAbsorptionDuration: TimeInterval?
 
-        public init(carbohydrate: Carbohydrate? = nil, fat: Fat? = nil, protein: Protein? = nil, energy: Energy? = nil, estimatedAbsorptionDuration: Int? = nil) {
+        public init(carbohydrate: Carbohydrate? = nil, fat: Fat? = nil, protein: Protein? = nil, energy: Energy? = nil, estimatedAbsorptionDuration: TimeInterval? = nil) {
             self.carbohydrate = carbohydrate
             self.fat = fat
             self.protein = protein
             self.energy = energy
             self.estimatedAbsorptionDuration = estimatedAbsorptionDuration
+        }
+
+        public init(from decoder: Decoder) throws {
+            let container = try decoder.container(keyedBy: CodingKeys.self)
+            self.carbohydrate = try container.decodeIfPresent(Carbohydrate.self, forKey: .carbohydrate)
+            self.fat = try container.decodeIfPresent(Fat.self, forKey: .fat)
+            self.protein = try container.decodeIfPresent(Protein.self, forKey: .protein)
+            self.energy = try container.decodeIfPresent(Energy.self, forKey: .energy)
+            self.estimatedAbsorptionDuration = try container.decodeIfPresent(Int.self, forKey: .estimatedAbsorptionDuration).map { .seconds($0) }
+        }
+
+        public func encode(to encoder: Encoder) throws {
+            var container = encoder.container(keyedBy: CodingKeys.self)
+            try container.encodeIfPresent(carbohydrate, forKey: .carbohydrate)
+            try container.encodeIfPresent(fat, forKey: .fat)
+            try container.encodeIfPresent(protein, forKey: .protein)
+            try container.encodeIfPresent(energy, forKey: .energy)
+            try container.encodeIfPresent(estimatedAbsorptionDuration.map { Int($0.seconds) }, forKey: .estimatedAbsorptionDuration)
         }
 
         public struct Carbohydrate: Codable, Equatable {
@@ -150,6 +168,14 @@ public class TFoodDatum: TDatum, Decodable {
                 self.value = value
                 self.units = units
             }
+        }
+
+        private enum CodingKeys: String, CodingKey {
+            case carbohydrate
+            case fat
+            case protein
+            case energy
+            case estimatedAbsorptionDuration
         }
     }
 

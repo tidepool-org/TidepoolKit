@@ -12,8 +12,8 @@ import TidepoolKit
 class TStatusDeviceEventDatumTests: XCTestCase {
     static let statusDeviceEvent = TStatusDeviceEventDatum(time: Date.test,
                                                            name: .suspended,
-                                                           duration: 123456,
-                                                           expectedDuration: 234567,
+                                                           duration: 123.456,
+                                                           expectedDuration: 234.567,
                                                            reason: TDictionary(["One": 2, "a": "b"]))
     static let statusDeviceEventJSONDictionary: [String: Any] = [
         "type": "deviceEvent",
@@ -28,8 +28,8 @@ class TStatusDeviceEventDatumTests: XCTestCase {
     func testInitializer() {
         let statusDeviceEvent = TStatusDeviceEventDatumTests.statusDeviceEvent
         XCTAssertEqual(statusDeviceEvent.name, .suspended)
-        XCTAssertEqual(statusDeviceEvent.duration, 123456)
-        XCTAssertEqual(statusDeviceEvent.expectedDuration, 234567)
+        XCTAssertEqual(statusDeviceEvent.duration, 123.456)
+        XCTAssertEqual(statusDeviceEvent.expectedDuration, 234.567)
         XCTAssertEqual(statusDeviceEvent.reason, TDictionary(["One": 2, "a": "b"]))
     }
     

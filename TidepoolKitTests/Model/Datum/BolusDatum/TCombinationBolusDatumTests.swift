@@ -15,8 +15,8 @@ class TCombinationBolusDatumTests: XCTestCase {
                                                          expectedNormal: 2.34,
                                                          extended: 3.45,
                                                          expectedExtended: 4.56,
-                                                         duration: 123456,
-                                                         expectedDuration: 234567)
+                                                         duration: 123.456,
+                                                         expectedDuration: 234.567)
     static let combinationBolusJSONDictionary: [String: Any] = [
         "type": "bolus",
         "subType": "dual/square",
@@ -35,8 +35,8 @@ class TCombinationBolusDatumTests: XCTestCase {
         XCTAssertEqual(combinationBolus.expectedNormal, 2.34)
         XCTAssertEqual(combinationBolus.extended, 3.45)
         XCTAssertEqual(combinationBolus.expectedExtended, 4.56)
-        XCTAssertEqual(combinationBolus.duration, 123456)
-        XCTAssertEqual(combinationBolus.expectedDuration, 234567)
+        XCTAssertEqual(combinationBolus.duration, 123.456)
+        XCTAssertEqual(combinationBolus.expectedDuration, 234.567)
     }
     
     func testCodableAsJSON() {

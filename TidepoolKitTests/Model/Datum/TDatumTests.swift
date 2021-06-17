@@ -14,8 +14,8 @@ class TDatumTests: XCTestCase {
                               time: Date.test,
                               annotations: [TDictionary(["a": "b", "c": 0]), TDictionary(["alpha": "bravo"])],
                               associations: [TAssociationTests.association, TAssociationTests.association],
-                              clockDriftOffset: 1234,
-                              conversionOffset: 2345,
+                              clockDriftOffset: 1.234,
+                              conversionOffset: 2.345,
                               dataSetId: "3456789012",
                               deviceId: "TestDevice",
                               deviceTime: "2019-01-02T03:04:05",
@@ -26,7 +26,7 @@ class TDatumTests: XCTestCase {
                               payload: TDictionary(["foo": "bar"]),
                               tags: ["Fast", "Slow"],
                               timezone: "America/Los_Angeles",
-                              timezoneOffset: 25200)
+                              timezoneOffset: -28800)
     static let datumJSONDictionary: [String: Any] = [
         "type": "water",
         "time": Date.testJSONString,
@@ -44,7 +44,7 @@ class TDatumTests: XCTestCase {
         "payload": ["foo": "bar"],
         "tags": ["Fast", "Slow"],
         "timezone": "America/Los_Angeles",
-        "timezoneOffset": 420
+        "timezoneOffset": -480
     ]
     
     func testInitializer() {
@@ -53,8 +53,8 @@ class TDatumTests: XCTestCase {
         XCTAssertEqual(datum.time, Date.test)
         XCTAssertEqual(datum.annotations, [TDictionary(["a": "b", "c": 0]), TDictionary(["alpha": "bravo"])])
         XCTAssertEqual(datum.associations, [TAssociationTests.association, TAssociationTests.association])
-        XCTAssertEqual(datum.clockDriftOffset, 1234)
-        XCTAssertEqual(datum.conversionOffset, 2345)
+        XCTAssertEqual(datum.clockDriftOffset, 1.234)
+        XCTAssertEqual(datum.conversionOffset, 2.345)
         XCTAssertEqual(datum.dataSetId, "3456789012")
         XCTAssertEqual(datum.deviceId, "TestDevice")
         XCTAssertEqual(datum.deviceTime, "2019-01-02T03:04:05")
@@ -65,7 +65,7 @@ class TDatumTests: XCTestCase {
         XCTAssertEqual(datum.payload, TDictionary(["foo": "bar"]))
         XCTAssertEqual(datum.tags, ["Fast", "Slow"])
         XCTAssertEqual(datum.timezone, "America/Los_Angeles")
-        XCTAssertEqual(datum.timezoneOffset, 25200)
+        XCTAssertEqual(datum.timezoneOffset, -28800)
     }
 }
 

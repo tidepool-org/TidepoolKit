@@ -106,12 +106,32 @@ public class TDosingDecisionDatum: TDatum, Decodable {
     public struct RecommendedBasal: Codable, Equatable {
         public var time: Date?
         public var rate: Double?
-        public var duration: Int?
+        public var duration: TimeInterval?
 
-        public init(time: Date, rate: Double, duration: Int) {
+        public init(time: Date, rate: Double, duration: TimeInterval) {
             self.time = time
             self.rate = rate
             self.duration = duration
+        }
+
+        public init(from decoder: Decoder) throws {
+            let container = try decoder.container(keyedBy: CodingKeys.self)
+            self.time = try container.decodeIfPresent(Date.self, forKey: .time)
+            self.rate = try container.decodeIfPresent(Double.self, forKey: .rate)
+            self.duration = try container.decodeIfPresent(Int.self, forKey: .duration).map { .seconds($0) }
+        }
+
+        public func encode(to encoder: Encoder) throws {
+            var container = encoder.container(keyedBy: CodingKeys.self)
+            try container.encodeIfPresent(time, forKey: .time)
+            try container.encodeIfPresent(rate, forKey: .rate)
+            try container.encodeIfPresent(duration.map { Int($0.seconds) }, forKey: .duration)
+        }
+
+        private enum CodingKeys: String, CodingKey {
+            case time
+            case rate
+            case duration
         }
     }
 
