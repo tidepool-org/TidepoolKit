@@ -369,6 +369,43 @@ public class TAPI {
         performRequest(request, completion: completion)
     }
 
+    // MARK: - Verify Device
+
+    /// Verify the validity of a device. Returns whether the device if is valid or not.
+    ///
+    /// - Parameters:
+    ///   - deviceToken: The device token used to verify the validity of a device.
+    ///   - completion: The completion function to invoke with any error.
+    public func verifyDevice(deviceToken: Data, completion: @escaping (Result<Bool, TError>) -> Void) {
+        guard session != nil else {
+            completion(.failure(.sessionMissing))
+            return
+        }
+
+        let body = VerifyDeviceRequestBody(deviceToken: deviceToken.base64EncodedString())
+        let request = createRequest(method: "POST", path: "/v1/device_check/verify", body: body)
+        performRequest(request) { (result: DecodableResult<VerifyDeviceResponseBody>) -> Void in
+            switch result {
+            case .failure(let error):
+                completion(.failure(error))
+            case .success(let response):
+                completion(.success(response.valid))
+            }
+        }
+    }
+
+    struct VerifyDeviceRequestBody: Codable {
+        let deviceToken: String
+
+        private enum CodingKeys: String, CodingKey {
+            case deviceToken = "device_token"
+        }
+    }
+
+    struct VerifyDeviceResponseBody: Codable {
+        let valid: Bool
+    }
+
     // MARK: - Internal - Create Request
 
     private func createRequest<E>(method: String, path: String, body: E) -> URLRequest? where E: Encodable {

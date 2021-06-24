@@ -729,6 +729,80 @@ class TAPIDeleteDataTests: TAPIRefreshSessionTests {
     }
 }
 
+class TAPIVerifyDeviceTests: TAPIRefreshSessionTests {
+    let deviceToken = randomString.data(using: .utf8)!
+
+    override func setUp() {
+        super.setUp()
+
+        let body = TAPI.VerifyDeviceRequestBody(deviceToken: deviceToken.base64EncodedString())
+        URLProtocolMock.handlers = [URLProtocolMock.Handler(validator: URLProtocolMock.Validator(url: "https://test.org/v1/device_check/verify", method: "POST", headers: headers, body: body),
+                                                            success: URLProtocolMock.Success(statusCode: 200, headers: headers, body: TAPI.VerifyDeviceResponseBody(valid: true)))]
+    }
+
+    func testNetworkError() {
+        setUpNetworkError()
+        guard case .failure(let error) = performRequest(), case .network(let networkError) = error else {
+            XCTFail()
+            return
+        }
+        XCTAssertNotNil(networkError)
+    }
+
+    func testRequestNotAuthenticated() {
+        setUpRequestNotAuthenticated()
+        guard case .failure(let error) = performRequest(), case .requestNotAuthenticated = error else {
+            XCTFail()
+            return
+        }
+    }
+
+    func testRequestNotAuthorized() {
+        setUpRequestNotAuthorized()
+        guard case .failure(let error) = performRequest(), case .requestNotAuthorized = error else {
+            XCTFail()
+            return
+        }
+    }
+
+    func testResponseMalformedJSON() {
+        setUpResponseMalformedJSON()
+        guard case .failure(let error) = performRequest(), case .responseMalformedJSON = error else {
+            XCTFail()
+            return
+        }
+    }
+
+    func testSuccess() {
+        guard case .success(let valid) = performRequest() else {
+            XCTFail()
+            return
+        }
+        XCTAssertTrue(valid)
+    }
+
+    func testSuccessInvalid() {
+        URLProtocolMock.handlers[0].success = URLProtocolMock.Success(statusCode: 200, headers: headers, body: TAPI.VerifyDeviceResponseBody(valid: false))
+        guard case .success(let valid) = performRequest() else {
+            XCTFail()
+            return
+        }
+        XCTAssertFalse(valid)
+    }
+
+    func testSuccessAfterRefresh() {
+        setUpSessionWantsRefresh()
+        testSuccess()
+    }
+
+    private func performRequest() -> Result<Bool, TError>? {
+        let expectation = XCTestExpectationWithResult<Bool, TError>()
+        api.verifyDevice(deviceToken: deviceToken) { expectation.fulfill($0) }
+        XCTAssertNotEqual(XCTWaiter.wait(for: [expectation], timeout: 10), .timedOut)
+        return expectation.result
+    }
+}
+
 fileprivate extension TSession {
     init(session: TSession, createdDate: Date) {
         self.init(environment: session.environment, authenticationToken: session.authenticationToken, userId: session.userId, trace: session.trace, createdDate: createdDate)
