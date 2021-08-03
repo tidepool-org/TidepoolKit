@@ -387,8 +387,10 @@ public class TAPI {
         performRequest(request) { (result: DecodableResult<VerifyDeviceResponseBody>) -> Void in
             switch result {
             case .failure(let error):
+                TSharedLogging.debug("verify device request failed. deviceToken:\(deviceToken), error:\(error)")
                 completion(.failure(error))
             case .success(let response):
+                TSharedLogging.debug("verify device request succeeded. deviceToken:\(deviceToken), valid:\(response.valid)")
                 completion(.success(response.valid))
             }
         }
