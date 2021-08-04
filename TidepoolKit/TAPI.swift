@@ -382,15 +382,16 @@ public class TAPI {
             return
         }
 
-        let body = VerifyDeviceRequestBody(deviceToken: deviceToken.base64EncodedString())
+        let encodedDeviceToken = deviceToken.base64EncodedString()
+        let body = VerifyDeviceRequestBody(deviceToken: encodedDeviceToken)
         let request = createRequest(method: "POST", path: "/v1/device_check/verify", body: body)
         performRequest(request) { (result: DecodableResult<VerifyDeviceResponseBody>) -> Void in
             switch result {
             case .failure(let error):
-                TSharedLogging.debug("verify device request failed. deviceToken:\(deviceToken), error:\(error)")
+                TSharedLogging.debug("verify device request failed. deviceToken:\(encodedDeviceToken), error:\(error)")
                 completion(.failure(error))
             case .success(let response):
-                TSharedLogging.debug("verify device request succeeded. deviceToken:\(deviceToken), valid:\(response.valid)")
+                TSharedLogging.debug("verify device request succeeded. deviceToken:\(encodedDeviceToken), valid:\(response.valid)")
                 completion(.success(response.valid))
             }
         }
