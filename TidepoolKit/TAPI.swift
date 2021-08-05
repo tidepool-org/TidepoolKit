@@ -378,6 +378,7 @@ public class TAPI {
     ///   - completion: The completion function to invoke with any error.
     public func verifyDevice(deviceToken: Data, completion: @escaping (Result<Bool, TError>) -> Void) {
         guard session != nil else {
+            TSharedLogging.debug("session is missing")
             completion(.failure(.sessionMissing))
             return
         }

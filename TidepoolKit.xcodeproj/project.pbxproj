@@ -114,7 +114,6 @@
 		A98780CC240A0D5E0007D5E1 /* TDatumTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = A98780A9240A0D5E0007D5E1 /* TDatumTests.swift */; };
 		A98780DB240A14E80007D5E1 /* Date.swift in Sources */ = {isa = PBXBuildFile; fileRef = A98780DA240A14E80007D5E1 /* Date.swift */; };
 		A98D55282410A50200EE62B5 /* Sample.swift in Sources */ = {isa = PBXBuildFile; fileRef = A98D55272410A50200EE62B5 /* Sample.swift */; };
-		A994916723FB288E00865738 /* Logging.swift in Sources */ = {isa = PBXBuildFile; fileRef = A994916623FB288E00865738 /* Logging.swift */; };
 		A994916923FB4CF500865738 /* TEnvironment.swift in Sources */ = {isa = PBXBuildFile; fileRef = A994916823FB4CF500865738 /* TEnvironment.swift */; };
 		A994916B23FB4D3200865738 /* TSession.swift in Sources */ = {isa = PBXBuildFile; fileRef = A994916A23FB4D3200865738 /* TSession.swift */; };
 		A994916D23FB54D200865738 /* TError.swift in Sources */ = {isa = PBXBuildFile; fileRef = A994916C23FB54D200865738 /* TError.swift */; };
@@ -154,6 +153,7 @@
 		A9DCED21262779350057359F /* ContentPreview.swift in Sources */ = {isa = PBXBuildFile; fileRef = A9DCED20262779350057359F /* ContentPreview.swift */; };
 		A9E33AA126444DC200B8D280 /* WeakSynchronizedSet.swift in Sources */ = {isa = PBXBuildFile; fileRef = A9E33AA026444DC200B8D280 /* WeakSynchronizedSet.swift */; };
 		A9EAB8E823DFC77E00874D2A /* DNS.swift in Sources */ = {isa = PBXBuildFile; fileRef = A9EAB8E723DFC77E00874D2A /* DNS.swift */; };
+		B483213C26BC53A900E5F7D3 /* Logging.swift in Sources */ = {isa = PBXBuildFile; fileRef = A994916623FB288E00865738 /* Logging.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -587,6 +587,7 @@
 			children = (
 				A943535323C932A10093CFA3 /* TidepoolKit.h */,
 				A943535423C932A10093CFA3 /* Info.plist */,
+				A994916623FB288E00865738 /* Logging.swift */,
 				A973CD2823D68FE000C44032 /* TAPI.swift */,
 				A994916823FB4CF500865738 /* TEnvironment.swift */,
 				A994916C23FB54D200865738 /* TError.swift */,
@@ -637,7 +638,6 @@
 			children = (
 				A943539823C932D20093CFA3 /* Info.plist */,
 				A943538C23C932D10093CFA3 /* AppDelegate.swift */,
-				A994916623FB288E00865738 /* Logging.swift */,
 				A943538E23C932D10093CFA3 /* RootTableViewController.swift */,
 				A943539323C932D20093CFA3 /* Assets.xcassets */,
 				A943539523C932D20093CFA3 /* LaunchScreen.storyboard */,
@@ -1134,6 +1134,7 @@
 				A9307642241224C700D1E376 /* TScheduledBasalDatum.swift in Sources */,
 				A930763E241224C700D1E376 /* TSuspendedBasalDatum.swift in Sources */,
 				A9116AD32405D81B00483021 /* JSONEncoder.swift in Sources */,
+				B483213C26BC53A900E5F7D3 /* Logging.swift in Sources */,
 				A994916D23FB54D200865738 /* TError.swift in Sources */,
 				A9307645241224C700D1E376 /* TPhysicalActivityDatum.swift in Sources */,
 				A9116ACF2405CC3300483021 /* LegacyResponse.swift in Sources */,
@@ -1248,7 +1249,6 @@
 				A9C9D2542400CC6500D66F16 /* UserDefaults.swift in Sources */,
 				A9C9D24F2400BFCC00D66F16 /* TextViewController.swift in Sources */,
 				A943538D23C932D10093CFA3 /* AppDelegate.swift in Sources */,
-				A994916723FB288E00865738 /* Logging.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

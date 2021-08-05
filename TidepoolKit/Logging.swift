@@ -1,24 +1,23 @@
 //
 //  Logging.swift
-//  TidepoolKit Example
+//  TidepoolKit
 //
 //  Created by Darin Krauss on 1/17/20.
 //  Copyright © 2020 Tidepool Project. All rights reserved.
 //
 
 import os.log
-import TidepoolKit
 
-class Logging: TLogging {
-    func debug(_ message: String, function: StaticString, file: StaticString, line: UInt) {
+public class Logging: TLogging {
+    public func debug(_ message: String, function: StaticString, file: StaticString, line: UInt) {
         os_log("DEBUG: %{public}@ %@", type: .debug, message, location(function: function, file: file, line: line))
     }
 
-    func info(_ message: String, function: StaticString, file: StaticString, line: UInt) {
+    public func info(_ message: String, function: StaticString, file: StaticString, line: UInt) {
         os_log("INFO: %{public}@ %@", type: .info, message, location(function: function, file: file, line: line))
     }
 
-    func error(_ message: String, function: StaticString, file: StaticString, line: UInt) {
+    public func error(_ message: String, function: StaticString, file: StaticString, line: UInt) {
         os_log("ERROR: %{public}@ %@", type: .error, message, location(function: function, file: file, line: line))
     }
 
