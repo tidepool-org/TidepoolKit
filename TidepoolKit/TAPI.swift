@@ -378,7 +378,7 @@ public class TAPI {
     ///   - completion: The completion function to invoke with any error.
     public func verifyDevice(deviceToken: Data, completion: @escaping (Result<Bool, TError>) -> Void) {
         guard session != nil else {
-            TSharedLogging.debug("session is missing")
+            TSharedLogging.info("session is missing")
             completion(.failure(.sessionMissing))
             return
         }
@@ -389,10 +389,10 @@ public class TAPI {
         performRequest(request) { (result: DecodableResult<VerifyDeviceResponseBody>) -> Void in
             switch result {
             case .failure(let error):
-                TSharedLogging.debug("verify device request failed. deviceToken:\(encodedDeviceToken), error:\(error)")
+                TSharedLogging.info("verify device request failed. deviceToken:\(encodedDeviceToken), error:\(error)")
                 completion(.failure(error))
             case .success(let response):
-                TSharedLogging.debug("verify device request succeeded. deviceToken:\(encodedDeviceToken), valid:\(response.valid)")
+                TSharedLogging.info("verify device request succeeded. deviceToken:\(encodedDeviceToken), valid:\(response.valid)")
                 completion(.success(response.valid))
             }
         }
