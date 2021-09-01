@@ -42,17 +42,17 @@ public protocol TLogging {
 public class TSharedLogging {
 
     /// A shared, global instance of TLogging.
-    public static var instance: TLogging = Logging()
+    public static var instance: TLogging?
 
     public static func debug(_ message: @autoclosure () -> String, function: StaticString = #function, file: StaticString = #file, line: UInt = #line) {
-        TSharedLogging.instance.debug(message(), function: function, file: file, line: line)
+        TSharedLogging.instance?.debug(message(), function: function, file: file, line: line)
     }
 
     public static func info(_ message: @autoclosure () -> String, function: StaticString = #function, file: StaticString = #file, line: UInt = #line) {
-        TSharedLogging.instance.info(message(), function: function, file: file, line: line)
+        TSharedLogging.instance?.info(message(), function: function, file: file, line: line)
     }
 
     public static func error(_ message: @autoclosure () -> String, function: StaticString = #function, file: StaticString = #file, line: UInt = #line) {
-        TSharedLogging.instance.error(message(), function: function, file: file, line: line)
+        TSharedLogging.instance?.error(message(), function: function, file: file, line: line)
     }
 }
