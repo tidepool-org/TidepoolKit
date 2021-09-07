@@ -206,6 +206,19 @@ public class TAPI {
         }
     }
 
+    // MARK: - Info
+
+    /// Get the supported version info for apps.
+    ///
+    /// - Parameters:
+    ///   - environment: The environment to check version info for.
+    ///   - completion: The completion function to invoke with any error.
+    public func getVersionInfo(environment: TEnvironment, completion: @escaping (Result<TInfo, TError>) -> Void) {
+        // Note: no session is needed
+        let request = createRequest(environment: environment, method: "GET", path: "/info")
+        performRequest(request, allowSessionRefresh: false, completion: completion)
+    }
+
     // MARK: - Profile
 
     /// Get the profile for the specified user id. If no user id is specified, then the session user id is used.

@@ -152,6 +152,66 @@ class TAPILoginTests: TAPITests {
     }
 }
 
+class TAPIInfoTests: TAPITests {
+
+    static let info = TInfo(versions: TInfo.TVersionInfo(loop: TInfo.TVersionInfo.TLoopVersionInfo(minimumSupported: "1.2.3", criticalUpdateNeeded: ["1.0.0", "1.1.0"])))
+    
+    override func setUp() {
+        super.setUp()
+
+        URLProtocolMock.handlers = [URLProtocolMock.Handler(validator: URLProtocolMock.Validator(url: "https://test.org/info", method: "GET"),
+                                                            success: URLProtocolMock.Success(statusCode: 200, body: TAPIInfoTests.info))]
+    }
+
+    func testNetworkError() {
+        setUpNetworkError()
+        guard case .failure(let error) = performRequest(), case .network(let networkError) = error else {
+            XCTFail()
+            return
+        }
+        XCTAssertNotNil(networkError)
+    }
+
+    func testRequestNotAuthenticated() {
+        setUpRequestNotAuthenticated()
+        guard case .failure(let error) = performRequest(), case .requestNotAuthenticated = error else {
+            XCTFail()
+            return
+        }
+    }
+
+    func testRequestNotAuthorized() {
+        setUpRequestNotAuthorized()
+        guard case .failure(let error) = performRequest(), case .requestNotAuthorized = error else {
+            XCTFail()
+            return
+        }
+    }
+
+    func testResponseMalformedJSON() {
+        setUpResponseMalformedJSON()
+        guard case .failure(let error) = performRequest(), case .responseMalformedJSON = error else {
+            XCTFail()
+            return
+        }
+    }
+
+    func testSuccess() {
+        guard case .success(let info) = performRequest() else {
+            XCTFail()
+            return
+        }
+        XCTAssertEqual(info, TAPIInfoTests.info)
+    }
+    
+    private func performRequest() -> Result<TInfo, TError>? {
+        let expectation = XCTestExpectationWithResult<TInfo, TError>()
+        api.getVersionInfo(environment: environment) { expectation.fulfill($0) }
+        XCTAssertNotEqual(XCTWaiter.wait(for: [expectation], timeout: 10), .timedOut)
+        return expectation.result
+    }
+}
+
 class TAPISessionTests: TAPITests {
     var session: TSession!
     var headers: [String: String]!
