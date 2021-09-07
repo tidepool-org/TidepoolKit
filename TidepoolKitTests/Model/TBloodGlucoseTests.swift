@@ -16,6 +16,18 @@ class TBloodGlucoseUnitsTests: XCTestCase {
     }
 }
 
+class TBloodGlucoseTrendTests: XCTestCase {
+    func testTrend() {
+        XCTAssertEqual(TBloodGlucose.Trend.constant.rawValue, "constant")
+        XCTAssertEqual(TBloodGlucose.Trend.slowFall.rawValue, "slowFall")
+        XCTAssertEqual(TBloodGlucose.Trend.slowRise.rawValue, "slowRise")
+        XCTAssertEqual(TBloodGlucose.Trend.moderateFall.rawValue, "moderateFall")
+        XCTAssertEqual(TBloodGlucose.Trend.moderateRise.rawValue, "moderateRise")
+        XCTAssertEqual(TBloodGlucose.Trend.rapidFall.rawValue, "rapidFall")
+        XCTAssertEqual(TBloodGlucose.Trend.rapidRise.rawValue, "rapidRise")
+    }
+}
+
 class TBloodGlucoseTargetTests: XCTestCase {
     static let target = TBloodGlucose.Target(target: 1.23)
     static let targetJSONDictionary: [String: Any] = [

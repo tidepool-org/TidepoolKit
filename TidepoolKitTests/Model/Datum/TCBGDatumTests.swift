@@ -10,18 +10,26 @@ import XCTest
 import TidepoolKit
 
 class TCBGDatumTests: XCTestCase {
-    static let cbg = TCBGDatum(time: Date.test, value: 1.23, units: .milligramsPerDeciliter)
+    static let cbg = TCBGDatum(time: Date.test,
+                               value: 1.23,
+                               units: .milligramsPerDeciliter,
+                               trend: .slowRise,
+                               trendRate: 1.1)
     static let cbgJSONDictionary: [String: Any] = [
         "type": "cbg",
         "time": Date.testJSONString,
         "value": 1.23,
-        "units": "mg/dL"
+        "units": "mg/dL",
+        "trend": "slowRise",
+        "trendRate": 1.1
     ]
     
     func testInitializer() {
         let cbg = TCBGDatumTests.cbg
         XCTAssertEqual(cbg.value, 1.23)
         XCTAssertEqual(cbg.units, .milligramsPerDeciliter)
+        XCTAssertEqual(cbg.trend, .slowRise)
+        XCTAssertEqual(cbg.trendRate, 1.1)
     }
     
     func testCodableAsJSON() {
@@ -31,6 +39,10 @@ class TCBGDatumTests: XCTestCase {
 
 extension TCBGDatum {
     func isEqual(to other: TCBGDatum) -> Bool {
-        return super.isEqual(to: other) && self.value == other.value && self.units == other.units
+        return super.isEqual(to: other) &&
+            self.value == other.value &&
+            self.units == other.units &&
+            self.trend == other.trend &&
+            self.trendRate == other.trendRate
     }
 }

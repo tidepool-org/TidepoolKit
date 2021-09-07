@@ -6,10 +6,22 @@
 //  Copyright © 2019 Tidepool Project. All rights reserved.
 //
 
+import Foundation
+
 public struct TBloodGlucose {
     public enum Units: String, Codable {
         case milligramsPerDeciliter = "mg/dL"
         case millimolesPerLiter = "mmol/L"
+    }
+
+    public enum Trend: String, Codable {
+        case constant
+        case slowFall
+        case slowRise
+        case moderateFall
+        case moderateRise
+        case rapidFall
+        case rapidRise
     }
 
     public struct Target: Codable, Equatable {
