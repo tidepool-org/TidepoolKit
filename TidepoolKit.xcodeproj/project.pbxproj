@@ -21,6 +21,7 @@
 		A9116AF32409D8C400483021 /* TDatum.swift in Sources */ = {isa = PBXBuildFile; fileRef = A9116AF12409D8C400483021 /* TDatum.swift */; };
 		A9116AF62409D8E000483021 /* DataResponse.swift in Sources */ = {isa = PBXBuildFile; fileRef = A9116AF52409D8E000483021 /* DataResponse.swift */; };
 		A918695426388E4A00532575 /* TPrescriptionClaim.swift in Sources */ = {isa = PBXBuildFile; fileRef = A918695326388E4A00532575 /* TPrescriptionClaim.swift */; };
+		A92621C526E6C2F6007DB99D /* TimeInterval.swift in Sources */ = {isa = PBXBuildFile; fileRef = A92621C426E6C2F6007DB99D /* TimeInterval.swift */; };
 		A9285746262B920E00AC3460 /* LoginSignupNavigationController.swift in Sources */ = {isa = PBXBuildFile; fileRef = A9285745262B920E00AC3460 /* LoginSignupNavigationController.swift */; };
 		A9285750262B923700AC3460 /* LoginSignupViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = A928574F262B923700AC3460 /* LoginSignupViewModel.swift */; };
 		A9285756262B926B00AC3460 /* LoginSignupView.swift in Sources */ = {isa = PBXBuildFile; fileRef = A9285755262B926B00AC3460 /* LoginSignupView.swift */; };
@@ -254,6 +255,7 @@
 		A9116AF12409D8C400483021 /* TDatum.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TDatum.swift; sourceTree = "<group>"; };
 		A9116AF52409D8E000483021 /* DataResponse.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = DataResponse.swift; sourceTree = "<group>"; };
 		A918695326388E4A00532575 /* TPrescriptionClaim.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TPrescriptionClaim.swift; sourceTree = "<group>"; };
+		A92621C426E6C2F6007DB99D /* TimeInterval.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TimeInterval.swift; sourceTree = "<group>"; };
 		A9285745262B920E00AC3460 /* LoginSignupNavigationController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LoginSignupNavigationController.swift; sourceTree = "<group>"; };
 		A928574F262B923700AC3460 /* LoginSignupViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LoginSignupViewModel.swift; sourceTree = "<group>"; };
 		A9285755262B926B00AC3460 /* LoginSignupView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LoginSignupView.swift; sourceTree = "<group>"; };
@@ -847,6 +849,7 @@
 				A98D55272410A50200EE62B5 /* Sample.swift */,
 				A9C9D2512400CC4300D66F16 /* UIAlertController.swift */,
 				A9C9D2532400CC6500D66F16 /* UserDefaults.swift */,
+				A92621C426E6C2F6007DB99D /* TimeInterval.swift */,
 			);
 			path = Extensions;
 			sourceTree = "<group>";
@@ -1251,6 +1254,7 @@
 				A9C9D2522400CC4300D66F16 /* UIAlertController.swift in Sources */,
 				A9C57C562400628800A5964D /* IdentifiableClass.swift in Sources */,
 				A994917223FB6C1100865738 /* StatusTableViewCell.swift in Sources */,
+				A92621C526E6C2F6007DB99D /* TimeInterval.swift in Sources */,
 				A9C57C5424005C3800A5964D /* LoadingTableViewCell.swift in Sources */,
 				A943538F23C932D10093CFA3 /* RootTableViewController.swift in Sources */,
 				A9C9D2562400CD7A00D66F16 /* UTF8TextFileActivityItem.swift in Sources */,

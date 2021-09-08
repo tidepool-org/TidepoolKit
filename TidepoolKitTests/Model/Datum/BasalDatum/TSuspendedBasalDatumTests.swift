@@ -11,8 +11,8 @@ import TidepoolKit
 
 class TSuspendedBasalDatumTests: XCTestCase {
     static let suspendedBasal = TSuspendedBasalDatum(time: Date.test,
-                                                     duration: 123456,
-                                                     expectedDuration: 234567,
+                                                     duration: 123.456,
+                                                     expectedDuration: 234.567,
                                                      suppressed: TTemporaryBasalDatumSuppressedTests.suppressed)
     static let suspendedBasalJSONDictionary: [String: Any] = [
         "type": "basal",
@@ -25,8 +25,8 @@ class TSuspendedBasalDatumTests: XCTestCase {
     
     func testInitializer() {
         let suspendedBasal = TSuspendedBasalDatumTests.suspendedBasal
-        XCTAssertEqual(suspendedBasal.duration, 123456)
-        XCTAssertEqual(suspendedBasal.expectedDuration, 234567)
+        XCTAssertEqual(suspendedBasal.duration, 123.456)
+        XCTAssertEqual(suspendedBasal.expectedDuration, 234.567)
         XCTAssertEqual(suspendedBasal.suppressed, TTemporaryBasalDatumSuppressedTests.suppressed)
     }
     

@@ -16,19 +16,19 @@ public class TTemporaryBasalDatum: TBasalDatum, Decodable {
     public var insulinFormulation: InsulinFormulation?
     public var suppressed: SuppressedBasal?
     
-    public init(time: Date, duration: Int, expectedDuration: Int? = nil, rate: Double, percent: Double? = nil, insulinFormulation: InsulinFormulation? = nil) {
+    public init(time: Date, duration: TimeInterval, expectedDuration: TimeInterval? = nil, rate: Double, percent: Double? = nil, insulinFormulation: InsulinFormulation? = nil) {
         self.rate = rate
         self.percent = percent
         self.insulinFormulation = insulinFormulation
         super.init(.temporary, time: time, duration: duration, expectedDuration: expectedDuration)
     }
 
-    public convenience init(time: Date, duration: Int, expectedDuration: Int? = nil, rate: Double, percent: Double? = nil, insulinFormulation: InsulinFormulation? = nil, suppressed: TAutomatedBasalDatum.Suppressed) {
+    public convenience init(time: Date, duration: TimeInterval, expectedDuration: TimeInterval? = nil, rate: Double, percent: Double? = nil, insulinFormulation: InsulinFormulation? = nil, suppressed: TAutomatedBasalDatum.Suppressed) {
         self.init(time: time, duration: duration, expectedDuration: expectedDuration, rate: rate, percent: percent, insulinFormulation: insulinFormulation)
         self.suppressed = suppressed
     }
 
-    public convenience init(time: Date, duration: Int, expectedDuration: Int? = nil, rate: Double, percent: Double? = nil, insulinFormulation: InsulinFormulation? = nil, suppressed: TScheduledBasalDatum.Suppressed) {
+    public convenience init(time: Date, duration: TimeInterval, expectedDuration: TimeInterval? = nil, rate: Double, percent: Double? = nil, insulinFormulation: InsulinFormulation? = nil, suppressed: TScheduledBasalDatum.Suppressed) {
         self.init(time: time, duration: duration, expectedDuration: expectedDuration, rate: rate, percent: percent, insulinFormulation: insulinFormulation)
         self.suppressed = suppressed
     }

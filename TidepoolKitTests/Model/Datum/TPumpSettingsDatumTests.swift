@@ -47,7 +47,7 @@ class TPumpSettingsDatumTests: XCTestCase {
         ],
         manufacturers: ["Alfa", "Romeo"],
         model: "Spider",
-        scheduleTimeZoneOffset: -480,
+        scheduleTimeZoneOffset: -28800,
         serialNumber: "1234567890",
         units: TPumpSettingsDatumUnitsTests.units
     )
@@ -131,7 +131,7 @@ class TPumpSettingsDatumTests: XCTestCase {
         ])
         XCTAssertEqual(pumpSettings.manufacturers, ["Alfa", "Romeo"])
         XCTAssertEqual(pumpSettings.model, "Spider")
-        XCTAssertEqual(pumpSettings.scheduleTimeZoneOffset, -480)
+        XCTAssertEqual(pumpSettings.scheduleTimeZoneOffset, -28800)
         XCTAssertEqual(pumpSettings.serialNumber, "1234567890")
         XCTAssertEqual(pumpSettings.units, TPumpSettingsDatumUnitsTests.units)
     }
@@ -211,7 +211,7 @@ class TPumpSettingsDatumBasalTemporaryTemporaryTypeTests: XCTestCase {
 }
 
 class TPumpSettingsDatumBasalRateStartTests: XCTestCase {
-    static let basalRateStart = TPumpSettingsDatum.BasalRateStart(start: 12345678, rate: 45.67)
+    static let basalRateStart = TPumpSettingsDatum.BasalRateStart(start: 12345.678, rate: 45.67)
     static let basalRateStartJSONDictionary: [String: Any] = [
         "start": 12345678,
         "rate": 45.67
@@ -219,7 +219,7 @@ class TPumpSettingsDatumBasalRateStartTests: XCTestCase {
     
     func testInitializer() {
         let basalRateStart = TPumpSettingsDatumBasalRateStartTests.basalRateStart
-        XCTAssertEqual(basalRateStart.start, 12345678)
+        XCTAssertEqual(basalRateStart.start, 12345.678)
         XCTAssertEqual(basalRateStart.rate, 45.67)
     }
     
@@ -331,7 +331,7 @@ class TPumpSettingsDatumBolusExtendedTests: XCTestCase {
 }
 
 class TPumpSettingsDatumCarbohydrateRatioStartTests: XCTestCase {
-    static let carbohydrateRatioStart = TPumpSettingsDatum.CarbohydrateRatioStart(start: 12345678, amount: 45.67)
+    static let carbohydrateRatioStart = TPumpSettingsDatum.CarbohydrateRatioStart(start: 12345.678, amount: 45.67)
     static let carbohydrateRatioStartJSONDictionary: [String: Any] = [
         "start": 12345678,
         "amount": 45.67
@@ -339,7 +339,7 @@ class TPumpSettingsDatumCarbohydrateRatioStartTests: XCTestCase {
     
     func testInitializer() {
         let carbohydrateRatioStart = TPumpSettingsDatumCarbohydrateRatioStartTests.carbohydrateRatioStart
-        XCTAssertEqual(carbohydrateRatioStart.start, 12345678)
+        XCTAssertEqual(carbohydrateRatioStart.start, 12345.678)
         XCTAssertEqual(carbohydrateRatioStart.amount, 45.67)
     }
     
@@ -426,7 +426,7 @@ class TPumpSettingsDatumInsulinModelModelTypeTests: XCTestCase {
 }
 
 class TPumpSettingsDatumInsulinSensitivityStartTests: XCTestCase {
-    static let insulinSensitivityStart = TPumpSettingsDatum.InsulinSensitivityStart(start: 12345678, amount: 45.67)
+    static let insulinSensitivityStart = TPumpSettingsDatum.InsulinSensitivityStart(start: 12345.678, amount: 45.67)
     static let insulinSensitivityStartJSONDictionary: [String: Any] = [
         "start": 12345678,
         "amount": 45.67
@@ -434,7 +434,7 @@ class TPumpSettingsDatumInsulinSensitivityStartTests: XCTestCase {
     
     func testInitializer() {
         let insulinSensitivityStart = TPumpSettingsDatumInsulinSensitivityStartTests.insulinSensitivityStart
-        XCTAssertEqual(insulinSensitivityStart.start, 12345678)
+        XCTAssertEqual(insulinSensitivityStart.start, 12345.678)
         XCTAssertEqual(insulinSensitivityStart.amount, 45.67)
     }
     

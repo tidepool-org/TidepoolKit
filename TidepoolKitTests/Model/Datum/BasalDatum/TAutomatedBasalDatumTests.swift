@@ -11,8 +11,8 @@ import TidepoolKit
 
 class TAutomatedBasalDatumTests: XCTestCase {
     static let automatedBasal = TAutomatedBasalDatum(time: Date.test,
-                                                     duration: 123456,
-                                                     expectedDuration: 234567,
+                                                     duration: 123.456,
+                                                     expectedDuration: 234.567,
                                                      rate: 1.23,
                                                      scheduleName: "One",
                                                      insulinFormulation: TInsulinDatumFormulationTests.formulation)
@@ -29,8 +29,8 @@ class TAutomatedBasalDatumTests: XCTestCase {
     
     func testInitializer() {
         let automatedBasal = TAutomatedBasalDatumTests.automatedBasal
-        XCTAssertEqual(automatedBasal.duration, 123456)
-        XCTAssertEqual(automatedBasal.expectedDuration, 234567)
+        XCTAssertEqual(automatedBasal.duration, 123.456)
+        XCTAssertEqual(automatedBasal.expectedDuration, 234.567)
         XCTAssertEqual(automatedBasal.rate, 1.23)
         XCTAssertEqual(automatedBasal.scheduleName, "One")
         XCTAssertEqual(automatedBasal.insulinFormulation, TInsulinDatumFormulationTests.formulation)

@@ -209,12 +209,12 @@ class TCGMSettingsDatumAlertsSnoozeUnitsTests: XCTestCase {
 }
 
 class TCGMSettingsDatumScheduledAlertTests: XCTestCase {
-    static let scheduledAlert = TCGMSettingsDatum.ScheduledAlert(name: "Test", days: ["sunday", "monday"], start: 123, end: 234, alerts: TCGMSettingsDatumAlertsTests.alerts)
+    static let scheduledAlert = TCGMSettingsDatum.ScheduledAlert(name: "Test", days: ["sunday", "monday"], start: 123.456, end: 234.567, alerts: TCGMSettingsDatumAlertsTests.alerts)
     static let scheduledAlertJSONDictionary: [String: Any] = [
         "name": "Test",
         "days": ["sunday", "monday"],
-        "start": 123,
-        "end": 234,
+        "start": 123456,
+        "end": 234567,
         "alerts": TCGMSettingsDatumAlertsTests.alertsJSONDictionary
     ]
     
@@ -222,8 +222,8 @@ class TCGMSettingsDatumScheduledAlertTests: XCTestCase {
         let scheduledAlert = TCGMSettingsDatumScheduledAlertTests.scheduledAlert
         XCTAssertEqual(scheduledAlert.name, "Test")
         XCTAssertEqual(scheduledAlert.days, ["sunday", "monday"])
-        XCTAssertEqual(scheduledAlert.start, 123)
-        XCTAssertEqual(scheduledAlert.end, 234)
+        XCTAssertEqual(scheduledAlert.start, 123.456)
+        XCTAssertEqual(scheduledAlert.end, 234.567)
         XCTAssertEqual(scheduledAlert.alerts, TCGMSettingsDatumAlertsTests.alerts)
     }
     

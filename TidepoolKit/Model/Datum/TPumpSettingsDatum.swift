@@ -31,7 +31,7 @@ public class TPumpSettingsDatum: TDatum, Decodable {
     public var insulinSensitivitySchedules: [String: [InsulinSensitivityStart]]?
     public var manufacturers: [String]?
     public var model: String?
-    public var scheduleTimeZoneOffset: Int?
+    public var scheduleTimeZoneOffset: TimeInterval?
     public var serialNumber: String?
     public var units: Units?
     
@@ -55,7 +55,7 @@ public class TPumpSettingsDatum: TDatum, Decodable {
                 insulinSensitivitySchedules: [String: [InsulinSensitivityStart]]? = nil,
                 manufacturers: [String]? = nil,
                 model: String? = nil,
-                scheduleTimeZoneOffset: Int? = nil,
+                scheduleTimeZoneOffset: TimeInterval? = nil,
                 serialNumber: String? = nil,
                 units: Units? = nil) {
         self.activeScheduleName = activeScheduleName
@@ -104,7 +104,7 @@ public class TPumpSettingsDatum: TDatum, Decodable {
         self.insulinSensitivitySchedules = try container.decodeIfPresent([String: [InsulinSensitivityStart]].self, forKey: .insulinSensitivitySchedules)
         self.manufacturers = try container.decodeIfPresent([String].self, forKey: .manufacturers)
         self.model = try container.decodeIfPresent(String.self, forKey: .model)
-        self.scheduleTimeZoneOffset = try container.decodeIfPresent(Int.self, forKey: .scheduleTimeZoneOffset)
+        self.scheduleTimeZoneOffset = try container.decodeIfPresent(Int.self, forKey: .scheduleTimeZoneOffset).map { .minutes($0) }
         self.serialNumber = try container.decodeIfPresent(String.self, forKey: .serialNumber)
         self.units = try container.decodeIfPresent(Units.self, forKey: .units)
         try super.init(.pumpSettings, from: decoder)
@@ -131,7 +131,7 @@ public class TPumpSettingsDatum: TDatum, Decodable {
         try container.encodeIfPresent(insulinSensitivitySchedules, forKey: .insulinSensitivitySchedules)
         try container.encodeIfPresent(manufacturers, forKey: .manufacturers)
         try container.encodeIfPresent(model, forKey: .model)
-        try container.encodeIfPresent(scheduleTimeZoneOffset, forKey: .scheduleTimeZoneOffset)
+        try container.encodeIfPresent(scheduleTimeZoneOffset.map { Int($0.minutes) }, forKey: .scheduleTimeZoneOffset)
         try container.encodeIfPresent(serialNumber, forKey: .serialNumber)
         try container.encodeIfPresent(units, forKey: .units)
         try super.encode(to: encoder)
@@ -174,12 +174,29 @@ public class TPumpSettingsDatum: TDatum, Decodable {
     }
     
     public struct BasalRateStart: Codable, Equatable {
-        public var start: Int?
+        public var start: TimeInterval?
         public var rate: Double?
         
-        public init(start: Int, rate: Double) {
+        public init(start: TimeInterval, rate: Double) {
             self.start = start
             self.rate = rate
+        }
+
+        public init(from decoder: Decoder) throws {
+            let container = try decoder.container(keyedBy: CodingKeys.self)
+            self.start = try container.decodeIfPresent(Int.self, forKey: .start).map { .milliseconds($0) }
+            self.rate = try container.decodeIfPresent(Double.self, forKey: .rate)
+        }
+
+        public func encode(to encoder: Encoder) throws {
+            var container = encoder.container(keyedBy: CodingKeys.self)
+            try container.encodeIfPresent(start.map { Int($0.milliseconds) }, forKey: .start)
+            try container.encodeIfPresent(rate, forKey: .rate)
+        }
+
+        private enum CodingKeys: String, CodingKey {
+            case start
+            case rate
         }
     }
 
@@ -242,12 +259,29 @@ public class TPumpSettingsDatum: TDatum, Decodable {
     }
     
     public struct CarbohydrateRatioStart: Codable, Equatable {
-        public var start: Int?
+        public var start: TimeInterval?
         public var amount: Double?
         
-        public init(start: Int, amount: Double) {
+        public init(start: TimeInterval, amount: Double) {
             self.start = start
             self.amount = amount
+        }
+
+        public init(from decoder: Decoder) throws {
+            let container = try decoder.container(keyedBy: CodingKeys.self)
+            self.start = try container.decodeIfPresent(Int.self, forKey: .start).map { .milliseconds($0) }
+            self.amount = try container.decodeIfPresent(Double.self, forKey: .amount)
+        }
+
+        public func encode(to encoder: Encoder) throws {
+            var container = encoder.container(keyedBy: CodingKeys.self)
+            try container.encodeIfPresent(start.map { Int($0.milliseconds) }, forKey: .start)
+            try container.encodeIfPresent(amount, forKey: .amount)
+        }
+
+        private enum CodingKeys: String, CodingKey {
+            case start
+            case amount
         }
     }
     
@@ -280,24 +314,64 @@ public class TPumpSettingsDatum: TDatum, Decodable {
 
         public var modelType: ModelType?
         public var modelTypeOther: String?
-        public var actionDuration: Int?
-        public var actionPeakOffset: Int?
+        public var actionDuration: TimeInterval?
+        public var actionPeakOffset: TimeInterval?
 
-        public init(modelType: ModelType? = nil, modelTypeOther: String? = nil, actionDuration: Int? = nil, actionPeakOffset: Int? = nil) {
+        public init(modelType: ModelType? = nil, modelTypeOther: String? = nil, actionDuration: TimeInterval? = nil, actionPeakOffset: TimeInterval? = nil) {
             self.modelType = modelType
             self.modelTypeOther = modelTypeOther
             self.actionDuration = actionDuration
             self.actionPeakOffset = actionPeakOffset
         }
+
+        public init(from decoder: Decoder) throws {
+            let container = try decoder.container(keyedBy: CodingKeys.self)
+            self.modelType = try container.decodeIfPresent(ModelType.self, forKey: .modelType)
+            self.modelTypeOther = try container.decodeIfPresent(String.self, forKey: .modelTypeOther)
+            self.actionDuration = try container.decodeIfPresent(Int.self, forKey: .actionDuration).map { .seconds($0) }
+            self.actionPeakOffset = try container.decodeIfPresent(Int.self, forKey: .actionPeakOffset).map { .seconds($0) }
+        }
+
+        public func encode(to encoder: Encoder) throws {
+            var container = encoder.container(keyedBy: CodingKeys.self)
+            try container.encodeIfPresent(modelType, forKey: .modelType)
+            try container.encodeIfPresent(modelTypeOther, forKey: .modelTypeOther)
+            try container.encodeIfPresent(actionDuration.map { Int($0.seconds) }, forKey: .actionDuration)
+            try container.encodeIfPresent(actionPeakOffset.map { Int($0.seconds) }, forKey: .actionPeakOffset)
+        }
+
+        private enum CodingKeys: String, CodingKey {
+            case modelType
+            case modelTypeOther
+            case actionDuration
+            case actionPeakOffset
+        }
     }
     
     public struct InsulinSensitivityStart: Codable, Equatable {
-        public var start: Int?
+        public var start: TimeInterval?
         public var amount: Double?
         
-        public init(start: Int, amount: Double) {
+        public init(start: TimeInterval, amount: Double) {
             self.start = start
             self.amount = amount
+        }
+
+        public init(from decoder: Decoder) throws {
+            let container = try decoder.container(keyedBy: CodingKeys.self)
+            self.start = try container.decodeIfPresent(Int.self, forKey: .start).map { .milliseconds($0) }
+            self.amount = try container.decodeIfPresent(Double.self, forKey: .amount)
+        }
+
+        public func encode(to encoder: Encoder) throws {
+            var container = encoder.container(keyedBy: CodingKeys.self)
+            try container.encodeIfPresent(start.map { Int($0.milliseconds) }, forKey: .start)
+            try container.encodeIfPresent(amount, forKey: .amount)
+        }
+
+        private enum CodingKeys: String, CodingKey {
+            case start
+            case amount
         }
     }
 
