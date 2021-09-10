@@ -154,7 +154,7 @@ class TAPILoginTests: TAPITests {
 
 class TAPIInfoTests: TAPITests {
 
-    static let info = TInfo(versions: TInfo.TVersionInfo(loop: TInfo.TVersionInfo.TLoopVersionInfo(minimumSupported: "1.2.3", criticalUpdateNeeded: ["1.0.0", "1.1.0"])))
+    static let info = TInfo(versions: TInfo.Versions(loop: TInfo.Versions.Loop(minimumSupported: "1.2.3", criticalUpdateNeeded: ["1.0.0", "1.1.0"])))
     
     override func setUp() {
         super.setUp()
@@ -206,7 +206,7 @@ class TAPIInfoTests: TAPITests {
     
     private func performRequest() -> Result<TInfo, TError>? {
         let expectation = XCTestExpectationWithResult<TInfo, TError>()
-        api.getVersionInfo(environment: environment) { expectation.fulfill($0) }
+        api.getInfo(environment: environment) { expectation.fulfill($0) }
         XCTAssertNotEqual(XCTWaiter.wait(for: [expectation], timeout: 10), .timedOut)
         return expectation.result
     }

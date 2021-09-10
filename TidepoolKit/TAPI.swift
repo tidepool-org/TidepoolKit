@@ -208,14 +208,14 @@ public class TAPI {
 
     // MARK: - Info
 
-    /// Get the supported version info for apps.
+    /// Get the info.
     ///
     /// - Parameters:
-    ///   - environment: The environment to check version info for.
+    ///   - environment: The environment to get the info for.
     ///   - completion: The completion function to invoke with any error.
-    public func getVersionInfo(environment: TEnvironment, completion: @escaping (Result<TInfo, TError>) -> Void) {
+    public func getInfo(environment: TEnvironment? = nil, completion: @escaping (Result<TInfo, TError>) -> Void) {
         // Note: no session is needed
-        let request = createRequest(environment: environment, method: "GET", path: "/info")
+        let request = createRequest(environment: environment ?? environments.first!, method: "GET", path: "/info")
         performRequest(request, allowSessionRefresh: false, completion: completion)
     }
 
