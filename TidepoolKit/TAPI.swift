@@ -215,7 +215,7 @@ public class TAPI {
     ///   - completion: The completion function to invoke with any error.
     public func getInfo(environment: TEnvironment? = nil, completion: @escaping (Result<TInfo, TError>) -> Void) {
         // Note: no session is needed
-        let request = createRequest(environment: environment ?? environments.first!, method: "GET", path: "/info")
+        let request = createRequest(environment: environment ?? session?.environment ?? environments.first!, method: "GET", path: "/info")
         performRequest(request, allowSessionRefresh: false, completion: completion)
     }
 
