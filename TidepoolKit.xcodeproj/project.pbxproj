@@ -7,6 +7,8 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		1D63DE9E26E8095E00F46FA5 /* TInfo.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1D63DE9D26E8095E00F46FA5 /* TInfo.swift */; };
+		1D63DEA026E8209200F46FA5 /* TInfoTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1D63DE9F26E8209200F46FA5 /* TInfoTests.swift */; };
 		A903670523D939AE009BD8C5 /* TextButtonTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = A903670423D939AE009BD8C5 /* TextButtonTableViewCell.swift */; };
 		A9116ACD2405B7F300483021 /* Bundle.swift in Sources */ = {isa = PBXBuildFile; fileRef = A9116ACC2405B7F300483021 /* Bundle.swift */; };
 		A9116ACF2405CC3300483021 /* LegacyResponse.swift in Sources */ = {isa = PBXBuildFile; fileRef = A9116ACE2405CC3300483021 /* LegacyResponse.swift */; };
@@ -107,7 +109,7 @@
 		A973CD3523D6916C00C44032 /* TidepoolKitUI.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = A943536F23C932BF0093CFA3 /* TidepoolKitUI.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
 		A98144602632236C003CE039 /* TPrescription.swift in Sources */ = {isa = PBXBuildFile; fileRef = A981445F2632236C003CE039 /* TPrescription.swift */; };
 		A98780B8240A0D5E0007D5E1 /* TOriginTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = A9878093240A0D5E0007D5E1 /* TOriginTests.swift */; };
-		A98780B9240A0D5E0007D5E1 /* TAsssociationTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = A9878094240A0D5E0007D5E1 /* TAsssociationTests.swift */; };
+		A98780B9240A0D5E0007D5E1 /* TAssociationTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = A9878094240A0D5E0007D5E1 /* TAssociationTests.swift */; };
 		A98780BA240A0D5E0007D5E1 /* TBloodGlucoseTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = A9878095240A0D5E0007D5E1 /* TBloodGlucoseTests.swift */; };
 		A98780BB240A0D5E0007D5E1 /* TLocationTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = A9878096240A0D5E0007D5E1 /* TLocationTests.swift */; };
 		A98780BD240A0D5E0007D5E1 /* TFoodDatumTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = A9878099240A0D5E0007D5E1 /* TFoodDatumTests.swift */; };
@@ -239,6 +241,8 @@
 /* End PBXCopyFilesBuildPhase section */
 
 /* Begin PBXFileReference section */
+		1D63DE9D26E8095E00F46FA5 /* TInfo.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TInfo.swift; sourceTree = "<group>"; };
+		1D63DE9F26E8209200F46FA5 /* TInfoTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TInfoTests.swift; sourceTree = "<group>"; };
 		A903670423D939AE009BD8C5 /* TextButtonTableViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TextButtonTableViewCell.swift; sourceTree = "<group>"; };
 		A9116ACC2405B7F300483021 /* Bundle.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Bundle.swift; sourceTree = "<group>"; };
 		A9116ACE2405CC3300483021 /* LegacyResponse.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LegacyResponse.swift; sourceTree = "<group>"; };
@@ -342,7 +346,7 @@
 		A973CD2823D68FE000C44032 /* TAPI.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TAPI.swift; sourceTree = "<group>"; };
 		A981445F2632236C003CE039 /* TPrescription.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TPrescription.swift; sourceTree = "<group>"; };
 		A9878093240A0D5E0007D5E1 /* TOriginTests.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TOriginTests.swift; sourceTree = "<group>"; };
-		A9878094240A0D5E0007D5E1 /* TAsssociationTests.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TAsssociationTests.swift; sourceTree = "<group>"; };
+		A9878094240A0D5E0007D5E1 /* TAssociationTests.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TAssociationTests.swift; sourceTree = "<group>"; };
 		A9878095240A0D5E0007D5E1 /* TBloodGlucoseTests.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TBloodGlucoseTests.swift; sourceTree = "<group>"; };
 		A9878096240A0D5E0007D5E1 /* TLocationTests.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TLocationTests.swift; sourceTree = "<group>"; };
 		A9878099240A0D5E0007D5E1 /* TFoodDatumTests.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TFoodDatumTests.swift; sourceTree = "<group>"; };
@@ -690,10 +694,11 @@
 		A9878092240A0D5E0007D5E1 /* Model */ = {
 			isa = PBXGroup;
 			children = (
-				A9878094240A0D5E0007D5E1 /* TAsssociationTests.swift */,
+				A9878094240A0D5E0007D5E1 /* TAssociationTests.swift */,
 				A9878095240A0D5E0007D5E1 /* TBloodGlucoseTests.swift */,
 				A94300CD2416F0F100DDFAD4 /* TCarbohydrateTests.swift */,
 				A9BF06D5240EF5BB005D5337 /* TDataSetTests.swift */,
+				1D63DE9F26E8209200F46FA5 /* TInfoTests.swift */,
 				A94300CF2416F0F900DDFAD4 /* TInsulinTests.swift */,
 				A9878096240A0D5E0007D5E1 /* TLocationTests.swift */,
 				A9878093240A0D5E0007D5E1 /* TOriginTests.swift */,
@@ -792,6 +797,7 @@
 				A94300CB2416E63A00DDFAD4 /* TCarbohydrate.swift */,
 				A9116AE024083C1100483021 /* TDataSet.swift */,
 				A9BF06CF240EE47D005D5337 /* TDictionary.swift */,
+				1D63DE9D26E8095E00F46FA5 /* TInfo.swift */,
 				A94300C92416E63000DDFAD4 /* TInsulin.swift */,
 				A9C57BFD23FF3BFD00A5964D /* TLocation.swift */,
 				A9C57BFF23FF3BFD00A5964D /* TOrigin.swift */,
@@ -1141,6 +1147,7 @@
 				A9307645241224C700D1E376 /* TPhysicalActivityDatum.swift in Sources */,
 				A9116ACF2405CC3300483021 /* LegacyResponse.swift in Sources */,
 				A9C57C2A23FF3BFD00A5964D /* TOrigin.swift in Sources */,
+				1D63DE9E26E8095E00F46FA5 /* TInfo.swift in Sources */,
 				A94D7D4523E243780087A9C0 /* UnfairLock.swift in Sources */,
 				A9307631241224C700D1E376 /* TCGMSettingsDatum.swift in Sources */,
 				A930762D241224C700D1E376 /* TBloodKetoneDatum.swift in Sources */,
@@ -1194,7 +1201,7 @@
 				A9307666241224F800D1E376 /* TReportedStateDatumTests.swift in Sources */,
 				A93F59FE240D9C1800299E75 /* XCTest.swift in Sources */,
 				A9307665241224F800D1E376 /* TBloodKetoneDatumTests.swift in Sources */,
-				A98780B9240A0D5E0007D5E1 /* TAsssociationTests.swift in Sources */,
+				A98780B9240A0D5E0007D5E1 /* TAssociationTests.swift in Sources */,
 				A929A90D2411DDB300742B08 /* URLProtocolMock.swift in Sources */,
 				A94300CE2416F0F100DDFAD4 /* TCarbohydrateTests.swift in Sources */,
 				A98780B8240A0D5E0007D5E1 /* TOriginTests.swift in Sources */,
@@ -1206,6 +1213,7 @@
 				A951B30E263C6B8900926CB4 /* TPrescriptionClaimTests.swift in Sources */,
 				A930766F241224F800D1E376 /* TSuspendedBasalDatumTests.swift in Sources */,
 				A9307677241224F800D1E376 /* TPhysicalActivityDatumTests.swift in Sources */,
+				1D63DEA026E8209200F46FA5 /* TInfoTests.swift in Sources */,
 				A98780BD240A0D5E0007D5E1 /* TFoodDatumTests.swift in Sources */,
 				A98780BB240A0D5E0007D5E1 /* TLocationTests.swift in Sources */,
 				A9BF06DA240F0A20005D5337 /* TSessionTests.swift in Sources */,

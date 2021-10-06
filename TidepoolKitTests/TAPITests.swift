@@ -152,6 +152,91 @@ class TAPILoginTests: TAPITests {
     }
 }
 
+class TAPIInfoTests: TAPITests {
+
+    static let info = TInfo(versions: TInfo.Versions(loop: TInfo.Versions.Loop(minimumSupported: "1.2.3", criticalUpdateNeeded: ["1.0.0", "1.1.0"])))
+    
+    override func setUp() {
+        super.setUp()
+
+        URLProtocolMock.handlers = [URLProtocolMock.Handler(validator: URLProtocolMock.Validator(url: "https://test.org/info", method: "GET"),
+                                                            success: URLProtocolMock.Success(statusCode: 200, body: TAPIInfoTests.info))]
+    }
+
+    func testNetworkError() {
+        setUpNetworkError()
+        guard case .failure(let error) = performRequest(environment), case .network(let networkError) = error else {
+            XCTFail()
+            return
+        }
+        XCTAssertNotNil(networkError)
+    }
+
+    func testRequestNotAuthenticated() {
+        setUpRequestNotAuthenticated()
+        guard case .failure(let error) = performRequest(environment), case .requestNotAuthenticated = error else {
+            XCTFail()
+            return
+        }
+    }
+
+    func testRequestNotAuthorized() {
+        setUpRequestNotAuthorized()
+        guard case .failure(let error) = performRequest(environment), case .requestNotAuthorized = error else {
+            XCTFail()
+            return
+        }
+    }
+
+    func testResponseMalformedJSON() {
+        setUpResponseMalformedJSON()
+        guard case .failure(let error) = performRequest(environment), case .responseMalformedJSON = error else {
+            XCTFail()
+            return
+        }
+    }
+
+    func testSuccess() {
+        guard case .success(let info) = performRequest(environment) else {
+            XCTFail()
+            return
+        }
+        XCTAssertEqual(info, TAPIInfoTests.info)
+    }
+
+    func testSuccessUsingSessionEnvironment() {
+        let env = TEnvironment(host: "foo.bar.baz", port: 123)
+        let session = TSession(environment: env, authenticationToken: authenticationToken, userId: userId)
+        api.session = session
+        URLProtocolMock.handlers = [URLProtocolMock.Handler(validator: URLProtocolMock.Validator(url: "http://foo.bar.baz:123/info", method: "GET"),
+                                                            success: URLProtocolMock.Success(statusCode: 200, body: TAPIInfoTests.info))]
+
+        guard case .success(let info) = performRequest(nil) else {
+            XCTFail()
+            return
+        }
+        XCTAssertEqual(info, TAPIInfoTests.info)
+    }
+    
+    func testSuccessUsingDefaultEnvironment() {
+        URLProtocolMock.handlers = [URLProtocolMock.Handler(validator: URLProtocolMock.Validator(url: "https://app.tidepool.org/info", method: "GET"),
+                                                            success: URLProtocolMock.Success(statusCode: 200, body: TAPIInfoTests.info))]
+
+        guard case .success(let info) = performRequest(nil) else {
+            XCTFail()
+            return
+        }
+        XCTAssertEqual(info, TAPIInfoTests.info)
+    }
+    
+    private func performRequest(_ environment: TEnvironment?) -> Result<TInfo, TError>? {
+        let expectation = XCTestExpectationWithResult<TInfo, TError>()
+        api.getInfo(environment: environment) { expectation.fulfill($0) }
+        XCTAssertNotEqual(XCTWaiter.wait(for: [expectation], timeout: 10), .timedOut)
+        return expectation.result
+    }
+}
+
 class TAPISessionTests: TAPITests {
     var session: TSession!
     var headers: [String: String]!
