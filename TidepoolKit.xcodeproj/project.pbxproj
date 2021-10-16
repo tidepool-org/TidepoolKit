@@ -9,6 +9,7 @@
 /* Begin PBXBuildFile section */
 		1D63DE9E26E8095E00F46FA5 /* TInfo.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1D63DE9D26E8095E00F46FA5 /* TInfo.swift */; };
 		1D63DEA026E8209200F46FA5 /* TInfoTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1D63DE9F26E8209200F46FA5 /* TInfoTests.swift */; };
+		1D63F486271A456700CC065D /* UserDefaults.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1D63F485271A456700CC065D /* UserDefaults.swift */; };
 		A903670523D939AE009BD8C5 /* TextButtonTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = A903670423D939AE009BD8C5 /* TextButtonTableViewCell.swift */; };
 		A9116ACD2405B7F300483021 /* Bundle.swift in Sources */ = {isa = PBXBuildFile; fileRef = A9116ACC2405B7F300483021 /* Bundle.swift */; };
 		A9116ACF2405CC3300483021 /* LegacyResponse.swift in Sources */ = {isa = PBXBuildFile; fileRef = A9116ACE2405CC3300483021 /* LegacyResponse.swift */; };
@@ -243,6 +244,7 @@
 /* Begin PBXFileReference section */
 		1D63DE9D26E8095E00F46FA5 /* TInfo.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TInfo.swift; sourceTree = "<group>"; };
 		1D63DE9F26E8209200F46FA5 /* TInfoTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TInfoTests.swift; sourceTree = "<group>"; };
+		1D63F485271A456700CC065D /* UserDefaults.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UserDefaults.swift; sourceTree = "<group>"; };
 		A903670423D939AE009BD8C5 /* TextButtonTableViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TextButtonTableViewCell.swift; sourceTree = "<group>"; };
 		A9116ACC2405B7F300483021 /* Bundle.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Bundle.swift; sourceTree = "<group>"; };
 		A9116ACE2405CC3300483021 /* LegacyResponse.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LegacyResponse.swift; sourceTree = "<group>"; };
@@ -767,6 +769,7 @@
 				A994917923FE15CE00865738 /* HTTPURLResponse.swift */,
 				A994917F23FE1AD500865738 /* ProcessInfo.swift */,
 				A9116AD72406012600483021 /* TimeInterval.swift */,
+				1D63F485271A456700CC065D /* UserDefaults.swift */,
 			);
 			path = Extensions;
 			sourceTree = "<group>";
@@ -1152,6 +1155,7 @@
 				A9307631241224C700D1E376 /* TCGMSettingsDatum.swift in Sources */,
 				A930762D241224C700D1E376 /* TBloodKetoneDatum.swift in Sources */,
 				A9307643241224C700D1E376 /* TWaterDatum.swift in Sources */,
+				1D63F486271A456700CC065D /* UserDefaults.swift in Sources */,
 				A973CD2923D68FE000C44032 /* TAPI.swift in Sources */,
 				A9307633241224C700D1E376 /* TReservoirChangeDeviceEventDatum.swift in Sources */,
 				A9E33AA126444DC200B8D280 /* WeakSynchronizedSet.swift in Sources */,

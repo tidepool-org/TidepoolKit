@@ -30,5 +30,5 @@ extension Bundle {
 
     var bundleVersion: String? { string(forInfoDictionaryKey: "CFBundleVersion") }
 
-    private func string(forInfoDictionaryKey key: String) -> String? { object(forInfoDictionaryKey: key) as? String }
+    func string(forInfoDictionaryKey key: String) -> String? { object(forInfoDictionaryKey: key) as? String }
 }

@@ -25,6 +25,17 @@ public class TAPI {
     /// environments discovered from the latest DNS SRV record lookup. When an instance of TAPI is created it will automatically
     /// perform a DNS SRV record lookup in the background. A client should generally only have one instance of TAPI.
     public var environments: [TEnvironment] { environmentsLocked.value }
+    
+    /// The default environment may come from a configuration from the host app's appGroup.  Otherwise, it defaults to the first environment.
+    /// See also the UserDefaults extension.
+    public var defaultEnvironment: TEnvironment? {
+        get {
+            UserDefaults.appGroup?.defaultEnvironment ?? environments.first
+        }
+        set {
+            UserDefaults.appGroup?.defaultEnvironment = newValue
+        }
+    }
 
     /// The URLSessionConfiguration used for all requests. The default is typically acceptable for most purposes. Any changes
     /// will only apply to subsequent requests.
@@ -215,7 +226,7 @@ public class TAPI {
     ///   - completion: The completion function to invoke with any error.
     public func getInfo(environment: TEnvironment? = nil, completion: @escaping (Result<TInfo, TError>) -> Void) {
         // Note: no session is needed
-        let request = createRequest(environment: environment ?? session?.environment ?? environments.first!, method: "GET", path: "/info")
+        let request = createRequest(environment: environment ?? session?.environment ?? defaultEnvironment!, method: "GET", path: "/info")
         performRequest(request, allowSessionRefresh: false, completion: completion)
     }
 
