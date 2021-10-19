@@ -26,7 +26,7 @@ extension UserDefaults {
             return try? JSONDecoder.tidepool.decode(TEnvironment.self, from: data)
         }
         set {
-            set(try! JSONEncoder.tidepool.encode(newValue), forKey: Key.defaultEnvironment.rawValue)
+            set(try? JSONEncoder.tidepool.encode(newValue), forKey: Key.defaultEnvironment.rawValue)
         }
     }
 
