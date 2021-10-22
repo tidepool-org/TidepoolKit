@@ -20,7 +20,7 @@ class LoginSignupViewModel: TLoginSignup {
 
     var environments: [TEnvironment] { api.environments }
 
-    var resolvedEnvironment: TEnvironment { environment ?? api.defaultEnvironment!     }
+    var resolvedEnvironment: TEnvironment { environment ?? api.defaultEnvironment! }
 
     func login(email: String, password: String, completion: @escaping (Error?) -> Void) {
         api.login(environment: resolvedEnvironment, email: email, password: password) { error in
