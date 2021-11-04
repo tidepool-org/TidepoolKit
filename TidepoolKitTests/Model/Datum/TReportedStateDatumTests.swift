@@ -62,6 +62,7 @@ class TReportedStateDatumStateStateTests: XCTestCase {
 
 extension TReportedStateDatum {
     func isEqual(to other: TReportedStateDatum) -> Bool {
-        return super.isEqual(to: other) && self.states == other.states
+        return super.isEqual(to: other) &&
+            self.states == other.states
     }
 }

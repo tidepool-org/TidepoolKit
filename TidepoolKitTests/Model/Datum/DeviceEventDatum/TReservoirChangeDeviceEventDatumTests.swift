@@ -28,6 +28,8 @@ class TReservoirChangeDeviceEventDatumTests: XCTestCase {
 
 extension TReservoirChangeDeviceEventDatum {
     func isEqual(to other: TReservoirChangeDeviceEventDatum) -> Bool {
-        return super.isEqual(to: other) && self.status == other.status && self.statusId == other.statusId
+        return super.isEqual(to: other) &&
+            self.status == other.status &&
+            self.statusId == other.statusId
     }
 }

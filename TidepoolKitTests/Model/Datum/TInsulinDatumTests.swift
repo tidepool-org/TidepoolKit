@@ -155,6 +155,9 @@ class TInsulinDatumFormulationCompoundTests: XCTestCase {
 
 extension TInsulinDatum {
     func isEqual(to other: TInsulinDatum) -> Bool {
-        return super.isEqual(to: other) && self.dose == other.dose && self.formulation == other.formulation && self.site == other.site
+        return super.isEqual(to: other) &&
+            self.dose == other.dose &&
+            self.formulation == other.formulation &&
+            self.site == other.site
     }
 }

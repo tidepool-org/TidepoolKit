@@ -16,14 +16,14 @@ public class TCombinationBolusDatum: TBolusDatum, Decodable {
     public var duration: TimeInterval?
     public var expectedDuration: TimeInterval?
 
-    public init(time: Date, normal: Double, expectedNormal: Double? = nil, extended: Double, expectedExtended: Double? = nil, duration: TimeInterval, expectedDuration: TimeInterval? = nil) {
+    public init(time: Date, normal: Double, expectedNormal: Double? = nil, extended: Double, expectedExtended: Double? = nil, duration: TimeInterval, expectedDuration: TimeInterval? = nil, insulinFormulation: InsulinFormulation? = nil) {
         self.normal = normal
         self.expectedNormal = expectedNormal
         self.extended = extended
         self.expectedExtended = expectedExtended
         self.duration = duration
         self.expectedDuration = expectedDuration
-        super.init(.combination, time: time)
+        super.init(.combination, time: time, insulinFormulation: insulinFormulation)
     }
 
     public required init(from decoder: Decoder) throws {

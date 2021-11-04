@@ -13,6 +13,7 @@ public class TDeviceEventDatum: TDatum {
         case alarm
         case calibration
         case prime
+        case pumpSettingsOverride
         case reservoirChange
         case status
         case timeChange

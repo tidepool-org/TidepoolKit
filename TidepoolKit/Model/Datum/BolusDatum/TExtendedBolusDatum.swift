@@ -14,12 +14,12 @@ public class TExtendedBolusDatum: TBolusDatum, Decodable {
     public var duration: TimeInterval?
     public var expectedDuration: TimeInterval?
 
-    public init(time: Date, extended: Double, expectedExtended: Double? = nil, duration: TimeInterval, expectedDuration: TimeInterval? = nil) {
+    public init(time: Date, extended: Double, expectedExtended: Double? = nil, duration: TimeInterval, expectedDuration: TimeInterval? = nil, insulinFormulation: InsulinFormulation? = nil) {
         self.extended = extended
         self.expectedExtended = expectedExtended
         self.duration = duration
         self.expectedDuration = expectedDuration
-        super.init(.extended, time: time)
+        super.init(.extended, time: time, insulinFormulation: insulinFormulation)
     }
 
     public required init(from decoder: Decoder) throws {

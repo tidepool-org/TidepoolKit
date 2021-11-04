@@ -14,7 +14,8 @@ class TExtendedBolusDatumTests: XCTestCase {
                                                    extended: 1.23,
                                                    expectedExtended: 2.34,
                                                    duration: 123.456,
-                                                   expectedDuration: 234.567)
+                                                   expectedDuration: 234.567,
+                                                   insulinFormulation: TInsulinDatumFormulationTests.formulation)
     static let extendedBolusJSONDictionary: [String: Any] = [
         "type": "bolus",
         "subType": "square",
@@ -22,7 +23,8 @@ class TExtendedBolusDatumTests: XCTestCase {
         "extended": 1.23,
         "expectedExtended": 2.34,
         "duration": 123456,
-        "expectedDuration": 234567
+        "expectedDuration": 234567,
+        "insulinFormulation": TInsulinDatumFormulationTests.formulationJSONDictionary
     ]
     
     func testInitializer() {
@@ -31,6 +33,7 @@ class TExtendedBolusDatumTests: XCTestCase {
         XCTAssertEqual(extendedBolus.expectedExtended, 2.34)
         XCTAssertEqual(extendedBolus.duration, 123.456)
         XCTAssertEqual(extendedBolus.expectedDuration, 234.567)
+        XCTAssertEqual(extendedBolus.insulinFormulation, TInsulinDatumFormulationTests.formulation)
     }
     
     func testCodableAsJSON() {
@@ -44,6 +47,7 @@ extension TExtendedBolusDatum {
             self.extended == other.extended &&
             self.expectedExtended == other.expectedExtended &&
             self.duration == other.duration &&
-            self.expectedDuration == other.expectedDuration
+            self.expectedDuration == other.expectedDuration &&
+            self.insulinFormulation == other.insulinFormulation
     }
 }

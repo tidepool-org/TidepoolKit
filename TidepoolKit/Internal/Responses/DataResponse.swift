@@ -25,8 +25,6 @@ struct DataResponse: Codable {
                 var datum: TDatum?
                 let type = try superContainer.decode(TDatum.DatumType.self, forKey: .type)
                 switch type {
-                case .applicationSettings:
-                    datum = try TApplicationSettingsDatum(from: superDecoder)
                 case .basal:
                     let deliveryType = try superContainer.decode(TBasalDatum.DeliveryType.self, forKey: .deliveryType)
                     switch deliveryType {
@@ -57,6 +55,8 @@ struct DataResponse: Codable {
                     datum = try TCBGDatum(from: superDecoder)
                 case .cgmSettings:
                     datum = try TCGMSettingsDatum(from: superDecoder)
+                case .controllerSettings:
+                    datum = try TControllerSettingsDatum(from: superDecoder)
                 case .deviceEvent:
                     let subType = try superContainer.decode(TDeviceEventDatum.SubType.self, forKey: .subType)
                     switch subType {
@@ -66,6 +66,8 @@ struct DataResponse: Codable {
                         datum = try TCalibrationDeviceEventDatum(from: superDecoder)
                     case .prime:
                         datum = try TPrimeDeviceEventDatum(from: superDecoder)
+                    case .pumpSettingsOverride:
+                        datum = try TPumpSettingsOverrideDeviceEventDatum(from: superDecoder)
                     case .reservoirChange:
                         datum = try TReservoirChangeDeviceEventDatum(from: superDecoder)
                     case .status:

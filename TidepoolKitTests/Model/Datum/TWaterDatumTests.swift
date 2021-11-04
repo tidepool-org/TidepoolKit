@@ -56,6 +56,7 @@ class TWaterDatumAmountUnitsTests: XCTestCase {
 
 extension TWaterDatum {
     func isEqual(to other: TWaterDatum) -> Bool {
-        return super.isEqual(to: other) && self.amount == other.amount
+        return super.isEqual(to: other) &&
+            self.amount == other.amount
     }
 }

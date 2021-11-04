@@ -41,6 +41,9 @@ class TSMBGDatumSubTypeTests: XCTestCase {
 
 extension TSMBGDatum {
     func isEqual(to other: TSMBGDatum) -> Bool {
-        return super.isEqual(to: other) && self.value == other.value && self.units == other.units && self.subType == other.subType
+        return super.isEqual(to: other) &&
+            self.value == other.value &&
+            self.units == other.units &&
+            self.subType == other.subType
     }
 }

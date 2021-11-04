@@ -71,13 +71,13 @@ class TDatumTests: XCTestCase {
 
 class TDatumDatumTypeTests: XCTestCase {
     func testDatumType() {
-        XCTAssertEqual(TDatum.DatumType.applicationSettings.rawValue, "applicationSettings")
         XCTAssertEqual(TDatum.DatumType.basal.rawValue, "basal")
         XCTAssertEqual(TDatum.DatumType.bloodKetone.rawValue, "bloodKetone")
         XCTAssertEqual(TDatum.DatumType.bolus.rawValue, "bolus")
         XCTAssertEqual(TDatum.DatumType.calculator.rawValue, "wizard")
         XCTAssertEqual(TDatum.DatumType.cbg.rawValue, "cbg")
         XCTAssertEqual(TDatum.DatumType.cgmSettings.rawValue, "cgmSettings")
+        XCTAssertEqual(TDatum.DatumType.controllerSettings.rawValue, "controllerSettings")
         XCTAssertEqual(TDatum.DatumType.deviceEvent.rawValue, "deviceEvent")
         XCTAssertEqual(TDatum.DatumType.dosingDecision.rawValue, "dosingDecision")
         XCTAssertEqual(TDatum.DatumType.food.rawValue, "food")
@@ -186,8 +186,6 @@ extension TDatum: Equatable {
     // NOTE: Yes, a bit of a hack, but it is explicitly only used for tests.
     public static func == (lhs: TDatum, rhs: TDatum) -> Bool {
         switch (lhs, rhs) {
-        case let (lhs as TApplicationSettingsDatum, rhs as TApplicationSettingsDatum):
-            return lhs.isEqual(to: rhs)
         case let (lhs as TAutomatedBasalDatum, rhs as TAutomatedBasalDatum):
             return lhs.isEqual(to: rhs)
         case let (lhs as TScheduledBasalDatum, rhs as TScheduledBasalDatum):
@@ -210,11 +208,15 @@ extension TDatum: Equatable {
             return lhs.isEqual(to: rhs)
         case let (lhs as TCGMSettingsDatum, rhs as TCGMSettingsDatum):
             return lhs.isEqual(to: rhs)
+        case let (lhs as TControllerSettingsDatum, rhs as TControllerSettingsDatum):
+            return lhs.isEqual(to: rhs)
         case let (lhs as TAlarmDeviceEventDatum, rhs as TAlarmDeviceEventDatum):
             return lhs.isEqual(to: rhs)
         case let (lhs as TCalibrationDeviceEventDatum, rhs as TCalibrationDeviceEventDatum):
             return lhs.isEqual(to: rhs)
         case let (lhs as TPrimeDeviceEventDatum, rhs as TPrimeDeviceEventDatum):
+            return lhs.isEqual(to: rhs)
+        case let (lhs as TPumpSettingsOverrideDeviceEventDatum, rhs as TPumpSettingsOverrideDeviceEventDatum):
             return lhs.isEqual(to: rhs)
         case let (lhs as TReservoirChangeDeviceEventDatum, rhs as TReservoirChangeDeviceEventDatum):
             return lhs.isEqual(to: rhs)

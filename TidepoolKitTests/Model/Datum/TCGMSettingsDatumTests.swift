@@ -11,9 +11,13 @@ import TidepoolKit
 
 class TCGMSettingsDatumTests: XCTestCase {
     static let cgmSettings = TCGMSettingsDatum(time: Date.test,
+                                               firmwareVersion: "10.11.12",
+                                               hardwareVersion: "11.12.13",
                                                manufacturers: ["Alfa", "Romeo"],
                                                model: "Spider",
+                                               name: "My Car",
                                                serialNumber: "1234567890",
+                                               softwareVersion: "12.13.14",
                                                transmitterId: "ABCDEF",
                                                units: .milligramsPerDeciliter,
                                                defaultAlerts: TCGMSettingsDatumAlertsTests.alerts,
@@ -21,9 +25,13 @@ class TCGMSettingsDatumTests: XCTestCase {
     static let cgmSettingsJSONDictionary: [String: Any] = [
         "type": "cgmSettings",
         "time": Date.testJSONString,
+        "firmwareVersion": "10.11.12",
+        "hardwareVersion": "11.12.13",
         "manufacturers": ["Alfa", "Romeo"],
         "model": "Spider",
+        "name": "My Car",
         "serialNumber": "1234567890",
+        "softwareVersion": "12.13.14",
         "transmitterId": "ABCDEF",
         "units": "mg/dL",
         "defaultAlerts": TCGMSettingsDatumAlertsTests.alertsJSONDictionary,
@@ -32,9 +40,13 @@ class TCGMSettingsDatumTests: XCTestCase {
     
     func testInitializer() {
         let cgmSettings = TCGMSettingsDatumTests.cgmSettings
+        XCTAssertEqual(cgmSettings.firmwareVersion, "10.11.12")
+        XCTAssertEqual(cgmSettings.hardwareVersion, "11.12.13")
         XCTAssertEqual(cgmSettings.manufacturers, ["Alfa", "Romeo"])
         XCTAssertEqual(cgmSettings.model, "Spider")
+        XCTAssertEqual(cgmSettings.name, "My Car")
         XCTAssertEqual(cgmSettings.serialNumber, "1234567890")
+        XCTAssertEqual(cgmSettings.softwareVersion, "12.13.14")
         XCTAssertEqual(cgmSettings.transmitterId, "ABCDEF")
         XCTAssertEqual(cgmSettings.units, .milligramsPerDeciliter)
         XCTAssertEqual(cgmSettings.defaultAlerts, TCGMSettingsDatumAlertsTests.alerts)
@@ -235,9 +247,12 @@ class TCGMSettingsDatumScheduledAlertTests: XCTestCase {
 extension TCGMSettingsDatum {
     func isEqual(to other: TCGMSettingsDatum) -> Bool {
         return super.isEqual(to: other) &&
+            self.firmwareVersion == other.firmwareVersion &&
+            self.hardwareVersion == other.hardwareVersion &&
             self.manufacturers == other.manufacturers &&
             self.model == other.model &&
             self.serialNumber == other.serialNumber &&
+            self.softwareVersion == other.softwareVersion &&
             self.transmitterId == other.transmitterId &&
             self.units == other.units &&
             self.defaultAlerts == other.defaultAlerts &&

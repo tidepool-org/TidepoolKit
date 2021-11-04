@@ -12,10 +12,10 @@ public class TNormalBolusDatum: TBolusDatum, Decodable {
     public var normal: Double?
     public var expectedNormal: Double?
 
-    public init(time: Date, normal: Double, expectedNormal: Double? = nil) {
+    public init(time: Date, normal: Double, expectedNormal: Double? = nil, insulinFormulation: InsulinFormulation? = nil) {
         self.normal = normal
         self.expectedNormal = expectedNormal
-        super.init(.normal, time: time)
+        super.init(.normal, time: time, insulinFormulation: insulinFormulation)
     }
 
     public required init(from decoder: Decoder) throws {

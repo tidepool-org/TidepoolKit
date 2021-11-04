@@ -39,6 +39,8 @@ class TPrimeDeviceEventDatumTargetTests: XCTestCase {
 
 extension TPrimeDeviceEventDatum {
     func isEqual(to other: TPrimeDeviceEventDatum) -> Bool {
-        return super.isEqual(to: other) && self.volume == other.volume && self.target == other.target
+        return super.isEqual(to: other) &&
+            self.volume == other.volume &&
+            self.target == other.target
     }
 }

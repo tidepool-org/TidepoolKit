@@ -10,13 +10,13 @@ import Foundation
 
 public class TDatum: Encodable {
     public enum DatumType: String, Codable {
-        case applicationSettings
         case basal
         case bloodKetone
         case bolus
         case calculator = "wizard"
         case cbg
         case cgmSettings
+        case controllerSettings
         case deviceEvent
         case dosingDecision
         case food
@@ -31,7 +31,7 @@ public class TDatum: Encodable {
     }
 
     public let type: DatumType
-    public var time: Date
+    public var time: Date?
 
     public var annotations: [TDictionary]?
     public var associations: [TAssociation]?
@@ -91,7 +91,7 @@ public class TDatum: Encodable {
         guard self.type == expectedType else {
             throw DecodingError.dataCorruptedError(forKey: .type, in: container, debugDescription: "Unexpected type '\(self.type)'")
         }
-        self.time = try container.decode(Date.self, forKey: .time)
+        self.time = try container.decodeIfPresent(Date.self, forKey: .time)
         self.annotations = try container.decodeIfPresent([TDictionary].self, forKey: .annotations)
         self.associations = try container.decodeIfPresent([TAssociation].self, forKey: .associations)
         self.clockDriftOffset = try container.decodeIfPresent(Int.self, forKey: .clockDriftOffset).map { .milliseconds($0) }
@@ -112,7 +112,7 @@ public class TDatum: Encodable {
     public func encode(to encoder: Encoder) throws {
         var container = encoder.container(keyedBy: CodingKeys.self)
         try container.encode(type, forKey: .type)
-        try container.encode(time, forKey: .time)
+        try container.encodeIfPresent(time, forKey: .time)
         try container.encodeIfPresent(annotations, forKey: .annotations)
         try container.encodeIfPresent(associations, forKey: .associations)
         try container.encodeIfPresent(clockDriftOffset.map { Int($0.milliseconds) }, forKey: .clockDriftOffset)

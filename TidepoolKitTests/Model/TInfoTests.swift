@@ -10,8 +10,8 @@ import XCTest
 @testable import TidepoolKit
 
 class TInfoTests: XCTestCase {
-    let info = TInfo(versions: TInfo.Versions(loop: TInfo.Versions.Loop(minimumSupported: "1.2.0", criticalUpdateNeeded: ["1.1.0"])))
-    let infoJSONDictionary: [String: Any] = [
+    static let info = TInfo(versions: TInfo.Versions(loop: TInfo.Versions.Loop(minimumSupported: "1.2.0", criticalUpdateNeeded: ["1.1.0"])))
+    static let infoJSONDictionary: [String: Any] = [
         "versions": [
             "loop": [
                 "minimumSupported": "1.2.0",
@@ -21,6 +21,6 @@ class TInfoTests: XCTestCase {
     ]
     
     func testCodableAsJSON() {
-        XCTAssertCodableAsJSON(info, infoJSONDictionary)
+        XCTAssertCodableAsJSON(TInfoTests.info, TInfoTests.infoJSONDictionary)
     }
 }

@@ -37,6 +37,8 @@ class TBloodKetoneDatumUnitsTests: XCTestCase {
 
 extension TBloodKetoneDatum {
     func isEqual(to other: TBloodKetoneDatum) -> Bool {
-        super.isEqual(to: other) && self.value == other.value && self.units == other.units
+        super.isEqual(to: other) &&
+            self.value == other.value &&
+            self.units == other.units
     }
 }

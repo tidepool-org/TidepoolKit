@@ -13,9 +13,6 @@ struct Sample {
     struct Datum {
         static func data(fullyAdorned: Bool = true) -> [TDatum] {
             var data: [TDatum] = [
-                TApplicationSettingsDatum(time: Date(),
-                                          name: "Sample Application",
-                                          version: "1.2.3"),
                 TAutomatedBasalDatum(time: Date(),
                                      duration: 300000,
                                      expectedDuration: 600000,
@@ -70,8 +67,9 @@ struct Sample {
                           value: 123,
                           units: .milligramsPerDeciliter),
                 TCGMSettingsDatum(time: Date(),
-                                  manufacturers: ["Acme Pump", "Acme CGM"],
+                                  manufacturers: ["Acme Pump Company", "Acme CGM Company"],
                                   model: "Super Deluxe",
+                                  name: "My CGM",
                                   serialNumber: "999666333",
                                   transmitterId: "A1B2C3",
                                   units: .milligramsPerDeciliter,
@@ -86,6 +84,14 @@ struct Sample {
                                                                                      start: 0,
                                                                                      end: 64800000,
                                                                                      alerts: cgmSettingsAlerts)]),
+                TControllerSettingsDatum(time: Date(),
+                                         device: TControllerSettingsDatum.Device(manufacturers: ["Acme Controller Company"],
+                                                                                 model: "Nifty Controller",
+                                                                                 name: "My Controller",
+                                                                                 softwareVersion: "1.2.3"),
+                                         notifications: TControllerSettingsDatum.Notifications(authorization: .authorized,
+                                                                                               alert: true,
+                                                                                               criticalAlert: true)),
                 TAlarmDeviceEventDatum(time: Date(),
                                        alarmType: .noDelivery,
                                        status: statusDeviceEventDatum),
@@ -95,6 +101,9 @@ struct Sample {
                 TPrimeDeviceEventDatum(time: Date(),
                                        volume: 0.25,
                                        target: .cannula),
+                TPumpSettingsOverrideDeviceEventDatum(time: Date(),
+                                                      overrideType: .preset,
+                                                      overridePreset: "Running"),
                 TReservoirChangeDeviceEventDatum(time: Date(),
                                                  status: statusDeviceEventDatum),
                 TStatusDeviceEventDatum(time: Date(),
@@ -157,7 +166,7 @@ struct Sample {
                                                                    temporary: TPumpSettingsDatum.Basal.Temporary(.unitsPerHour)),
                                    basalRateSchedules: ["Default": [TPumpSettingsDatum.BasalRateStart(start: .hours(0), rate: 1.0),
                                                                     TPumpSettingsDatum.BasalRateStart(start: .hours(12), rate: 1.5)]],
-                                   bloodGlucoseSuspendThreshold: 70,
+                                   bloodGlucoseSafetyLimit: 70,
                                    bloodGlucoseTargetPhysicalActivity: TBloodGlucose.Target(low: 150, high: 160),
                                    bloodGlucoseTargetPreprandial: TBloodGlucose.Target(low: 80, high: 90),
                                    bloodGlucoseTargetSchedules: ["Default": [TBloodGlucose.StartTarget(start: .hours(0), low: 100, high: 110),
@@ -172,8 +181,9 @@ struct Sample {
                                    insulinModel: TPumpSettingsDatum.InsulinModel(modelType: .rapidAdult, actionDuration: .hours(6), actionPeakOffset: .hours(1)),
                                    insulinSensitivitySchedules: ["Default": [TPumpSettingsDatum.InsulinSensitivityStart(start: .hours(0), amount: 45),
                                                                              TPumpSettingsDatum.InsulinSensitivityStart(start: .hours(12), amount: 60)]],
-                                   manufacturers: ["Acme Pump"],
+                                   manufacturers: ["Acme Pump Company"],
                                    model: "Ultra Deluxe",
+                                   name: "My Pump",
                                    scheduleTimeZoneOffset: -480,
                                    serialNumber: "a1b2c3d4e5",
                                    units: TPumpSettingsDatum.Units(bloodGlucose: .milligramsPerDeciliter, carbohydrate: .grams, insulin: .units)),
@@ -337,7 +347,10 @@ struct Sample {
                 datum.timezone = "America/Los_Angeles"
                 datum.timezoneOffset = .minutes(-480)
             } else {
-                datum.origin = TOrigin(id: UUID().uuidString)
+                datum.origin = TOrigin(id: UUID().uuidString,
+                                       name: Bundle.main.bundleIdentifier,
+                                       version: Bundle.main.semanticVersion,
+                                       type: .application)
             }
             return datum
         }

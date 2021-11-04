@@ -11,9 +11,13 @@ import Foundation
 public class TCGMSettingsDatum: TDatum, Decodable {
     public typealias Units = TBloodGlucose.Units
 
+    public var firmwareVersion: String?
+    public var hardwareVersion: String?
     public var manufacturers: [String]?
     public var model: String?
+    public var name: String?
     public var serialNumber: String?
+    public var softwareVersion: String?
     public var transmitterId: String?
     public var units: Units?
     public var defaultAlerts: Alerts?
@@ -24,10 +28,25 @@ public class TCGMSettingsDatum: TDatum, Decodable {
     public var outOfRangeAlertsDEPRECATED: OutOfRangeAlertsDEPRECATED?
     public var rateOfChangeAlertsDEPRECATED: RateOfChangeAlertsDEPRECATED?
 
-    public init(time: Date, manufacturers: [String]? = nil, model: String? = nil, serialNumber: String? = nil, transmitterId: String? = nil, units: Units? = nil, defaultAlerts: Alerts? = nil, scheduledAlerts: [ScheduledAlert]? = nil) {
+    public init(time: Date,
+                firmwareVersion: String? = nil,
+                hardwareVersion: String? = nil,
+                manufacturers: [String]? = nil,
+                model: String? = nil,
+                name: String? = nil,
+                serialNumber: String? = nil,
+                softwareVersion: String? = nil,
+                transmitterId: String? = nil,
+                units: Units? = nil,
+                defaultAlerts: Alerts? = nil,
+                scheduledAlerts: [ScheduledAlert]? = nil) {
+        self.firmwareVersion = firmwareVersion
+        self.hardwareVersion = hardwareVersion
         self.manufacturers = manufacturers
         self.model = model
+        self.name = name
         self.serialNumber = serialNumber
+        self.softwareVersion = softwareVersion
         self.transmitterId = transmitterId
         self.units = units
         self.defaultAlerts = defaultAlerts
@@ -37,9 +56,13 @@ public class TCGMSettingsDatum: TDatum, Decodable {
 
     public required init(from decoder: Decoder) throws {
         let container = try decoder.container(keyedBy: CodingKeys.self)
+        self.firmwareVersion = try container.decodeIfPresent(String.self, forKey: .firmwareVersion)
+        self.hardwareVersion = try container.decodeIfPresent(String.self, forKey: .hardwareVersion)
         self.manufacturers = try container.decodeIfPresent([String].self, forKey: .manufacturers)
         self.model = try container.decodeIfPresent(String.self, forKey: .model)
+        self.name = try container.decodeIfPresent(String.self, forKey: .name)
         self.serialNumber = try container.decodeIfPresent(String.self, forKey: .serialNumber)
+        self.softwareVersion = try container.decodeIfPresent(String.self, forKey: .softwareVersion)
         self.transmitterId = try container.decodeIfPresent(String.self, forKey: .transmitterId)
         self.units = try container.decodeIfPresent(Units.self, forKey: .units)
         self.defaultAlerts = try container.decodeIfPresent(Alerts.self, forKey: .defaultAlerts)
@@ -53,9 +76,13 @@ public class TCGMSettingsDatum: TDatum, Decodable {
 
     public override func encode(to encoder: Encoder) throws {
         var container = encoder.container(keyedBy: CodingKeys.self)
+        try container.encodeIfPresent(firmwareVersion, forKey: .firmwareVersion)
+        try container.encodeIfPresent(hardwareVersion, forKey: .hardwareVersion)
         try container.encodeIfPresent(manufacturers, forKey: .manufacturers)
         try container.encodeIfPresent(model, forKey: .model)
+        try container.encodeIfPresent(name, forKey: .name)
         try container.encodeIfPresent(serialNumber, forKey: .serialNumber)
+        try container.encodeIfPresent(softwareVersion, forKey: .softwareVersion)
         try container.encodeIfPresent(transmitterId, forKey: .transmitterId)
         try container.encodeIfPresent(units, forKey: .units)
         try container.encodeIfPresent(defaultAlerts, forKey: .defaultAlerts)
@@ -288,9 +315,13 @@ public class TCGMSettingsDatum: TDatum, Decodable {
     }
 
     private enum CodingKeys: String, CodingKey {
+        case firmwareVersion
+        case hardwareVersion
         case manufacturers
         case model
+        case name
         case serialNumber
+        case softwareVersion
         case transmitterId
         case units
         case defaultAlerts

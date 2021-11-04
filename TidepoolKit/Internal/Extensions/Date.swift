@@ -11,9 +11,9 @@ import Foundation
 extension Date {
     init?(timeString: String) {
         if let date = Date.timeFormatter.date(from: timeString) {
-            self = date.roundedToTimeInterval(TimeInterval.millisecond)
+            self = date.roundedToTimeInterval(.millisecond)
         } else if let date = Date.timeFormatterAlternate.date(from: timeString) {
-            self = date.roundedToTimeInterval(TimeInterval.millisecond)
+            self = date.roundedToTimeInterval(.millisecond)
         } else {
             return nil
         }
@@ -21,41 +21,41 @@ extension Date {
 
     init?(deviceTimeString: String) {
         if let date = Date.deviceTimeFormatter.date(from: deviceTimeString) {
-            self = date.roundedToTimeInterval(TimeInterval.millisecond)
+            self = date.roundedToTimeInterval(.millisecond)
         } else if let date = Date.deviceTimeFormatterAlternate.date(from: deviceTimeString) {
-            self = date.roundedToTimeInterval(TimeInterval.millisecond)
+            self = date.roundedToTimeInterval(.millisecond)
         } else {
             return nil
         }
     }
 
     var timeString: String {
-        return Date.timeFormatter.string(from: self.roundedToTimeInterval(TimeInterval.millisecond))
+        return Date.timeFormatter.string(from: self.roundedToTimeInterval(.millisecond))
     }
 
     var deviceTimeString: String {
-        return Date.deviceTimeFormatter.string(from: self.roundedToTimeInterval(TimeInterval.millisecond))
+        return Date.deviceTimeFormatter.string(from: self.roundedToTimeInterval(.millisecond))
     }
 
-    static let timeFormatter: ISO8601DateFormatter = {
+    private static let timeFormatter: ISO8601DateFormatter = {
         var timeFormatter = ISO8601DateFormatter()
         timeFormatter.formatOptions = [.withInternetDateTime, .withFractionalSeconds]
         return timeFormatter
     }()
 
-    static let timeFormatterAlternate: ISO8601DateFormatter = {
+    private static let timeFormatterAlternate: ISO8601DateFormatter = {
         var timeFormatter = ISO8601DateFormatter()
         timeFormatter.formatOptions = [.withInternetDateTime]
         return timeFormatter
     }()
 
-    static let deviceTimeFormatter: ISO8601DateFormatter = {
+    private static let deviceTimeFormatter: ISO8601DateFormatter = {
         var timeFormatter = ISO8601DateFormatter()
         timeFormatter.formatOptions = [.withFullDate, .withFullTime, .withDashSeparatorInDate, .withColonSeparatorInTime, .withFractionalSeconds]
         return timeFormatter
     }()
 
-    static let deviceTimeFormatterAlternate: ISO8601DateFormatter = {
+    private static let deviceTimeFormatterAlternate: ISO8601DateFormatter = {
         var timeFormatter = ISO8601DateFormatter()
         timeFormatter.formatOptions = [.withFullDate, .withFullTime, .withDashSeparatorInDate, .withColonSeparatorInTime]
         return timeFormatter

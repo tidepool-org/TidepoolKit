@@ -32,6 +32,8 @@ class TCalibrationDeviceEventDatumTests: XCTestCase {
 
 extension TCalibrationDeviceEventDatum {
     func isEqual(to other: TCalibrationDeviceEventDatum) -> Bool {
-        return super.isEqual(to: other) && self.value == other.value && self.units == other.units
+        return super.isEqual(to: other) &&
+            self.value == other.value &&
+            self.units == other.units
     }
 }

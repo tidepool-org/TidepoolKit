@@ -6,7 +6,7 @@
 //  Copyright © 2019 Tidepool Project. All rights reserved.
 //
 
-public protocol TLogging {
+public protocol TLogging: AnyObject {
 
     ///
     /// Log a debug message.
@@ -42,7 +42,7 @@ public protocol TLogging {
 public class TSharedLogging {
 
     /// A shared, global instance of TLogging.
-    public static var instance: TLogging?
+    public static weak var instance: TLogging?
 
     public static func debug(_ message: @autoclosure () -> String, function: StaticString = #function, file: StaticString = #file, line: UInt = #line) {
         TSharedLogging.instance?.debug(message(), function: function, file: file, line: line)
