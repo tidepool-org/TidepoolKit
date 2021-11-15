@@ -34,6 +34,8 @@ class RootTableViewController: UITableViewController, TAPIObserver {
         }
     }
 
+    private let logging = Logging()
+
     required init?(coder: NSCoder) {
         self.api = TAPI(session: UserDefaults.standard.session)
         self.environment = UserDefaults.standard.environment
@@ -41,6 +43,7 @@ class RootTableViewController: UITableViewController, TAPIObserver {
 
         super.init(coder: coder)
 
+        api.logging = logging
         api.addObserver(self)
     }
 
@@ -436,7 +439,7 @@ class RootTableViewController: UITableViewController, TAPIObserver {
         do {
             display(try JSONEncoder.pretty.encode(encodable), withTitle: title)
         } catch let error {
-            TSharedLogging.error("Failure to encode object as JSON data [\(error)]")
+            logging.error("Failure to encode object as JSON data [\(error)]")
             present(UIAlertController(error: "Failure to encode object as JSON data."), animated: true)
         }
     }
@@ -445,7 +448,7 @@ class RootTableViewController: UITableViewController, TAPIObserver {
         do {
             display(try JSONSerialization.data(withJSONObject: object, options: [.prettyPrinted, .sortedKeys, .withoutEscapingSlashes]), withTitle: title)
         } catch let error {
-            TSharedLogging.error("Failure to encode object as JSON data [\(error)]")
+            logging.error("Failure to encode object as JSON data [\(error)]")
             present(UIAlertController(error: "Failure to encode object as JSON data."), animated: true)
         }
     }

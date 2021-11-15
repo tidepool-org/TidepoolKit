@@ -11,12 +11,10 @@ import TidepoolKit
 
 extension UIAlertController {
     convenience init(error: Error, handler: (() -> Void)? = nil) {
-        TSharedLogging.error((error as CustomDebugStringConvertible).debugDescription)
         self.init(errorString: error.localizedDescription, handler: handler)
     }
 
     convenience init(error: String, handler: (() -> Void)? = nil) {
-        TSharedLogging.error(error)
         self.init(errorString: error, handler: handler)
     }
 

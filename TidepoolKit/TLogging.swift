@@ -39,20 +39,16 @@ public protocol TLogging: AnyObject {
     func error(_ message: String, function: StaticString, file: StaticString, line: UInt)
 }
 
-public class TSharedLogging {
-
-    /// A shared, global instance of TLogging.
-    public static weak var instance: TLogging?
-
-    public static func debug(_ message: @autoclosure () -> String, function: StaticString = #function, file: StaticString = #file, line: UInt = #line) {
-        TSharedLogging.instance?.debug(message(), function: function, file: file, line: line)
+extension TLogging {
+    public func debug(_ message: @autoclosure () -> String, function: StaticString = #function, file: StaticString = #file, line: UInt = #line) {
+       debug(message(), function: function, file: file, line: line)
     }
 
-    public static func info(_ message: @autoclosure () -> String, function: StaticString = #function, file: StaticString = #file, line: UInt = #line) {
-        TSharedLogging.instance?.info(message(), function: function, file: file, line: line)
+    public func info(_ message: @autoclosure () -> String, function: StaticString = #function, file: StaticString = #file, line: UInt = #line) {
+       info(message(), function: function, file: file, line: line)
     }
 
-    public static func error(_ message: @autoclosure () -> String, function: StaticString = #function, file: StaticString = #file, line: UInt = #line) {
-        TSharedLogging.instance?.error(message(), function: function, file: file, line: line)
+    public func error(_ message: @autoclosure () -> String, function: StaticString = #function, file: StaticString = #file, line: UInt = #line) {
+       error(message(), function: function, file: file, line: line)
     }
 }

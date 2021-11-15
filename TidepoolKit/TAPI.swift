@@ -60,6 +60,8 @@ public class TAPI {
         }
     }
 
+    public weak var logging: TLogging?
+
     private var observers = WeakSynchronizedSet<TAPIObserver>()
 
     /// Create a new instance of TAPI. Automatically lookup additional environments in the background.
@@ -105,7 +107,7 @@ public class TAPI {
             DNS.lookupSRVRecords(for: TAPI.DNSSRVRecordsDomainName) { result in
                 switch result {
                 case .failure(let error):
-                    TSharedLogging.error("Failure during DNS SRV record lookup [\(error)]")
+                    self.logging?.error("Failure during DNS SRV record lookup [\(error)]")
                     completion?(.failure(.network(error)))
                 case .success(let records):
                     var records = records + TAPI.DNSSRVRecordsImplicit
@@ -117,7 +119,7 @@ public class TAPI {
                     }
                     let environments = records.sorted().environments
                     self.environmentsLocked.mutate { $0 = environments }
-                    TSharedLogging.debug("Successful DNS SRV record lookup")
+                    self.logging?.debug("Successful DNS SRV record lookup")
                     completion?(.success(environments))
                 }
             }
@@ -438,7 +440,7 @@ public class TAPI {
         do {
             request?.httpBody = try JSONEncoder.tidepool.encode(body)
         } catch let error {
-            TSharedLogging.error("Failure encoding request body [\(error)]")
+            logging?.error("Failure encoding request body [\(error)]")
             return nil
         }
         return request
@@ -459,7 +461,7 @@ public class TAPI {
 
     private func createRequest(environment: TEnvironment, method: String, path: String, queryItems: [URLQueryItem]? = nil) -> URLRequest? {
         guard let url = environment.url(path: path, queryItems: queryItems) else {
-            TSharedLogging.error("Failure creating request URL [environment='\(environment)'; path='\(path)'; queryItems=\(String(describing: queryItems))")
+            logging?.error("Failure creating request URL [environment='\(environment)'; path='\(path)'; queryItems=\(String(describing: queryItems))")
             return nil
         }
         var request = URLRequest(url: url)

@@ -100,7 +100,6 @@ struct DataResponse: Codable {
                     data.append(datum)
                 }
             } catch let error {
-                TSharedLogging.error((error as CustomDebugStringConvertible).debugDescription)
                 let malformedContainer = try superDecoder.container(keyedBy: JSONCodingKeys.self)
                 malformed[String(container.currentIndex)] = try malformedContainer.decode([String: Any].self)
             }
