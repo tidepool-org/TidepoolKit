@@ -97,10 +97,10 @@ class TPrescriptionAttributesTests: XCTestCase {
         mrn: "1234567890",
         email: "parent.doe@email.com",
         sex: .undisclosed,
-        weight: TPrescriptionWeightTests.weight,
+        weight: TPrescriptionAttributesWeightTests.weight,
         yearOfDiagnosis: 2020,
-        phoneNumber: TPrescriptionPhoneNumberTests.phoneNumber,
-        initialSettings: TPrescriptionInitialSettingsTests.initialSettings,
+        phoneNumber: TPrescriptionAttributesPhoneNumberTests.phoneNumber,
+        initialSettings: TPrescriptionAttributesInitialSettingsTests.initialSettings,
         training: .inModule,
         therapySettings: .initial,
         prescriberTermsAccepted: true,
@@ -108,7 +108,7 @@ class TPrescriptionAttributesTests: XCTestCase {
         createdTime: Date.test,
         createdUserId: "abcdefghijklmnopqrstuvwxyz")
     static let attributesJSONDictionary: [String: Any] = [
-        "accountType": TPrescription.AccountType.caregiver.rawValue,
+        "accountType": TPrescription.Attributes.AccountType.caregiver.rawValue,
         "caregiverFirstName": "Parent",
         "caregiverLastName": "Doe",
         "firstName": "Child",
@@ -116,13 +116,13 @@ class TPrescriptionAttributesTests: XCTestCase {
         "birthday": "2004-01-04",
         "mrn": "1234567890",
         "email": "parent.doe@email.com",
-        "sex": TPrescription.Sex.undisclosed.rawValue,
-        "weight": TPrescriptionWeightTests.weightJSONDictionary,
+        "sex": TPrescription.Attributes.Sex.undisclosed.rawValue,
+        "weight": TPrescriptionAttributesWeightTests.weightJSONDictionary,
         "yearOfDiagnosis": 2020,
-        "phoneNumber": TPrescriptionPhoneNumberTests.phoneNumberJSONDictionary,
-        "initialSettings": TPrescriptionInitialSettingsTests.initialSettingsJSONDictionary,
-        "training": TPrescription.Training.inModule.rawValue,
-        "therapySettings": TPrescription.TherapySettings.initial.rawValue,
+        "phoneNumber": TPrescriptionAttributesPhoneNumberTests.phoneNumberJSONDictionary,
+        "initialSettings": TPrescriptionAttributesInitialSettingsTests.initialSettingsJSONDictionary,
+        "training": TPrescription.Attributes.Training.inModule.rawValue,
+        "therapySettings": TPrescription.Attributes.TherapySettings.initial.rawValue,
         "prescriberTermsAccepted": true,
         "state": TPrescription.Attributes.State.submitted.rawValue,
         "createdTime": Date.testJSONString,
@@ -140,10 +140,10 @@ class TPrescriptionAttributesTests: XCTestCase {
         XCTAssertEqual(attributes.mrn, "1234567890")
         XCTAssertEqual(attributes.email, "parent.doe@email.com")
         XCTAssertEqual(attributes.sex, .undisclosed)
-        XCTAssertEqual(attributes.weight, TPrescriptionWeightTests.weight)
+        XCTAssertEqual(attributes.weight, TPrescriptionAttributesWeightTests.weight)
         XCTAssertEqual(attributes.yearOfDiagnosis, 2020)
-        XCTAssertEqual(attributes.phoneNumber, TPrescriptionPhoneNumberTests.phoneNumber)
-        XCTAssertEqual(attributes.initialSettings, TPrescriptionInitialSettingsTests.initialSettings)
+        XCTAssertEqual(attributes.phoneNumber, TPrescriptionAttributesPhoneNumberTests.phoneNumber)
+        XCTAssertEqual(attributes.initialSettings, TPrescriptionAttributesInitialSettingsTests.initialSettings)
         XCTAssertEqual(attributes.training, .inModule)
         XCTAssertEqual(attributes.therapySettings, .initial)
         XCTAssertEqual(attributes.prescriberTermsAccepted, true)
@@ -165,65 +165,79 @@ class TPrescriptionAttributesStateTests: XCTestCase {
     }
 }
 
-class TPrescriptionAccountTypeTests: XCTestCase {
+class TPrescriptionAttributesAccountTypeTests: XCTestCase {
     func testAccountType() {
-        XCTAssertEqual(TPrescription.AccountType.patient.rawValue, "patient")
-        XCTAssertEqual(TPrescription.AccountType.caregiver.rawValue, "caregiver")
+        XCTAssertEqual(TPrescription.Attributes.AccountType.patient.rawValue, "patient")
+        XCTAssertEqual(TPrescription.Attributes.AccountType.caregiver.rawValue, "caregiver")
     }
 }
 
-class TPrescriptionSexTests: XCTestCase {
+class TPrescriptionAttributesSexTests: XCTestCase {
     func testSex() {
-        XCTAssertEqual(TPrescription.Sex.male.rawValue, "male")
-        XCTAssertEqual(TPrescription.Sex.female.rawValue, "female")
-        XCTAssertEqual(TPrescription.Sex.undisclosed.rawValue, "undisclosed")
+        XCTAssertEqual(TPrescription.Attributes.Sex.male.rawValue, "male")
+        XCTAssertEqual(TPrescription.Attributes.Sex.female.rawValue, "female")
+        XCTAssertEqual(TPrescription.Attributes.Sex.undisclosed.rawValue, "undisclosed")
     }
 }
 
-class TPrescriptionWeightTests: XCTestCase {
-    static let weight = TPrescription.Weight(value: 123, units: .kg)
+class TPrescriptionAttributesTrainingTests: XCTestCase {
+    func testTraining() {
+        XCTAssertEqual(TPrescription.Attributes.Training.inPerson.rawValue, "inPerson")
+        XCTAssertEqual(TPrescription.Attributes.Training.inModule.rawValue, "inModule")
+    }
+}
+
+class TPrescriptionAttributesTherapySettingsTests: XCTestCase {
+    func testTherapySettings() {
+        XCTAssertEqual(TPrescription.Attributes.TherapySettings.initial.rawValue, "initial")
+        XCTAssertEqual(TPrescription.Attributes.TherapySettings.transferPumpSettings.rawValue, "transferPumpSettings")
+    }
+}
+
+class TPrescriptionAttributesWeightTests: XCTestCase {
+    static let weight = TPrescription.Attributes.Weight(value: 123, units: .kg)
     static let weightJSONDictionary: [String: Any] = [
         "value": 123,
         "units": "kg"
     ]
     
     func testInitializer() {
-        let weight = TPrescriptionWeightTests.weight
+        let weight = TPrescriptionAttributesWeightTests.weight
         XCTAssertEqual(weight.value, 123)
         XCTAssertEqual(weight.units, .kg)
     }
     
     func testCodableAsJSON() {
-        XCTAssertCodableAsJSON(TPrescriptionWeightTests.weight, TPrescriptionWeightTests.weightJSONDictionary)
+        XCTAssertCodableAsJSON(TPrescriptionAttributesWeightTests.weight, TPrescriptionAttributesWeightTests.weightJSONDictionary)
     }
 }
 
-class TPrescriptionWeightUnitsTests: XCTestCase {
+class TPrescriptionAttributesWeightUnitsTests: XCTestCase {
     func testUnits() {
-        XCTAssertEqual(TPrescription.Weight.Units.kg.rawValue, "kg")
+        XCTAssertEqual(TPrescription.Attributes.Weight.Units.kg.rawValue, "kg")
     }
 }
 
-class TPrescriptionPhoneNumberTests: XCTestCase {
-    static let phoneNumber = TPrescription.PhoneNumber(countryCode: 123, number: "(234) 345-4566")
+class TPrescriptionAttributesPhoneNumberTests: XCTestCase {
+    static let phoneNumber = TPrescription.Attributes.PhoneNumber(countryCode: 123, number: "(234) 345-4566")
     static let phoneNumberJSONDictionary: [String: Any] = [
         "countryCode": 123,
         "number": "(234) 345-4566"
     ]
     
     func testInitializer() {
-        let phoneNumber = TPrescriptionPhoneNumberTests.phoneNumber
+        let phoneNumber = TPrescriptionAttributesPhoneNumberTests.phoneNumber
         XCTAssertEqual(phoneNumber.countryCode, 123)
         XCTAssertEqual(phoneNumber.number, "(234) 345-4566")
     }
     
     func testCodableAsJSON() {
-        XCTAssertCodableAsJSON(TPrescriptionPhoneNumberTests.phoneNumber, TPrescriptionPhoneNumberTests.phoneNumberJSONDictionary)
+        XCTAssertCodableAsJSON(TPrescriptionAttributesPhoneNumberTests.phoneNumber, TPrescriptionAttributesPhoneNumberTests.phoneNumberJSONDictionary)
     }
 }
 
-class TPrescriptionInitialSettingsTests: XCTestCase {
-    static let initialSettings = TPrescription.InitialSettings(
+class TPrescriptionAttributesInitialSettingsTests: XCTestCase {
+    static let initialSettings = TPrescription.Attributes.InitialSettings(
         bloodGlucoseUnits: .milligramsPerDeciliter,
         basalRateSchedule: [TPumpSettingsDatumBasalRateStartTests.basalRateStart,
                             TPumpSettingsDatumBasalRateStartTests.basalRateStart],
@@ -262,7 +276,7 @@ class TPrescriptionInitialSettingsTests: XCTestCase {
     ]
     
     func testInitializer() {
-        let initialSettings = TPrescriptionInitialSettingsTests.initialSettings
+        let initialSettings = TPrescriptionAttributesInitialSettingsTests.initialSettings
         XCTAssertEqual(initialSettings.bloodGlucoseUnits, .milligramsPerDeciliter)
         XCTAssertEqual(initialSettings.basalRateSchedule, [TPumpSettingsDatumBasalRateStartTests.basalRateStart,
                                                            TPumpSettingsDatumBasalRateStartTests.basalRateStart])
@@ -283,20 +297,6 @@ class TPrescriptionInitialSettingsTests: XCTestCase {
     }
     
     func testCodableAsJSON() {
-        XCTAssertCodableAsJSON(TPrescriptionInitialSettingsTests.initialSettings, TPrescriptionInitialSettingsTests.initialSettingsJSONDictionary)
-    }
-}
-
-class TPrescriptionTrainingTests: XCTestCase {
-    func testTraining() {
-        XCTAssertEqual(TPrescription.Training.inPerson.rawValue, "inPerson")
-        XCTAssertEqual(TPrescription.Training.inModule.rawValue, "inModule")
-    }
-}
-
-class TPrescriptionTherapySettingsTests: XCTestCase {
-    func testTherapySettings() {
-        XCTAssertEqual(TPrescription.TherapySettings.initial.rawValue, "initial")
-        XCTAssertEqual(TPrescription.TherapySettings.transferPumpSettings.rawValue, "transferPumpSettings")
+        XCTAssertCodableAsJSON(TPrescriptionAttributesInitialSettingsTests.initialSettings, TPrescriptionAttributesInitialSettingsTests.initialSettingsJSONDictionary)
     }
 }

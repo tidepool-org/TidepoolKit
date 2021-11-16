@@ -14,7 +14,7 @@ class TPumpStatusDatumTests: XCTestCase {
                                              basalDelivery: TPumpStatusDatumBasalDeliveryTests.basalDelivery,
                                              battery: TPumpStatusDatumBatteryTests.battery,
                                              bolusDelivery: TPumpStatusDatumBolusDeliveryTests.bolusDelivery,
-                                             device: TPumpStatusDatumDeviceTests.device,
+                                             deliveryIndeterminant: false,
                                              reservoir: TPumpStatusDatumReservoirTests.reservoir)
     static let pumpStatusJSONDictionary: [String: Any] = [
         "type": "pumpStatus",
@@ -22,7 +22,7 @@ class TPumpStatusDatumTests: XCTestCase {
         "basalDelivery": TPumpStatusDatumBasalDeliveryTests.basalDeliveryJSONDictionary,
         "battery": TPumpStatusDatumBatteryTests.batteryJSONDictionary,
         "bolusDelivery": TPumpStatusDatumBolusDeliveryTests.bolusDeliveryJSONDictionary,
-        "device": TPumpStatusDatumDeviceTests.deviceJSONDictionary,
+        "deliveryIndeterminant": false,
         "reservoir": TPumpStatusDatumReservoirTests.reservoirJSONDictionary
     ]
 
@@ -31,7 +31,7 @@ class TPumpStatusDatumTests: XCTestCase {
         XCTAssertEqual(pumpStatus.basalDelivery, TPumpStatusDatumBasalDeliveryTests.basalDelivery)
         XCTAssertEqual(pumpStatus.battery, TPumpStatusDatumBatteryTests.battery)
         XCTAssertEqual(pumpStatus.bolusDelivery, TPumpStatusDatumBolusDeliveryTests.bolusDelivery)
-        XCTAssertEqual(pumpStatus.device, TPumpStatusDatumDeviceTests.device)
+        XCTAssertEqual(pumpStatus.deliveryIndeterminant, false)
         XCTAssertEqual(pumpStatus.reservoir, TPumpStatusDatumReservoirTests.reservoir)
     }
 
@@ -60,6 +60,18 @@ class TPumpStatusDatumBasalDeliveryTests: XCTestCase {
     }
 }
 
+class TPumpStatusDatumBasalDeliveryStateTests: XCTestCase {
+    func testState() {
+        XCTAssertEqual(TPumpStatusDatum.BasalDelivery.State.cancelingTemporary.rawValue, "cancelingTemporary")
+        XCTAssertEqual(TPumpStatusDatum.BasalDelivery.State.initiatingTemporary.rawValue, "initiatingTemporary")
+        XCTAssertEqual(TPumpStatusDatum.BasalDelivery.State.resuming.rawValue, "resuming")
+        XCTAssertEqual(TPumpStatusDatum.BasalDelivery.State.scheduled.rawValue, "scheduled")
+        XCTAssertEqual(TPumpStatusDatum.BasalDelivery.State.suspended.rawValue, "suspended")
+        XCTAssertEqual(TPumpStatusDatum.BasalDelivery.State.suspending.rawValue, "suspending")
+        XCTAssertEqual(TPumpStatusDatum.BasalDelivery.State.temporary.rawValue, "temporary")
+    }
+}
+
 class TPumpStatusDatumBasalDeliveryDoseTests: XCTestCase {
     static let dose = TPumpStatusDatum.BasalDelivery.Dose(startTime: Date.test, endTime: Date.test, rate: 2.34, amountDelivered: 1.23)
     static let doseJSONDictionary: [String: Any] = [
@@ -83,9 +95,10 @@ class TPumpStatusDatumBasalDeliveryDoseTests: XCTestCase {
 }
 
 class TPumpStatusDatumBatteryTests: XCTestCase {
-    static let battery = TPumpStatusDatum.Battery(time: Date.test, remaining: 0.12)
+    static let battery = TPumpStatusDatum.Battery(time: Date.test, state: .unplugged, remaining: 0.12, units: .percent)
     static let batteryJSONDictionary: [String: Any] = [
         "time": Date.testJSONString,
+        "state": "unplugged",
         "remaining": 0.12,
         "units": "percent"
     ]
@@ -93,12 +106,27 @@ class TPumpStatusDatumBatteryTests: XCTestCase {
     func testInitializer() {
         let battery = TPumpStatusDatumBatteryTests.battery
         XCTAssertEqual(battery.time, Date.test)
+        XCTAssertEqual(battery.state, .unplugged)
         XCTAssertEqual(battery.remaining, 0.12)
         XCTAssertEqual(battery.units, .percent)
     }
 
     func testCodableAsJSON() {
         XCTAssertCodableAsJSON(TPumpStatusDatumBatteryTests.battery, TPumpStatusDatumBatteryTests.batteryJSONDictionary)
+    }
+}
+
+class TPumpStatusDatumBatteryStateTests: XCTestCase {
+    func testState() {
+        XCTAssertEqual(TPumpStatusDatum.Battery.State.unplugged.rawValue, "unplugged")
+        XCTAssertEqual(TPumpStatusDatum.Battery.State.charging.rawValue, "charging")
+        XCTAssertEqual(TPumpStatusDatum.Battery.State.full.rawValue, "full")
+    }
+}
+
+class TPumpStatusDatumBatteryUnitsTests: XCTestCase {
+    func testUnits() {
+        XCTAssertEqual(TPumpStatusDatum.Battery.Units.percent.rawValue, "percent")
     }
 }
 
@@ -120,6 +148,15 @@ class TPumpStatusDatumBolusDeliveryTests: XCTestCase {
     }
 }
 
+class TPumpStatusDatumBolusDeliveryStateTests: XCTestCase {
+    func testState() {
+        XCTAssertEqual(TPumpStatusDatum.BolusDelivery.State.canceling.rawValue, "canceling")
+        XCTAssertEqual(TPumpStatusDatum.BolusDelivery.State.delivering.rawValue, "delivering")
+        XCTAssertEqual(TPumpStatusDatum.BolusDelivery.State.initiating.rawValue, "initiating")
+        XCTAssertEqual(TPumpStatusDatum.BolusDelivery.State.none.rawValue, "none")
+    }
+}
+
 class TPumpStatusDatumBolusDeliveryDoseTests: XCTestCase {
     static let dose = TPumpStatusDatum.BolusDelivery.Dose(startTime: Date.test, amount: 2.34, amountDelivered: 1.23)
     static let doseJSONDictionary: [String: Any] = [
@@ -137,40 +174,6 @@ class TPumpStatusDatumBolusDeliveryDoseTests: XCTestCase {
 
     func testCodableAsJSON() {
         XCTAssertCodableAsJSON(TPumpStatusDatumBolusDeliveryDoseTests.dose, TPumpStatusDatumBolusDeliveryDoseTests.doseJSONDictionary)
-    }
-}
-
-class TPumpStatusDatumDeviceTests: XCTestCase {
-    static let device = TPumpStatusDatum.Device(id: "1234567890",
-                                                name: "Joe's Pump",
-                                                manufacturer: "Acme Pump Company",
-                                                model: "Model X",
-                                                firmwareVersion: "0.1.2",
-                                                hardwareVersion: "1.2.3",
-                                                softwareVersion: "2.3.4")
-    static let deviceJSONDictionary: [String: Any] = [
-        "id": "1234567890",
-        "name": "Joe's Pump",
-        "manufacturer": "Acme Pump Company",
-        "model": "Model X",
-        "firmwareVersion": "0.1.2",
-        "hardwareVersion": "1.2.3",
-        "softwareVersion": "2.3.4"
-    ]
-
-    func testInitializer() {
-        let device = TPumpStatusDatumDeviceTests.device
-        XCTAssertEqual(device.id, "1234567890")
-        XCTAssertEqual(device.name, "Joe's Pump")
-        XCTAssertEqual(device.manufacturer, "Acme Pump Company")
-        XCTAssertEqual(device.model, "Model X")
-        XCTAssertEqual(device.firmwareVersion, "0.1.2")
-        XCTAssertEqual(device.hardwareVersion, "1.2.3")
-        XCTAssertEqual(device.softwareVersion, "2.3.4")
-    }
-
-    func testCodableAsJSON() {
-        XCTAssertCodableAsJSON(TPumpStatusDatumDeviceTests.device, TPumpStatusDatumDeviceTests.deviceJSONDictionary)
     }
 }
 
@@ -200,7 +203,7 @@ extension TPumpStatusDatum {
             self.basalDelivery == other.basalDelivery &&
             self.battery == other.battery &&
             self.bolusDelivery == other.bolusDelivery &&
-            self.device == other.device &&
+            self.deliveryIndeterminant == other.deliveryIndeterminant &&
             self.reservoir == other.reservoir
     }
 }

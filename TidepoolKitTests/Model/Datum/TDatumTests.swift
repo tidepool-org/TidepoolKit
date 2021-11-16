@@ -25,8 +25,8 @@ class TDatumTests: XCTestCase {
                               origin: TOriginTests.origin,
                               payload: TDictionary(["foo": "bar"]),
                               tags: ["Fast", "Slow"],
-                              timezone: "America/Los_Angeles",
-                              timezoneOffset: -28800)
+                              timeZone: TimeZone(identifier: "America/Los_Angeles")!,
+                              timeZoneOffset: -28800)
     static let datumJSONDictionary: [String: Any] = [
         "type": "water",
         "time": Date.testJSONString,
@@ -64,8 +64,8 @@ class TDatumTests: XCTestCase {
         XCTAssertEqual(datum.origin, TOriginTests.origin)
         XCTAssertEqual(datum.payload, TDictionary(["foo": "bar"]))
         XCTAssertEqual(datum.tags, ["Fast", "Slow"])
-        XCTAssertEqual(datum.timezone, "America/Los_Angeles")
-        XCTAssertEqual(datum.timezoneOffset, -28800)
+        XCTAssertEqual(datum.timeZone, TimeZone(identifier: "America/Los_Angeles")!)
+        XCTAssertEqual(datum.timeZoneOffset, -28800)
     }
 }
 
@@ -78,6 +78,7 @@ class TDatumDatumTypeTests: XCTestCase {
         XCTAssertEqual(TDatum.DatumType.cbg.rawValue, "cbg")
         XCTAssertEqual(TDatum.DatumType.cgmSettings.rawValue, "cgmSettings")
         XCTAssertEqual(TDatum.DatumType.controllerSettings.rawValue, "controllerSettings")
+        XCTAssertEqual(TDatum.DatumType.controllerStatus.rawValue, "controllerStatus")
         XCTAssertEqual(TDatum.DatumType.deviceEvent.rawValue, "deviceEvent")
         XCTAssertEqual(TDatum.DatumType.dosingDecision.rawValue, "dosingDecision")
         XCTAssertEqual(TDatum.DatumType.food.rawValue, "food")
@@ -210,6 +211,8 @@ extension TDatum: Equatable {
             return lhs.isEqual(to: rhs)
         case let (lhs as TControllerSettingsDatum, rhs as TControllerSettingsDatum):
             return lhs.isEqual(to: rhs)
+        case let (lhs as TControllerStatusDatum, rhs as TControllerStatusDatum):
+            return lhs.isEqual(to: rhs)
         case let (lhs as TAlarmDeviceEventDatum, rhs as TAlarmDeviceEventDatum):
             return lhs.isEqual(to: rhs)
         case let (lhs as TCalibrationDeviceEventDatum, rhs as TCalibrationDeviceEventDatum):
@@ -263,7 +266,7 @@ extension TDatum: Equatable {
             self.origin == other.origin &&
             self.payload == other.payload &&
             self.tags == other.tags &&
-            self.timezone == other.timezone &&
-            self.timezoneOffset == other.timezoneOffset
+            self.timeZone == other.timeZone &&
+            self.timeZoneOffset == other.timeZoneOffset
     }
 }

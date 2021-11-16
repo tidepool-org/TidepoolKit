@@ -116,7 +116,7 @@ public class TFoodDatum: TDatum, Decodable {
             public var total: Double?
             public var units: Units?
 
-            public init(net: Double? = nil, sugars: Double? = nil, dietaryFiber: Double? = nil, total: Double? = nil, units: Units = .grams) {
+            public init(net: Double? = nil, sugars: Double? = nil, dietaryFiber: Double? = nil, total: Double? = nil, units: Units? = .grams) {
                 self.net = net
                 self.sugars = sugars
                 self.dietaryFiber = dietaryFiber
@@ -133,7 +133,7 @@ public class TFoodDatum: TDatum, Decodable {
             public var total: Double?
             public var units: Units?
 
-            public init(_ total: Double, _ units: Units = .grams) {
+            public init(_ total: Double, _ units: Units? = .grams) {
                 self.total = total
                 self.units = units
             }
@@ -147,7 +147,7 @@ public class TFoodDatum: TDatum, Decodable {
             public var total: Double?
             public var units: Units?
 
-            public init(_ total: Double, _ units: Units = .grams) {
+            public init(_ total: Double, _ units: Units? = .grams) {
                 self.total = total
                 self.units = units
             }

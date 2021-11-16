@@ -12,19 +12,19 @@ public class TPumpStatusDatum: TDatum, Decodable {
     public var basalDelivery: BasalDelivery?
     public var battery: Battery?
     public var bolusDelivery: BolusDelivery?
-    public var device: Device?
+    public var deliveryIndeterminant: Bool?
     public var reservoir: Reservoir?
 
     public init(time: Date,
                 basalDelivery: BasalDelivery? = nil,
                 battery: Battery? = nil,
                 bolusDelivery: BolusDelivery? = nil,
-                device: Device? = nil,
+                deliveryIndeterminant: Bool? = nil,
                 reservoir: Reservoir? = nil) {
         self.basalDelivery = basalDelivery
         self.battery = battery
         self.bolusDelivery = bolusDelivery
-        self.device = device
+        self.deliveryIndeterminant = deliveryIndeterminant
         self.reservoir = reservoir
         super.init(.pumpStatus, time: time)
     }
@@ -34,7 +34,7 @@ public class TPumpStatusDatum: TDatum, Decodable {
         self.basalDelivery = try container.decodeIfPresent(BasalDelivery.self, forKey: .basalDelivery)
         self.battery = try container.decodeIfPresent(Battery.self, forKey: .battery)
         self.bolusDelivery = try container.decodeIfPresent(BolusDelivery.self, forKey: .bolusDelivery)
-        self.device = try container.decodeIfPresent(Device.self, forKey: .device)
+        self.deliveryIndeterminant = try container.decodeIfPresent(Bool.self, forKey: .deliveryIndeterminant)
         self.reservoir = try container.decodeIfPresent(Reservoir.self, forKey: .reservoir)
         try super.init(.pumpStatus, from: decoder)
     }
@@ -44,7 +44,7 @@ public class TPumpStatusDatum: TDatum, Decodable {
         try container.encodeIfPresent(basalDelivery, forKey: .basalDelivery)
         try container.encodeIfPresent(battery, forKey: .battery)
         try container.encodeIfPresent(bolusDelivery, forKey: .bolusDelivery)
-        try container.encodeIfPresent(device, forKey: .device)
+        try container.encodeIfPresent(deliveryIndeterminant, forKey: .deliveryIndeterminant)
         try container.encodeIfPresent(reservoir, forKey: .reservoir)
         try super.encode(to: encoder)
     }
@@ -86,16 +86,24 @@ public class TPumpStatusDatum: TDatum, Decodable {
     }
 
     public struct Battery: Codable, Equatable {
+        public enum State: String, Codable {
+            case unplugged
+            case charging
+            case full
+        }
+
         public enum Units: String, Codable {
             case percent
         }
 
         public var time: Date?
+        public var state: State?
         public var remaining: Double?
         public var units: Units?
 
-        public init(time: Date? = nil, remaining: Double, units: Units = .percent) {
+        public init(time: Date? = nil, state: State? = nil, remaining: Double? = nil, units: Units? = nil) {
             self.time = time
+            self.state = state
             self.remaining = remaining
             self.units = units
         }
@@ -130,32 +138,6 @@ public class TPumpStatusDatum: TDatum, Decodable {
         }
     }
 
-    public struct Device: Codable, Equatable {
-        public var id: String?
-        public var name: String?
-        public var manufacturer: String?
-        public var model: String?
-        public var firmwareVersion: String?
-        public var hardwareVersion: String?
-        public var softwareVersion: String?
-
-        public init(id: String? = nil,
-                    name: String? = nil,
-                    manufacturer: String? = nil,
-                    model: String? = nil,
-                    firmwareVersion: String? = nil,
-                    hardwareVersion: String? = nil,
-                    softwareVersion: String? = nil) {
-            self.id = id
-            self.name = name
-            self.manufacturer = manufacturer
-            self.model = model
-            self.firmwareVersion = firmwareVersion
-            self.hardwareVersion = hardwareVersion
-            self.softwareVersion = softwareVersion
-        }
-    }
-
     public struct Reservoir: Codable, Equatable {
         public typealias Units = TInsulin.Units
 
@@ -174,7 +156,7 @@ public class TPumpStatusDatum: TDatum, Decodable {
         case basalDelivery
         case battery
         case bolusDelivery
-        case device
+        case deliveryIndeterminant
         case reservoir
     }
 }

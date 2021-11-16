@@ -17,6 +17,7 @@ public class TDatum: Encodable {
         case cbg
         case cgmSettings
         case controllerSettings
+        case controllerStatus
         case deviceEvent
         case dosingDecision
         case food
@@ -46,8 +47,8 @@ public class TDatum: Encodable {
     public var origin: TOrigin?
     public var payload: TDictionary?
     public var tags: [String]?
-    public var timezone: String?
-    public var timezoneOffset: TimeInterval?
+    public var timeZone: TimeZone?
+    public var timeZoneOffset: TimeInterval?
 
     public init(_ type: DatumType,
                 time: Date,
@@ -64,8 +65,8 @@ public class TDatum: Encodable {
                 origin: TOrigin? = nil,
                 payload: TDictionary? = nil,
                 tags: [String]? = nil,
-                timezone: String? = nil,
-                timezoneOffset: TimeInterval? = nil) {
+                timeZone: TimeZone? = nil,
+                timeZoneOffset: TimeInterval? = nil) {
         self.type = type
         self.time = time
         self.annotations = annotations
@@ -81,8 +82,8 @@ public class TDatum: Encodable {
         self.origin = origin
         self.payload = payload
         self.tags = tags
-        self.timezone = timezone
-        self.timezoneOffset = timezoneOffset
+        self.timeZone = timeZone
+        self.timeZoneOffset = timeZoneOffset
     }
 
     init(_ expectedType: DatumType, from decoder: Decoder) throws {
@@ -105,8 +106,8 @@ public class TDatum: Encodable {
         self.origin = try container.decodeIfPresent(TOrigin.self, forKey: .origin)
         self.payload = try container.decodeIfPresent(TDictionary.self, forKey: .payload)
         self.tags = try container.decodeIfPresent([String].self, forKey: .tags)
-        self.timezone = try container.decodeIfPresent(String.self, forKey: .timezone)
-        self.timezoneOffset = try container.decodeIfPresent(Int.self, forKey: .timezoneOffset).map { .minutes($0) }
+        self.timeZone = try container.decodeIfPresent(String.self, forKey: .timeZone).flatMap { TimeZone(identifier: $0) }
+        self.timeZoneOffset = try container.decodeIfPresent(Int.self, forKey: .timeZoneOffset).map { .minutes($0) }
     }
 
     public func encode(to encoder: Encoder) throws {
@@ -126,8 +127,8 @@ public class TDatum: Encodable {
         try container.encodeIfPresent(origin, forKey: .origin)
         try container.encodeIfPresent(payload, forKey: .payload)
         try container.encodeIfPresent(tags, forKey: .tags)
-        try container.encodeIfPresent(timezone, forKey: .timezone)
-        try container.encodeIfPresent(timezoneOffset.map { Int($0.minutes) }, forKey: .timezoneOffset)
+        try container.encodeIfPresent(timeZone.map { $0.identifier }, forKey: .timeZone)
+        try container.encodeIfPresent(timeZoneOffset.map { Int($0.minutes) }, forKey: .timeZoneOffset)
     }
 
     private enum CodingKeys: String, CodingKey {
@@ -146,8 +147,8 @@ public class TDatum: Encodable {
         case origin
         case payload
         case tags
-        case timezone
-        case timezoneOffset
+        case timeZone = "timezone"
+        case timeZoneOffset = "timezoneOffset"
     }
 }
 

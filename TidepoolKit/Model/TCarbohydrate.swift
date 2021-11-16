@@ -8,6 +8,7 @@
 
 public struct TCarbohydrate {
     public enum Units: String, Codable {
+        case exchanges
         case grams
     }
 }

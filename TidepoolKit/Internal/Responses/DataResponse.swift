@@ -57,6 +57,8 @@ struct DataResponse: Codable {
                     datum = try TCGMSettingsDatum(from: superDecoder)
                 case .controllerSettings:
                     datum = try TControllerSettingsDatum(from: superDecoder)
+                case .controllerStatus:
+                    datum = try TControllerStatusDatum(from: superDecoder)
                 case .deviceEvent:
                     let subType = try superContainer.decode(TDeviceEventDatum.SubType.self, forKey: .subType)
                     switch subType {
@@ -99,7 +101,7 @@ struct DataResponse: Codable {
                 if let datum = datum {
                     data.append(datum)
                 }
-            } catch let error {
+            } catch {
                 let malformedContainer = try superDecoder.container(keyedBy: JSONCodingKeys.self)
                 malformed[String(container.currentIndex)] = try malformedContainer.decode([String: Any].self)
             }

@@ -106,4 +106,18 @@ public struct TBloodGlucose {
             case high
         }
     }
+
+    public static func valueRange(for units: Units) -> ClosedRange<Double> {
+        switch units {
+        case .milligramsPerDeciliter:
+            return 0...1000
+        case .millimolesPerLiter:
+            return 0...55.0
+        }
+    }
+
+    public static func clamp(value: Double, for units: Units) -> Double {
+        let range = valueRange(for: units)
+        return min(max(value, range.lowerBound), range.upperBound)
+    }
 }

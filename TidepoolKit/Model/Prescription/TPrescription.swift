@@ -7,6 +7,16 @@
 //
 
 public struct TPrescription: Codable, Equatable {
+    public enum State: String, Codable, Equatable {
+        case draft
+        case pending
+        case submitted
+        case claimed
+        case expired
+        case active
+        case inactive
+    }
+
     public var id: String?
     public var patientUserId: String?
     public var accessCode: String?
@@ -43,16 +53,6 @@ public struct TPrescription: Codable, Equatable {
         self.modifiedUserId = modifiedUserId
     }
     
-    public enum State: String, Codable, Equatable {
-        case draft
-        case pending
-        case submitted
-        case claimed
-        case expired
-        case active
-        case inactive
-    }
-    
     public struct Revision: Codable, Equatable {
         public var revisionId: Int?
         public var attributes: Attributes?
@@ -64,6 +64,33 @@ public struct TPrescription: Codable, Equatable {
     }
     
     public struct Attributes: Codable, Equatable {
+        public enum State: String, Codable, Equatable {
+            case draft
+            case pending
+            case submitted
+        }
+
+        public enum AccountType: String, Codable, Equatable {
+            case patient
+            case caregiver
+        }
+
+        public enum Sex: String, Codable, Equatable {
+            case male
+            case female
+            case undisclosed
+        }
+
+        public enum Training: String, Codable, Equatable {
+            case inPerson
+            case inModule
+        }
+
+        public enum TherapySettings: String, Codable, Equatable {
+            case initial
+            case transferPumpSettings
+        }
+
         public var accountType: AccountType?
         public var caregiverFirstName: String?
         public var caregiverLastName: String?
@@ -123,110 +150,83 @@ public struct TPrescription: Codable, Equatable {
             self.createdTime = createdTime
             self.createdUserId = createdUserId
         }
-        
-        public enum State: String, Codable, Equatable {
-            case draft
-            case pending
-            case submitted
+
+        public struct Weight: Codable, Equatable {
+            public var value: Double?
+            public var units: Units?
+
+            public init(value: Double? = nil, units: Units? = nil) {
+                self.value = value
+                self.units = units
+            }
+
+            public enum Units: String, Codable, Equatable {
+                case kg
+            }
+        }
+
+        public struct PhoneNumber: Codable, Equatable {
+            public var countryCode: Int?
+            public var number: String?
+
+            public init(countryCode: Int? = nil, number: String? = nil) {
+                self.countryCode = countryCode
+                self.number = number
+            }
+        }
+
+        public struct InitialSettings: Codable, Equatable {
+            public typealias BloodGlucoseUnits = TBloodGlucose.Units
+            public typealias BasalRateStart = TPumpSettingsDatum.BasalRateStart
+            public typealias BloodGlucoseTarget = TBloodGlucose.Target
+            public typealias BloodGlucoseStartTarget = TBloodGlucose.StartTarget
+            public typealias CarbohydrateRatioStart = TPumpSettingsDatum.CarbohydrateRatioStart
+            public typealias InsulinModelType = TPumpSettingsDatum.InsulinModel.ModelType
+            public typealias InsulinSensitivityStart = TPumpSettingsDatum.InsulinSensitivityStart
+            public typealias BasalRateMaximum = TPumpSettingsDatum.Basal.RateMaximum
+            public typealias BolusAmountMaximum = TPumpSettingsDatum.Bolus.AmountMaximum
+
+            public var bloodGlucoseUnits: BloodGlucoseUnits?
+            public var basalRateSchedule: [BasalRateStart]?
+            public var bloodGlucoseTargetPhysicalActivity: BloodGlucoseTarget?
+            public var bloodGlucoseTargetPreprandial: BloodGlucoseTarget?
+            public var bloodGlucoseTargetSchedule: [BloodGlucoseStartTarget]?
+            public var carbohydrateRatioSchedule: [CarbohydrateRatioStart]?
+            public var glucoseSafetyLimit: Double?
+            public var insulinModel: InsulinModelType?
+            public var insulinSensitivitySchedule: [InsulinSensitivityStart]?
+            public var basalRateMaximum: BasalRateMaximum?
+            public var bolusAmountMaximum: BolusAmountMaximum?
+            public var pumpId: String?
+            public var cgmId: String?
+
+            public init(bloodGlucoseUnits: BloodGlucoseUnits? = nil,
+                        basalRateSchedule: [BasalRateStart]? = nil,
+                        bloodGlucoseTargetPhysicalActivity: BloodGlucoseTarget? = nil,
+                        bloodGlucoseTargetPreprandial: BloodGlucoseTarget? = nil,
+                        bloodGlucoseTargetSchedule: [BloodGlucoseStartTarget]? = nil,
+                        carbohydrateRatioSchedule: [CarbohydrateRatioStart]? = nil,
+                        glucoseSafetyLimit: Double? = nil,
+                        insulinModel: InsulinModelType? = nil,
+                        insulinSensitivitySchedule: [InsulinSensitivityStart]? = nil,
+                        basalRateMaximum: BasalRateMaximum? = nil,
+                        bolusAmountMaximum: BolusAmountMaximum? = nil,
+                        pumpId: String? = nil,
+                        cgmId: String? = nil) {
+                self.bloodGlucoseUnits = bloodGlucoseUnits
+                self.basalRateSchedule = basalRateSchedule
+                self.bloodGlucoseTargetPhysicalActivity = bloodGlucoseTargetPhysicalActivity
+                self.bloodGlucoseTargetPreprandial = bloodGlucoseTargetPreprandial
+                self.bloodGlucoseTargetSchedule = bloodGlucoseTargetSchedule
+                self.carbohydrateRatioSchedule = carbohydrateRatioSchedule
+                self.glucoseSafetyLimit = glucoseSafetyLimit
+                self.insulinModel = insulinModel
+                self.insulinSensitivitySchedule = insulinSensitivitySchedule
+                self.basalRateMaximum = basalRateMaximum
+                self.bolusAmountMaximum = bolusAmountMaximum
+                self.pumpId = pumpId
+                self.cgmId = cgmId
+            }
         }
     }
-    
-    public enum AccountType: String, Codable, Equatable {
-        case patient
-        case caregiver
-    }
-    
-    public enum Sex: String, Codable, Equatable {
-        case male
-        case female
-        case undisclosed
-    }
-    
-    public struct Weight: Codable, Equatable {
-        public var value: Double?
-        public var units: Units?
-        
-        public init(value: Double? = nil, units: Units? = nil) {
-            self.value = value
-            self.units = units
-        }
-        
-        public enum Units: String, Codable, Equatable {
-            case kg
-        }
-    }
-    
-    public struct PhoneNumber: Codable, Equatable {
-        public var countryCode: Int?
-        public var number: String?
-        
-        public init(countryCode: Int? = nil, number: String? = nil) {
-            self.countryCode = countryCode
-            self.number = number
-        }
-    }
-    
-    public struct InitialSettings: Codable, Equatable {
-        public var bloodGlucoseUnits: BloodGlucoseUnits?
-        public var basalRateSchedule: [BasalRateStart]?
-        public var bloodGlucoseTargetPhysicalActivity: BloodGlucoseTarget?
-        public var bloodGlucoseTargetPreprandial: BloodGlucoseTarget?
-        public var bloodGlucoseTargetSchedule: [BloodGlucoseStartTarget]?
-        public var carbohydrateRatioSchedule: [CarbohydrateRatioStart]?
-        public var glucoseSafetyLimit: Double?
-        public var insulinModel: InsulinModelType?
-        public var insulinSensitivitySchedule: [InsulinSensitivityStart]?
-        public var basalRateMaximum: BasalRateMaximum?
-        public var bolusAmountMaximum: BolusAmountMaximum?
-        public var pumpId: String?
-        public var cgmId: String?
-        
-        public init(bloodGlucoseUnits: BloodGlucoseUnits? = nil,
-                    basalRateSchedule: [BasalRateStart]? = nil,
-                    bloodGlucoseTargetPhysicalActivity: BloodGlucoseTarget? = nil,
-                    bloodGlucoseTargetPreprandial: BloodGlucoseTarget? = nil,
-                    bloodGlucoseTargetSchedule: [BloodGlucoseStartTarget]? = nil,
-                    carbohydrateRatioSchedule: [CarbohydrateRatioStart]? = nil,
-                    glucoseSafetyLimit: Double? = nil,
-                    insulinModel: InsulinModelType? = nil,
-                    insulinSensitivitySchedule: [InsulinSensitivityStart]? = nil,
-                    basalRateMaximum: BasalRateMaximum? = nil,
-                    bolusAmountMaximum: BolusAmountMaximum? = nil,
-                    pumpId: String? = nil,
-                    cgmId: String? = nil) {
-            self.bloodGlucoseUnits = bloodGlucoseUnits
-            self.basalRateSchedule = basalRateSchedule
-            self.bloodGlucoseTargetPhysicalActivity = bloodGlucoseTargetPhysicalActivity
-            self.bloodGlucoseTargetPreprandial = bloodGlucoseTargetPreprandial
-            self.bloodGlucoseTargetSchedule = bloodGlucoseTargetSchedule
-            self.carbohydrateRatioSchedule = carbohydrateRatioSchedule
-            self.glucoseSafetyLimit = glucoseSafetyLimit
-            self.insulinModel = insulinModel
-            self.insulinSensitivitySchedule = insulinSensitivitySchedule
-            self.basalRateMaximum = basalRateMaximum
-            self.bolusAmountMaximum = bolusAmountMaximum
-            self.pumpId = pumpId
-            self.cgmId = cgmId
-        }
-    }
-    
-    public enum Training: String, Codable, Equatable {
-        case inPerson
-        case inModule
-    }
-    
-    public enum TherapySettings: String, Codable, Equatable {
-        case initial
-        case transferPumpSettings
-    }
-    
-    public typealias BloodGlucoseUnits = TBloodGlucose.Units
-    public typealias BasalRateStart = TPumpSettingsDatum.BasalRateStart
-    public typealias BloodGlucoseTarget = TBloodGlucose.Target
-    public typealias BloodGlucoseStartTarget = TBloodGlucose.StartTarget
-    public typealias CarbohydrateRatioStart = TPumpSettingsDatum.CarbohydrateRatioStart
-    public typealias InsulinModelType = TPumpSettingsDatum.InsulinModel.ModelType
-    public typealias InsulinSensitivityStart = TPumpSettingsDatum.InsulinSensitivityStart
-    public typealias BasalRateMaximum = TPumpSettingsDatum.Basal.RateMaximum
-    public typealias BolusAmountMaximum = TPumpSettingsDatum.Bolus.AmountMaximum
 }
