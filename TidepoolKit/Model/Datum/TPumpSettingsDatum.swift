@@ -11,6 +11,7 @@ import Foundation
 public class TPumpSettingsDatum: TDatum, Decodable {
     public typealias BloodGlucoseTarget = TBloodGlucose.Target
     public typealias BloodGlucoseStartTarget = TBloodGlucose.StartTarget
+    public typealias InsulinFormulation = TInsulinDatum.Formulation
 
     public var activeScheduleName: String?
     public var automatedDelivery: Bool?
@@ -28,6 +29,7 @@ public class TPumpSettingsDatum: TDatum, Decodable {
     public var display: Display?
     public var firmwareVersion: String?
     public var hardwareVersion: String?
+    public var insulinFormulation: InsulinFormulation?
     public var insulinModel: InsulinModel?
     public var insulinSensitivitySchedule: [InsulinSensitivityStart]?
     public var insulinSensitivitySchedules: [String: [InsulinSensitivityStart]]?
@@ -57,6 +59,7 @@ public class TPumpSettingsDatum: TDatum, Decodable {
                 display: Display? = nil,
                 firmwareVersion: String? = nil,
                 hardwareVersion: String? = nil,
+                insulinFormulation: InsulinFormulation? = nil,
                 insulinModel: InsulinModel? = nil,
                 insulinSensitivitySchedule: [InsulinSensitivityStart]? = nil,
                 insulinSensitivitySchedules: [String: [InsulinSensitivityStart]]? = nil,
@@ -84,6 +87,7 @@ public class TPumpSettingsDatum: TDatum, Decodable {
         self.display = display
         self.firmwareVersion = firmwareVersion
         self.hardwareVersion = hardwareVersion
+        self.insulinFormulation = insulinFormulation
         self.insulinModel = insulinModel
         self.insulinSensitivitySchedule = insulinSensitivitySchedule
         self.insulinSensitivitySchedules = insulinSensitivitySchedules
@@ -116,6 +120,7 @@ public class TPumpSettingsDatum: TDatum, Decodable {
         self.display = try container.decodeIfPresent(Display.self, forKey: .display)
         self.firmwareVersion = try container.decodeIfPresent(String.self, forKey: .firmwareVersion)
         self.hardwareVersion = try container.decodeIfPresent(String.self, forKey: .hardwareVersion)
+        self.insulinFormulation = try container.decodeIfPresent(InsulinFormulation.self, forKey: .insulinFormulation)
         self.insulinModel = try container.decodeIfPresent(InsulinModel.self, forKey: .insulinModel)
         self.insulinSensitivitySchedule = try container.decodeIfPresent([InsulinSensitivityStart].self, forKey: .insulinSensitivitySchedule)
         self.insulinSensitivitySchedules = try container.decodeIfPresent([String: [InsulinSensitivityStart]].self, forKey: .insulinSensitivitySchedules)
@@ -148,6 +153,7 @@ public class TPumpSettingsDatum: TDatum, Decodable {
         try container.encodeIfPresent(display, forKey: .display)
         try container.encodeIfPresent(firmwareVersion, forKey: .firmwareVersion)
         try container.encodeIfPresent(hardwareVersion, forKey: .hardwareVersion)
+        try container.encodeIfPresent(insulinFormulation, forKey: .insulinFormulation)
         try container.encodeIfPresent(insulinModel, forKey: .insulinModel)
         try container.encodeIfPresent(insulinSensitivitySchedule, forKey: .insulinSensitivitySchedule)
         try container.encodeIfPresent(insulinSensitivitySchedules, forKey: .insulinSensitivitySchedules)
@@ -491,6 +497,7 @@ public class TPumpSettingsDatum: TDatum, Decodable {
         case display
         case firmwareVersion
         case hardwareVersion
+        case insulinFormulation
         case insulinModel
         case insulinSensitivitySchedule = "insulinSensitivity"
         case insulinSensitivitySchedules = "insulinSensitivities"

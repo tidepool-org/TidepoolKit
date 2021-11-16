@@ -251,11 +251,16 @@ extension TCGMSettingsDatum {
             self.hardwareVersion == other.hardwareVersion &&
             self.manufacturers == other.manufacturers &&
             self.model == other.model &&
+            self.name == other.name &&
             self.serialNumber == other.serialNumber &&
             self.softwareVersion == other.softwareVersion &&
             self.transmitterId == other.transmitterId &&
             self.units == other.units &&
             self.defaultAlerts == other.defaultAlerts &&
-            self.scheduledAlerts == other.scheduledAlerts
+            self.scheduledAlerts == other.scheduledAlerts &&
+            self.highAlertsDEPRECATED == other.highAlertsDEPRECATED &&
+            self.lowAlertsDEPRECATED == other.lowAlertsDEPRECATED &&
+            self.outOfRangeAlertsDEPRECATED == other.outOfRangeAlertsDEPRECATED &&
+            self.rateOfChangeAlertsDEPRECATED == other.rateOfChangeAlertsDEPRECATED
     }
 }

@@ -40,6 +40,7 @@ class TPumpSettingsDatumTests: XCTestCase {
         display: TPumpSettingsDatumDisplayTests.display,
         firmwareVersion: "1.2.3",
         hardwareVersion: "2.3.4",
+        insulinFormulation: TInsulinDatumFormulationTests.formulation,
         insulinModel: TPumpSettingsDatumInsulinModelTests.insulinModel,
         insulinSensitivitySchedule: [TPumpSettingsDatumInsulinSensitivityStartTests.insulinSensitivityStart, TPumpSettingsDatumInsulinSensitivityStartTests.insulinSensitivityStart],
         insulinSensitivitySchedules: [
@@ -90,6 +91,7 @@ class TPumpSettingsDatumTests: XCTestCase {
         "display": TPumpSettingsDatumDisplayTests.displayJSONDictionary,
         "firmwareVersion": "1.2.3",
         "hardwareVersion": "2.3.4",
+        "insulinFormulation": TInsulinDatumFormulationTests.formulationJSONDictionary,
         "insulinModel": TPumpSettingsDatumInsulinModelTests.insulinModelJSONDictionary,
         "insulinSensitivity": [TPumpSettingsDatumInsulinSensitivityStartTests.insulinSensitivityStartJSONDictionary, TPumpSettingsDatumInsulinSensitivityStartTests.insulinSensitivityStartJSONDictionary],
         "insulinSensitivities": [
@@ -140,6 +142,7 @@ class TPumpSettingsDatumTests: XCTestCase {
         XCTAssertEqual(pumpSettings.display, TPumpSettingsDatumDisplayTests.display)
         XCTAssertEqual(pumpSettings.firmwareVersion, "1.2.3")
         XCTAssertEqual(pumpSettings.hardwareVersion, "2.3.4")
+        XCTAssertEqual(pumpSettings.insulinFormulation, TInsulinDatumFormulationTests.formulation)
         XCTAssertEqual(pumpSettings.insulinModel, TPumpSettingsDatumInsulinModelTests.insulinModel)
         XCTAssertEqual(pumpSettings.insulinSensitivitySchedule, [TPumpSettingsDatumInsulinSensitivityStartTests.insulinSensitivityStart, TPumpSettingsDatumInsulinSensitivityStartTests.insulinSensitivityStart])
         XCTAssertEqual(pumpSettings.insulinSensitivitySchedules, [
@@ -524,20 +527,32 @@ extension TPumpSettingsDatum {
     func isEqual(to other: TPumpSettingsDatum) -> Bool {
         return super.isEqual(to: other) &&
             self.activeScheduleName == other.activeScheduleName &&
+            self.automatedDelivery == other.automatedDelivery &&
             self.basal == other.basal &&
             self.basalRateSchedule == other.basalRateSchedule &&
             self.basalRateSchedules == other.basalRateSchedules &&
+            self.bloodGlucoseSafetyLimit == other.bloodGlucoseSafetyLimit &&
+            self.bloodGlucoseTargetPhysicalActivity == other.bloodGlucoseTargetPhysicalActivity &&
+            self.bloodGlucoseTargetPreprandial == other.bloodGlucoseTargetPreprandial &&
             self.bloodGlucoseTargetSchedule == other.bloodGlucoseTargetSchedule &&
             self.bloodGlucoseTargetSchedules == other.bloodGlucoseTargetSchedules &&
             self.bolus == other.bolus &&
             self.carbohydrateRatioSchedule == other.carbohydrateRatioSchedule &&
             self.carbohydrateRatioSchedules == other.carbohydrateRatioSchedules &&
             self.display == other.display &&
+            self.firmwareVersion == other.firmwareVersion &&
+            self.hardwareVersion == other.hardwareVersion &&
+            self.insulinFormulation == other.insulinFormulation &&
+            self.insulinModel == other.insulinModel &&
             self.insulinSensitivitySchedule == other.insulinSensitivitySchedule &&
             self.insulinSensitivitySchedules == other.insulinSensitivitySchedules &&
             self.manufacturers == other.manufacturers &&
             self.model == other.model &&
+            self.name == other.name &&
+            self.overridePresets == other.overridePresets &&
+            self.scheduleTimeZoneOffset == other.scheduleTimeZoneOffset &&
             self.serialNumber == other.serialNumber &&
+            self.softwareVersion == other.softwareVersion &&
             self.units == other.units
     }
 }
