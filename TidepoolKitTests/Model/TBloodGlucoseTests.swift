@@ -132,3 +132,47 @@ class TBloodGlucoseStartTargetTests: XCTestCase {
         XCTAssertCodableAsJSON(startTarget, ["start": 12345678, "low": 1.23, "high": 2.34])
     }
 }
+
+class TBloodGlucoseValueRangeTests: XCTestCase {
+    func testMilligramsPerDeciliter() {
+        XCTAssertEqual(TBloodGlucose.valueRange(for: .milligramsPerDeciliter), 0...1000)
+    }
+
+    func testMillimolesPerLiter() {
+        XCTAssertEqual(TBloodGlucose.valueRange(for: .millimolesPerLiter), 0...55.0)
+    }
+}
+
+class TBloodGlucoseClampTests: XCTestCase {
+    func testMilligramsPerDeciliterOutOfRangeRangeLower() {
+        XCTAssertEqual(TBloodGlucose.clamp(value: -0.1, for: .milligramsPerDeciliter), 0)
+    }
+
+    func testMilligramsPerDeciliterInRangeLower() {
+        XCTAssertEqual(TBloodGlucose.clamp(value: 0, for: .milligramsPerDeciliter), 0)
+    }
+
+    func testMilligramsPerDeciliterInRangeUpper() {
+        XCTAssertEqual(TBloodGlucose.clamp(value: 1000, for: .milligramsPerDeciliter), 1000)
+    }
+
+    func testMilligramsPerDeciliterOutOfRangeRangeUpper() {
+        XCTAssertEqual(TBloodGlucose.clamp(value: 1000.1, for: .milligramsPerDeciliter), 1000)
+    }
+
+    func testMillimolesPerLiterOutOfRangeRangeLower() {
+        XCTAssertEqual(TBloodGlucose.clamp(value: -0.1, for: .millimolesPerLiter), 0)
+    }
+
+    func testMillimolesPerLiterInRangeLower() {
+        XCTAssertEqual(TBloodGlucose.clamp(value: 0, for: .millimolesPerLiter), 0)
+    }
+
+    func testMillimolesPerLiterInRangeUpper() {
+        XCTAssertEqual(TBloodGlucose.clamp(value: 55.0, for: .millimolesPerLiter), 55.0)
+    }
+
+    func testMillimolesPerLiterOutOfRangeRangeUpper() {
+        XCTAssertEqual(TBloodGlucose.clamp(value: 55.01, for: .millimolesPerLiter), 55.0)
+    }
+}
