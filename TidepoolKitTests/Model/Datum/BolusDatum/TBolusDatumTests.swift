@@ -27,6 +27,7 @@ class TBolusDatumTests: XCTestCase {
 
 class TBolusDatumSubTypeTests: XCTestCase {
     func testSubType() {
+        XCTAssertEqual(TBolusDatum.SubType.automated.rawValue, "automated")
         XCTAssertEqual(TBolusDatum.SubType.combination.rawValue, "dual/square")
         XCTAssertEqual(TBolusDatum.SubType.extended.rawValue, "square")
         XCTAssertEqual(TBolusDatum.SubType.normal.rawValue, "normal")

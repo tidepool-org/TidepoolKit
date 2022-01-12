@@ -42,6 +42,8 @@ struct DataResponse: Codable {
                 case .bolus:
                     let subType = try superContainer.decode(TBolusDatum.SubType.self, forKey: .subType)
                     switch subType {
+                    case .automated:
+                        datum = try TAutomatedBolusDatum(from: superDecoder)
                     case .combination:
                         datum = try TCombinationBolusDatum(from: superDecoder)
                     case .extended:

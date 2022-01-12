@@ -15,7 +15,8 @@ class TAutomatedBasalDatumTests: XCTestCase {
                                                      expectedDuration: 234.567,
                                                      rate: 1.23,
                                                      scheduleName: "One",
-                                                     insulinFormulation: TInsulinDatumFormulationTests.formulation)
+                                                     insulinFormulation: TInsulinDatumFormulationTests.formulation,
+                                                     suppressed: TScheduledBasalDatumSuppressedTests.suppressed)
     static let automatedBasalJSONDictionary: [String: Any] = [
         "type": "basal",
         "deliveryType": "automated",
@@ -24,7 +25,8 @@ class TAutomatedBasalDatumTests: XCTestCase {
         "expectedDuration": 234567,
         "rate": 1.23,
         "scheduleName": "One",
-        "insulinFormulation": TInsulinDatumFormulationTests.formulationJSONDictionary
+        "insulinFormulation": TInsulinDatumFormulationTests.formulationJSONDictionary,
+        "suppressed": TScheduledBasalDatumSuppressedTests.suppressedJSONDictionary
     ]
     
     func testInitializer() {
@@ -34,6 +36,7 @@ class TAutomatedBasalDatumTests: XCTestCase {
         XCTAssertEqual(automatedBasal.rate, 1.23)
         XCTAssertEqual(automatedBasal.scheduleName, "One")
         XCTAssertEqual(automatedBasal.insulinFormulation, TInsulinDatumFormulationTests.formulation)
+        XCTAssertEqual(automatedBasal.suppressed, TScheduledBasalDatumSuppressedTests.suppressed)
     }
     
     func testCodableAsJSON() {
@@ -45,14 +48,16 @@ class TAutomatedBasalDatumSuppressedTests: XCTestCase {
     static let suppressed = TAutomatedBasalDatum.Suppressed(rate: 2.34,
                                                             scheduleName: "Two",
                                                             insulinFormulation: TInsulinDatumFormulationTests.formulation,
-                                                            annotations: [TDictionary(["a": "b", "c": 0]), TDictionary(["alpha": "bravo"])])
+                                                            annotations: [TDictionary(["a": "b", "c": 0]), TDictionary(["alpha": "bravo"])],
+                                                            suppressed: TScheduledBasalDatumSuppressedTests.suppressed)
     static let suppressedJSONDictionary: [String: Any] = [
         "type": "basal",
         "deliveryType": "automated",
         "rate": 2.34,
         "scheduleName": "Two",
         "insulinFormulation": TInsulinDatumFormulationTests.formulationJSONDictionary,
-        "annotations": [["a": "b", "c": 0], ["alpha": "bravo"]]
+        "annotations": [["a": "b", "c": 0], ["alpha": "bravo"]],
+        "suppressed": TScheduledBasalDatumSuppressedTests.suppressedJSONDictionary
     ]
     
     func testInitializer() {
@@ -63,6 +68,7 @@ class TAutomatedBasalDatumSuppressedTests: XCTestCase {
         XCTAssertEqual(suppressed.scheduleName, "Two")
         XCTAssertEqual(suppressed.insulinFormulation, TInsulinDatumFormulationTests.formulation)
         XCTAssertEqual(suppressed.annotations, [TDictionary(["a": "b", "c": 0]), TDictionary(["alpha": "bravo"])])
+        XCTAssertEqual(suppressed.suppressed, TScheduledBasalDatumSuppressedTests.suppressed)
     }
     
     func testCodableAsJSON() {
@@ -75,7 +81,8 @@ extension TAutomatedBasalDatum {
         return super.isEqual(to: other) &&
             self.rate == other.rate &&
             self.scheduleName == other.scheduleName &&
-            self.insulinFormulation == other.insulinFormulation
+            self.insulinFormulation == other.insulinFormulation &&
+            self.suppressed == other.suppressed
     }
 }
 
@@ -83,6 +90,7 @@ extension TAutomatedBasalDatum.Suppressed {
     func isEqual(to other: TAutomatedBasalDatum.Suppressed) -> Bool {
         return super.isEqual(to: other) &&
             self.rate == other.rate &&
-            self.scheduleName == other.scheduleName
+            self.scheduleName == other.scheduleName &&
+            self.suppressed == other.suppressed
     }
 }

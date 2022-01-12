@@ -12,6 +12,7 @@ public class TBolusDatum: TDatum {
     public typealias InsulinFormulation = TInsulinDatum.Formulation
 
     public enum SubType: String, Codable {
+        case automated
         case combination = "dual/square"
         case extended = "square"
         case normal

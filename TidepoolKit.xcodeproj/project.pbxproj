@@ -109,6 +109,8 @@
 		A973CD3423D6916C00C44032 /* TidepoolKitUI.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = A943536F23C932BF0093CFA3 /* TidepoolKitUI.framework */; };
 		A973CD3523D6916C00C44032 /* TidepoolKitUI.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = A943536F23C932BF0093CFA3 /* TidepoolKitUI.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
 		A98144602632236C003CE039 /* TPrescription.swift in Sources */ = {isa = PBXBuildFile; fileRef = A981445F2632236C003CE039 /* TPrescription.swift */; };
+		A98737CF27890F3700A6A23D /* TAutomatedBolusDatum.swift in Sources */ = {isa = PBXBuildFile; fileRef = A98737CE27890F3700A6A23D /* TAutomatedBolusDatum.swift */; };
+		A98737D127890FC000A6A23D /* TAutomatedBolusDatumTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = A98737D027890FC000A6A23D /* TAutomatedBolusDatumTests.swift */; };
 		A98780B8240A0D5E0007D5E1 /* TOriginTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = A9878093240A0D5E0007D5E1 /* TOriginTests.swift */; };
 		A98780B9240A0D5E0007D5E1 /* TAssociationTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = A9878094240A0D5E0007D5E1 /* TAssociationTests.swift */; };
 		A98780BA240A0D5E0007D5E1 /* TBloodGlucoseTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = A9878095240A0D5E0007D5E1 /* TBloodGlucoseTests.swift */; };
@@ -354,6 +356,8 @@
 		A973CD2623D68FC300C44032 /* TAPI+UI.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "TAPI+UI.swift"; sourceTree = "<group>"; };
 		A973CD2823D68FE000C44032 /* TAPI.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TAPI.swift; sourceTree = "<group>"; };
 		A981445F2632236C003CE039 /* TPrescription.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TPrescription.swift; sourceTree = "<group>"; };
+		A98737CE27890F3700A6A23D /* TAutomatedBolusDatum.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TAutomatedBolusDatum.swift; sourceTree = "<group>"; };
+		A98737D027890FC000A6A23D /* TAutomatedBolusDatumTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TAutomatedBolusDatumTests.swift; sourceTree = "<group>"; };
 		A9878093240A0D5E0007D5E1 /* TOriginTests.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TOriginTests.swift; sourceTree = "<group>"; };
 		A9878094240A0D5E0007D5E1 /* TAssociationTests.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TAssociationTests.swift; sourceTree = "<group>"; };
 		A9878095240A0D5E0007D5E1 /* TBloodGlucoseTests.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TBloodGlucoseTests.swift; sourceTree = "<group>"; };
@@ -524,6 +528,7 @@
 		A930761E241224C600D1E376 /* BolusDatum */ = {
 			isa = PBXGroup;
 			children = (
+				A98737CE27890F3700A6A23D /* TAutomatedBolusDatum.swift */,
 				A930761F241224C600D1E376 /* TBolusDatum.swift */,
 				A9307621241224C600D1E376 /* TCombinationBolusDatum.swift */,
 				A9307620241224C600D1E376 /* TExtendedBolusDatum.swift */,
@@ -574,6 +579,7 @@
 		A930765F241224F800D1E376 /* BolusDatum */ = {
 			isa = PBXGroup;
 			children = (
+				A98737D027890FC000A6A23D /* TAutomatedBolusDatumTests.swift */,
 				A9307663241224F800D1E376 /* TBolusDatumTests.swift */,
 				A9307662241224F800D1E376 /* TCombinationBolusDatumTests.swift */,
 				A9307661241224F800D1E376 /* TExtendedBolusDatumTests.swift */,
@@ -1165,6 +1171,7 @@
 				A9116ADD24075D5A00483021 /* Codable.swift in Sources */,
 				A96633E32409E99F007B68C1 /* TCBGDatum.swift in Sources */,
 				A994917423FB88A300865738 /* DNS+TEnvironment.swift in Sources */,
+				A98737CF27890F3700A6A23D /* TAutomatedBolusDatum.swift in Sources */,
 				A9116AD92406012600483021 /* TimeInterval.swift in Sources */,
 				A94D7D4323E242D60087A9C0 /* Locked.swift in Sources */,
 				A9307635241224C700D1E376 /* TAlarmDeviceEventDatum.swift in Sources */,
@@ -1223,6 +1230,7 @@
 				A9307673241224F800D1E376 /* TBasalDatumTests.swift in Sources */,
 				A930767B241224F800D1E376 /* TExtendedBolusDatumTests.swift in Sources */,
 				A9E8C605272C54D500016E2E /* LoginResponseTests.swift in Sources */,
+				A98737D127890FC000A6A23D /* TAutomatedBolusDatumTests.swift in Sources */,
 				A9BF06E6240F305B005D5337 /* JSONEncoderTests.swift in Sources */,
 				A9D58157272B2D4D00AA5C18 /* TPumpSettingsOverrideDeviceEventDatumTests.swift in Sources */,
 				A9D58159272B411500AA5C18 /* TControllerStatusDatumTests.swift in Sources */,
