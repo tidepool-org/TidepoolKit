@@ -26,11 +26,10 @@ public class TAPI {
     /// perform a DNS SRV record lookup in the background. A client should generally only have one instance of TAPI.
     public var environments: [TEnvironment] { environmentsLocked.value }
     
-    /// The default environment may come from a configuration from the host app's appGroup.  Otherwise, it defaults to the first environment.
-    /// See also the UserDefaults extension.
+    /// The default environment is derived from the host app group. See UserDefaults extension.
     public var defaultEnvironment: TEnvironment? {
         get {
-            UserDefaults.appGroup?.defaultEnvironment ?? environments.first
+            UserDefaults.appGroup?.defaultEnvironment
         }
         set {
             UserDefaults.appGroup?.defaultEnvironment = newValue
@@ -70,7 +69,7 @@ public class TAPI {
     ///   - session: The initial session to use, if any.
     ///   - automaticallyFetchEnvironments: Automatically fetch an updated list of environments when created.
     public init(session: TSession? = nil, automaticallyFetchEnvironments: Bool = true) {
-        self.environmentsLocked = Locked(TAPI.defaultEnvironments)
+        self.environmentsLocked = Locked(TAPI.implicitEnvironments)
         self.urlSessionConfigurationLocked = Locked(TAPI.defaultURLSessionConfiguration)
         self.urlSessionLocked = Locked(nil)
         self.sessionLocked = Locked(session)
@@ -228,7 +227,7 @@ public class TAPI {
     ///   - completion: The completion function to invoke with any error.
     public func getInfo(environment: TEnvironment? = nil, completion: @escaping (Result<TInfo, TError>) -> Void) {
         // Note: no session is needed
-        let request = createRequest(environment: environment ?? session?.environment ?? defaultEnvironment!, method: "GET", path: "/info")
+        let request = createRequest(environment: environment ?? session?.environment ?? defaultEnvironment ?? environments.first!, method: "GET", path: "/info")
         performRequest(request, allowSessionRefresh: false, completion: completion)
     }
 
@@ -612,7 +611,7 @@ public class TAPI {
 
     private var sessionLocked: Locked<TSession?>
 
-    private static var defaultEnvironments: [TEnvironment] {
+    private static var implicitEnvironments: [TEnvironment] {
         return DNSSRVRecordsImplicit.environments
     }
 
