@@ -165,6 +165,8 @@
 		A9E8C605272C54D500016E2E /* LoginResponseTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = A9E8C604272C54D500016E2E /* LoginResponseTests.swift */; };
 		A9E8C607272C54DD00016E2E /* DataResponseTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = A9E8C606272C54DD00016E2E /* DataResponseTests.swift */; };
 		A9EAB8E823DFC77E00874D2A /* DNS.swift in Sources */ = {isa = PBXBuildFile; fileRef = A9EAB8E723DFC77E00874D2A /* DNS.swift */; };
+		A9EBE97A27AA42AF00B441BA /* TAlertDatum.swift in Sources */ = {isa = PBXBuildFile; fileRef = A9EBE97927AA42AF00B441BA /* TAlertDatum.swift */; };
+		A9EBE97C27AA44F700B441BA /* TAlertDatumTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = A9EBE97B27AA44F700B441BA /* TAlertDatumTests.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -410,6 +412,8 @@
 		A9E8C604272C54D500016E2E /* LoginResponseTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LoginResponseTests.swift; sourceTree = "<group>"; };
 		A9E8C606272C54DD00016E2E /* DataResponseTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DataResponseTests.swift; sourceTree = "<group>"; };
 		A9EAB8E723DFC77E00874D2A /* DNS.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DNS.swift; sourceTree = "<group>"; };
+		A9EBE97927AA42AF00B441BA /* TAlertDatum.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TAlertDatum.swift; sourceTree = "<group>"; };
+		A9EBE97B27AA44F700B441BA /* TAlertDatumTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TAlertDatumTests.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -459,6 +463,7 @@
 		A9116AE424083C4C00483021 /* Datum */ = {
 			isa = PBXGroup;
 			children = (
+				A9EBE97927AA42AF00B441BA /* TAlertDatum.swift */,
 				A9307610241224C600D1E376 /* TBloodKetoneDatum.swift */,
 				A930762A241224C600D1E376 /* TCalculatorDatum.swift */,
 				A96633C82409E99F007B68C1 /* TCBGDatum.swift */,
@@ -732,6 +737,7 @@
 		A9878097240A0D5E0007D5E1 /* Datum */ = {
 			isa = PBXGroup;
 			children = (
+				A9EBE97B27AA44F700B441BA /* TAlertDatumTests.swift */,
 				A9307648241224F700D1E376 /* TBloodKetoneDatumTests.swift */,
 				A930765B241224F700D1E376 /* TCalculatorDatumTests.swift */,
 				A98780A3240A0D5E0007D5E1 /* TCBGDatumTests.swift */,
@@ -1169,6 +1175,7 @@
 				A94D7D4323E242D60087A9C0 /* Locked.swift in Sources */,
 				A9307635241224C700D1E376 /* TAlarmDeviceEventDatum.swift in Sources */,
 				A973CD2323D68B6400C44032 /* TLogging.swift in Sources */,
+				A9EBE97A27AA42AF00B441BA /* TAlertDatum.swift in Sources */,
 				A9116AD82406012600483021 /* Date.swift in Sources */,
 				A9307636241224C700D1E376 /* TStatusDeviceEventDatum.swift in Sources */,
 				A9307638241224C700D1E376 /* TCalibrationDeviceEventDatum.swift in Sources */,
@@ -1232,6 +1239,7 @@
 				A9BF06D8240F0A13005D5337 /* TEnvironmentTests.swift in Sources */,
 				A9B0D97A2732F0D300D96D93 /* TControllerSettingsDatumTests.swift in Sources */,
 				A9307674241224F800D1E376 /* TSMBGDatumTests.swift in Sources */,
+				A9EBE97C27AA44F700B441BA /* TAlertDatumTests.swift in Sources */,
 				A9DA2AC124130D1D0083298B /* TDosingDecisionDatumTests.swift in Sources */,
 				A9BF06D6240EF5BB005D5337 /* TDataSetTests.swift in Sources */,
 				A9307679241224F800D1E376 /* TWaterDatumTests.swift in Sources */,

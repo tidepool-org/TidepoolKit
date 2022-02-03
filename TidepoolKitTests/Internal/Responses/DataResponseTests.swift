@@ -10,7 +10,8 @@ import XCTest
 @testable import TidepoolKit
 
 class DataResponseTests: XCTestCase {
-    static let dataResponse = DataResponse(data: [TAutomatedBasalDatumTests.automatedBasal,
+    static let dataResponse = DataResponse(data: [TAlertDatumTests.alert,
+                                                  TAutomatedBasalDatumTests.automatedBasal,
                                                   TScheduledBasalDatumTests.scheduledBasal,
                                                   TSuspendedBasalDatumTests.suspendedBasal,
                                                   TTemporaryBasalDatumTests.temporaryBasal,
@@ -40,6 +41,7 @@ class DataResponseTests: XCTestCase {
                                                   TSMBGDatumTests.smbg,
                                                   TWaterDatumTests.water])
     static let dataResponseJSONArray = [
+        TAlertDatumTests.alertJSONDictionary,
         TAutomatedBasalDatumTests.automatedBasalJSONDictionary,
         TScheduledBasalDatumTests.scheduledBasalJSONDictionary,
         TSuspendedBasalDatumTests.suspendedBasalJSONDictionary,
