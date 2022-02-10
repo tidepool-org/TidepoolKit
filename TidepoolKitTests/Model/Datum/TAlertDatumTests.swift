@@ -17,7 +17,6 @@ class TAlertDatumTests: XCTestCase {
                                    triggerDelay: .minutes(15),
                                    sound: .name,
                                    soundName: "Beep Beep",
-                                   parameters: TDictionary(["a": "b", "c": 0]),
                                    issuedTime: Date.test,
                                    acknowledgedTime: Date.test,
                                    retractedTime: Date.test)
@@ -30,7 +29,6 @@ class TAlertDatumTests: XCTestCase {
         "triggerDelay": 900,
         "sound": "name",
         "soundName": "Beep Beep",
-        "parameters": ["a": "b", "c": 0],
         "issuedTime": Date.testJSONString,
         "acknowledgedTime": Date.testJSONString,
         "retractedTime": Date.testJSONString
@@ -44,7 +42,6 @@ class TAlertDatumTests: XCTestCase {
         XCTAssertEqual(alert.triggerDelay, .minutes(15))
         XCTAssertEqual(alert.sound, .name)
         XCTAssertEqual(alert.soundName, "Beep Beep")
-        XCTAssertEqual(alert.parameters, TDictionary(["a": "b", "c": 0]))
         XCTAssertEqual(alert.issuedTime, Date.test)
         XCTAssertEqual(alert.acknowledgedTime, Date.test)
         XCTAssertEqual(alert.retractedTime, Date.test)
@@ -88,7 +85,6 @@ extension TAlertDatum {
             self.triggerDelay == other.triggerDelay &&
             self.sound == other.sound &&
             self.soundName == other.soundName &&
-            self.parameters == other.parameters &&
             self.issuedTime == other.issuedTime &&
             self.acknowledgedTime == other.acknowledgedTime &&
             self.retractedTime == other.retractedTime

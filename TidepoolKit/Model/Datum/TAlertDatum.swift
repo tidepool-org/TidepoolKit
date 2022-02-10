@@ -33,7 +33,6 @@ public class TAlertDatum: TDatum, Decodable {
     public var triggerDelay: TimeInterval?
     public var sound: Sound?
     public var soundName: String?
-    public var parameters: TDictionary?
     public var issuedTime: Date?
     public var acknowledgedTime: Date?
     public var retractedTime: Date?
@@ -45,7 +44,6 @@ public class TAlertDatum: TDatum, Decodable {
                 triggerDelay: TimeInterval? = nil,
                 sound: Sound? = nil,
                 soundName: String? = nil,
-                parameters: TDictionary? = nil,
                 issuedTime: Date? = nil,
                 acknowledgedTime: Date? = nil,
                 retractedTime: Date? = nil) {
@@ -55,7 +53,6 @@ public class TAlertDatum: TDatum, Decodable {
         self.triggerDelay = triggerDelay
         self.sound = sound
         self.soundName = soundName
-        self.parameters = parameters
         self.issuedTime = issuedTime
         self.acknowledgedTime = acknowledgedTime
         self.retractedTime = retractedTime
@@ -70,7 +67,6 @@ public class TAlertDatum: TDatum, Decodable {
         self.triggerDelay = try container.decodeIfPresent(Int.self, forKey: .triggerDelay).map { .seconds($0) }
         self.sound = try container.decodeIfPresent(Sound.self, forKey: .sound)
         self.soundName = try container.decodeIfPresent(String.self, forKey: .soundName)
-        self.parameters = try container.decodeIfPresent(TDictionary.self, forKey: .parameters)
         self.issuedTime = try container.decodeIfPresent(Date.self, forKey: .issuedTime)
         self.acknowledgedTime = try container.decodeIfPresent(Date.self, forKey: .acknowledgedTime)
         self.retractedTime = try container.decodeIfPresent(Date.self, forKey: .retractedTime)
@@ -85,7 +81,6 @@ public class TAlertDatum: TDatum, Decodable {
         try container.encodeIfPresent(triggerDelay.map { Int($0.seconds) }, forKey: .triggerDelay)
         try container.encodeIfPresent(sound, forKey: .sound)
         try container.encodeIfPresent(soundName, forKey: .soundName)
-        try container.encodeIfPresent(parameters, forKey: .parameters)
         try container.encodeIfPresent(issuedTime, forKey: .issuedTime)
         try container.encodeIfPresent(acknowledgedTime, forKey: .acknowledgedTime)
         try container.encodeIfPresent(retractedTime, forKey: .retractedTime)
@@ -99,7 +94,6 @@ public class TAlertDatum: TDatum, Decodable {
         case triggerDelay
         case sound
         case soundName
-        case parameters
         case issuedTime
         case acknowledgedTime
         case retractedTime
