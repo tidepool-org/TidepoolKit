@@ -25,12 +25,15 @@ public class TAlertDatum: TDatum, Decodable {
         case delayed
         case immediate
         case repeating
+        case nextDate
+        case nextDateRepeating
     }
     
     public var name: String?
     public var priority: Priority?
     public var trigger: Trigger?
     public var triggerDelay: TimeInterval?
+    public var triggerDateMatching: DateComponents?
     public var sound: Sound?
     public var soundName: String?
     public var issuedTime: Date?
@@ -42,6 +45,7 @@ public class TAlertDatum: TDatum, Decodable {
                 priority: Priority? = nil,
                 trigger: Trigger? = nil,
                 triggerDelay: TimeInterval? = nil,
+                triggerDateMatching: DateComponents? = nil,
                 sound: Sound? = nil,
                 soundName: String? = nil,
                 issuedTime: Date? = nil,
@@ -51,6 +55,7 @@ public class TAlertDatum: TDatum, Decodable {
         self.priority = priority
         self.trigger = trigger
         self.triggerDelay = triggerDelay
+        self.triggerDateMatching = triggerDateMatching
         self.sound = sound
         self.soundName = soundName
         self.issuedTime = issuedTime
@@ -65,6 +70,7 @@ public class TAlertDatum: TDatum, Decodable {
         self.priority = try container.decodeIfPresent(Priority.self, forKey: .priority)
         self.trigger = try container.decodeIfPresent(Trigger.self, forKey: .trigger)
         self.triggerDelay = try container.decodeIfPresent(Int.self, forKey: .triggerDelay).map { .seconds($0) }
+        self.triggerDateMatching = try container.decodeIfPresent(DateComponents.self, forKey: .triggerDateMatching)
         self.sound = try container.decodeIfPresent(Sound.self, forKey: .sound)
         self.soundName = try container.decodeIfPresent(String.self, forKey: .soundName)
         self.issuedTime = try container.decodeIfPresent(Date.self, forKey: .issuedTime)
@@ -79,6 +85,7 @@ public class TAlertDatum: TDatum, Decodable {
         try container.encodeIfPresent(priority, forKey: .priority)
         try container.encodeIfPresent(trigger, forKey: .trigger)
         try container.encodeIfPresent(triggerDelay.map { Int($0.seconds) }, forKey: .triggerDelay)
+        try container.encodeIfPresent(triggerDateMatching, forKey: .triggerDateMatching)
         try container.encodeIfPresent(sound, forKey: .sound)
         try container.encodeIfPresent(soundName, forKey: .soundName)
         try container.encodeIfPresent(issuedTime, forKey: .issuedTime)
@@ -92,6 +99,7 @@ public class TAlertDatum: TDatum, Decodable {
         case priority
         case trigger
         case triggerDelay
+        case triggerDateMatching
         case sound
         case soundName
         case issuedTime

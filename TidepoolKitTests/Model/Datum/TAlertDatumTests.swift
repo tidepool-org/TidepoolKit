@@ -10,11 +10,13 @@ import XCTest
 import TidepoolKit
 
 class TAlertDatumTests: XCTestCase {
+    static let noon = DateComponents(hour: 12, minute: 0)
     static let alert = TAlertDatum(time: Date.test,
                                    name: "Alert One",
                                    priority: .critical,
                                    trigger: .delayed,
                                    triggerDelay: .minutes(15),
+                                   triggerDateMatching: noon,
                                    sound: .name,
                                    soundName: "Beep Beep",
                                    issuedTime: Date.test,
@@ -27,6 +29,7 @@ class TAlertDatumTests: XCTestCase {
         "priority": "critical",
         "trigger": "delayed",
         "triggerDelay": 900,
+        "triggerDateMatching": ["hour": 12, "minute": 0],
         "sound": "name",
         "soundName": "Beep Beep",
         "issuedTime": Date.testJSONString,
@@ -40,6 +43,7 @@ class TAlertDatumTests: XCTestCase {
         XCTAssertEqual(alert.priority, .critical)
         XCTAssertEqual(alert.trigger, .delayed)
         XCTAssertEqual(alert.triggerDelay, .minutes(15))
+        XCTAssertEqual(alert.triggerDateMatching, Self.noon)
         XCTAssertEqual(alert.sound, .name)
         XCTAssertEqual(alert.soundName, "Beep Beep")
         XCTAssertEqual(alert.issuedTime, Date.test)
@@ -73,6 +77,8 @@ class TAlertDatumTriggerTests: XCTestCase {
         XCTAssertEqual(TAlertDatum.Trigger.delayed.rawValue, "delayed")
         XCTAssertEqual(TAlertDatum.Trigger.immediate.rawValue, "immediate")
         XCTAssertEqual(TAlertDatum.Trigger.repeating.rawValue, "repeating")
+        XCTAssertEqual(TAlertDatum.Trigger.nextDate.rawValue, "nextDate")
+        XCTAssertEqual(TAlertDatum.Trigger.nextDateRepeating.rawValue, "nextDateRepeating")
     }
 }
 
