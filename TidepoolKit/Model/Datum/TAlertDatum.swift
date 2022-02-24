@@ -29,11 +29,22 @@ public class TAlertDatum: TDatum, Decodable {
         case nextDateRepeating
     }
     
+    public struct TriggerNextDateTimeSpec: Codable, Equatable {
+        public var dayOfMonth: Int? // 1-31
+        public var hourOfDay: Int? // 0-23
+        public var minuteOfHour: Int? // 0-59
+        public init(dayOfMonth: Int? = nil, hourOfDay: Int? = nil, minuteOfHour: Int? = nil) {
+            self.dayOfMonth = dayOfMonth
+            self.hourOfDay = hourOfDay
+            self.minuteOfHour = minuteOfHour
+        }
+    }
+    
     public var name: String?
     public var priority: Priority?
     public var trigger: Trigger?
     public var triggerDelay: TimeInterval?
-    public var triggerDateMatching: DateComponents?
+    public var triggerDateMatching: TriggerNextDateTimeSpec?
     public var sound: Sound?
     public var soundName: String?
     public var issuedTime: Date?
@@ -45,7 +56,7 @@ public class TAlertDatum: TDatum, Decodable {
                 priority: Priority? = nil,
                 trigger: Trigger? = nil,
                 triggerDelay: TimeInterval? = nil,
-                triggerDateMatching: DateComponents? = nil,
+                triggerDateMatching: TriggerNextDateTimeSpec? = nil,
                 sound: Sound? = nil,
                 soundName: String? = nil,
                 issuedTime: Date? = nil,
@@ -70,7 +81,7 @@ public class TAlertDatum: TDatum, Decodable {
         self.priority = try container.decodeIfPresent(Priority.self, forKey: .priority)
         self.trigger = try container.decodeIfPresent(Trigger.self, forKey: .trigger)
         self.triggerDelay = try container.decodeIfPresent(Int.self, forKey: .triggerDelay).map { .seconds($0) }
-        self.triggerDateMatching = try container.decodeIfPresent(DateComponents.self, forKey: .triggerDateMatching)
+        self.triggerDateMatching = try container.decodeIfPresent(TriggerNextDateTimeSpec.self, forKey: .triggerDateMatching)
         self.sound = try container.decodeIfPresent(Sound.self, forKey: .sound)
         self.soundName = try container.decodeIfPresent(String.self, forKey: .soundName)
         self.issuedTime = try container.decodeIfPresent(Date.self, forKey: .issuedTime)

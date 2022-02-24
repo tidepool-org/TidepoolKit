@@ -10,13 +10,13 @@ import XCTest
 import TidepoolKit
 
 class TAlertDatumTests: XCTestCase {
-    static let noon = DateComponents(hour: 12, minute: 0)
+    static let exampleTimeSpec = TAlertDatum.TriggerNextDateTimeSpec(dayOfMonth: 2, hourOfDay: 4, minuteOfHour: 6)
     static let alert = TAlertDatum(time: Date.test,
                                    name: "Alert One",
                                    priority: .critical,
                                    trigger: .delayed,
                                    triggerDelay: .minutes(15),
-                                   triggerDateMatching: noon,
+                                   triggerDateMatching: exampleTimeSpec,
                                    sound: .name,
                                    soundName: "Beep Beep",
                                    issuedTime: Date.test,
@@ -29,7 +29,7 @@ class TAlertDatumTests: XCTestCase {
         "priority": "critical",
         "trigger": "delayed",
         "triggerDelay": 900,
-        "triggerDateMatching": ["hour": 12, "minute": 0],
+        "triggerDateMatching": ["dayOfMonth": 2, "hourOfDay": 4, "minuteOfHour": 6],
         "sound": "name",
         "soundName": "Beep Beep",
         "issuedTime": Date.testJSONString,
@@ -43,7 +43,7 @@ class TAlertDatumTests: XCTestCase {
         XCTAssertEqual(alert.priority, .critical)
         XCTAssertEqual(alert.trigger, .delayed)
         XCTAssertEqual(alert.triggerDelay, .minutes(15))
-        XCTAssertEqual(alert.triggerDateMatching, Self.noon)
+        XCTAssertEqual(alert.triggerDateMatching, Self.exampleTimeSpec)
         XCTAssertEqual(alert.sound, .name)
         XCTAssertEqual(alert.soundName, "Beep Beep")
         XCTAssertEqual(alert.issuedTime, Date.test)
@@ -89,6 +89,7 @@ extension TAlertDatum {
             self.priority == other.priority &&
             self.trigger == other.trigger &&
             self.triggerDelay == other.triggerDelay &&
+            self.triggerDateMatching == other.triggerDateMatching &&
             self.sound == other.sound &&
             self.soundName == other.soundName &&
             self.issuedTime == other.issuedTime &&
