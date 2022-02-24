@@ -30,10 +30,10 @@ public class TAlertDatum: TDatum, Decodable {
     }
     
     public struct TriggerNextDateTimeSpec: Codable, Equatable {
-        public var dayOfMonth: Int? // 1-31
-        public var hourOfDay: Int? // 0-23
-        public var minuteOfHour: Int? // 0-59
-        public init(dayOfMonth: Int? = nil, hourOfDay: Int? = nil, minuteOfHour: Int? = nil) {
+        public var dayOfMonth: Int // 1-31
+        public var hourOfDay: Int // 0-23
+        public var minuteOfHour: Int // 0-59
+        public init(dayOfMonth: Int, hourOfDay: Int, minuteOfHour: Int) {
             self.dayOfMonth = dayOfMonth
             self.hourOfDay = hourOfDay
             self.minuteOfHour = minuteOfHour
