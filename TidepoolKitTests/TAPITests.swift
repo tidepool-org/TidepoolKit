@@ -55,7 +55,7 @@ class TAPITests: XCTestCase {
 }
 
 class TAPIEnvironmentTests: TAPITests {
-    func testDefaultEnvironment() {
+    func testImplicitEnvironments() {
         XCTAssertEqual(api.environments, [TEnvironment(host: "app.tidepool.org", port: 443)])
     }
 }
@@ -209,17 +209,6 @@ class TAPIInfoTests: TAPITests {
         let session = TSession(environment: env, authenticationToken: authenticationToken, userId: userId)
         api.session = session
         URLProtocolMock.handlers = [URLProtocolMock.Handler(validator: URLProtocolMock.Validator(url: "http://foo.bar.baz:123/info", method: "GET"),
-                                                            success: URLProtocolMock.Success(statusCode: 200, body: TAPIInfoTests.info))]
-
-        guard case .success(let info) = performRequest(nil) else {
-            XCTFail()
-            return
-        }
-        XCTAssertEqual(info, TAPIInfoTests.info)
-    }
-    
-    func testSuccessUsingDefaultEnvironment() {
-        URLProtocolMock.handlers = [URLProtocolMock.Handler(validator: URLProtocolMock.Validator(url: "https://app.tidepool.org/info", method: "GET"),
                                                             success: URLProtocolMock.Success(statusCode: 200, body: TAPIInfoTests.info))]
 
         guard case .success(let info) = performRequest(nil) else {

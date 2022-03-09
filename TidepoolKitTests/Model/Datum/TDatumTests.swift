@@ -71,6 +71,7 @@ class TDatumTests: XCTestCase {
 
 class TDatumDatumTypeTests: XCTestCase {
     func testDatumType() {
+        XCTAssertEqual(TDatum.DatumType.alert.rawValue, "alert")
         XCTAssertEqual(TDatum.DatumType.basal.rawValue, "basal")
         XCTAssertEqual(TDatum.DatumType.bloodKetone.rawValue, "bloodKetone")
         XCTAssertEqual(TDatum.DatumType.bolus.rawValue, "bolus")
@@ -187,6 +188,8 @@ extension TDatum: Equatable {
     // NOTE: Yes, a bit of a hack, but it is explicitly only used for tests.
     public static func == (lhs: TDatum, rhs: TDatum) -> Bool {
         switch (lhs, rhs) {
+        case let (lhs as TAlertDatum, rhs as TAlertDatum):
+            return lhs.isEqual(to: rhs)
         case let (lhs as TAutomatedBasalDatum, rhs as TAutomatedBasalDatum):
             return lhs.isEqual(to: rhs)
         case let (lhs as TScheduledBasalDatum, rhs as TScheduledBasalDatum):

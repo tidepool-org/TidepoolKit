@@ -25,6 +25,8 @@ struct DataResponse: Codable {
                 var datum: TDatum?
                 let type = try superContainer.decode(TDatum.DatumType.self, forKey: .type)
                 switch type {
+                case .alert:
+                    datum = try TAlertDatum(from: superDecoder)
                 case .basal:
                     let deliveryType = try superContainer.decode(TBasalDatum.DeliveryType.self, forKey: .deliveryType)
                     switch deliveryType {

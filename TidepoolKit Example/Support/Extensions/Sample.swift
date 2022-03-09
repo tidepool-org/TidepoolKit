@@ -13,6 +13,8 @@ struct Sample {
     struct Datum {
         static func data(fullyAdorned: Bool = true) -> [TDatum] {
             var data: [TDatum] = [
+                TAlertDatum(time: Date(),
+                            name: "Alert One"),
                 TAutomatedBasalDatum(time: Date(),
                                      duration: 300000,
                                      expectedDuration: 600000,
