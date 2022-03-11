@@ -77,11 +77,15 @@ class TPrescriptionStateTests: XCTestCase {
 class TPrescriptionRevisionTests: XCTestCase {
     static let revision = TPrescription.Revision(revisionId: 123,
                                                  integrityHash: TPrescriptionIntegrityHashTests.integrityHash,
-                                                 attributes: TPrescriptionAttributesTests.attributes)
+                                                 attributes: TPrescriptionAttributesTests.attributes,
+                                                 createdTime: Date.test,
+                                                 createdUserId: "abcdefghijklmnopqrstuvwxyz")
     static let revisionJSONDictionary: [String: Any] = [
         "revisionId": 123,
         "integrityHash": TPrescriptionIntegrityHashTests.integrityHashJSONDictionary,
-        "attributes": TPrescriptionAttributesTests.attributesJSONDictionary
+        "attributes": TPrescriptionAttributesTests.attributesJSONDictionary,
+        "createdTime": Date.testJSONString,
+        "createdUserId": "abcdefghijklmnopqrstuvwxyz"
     ]
     
     func testInitializer() {
@@ -89,6 +93,8 @@ class TPrescriptionRevisionTests: XCTestCase {
         XCTAssertEqual(revision.revisionId, 123)
         XCTAssertEqual(revision.integrityHash, TPrescriptionIntegrityHashTests.integrityHash)
         XCTAssertEqual(revision.attributes, TPrescriptionAttributesTests.attributes)
+        XCTAssertEqual(revision.createdTime, Date.test)
+        XCTAssertEqual(revision.createdUserId, "abcdefghijklmnopqrstuvwxyz")
     }
     
     func testCodableAsJSON() {
@@ -133,9 +139,7 @@ class TPrescriptionAttributesTests: XCTestCase {
         training: .inModule,
         therapySettings: .initial,
         prescriberTermsAccepted: true,
-        state: .submitted,
-        createdTime: Date.test,
-        createdUserId: "abcdefghijklmnopqrstuvwxyz")
+        state: .submitted)
     static let attributesJSONDictionary: [String: Any] = [
         "accountType": TPrescription.Attributes.AccountType.caregiver.rawValue,
         "caregiverFirstName": "Parent",
@@ -154,9 +158,7 @@ class TPrescriptionAttributesTests: XCTestCase {
         "training": TPrescription.Attributes.Training.inModule.rawValue,
         "therapySettings": TPrescription.Attributes.TherapySettings.initial.rawValue,
         "prescriberTermsAccepted": true,
-        "state": TPrescription.Attributes.State.submitted.rawValue,
-        "createdTime": Date.testJSONString,
-        "createdUserId": "abcdefghijklmnopqrstuvwxyz"
+        "state": TPrescription.Attributes.State.submitted.rawValue
     ]
     
     func testInitializer() {
@@ -179,8 +181,6 @@ class TPrescriptionAttributesTests: XCTestCase {
         XCTAssertEqual(attributes.therapySettings, .initial)
         XCTAssertEqual(attributes.prescriberTermsAccepted, true)
         XCTAssertEqual(attributes.state, .submitted)
-        XCTAssertEqual(attributes.createdTime, Date.test)
-        XCTAssertEqual(attributes.createdUserId, "abcdefghijklmnopqrstuvwxyz")
     }
     
     func testCodableAsJSON() {

@@ -63,11 +63,19 @@ public struct TPrescription: Codable, Equatable {
         public var revisionId: Int?
         public var integrityHash: IntegrityHash?
         public var attributes: Attributes?
-        
-        public init(revisionId: Int? = nil, integrityHash: IntegrityHash? = nil, attributes: Attributes? = nil) {
+        public var createdTime: Date?
+        public var createdUserId: String?
+
+        public init(revisionId: Int? = nil,
+                    integrityHash: IntegrityHash? = nil,
+                    attributes: Attributes? = nil,
+                    createdTime: Date? = nil,
+                    createdUserId: String? = nil) {
             self.revisionId = revisionId
             self.integrityHash = integrityHash
             self.attributes = attributes
+            self.createdTime = createdTime
+            self.createdUserId = createdUserId
         }
     }
 
@@ -131,8 +139,6 @@ public struct TPrescription: Codable, Equatable {
         public var therapySettings: TherapySettings?
         public var prescriberTermsAccepted: Bool?
         public var state: State?
-        public var createdTime: Date?
-        public var createdUserId: String?
         
         public init(accountType: AccountType? = nil,
                     caregiverFirstName: String? = nil,
@@ -151,9 +157,7 @@ public struct TPrescription: Codable, Equatable {
                     training: Training? = nil,
                     therapySettings: TherapySettings? = nil,
                     prescriberTermsAccepted: Bool? = nil,
-                    state: State? = nil,
-                    createdTime: Date? = nil,
-                    createdUserId: String? = nil) {
+                    state: State? = nil) {
             self.accountType = accountType
             self.caregiverFirstName = caregiverFirstName
             self.caregiverLastName = caregiverLastName
@@ -172,8 +176,6 @@ public struct TPrescription: Codable, Equatable {
             self.therapySettings = therapySettings
             self.prescriberTermsAccepted = prescriberTermsAccepted
             self.state = state
-            self.createdTime = createdTime
-            self.createdUserId = createdUserId
         }
 
         public struct Weight: Codable, Equatable {
