@@ -421,7 +421,7 @@ class TAPIClaimPrescriptionTests: TAPIRefreshSessionTests {
         super.setUp()
 
         prescriptionClaim = TPrescriptionClaim(accessCode: "ABCDEF", birthday: "2004-01-04")
-        URLProtocolMock.handlers = [URLProtocolMock.Handler(validator: URLProtocolMock.Validator(url: "https://test.org/v1/prescriptions/claim", method: "POST", headers: headers, body: prescriptionClaim),
+        URLProtocolMock.handlers = [URLProtocolMock.Handler(validator: URLProtocolMock.Validator(url: "https://test.org/v1/patients/\(userId)/prescriptions", method: "POST", headers: headers, body: prescriptionClaim),
                                                             success: URLProtocolMock.Success(statusCode: 201, headers: headers, body: TPrescriptionTests.prescription))]
     }
 

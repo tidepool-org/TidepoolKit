@@ -24,10 +24,12 @@ public struct TPrescription: Codable, Equatable {
     public var latestRevision: Revision?
     public var expirationTime: Date?
     public var prescriberUserId: String?
+    public var clinicId: String?
     public var createdTime: Date?
     public var createdUserId: String?
     public var modifiedTime: Date?
     public var modifiedUserId: String?
+    public var submittedTime: Date?
     
     public init(id: String? = nil,
                 patientUserId: String? = nil,
@@ -36,10 +38,12 @@ public struct TPrescription: Codable, Equatable {
                 latestRevision: Revision? = nil,
                 expirationTime: Date? = nil,
                 prescriberUserId: String? = nil,
+                clinicId: String? = nil,
                 createdTime: Date? = nil,
                 createdUserId: String? = nil,
                 modifiedTime: Date? = nil,
-                modifiedUserId: String? = nil) {
+                modifiedUserId: String? = nil,
+                submittedTime: Date? = nil) {
         self.id = id
         self.patientUserId = patientUserId
         self.accessCode = accessCode
@@ -47,19 +51,37 @@ public struct TPrescription: Codable, Equatable {
         self.latestRevision = latestRevision
         self.expirationTime = expirationTime
         self.prescriberUserId = prescriberUserId
+        self.clinicId = clinicId
         self.createdTime = createdTime
         self.createdUserId = createdUserId
         self.modifiedTime = modifiedTime
         self.modifiedUserId = modifiedUserId
+        self.submittedTime = submittedTime
     }
     
     public struct Revision: Codable, Equatable {
         public var revisionId: Int?
+        public var integrityHash: IntegrityHash?
         public var attributes: Attributes?
         
-        public init(revisionId: Int? = nil, attributes: Attributes? = nil) {
+        public init(revisionId: Int? = nil, integrityHash: IntegrityHash? = nil, attributes: Attributes? = nil) {
             self.revisionId = revisionId
+            self.integrityHash = integrityHash
             self.attributes = attributes
+        }
+    }
+
+    public struct IntegrityHash: Codable, Equatable {
+        public enum Algorithm: String, Codable, Equatable {
+            case jcssha512 = "JCSSHA512"
+        }
+
+        public var algorithm: Algorithm?
+        public var hash: String?
+
+        public init(algorithm: Algorithm? = nil, hash: String? = nil) {
+            self.algorithm = algorithm
+            self.hash = hash
         }
     }
     
@@ -104,6 +126,7 @@ public struct TPrescription: Codable, Equatable {
         public var yearOfDiagnosis: Int?
         public var phoneNumber: PhoneNumber?
         public var initialSettings: InitialSettings?
+        public var calculator: Calculator?
         public var training: Training?
         public var therapySettings: TherapySettings?
         public var prescriberTermsAccepted: Bool?
@@ -124,6 +147,7 @@ public struct TPrescription: Codable, Equatable {
                     yearOfDiagnosis: Int? = nil,
                     phoneNumber: PhoneNumber? = nil,
                     initialSettings: InitialSettings? = nil,
+                    calculator: Calculator? = nil,
                     training: Training? = nil,
                     therapySettings: TherapySettings? = nil,
                     prescriberTermsAccepted: Bool? = nil,
@@ -143,6 +167,7 @@ public struct TPrescription: Codable, Equatable {
             self.yearOfDiagnosis = yearOfDiagnosis
             self.phoneNumber = phoneNumber
             self.initialSettings = initialSettings
+            self.calculator = calculator
             self.training = training
             self.therapySettings = therapySettings
             self.prescriberTermsAccepted = prescriberTermsAccepted
@@ -226,6 +251,46 @@ public struct TPrescription: Codable, Equatable {
                 self.bolusAmountMaximum = bolusAmountMaximum
                 self.pumpId = pumpId
                 self.cgmId = cgmId
+            }
+        }
+
+        public struct Calculator: Codable, Equatable {
+            public enum Method: String, Codable, Equatable {
+                case weight
+                case totalDailyDose
+                case totalDailyDoseAndWeight
+            }
+
+            public enum WeightUnits: String, Codable, Equatable {
+                case kilograms = "kg"
+                case pounds = "lbs"
+            }
+
+            public var method: Method?
+            public var recommendedBasalRate: Double?
+            public var recommendedCarbohydrateRatio: Double?
+            public var recommendedInsulinSensitivity: Double?
+            public var totalDailyDose: Double?
+            public var totalDailyDoseScaleFactor: Double?
+            public var weight: Double?
+            public var weightUnits: WeightUnits?
+
+            public init(method: Method? = nil,
+                        recommendedBasalRate: Double? = nil,
+                        recommendedCarbohydrateRatio: Double? = nil,
+                        recommendedInsulinSensitivity: Double? = nil,
+                        totalDailyDose: Double? = nil,
+                        totalDailyDoseScaleFactor: Double? = nil,
+                        weight: Double? = nil,
+                        weightUnits: WeightUnits? = nil) {
+                self.method = method
+                self.recommendedBasalRate = recommendedBasalRate
+                self.recommendedCarbohydrateRatio = recommendedCarbohydrateRatio
+                self.recommendedInsulinSensitivity = recommendedInsulinSensitivity
+                self.totalDailyDose = totalDailyDose
+                self.totalDailyDoseScaleFactor = totalDailyDoseScaleFactor
+                self.weight = weight
+                self.weightUnits = weightUnits
             }
         }
     }

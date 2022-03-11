@@ -254,14 +254,15 @@ public class TAPI {
     ///
     /// - Parameters:
     ///   - prescriptionClaim: The prescription claim to submit.
+    ///   - userId: The user id for which to claim the prescription. If no user id is specified, then the session user id is used.
     ///   - completion: The completion function to invoke with any error.
-    public func claimPrescription(prescriptionClaim: TPrescriptionClaim, completion: @escaping (Result<TPrescription, TError>) -> Void) {
-        guard session != nil else {
+    public func claimPrescription(prescriptionClaim: TPrescriptionClaim, userId: String? = nil, completion: @escaping (Result<TPrescription, TError>) -> Void) {
+        guard let session = session else {
             completion(.failure(.sessionMissing))
             return
         }
 
-        let request = createRequest(method: "POST", path: "/v1/prescriptions/claim", body: prescriptionClaim)
+        let request = createRequest(method: "POST", path: "/v1/patients/\(userId ?? session.userId)/prescriptions", body: prescriptionClaim)
         performRequest(request, completion: completion)
     }
 

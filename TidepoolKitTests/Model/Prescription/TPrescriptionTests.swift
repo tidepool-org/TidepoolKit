@@ -18,10 +18,12 @@ class TPrescriptionTests: XCTestCase {
         latestRevision: TPrescriptionRevisionTests.revision,
         expirationTime: Date.test,
         prescriberUserId: "b2c3d4e5f6",
+        clinicId: "e5f6g7c3d4",
         createdTime: Date.test,
         createdUserId: "c3d4e5f6g7",
         modifiedTime: Date.test,
-        modifiedUserId: "d4e5f6g7h8")
+        modifiedUserId: "d4e5f6g7h8",
+        submittedTime: Date.test)
     static let prescriptionJSONDictionary: [String: Any] = [
         "id": "1234567890",
         "patientUserId": "a1b2c3d4e5",
@@ -30,10 +32,12 @@ class TPrescriptionTests: XCTestCase {
         "latestRevision": TPrescriptionRevisionTests.revisionJSONDictionary,
         "expirationTime": Date.testJSONString,
         "prescriberUserId": "b2c3d4e5f6",
+        "clinicId": "e5f6g7c3d4",
         "createdTime": Date.testJSONString,
         "createdUserId": "c3d4e5f6g7",
         "modifiedTime": Date.testJSONString,
-        "modifiedUserId": "d4e5f6g7h8"
+        "modifiedUserId": "d4e5f6g7h8",
+        "submittedTime": Date.testJSONString
     ]
     
     func testInitializer() {
@@ -45,10 +49,12 @@ class TPrescriptionTests: XCTestCase {
         XCTAssertEqual(prescription.latestRevision, TPrescriptionRevisionTests.revision)
         XCTAssertEqual(prescription.expirationTime, Date.test)
         XCTAssertEqual(prescription.prescriberUserId, "b2c3d4e5f6")
+        XCTAssertEqual(prescription.clinicId, "e5f6g7c3d4")
         XCTAssertEqual(prescription.createdTime, Date.test)
         XCTAssertEqual(prescription.createdUserId, "c3d4e5f6g7")
         XCTAssertEqual(prescription.modifiedTime, Date.test)
         XCTAssertEqual(prescription.modifiedUserId, "d4e5f6g7h8")
+        XCTAssertEqual(prescription.submittedTime, Date.test)
     }
     
     func testCodableAsJSON() {
@@ -69,20 +75,42 @@ class TPrescriptionStateTests: XCTestCase {
 }
 
 class TPrescriptionRevisionTests: XCTestCase {
-    static let revision = TPrescription.Revision(revisionId: 123, attributes: TPrescriptionAttributesTests.attributes)
+    static let revision = TPrescription.Revision(revisionId: 123,
+                                                 integrityHash: TPrescriptionIntegrityHashTests.integrityHash,
+                                                 attributes: TPrescriptionAttributesTests.attributes)
     static let revisionJSONDictionary: [String: Any] = [
         "revisionId": 123,
+        "integrityHash": TPrescriptionIntegrityHashTests.integrityHashJSONDictionary,
         "attributes": TPrescriptionAttributesTests.attributesJSONDictionary
     ]
     
     func testInitializer() {
         let revision = TPrescriptionRevisionTests.revision
         XCTAssertEqual(revision.revisionId, 123)
+        XCTAssertEqual(revision.integrityHash, TPrescriptionIntegrityHashTests.integrityHash)
         XCTAssertEqual(revision.attributes, TPrescriptionAttributesTests.attributes)
     }
     
     func testCodableAsJSON() {
         XCTAssertCodableAsJSON(TPrescriptionRevisionTests.revision, TPrescriptionRevisionTests.revisionJSONDictionary)
+    }
+}
+
+class TPrescriptionIntegrityHashTests: XCTestCase {
+    static let integrityHash = TPrescription.IntegrityHash(algorithm: .jcssha512, hash: "1234567890")
+    static let integrityHashJSONDictionary: [String: Any] = [
+        "algorithm": "JCSSHA512",
+        "hash": "1234567890"
+    ]
+
+    func testInitializer() {
+        let integrityHash = TPrescriptionIntegrityHashTests.integrityHash
+        XCTAssertEqual(integrityHash.algorithm, .jcssha512)
+        XCTAssertEqual(integrityHash.hash, "1234567890")
+    }
+
+    func testCodableAsJSON() {
+        XCTAssertCodableAsJSON(TPrescriptionIntegrityHashTests.integrityHash, TPrescriptionIntegrityHashTests.integrityHashJSONDictionary)
     }
 }
 
@@ -101,6 +129,7 @@ class TPrescriptionAttributesTests: XCTestCase {
         yearOfDiagnosis: 2020,
         phoneNumber: TPrescriptionAttributesPhoneNumberTests.phoneNumber,
         initialSettings: TPrescriptionAttributesInitialSettingsTests.initialSettings,
+        calculator: TPrescriptionAttributesCalculatorTests.calculator,
         training: .inModule,
         therapySettings: .initial,
         prescriberTermsAccepted: true,
@@ -121,6 +150,7 @@ class TPrescriptionAttributesTests: XCTestCase {
         "yearOfDiagnosis": 2020,
         "phoneNumber": TPrescriptionAttributesPhoneNumberTests.phoneNumberJSONDictionary,
         "initialSettings": TPrescriptionAttributesInitialSettingsTests.initialSettingsJSONDictionary,
+        "calculator": TPrescriptionAttributesCalculatorTests.calculatorJSONDictionary,
         "training": TPrescription.Attributes.Training.inModule.rawValue,
         "therapySettings": TPrescription.Attributes.TherapySettings.initial.rawValue,
         "prescriberTermsAccepted": true,
@@ -144,6 +174,7 @@ class TPrescriptionAttributesTests: XCTestCase {
         XCTAssertEqual(attributes.yearOfDiagnosis, 2020)
         XCTAssertEqual(attributes.phoneNumber, TPrescriptionAttributesPhoneNumberTests.phoneNumber)
         XCTAssertEqual(attributes.initialSettings, TPrescriptionAttributesInitialSettingsTests.initialSettings)
+        XCTAssertEqual(attributes.calculator, TPrescriptionAttributesCalculatorTests.calculator)
         XCTAssertEqual(attributes.training, .inModule)
         XCTAssertEqual(attributes.therapySettings, .initial)
         XCTAssertEqual(attributes.prescriberTermsAccepted, true)
@@ -298,5 +329,42 @@ class TPrescriptionAttributesInitialSettingsTests: XCTestCase {
     
     func testCodableAsJSON() {
         XCTAssertCodableAsJSON(TPrescriptionAttributesInitialSettingsTests.initialSettings, TPrescriptionAttributesInitialSettingsTests.initialSettingsJSONDictionary)
+    }
+}
+
+class TPrescriptionAttributesCalculatorTests: XCTestCase {
+    static let calculator = TPrescription.Attributes.Calculator(method: .totalDailyDoseAndWeight,
+                                                                recommendedBasalRate: 1.25,
+                                                                recommendedCarbohydrateRatio: 15.0,
+                                                                recommendedInsulinSensitivity: 45.0,
+                                                                totalDailyDose: 60,
+                                                                totalDailyDoseScaleFactor: 0.9,
+                                                                weight: 75,
+                                                                weightUnits: .kilograms)
+    static let calculatorJSONDictionary: [String: Any] = [
+        "method": "totalDailyDoseAndWeight",
+        "recommendedBasalRate": 1.25,
+        "recommendedCarbohydrateRatio": 15.0,
+        "recommendedInsulinSensitivity": 45.0,
+        "totalDailyDose": 60,
+        "totalDailyDoseScaleFactor": 0.9,
+        "weight": 75,
+        "weightUnits": "kg"
+    ]
+
+    func testInitializer() {
+        let calculator = TPrescriptionAttributesCalculatorTests.calculator
+        XCTAssertEqual(calculator.method, .totalDailyDoseAndWeight)
+        XCTAssertEqual(calculator.recommendedBasalRate, 1.25)
+        XCTAssertEqual(calculator.recommendedCarbohydrateRatio, 15.0)
+        XCTAssertEqual(calculator.recommendedInsulinSensitivity, 45.0)
+        XCTAssertEqual(calculator.totalDailyDose, 60)
+        XCTAssertEqual(calculator.totalDailyDoseScaleFactor, 0.9)
+        XCTAssertEqual(calculator.weight, 75)
+        XCTAssertEqual(calculator.weightUnits, .kilograms)
+    }
+
+    func testCodableAsJSON() {
+        XCTAssertCodableAsJSON(TPrescriptionAttributesCalculatorTests.calculator, TPrescriptionAttributesCalculatorTests.calculatorJSONDictionary)
     }
 }
