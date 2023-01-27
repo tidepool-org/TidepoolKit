@@ -877,6 +877,128 @@ class TAPIVerifyDeviceTests: TAPIRefreshSessionTests {
     }
 }
 
+class TAPIVerifyAppTests: TAPIRefreshSessionTests {
+    let challenge = randomString
+    let attestationKeyID = randomString
+    let attestationEncoded = randomString.data(using: .utf8)!.base64EncodedString()
+    let assertionEncoded = randomString.data(using: .utf8)!.base64EncodedString()
+
+    private func addChallengeHandler() {
+        let challengeRequestBody = TAPI.VerifyAppChallengeRequestBody(keyId: attestationKeyID)
+        URLProtocolMock.handlers.append(URLProtocolMock.Handler(validator: URLProtocolMock.Validator(url: "https://test.org/v1/attestations/challenges", method: "POST", headers: headers, body: challengeRequestBody),
+                                                                success: URLProtocolMock.Success(statusCode: 201, headers: headers, body: TAPI.VerifyAppChallengeResponseBody(challenge: challenge))))
+    }
+
+    private func addAttestationHandler() {
+        let attestationRequestBody = TAPI.VerifyAppAttestationVerificationRequestBody(keyId: attestationKeyID, challenge: challenge, attestation: attestationEncoded)
+        URLProtocolMock.handlers.append(URLProtocolMock.Handler(validator: URLProtocolMock.Validator(url: "https://test.org/v1/attestations/verifications", method: "POST", headers: headers, body: attestationRequestBody),
+                                                                success: URLProtocolMock.Success(statusCode: 204, headers: headers)))
+    }
+
+    private func addAssertionHandler() {
+        let assertionRequestBody = TAPI.VerifyAppAssertionVerificationRequestBody(keyId: attestationKeyID, challenge: challenge, assertion: assertionEncoded)
+        URLProtocolMock.handlers.append(URLProtocolMock.Handler(validator: URLProtocolMock.Validator(url: "https://test.org/v1/assertions/verifications", method: "POST", headers: headers, body: assertionRequestBody),
+                                                                 success: URLProtocolMock.Success(statusCode: 204, headers: headers)))
+    }
+
+    func testNetworkError() {
+        addChallengeHandler()
+        setUpNetworkError()
+        guard case .failure(let error) = performRequestChallenge(), case .network(let networkError) = error else {
+            XCTFail()
+            return
+        }
+        XCTAssertNotNil(networkError)
+        print("\(URLProtocolMock.handlers)")
+        URLProtocolMock.handlers.removeAll()
+    }
+
+    func testRequestNotAuthenticated() {
+        addAttestationHandler()
+        setUpRequestNotAuthenticated()
+        guard case .failure(let error) = performRequestAttestation(), case .requestNotAuthenticated = error else {
+            XCTFail()
+            return
+        }
+    }
+
+    func testRequestNotAuthorized() {
+        addAssertionHandler()
+        setUpRequestNotAuthorized()
+        guard case .failure(let error) = performRequestAssertion(), case .requestNotAuthorized = error else {
+            XCTFail()
+            return
+        }
+    }
+
+    func testResponseMalformedJSON() {
+        addChallengeHandler()
+        setUpResponseMalformedJSON()
+        guard case .failure(let error) = performRequestChallenge(), case .responseMalformedJSON = error else {
+            XCTFail()
+            return
+        }
+    }
+
+    func testSuccessChallenge() {
+        addChallengeHandler()
+        guard case .success(let challenge) = performRequestChallenge() else {
+            XCTFail()
+            return
+        }
+        XCTAssertEqual(challenge, self.challenge)
+    }
+
+    func testSuccessAttestation() {
+        addAttestationHandler()
+        guard case .success(let valid) = performRequestAttestation() else {
+            XCTFail()
+            return
+        }
+        XCTAssertTrue(valid)
+    }
+
+    func testSuccessAssertion() {
+        addAssertionHandler()
+        guard case .success(let valid) = performRequestAssertion() else {
+            XCTFail()
+            return
+        }
+        XCTAssertTrue(valid)
+    }
+
+    func testSuccessAfterRefresh() {
+        addAssertionHandler()
+        setUpSessionWantsRefresh()
+        guard case .success(let valid) = performRequestAssertion() else {
+            XCTFail()
+            return
+        }
+        XCTAssertTrue(valid)
+    }
+
+    private func performRequestChallenge() -> Result<String, TError>? {
+        let expectation = XCTestExpectationWithResult<String, TError>()
+        api.getAttestationChallenge(keyID: attestationKeyID) { expectation.fulfill($0) }
+        XCTAssertNotEqual(XCTWaiter.wait(for: [expectation], timeout: 10), .timedOut)
+        return expectation.result
+    }
+
+    private func performRequestAttestation() -> Result<Bool, TError>? {
+        let expectation = XCTestExpectationWithResult<Bool, TError>()
+        api.verifyAttestation(keyID: attestationKeyID, challenge: challenge, attestation: attestationEncoded) { expectation.fulfill($0) }
+        XCTAssertNotEqual(XCTWaiter.wait(for: [expectation], timeout: 10), .timedOut)
+        return expectation.result
+    }
+
+    private func performRequestAssertion() -> Result<Bool, TError>? {
+        let expectation = XCTestExpectationWithResult<Bool, TError>()
+        api.verifyAssertion(keyID: attestationKeyID, challenge: challenge, assertion: assertionEncoded) { expectation.fulfill($0) }
+        XCTAssertNotEqual(XCTWaiter.wait(for: [expectation], timeout: 10), .timedOut)
+        return expectation.result
+    }
+}
+
 fileprivate extension TSession {
     init(session: TSession, createdDate: Date) {
         self.init(environment: session.environment, authenticationToken: session.authenticationToken, userId: session.userId, trace: session.trace, createdDate: createdDate)
