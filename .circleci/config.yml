@@ -8,10 +8,10 @@ jobs:
       - checkout
       - run:
           name: Build TidepoolKit
-          command: set -o pipefail && time xcrun xcodebuild -project 'TidepoolKit.xcodeproj' -scheme 'Shared' build -destination 'platform=iOS Simulator, id=A3056663-B051-4F3C-BFB0-0CC9089E2E6E, OS:15.5, name=iPhone 13 Pro' build | xcpretty
+          command: set -o pipefail && time xcrun xcodebuild -project 'TidepoolKit.xcodeproj' -scheme 'Shared' build -destination 'platform=iOS Simulator,OS=16.1,name=iPhone 14' build | xcpretty
       - run:
           name: Run TidepoolKit unit tests
-          command: set -o pipefail && time xcrun xcodebuild -project 'TidepoolKit.xcodeproj' -scheme 'Shared' build -destination 'platform=iOS Simulator, id=A3056663-B051-4F3C-BFB0-0CC9089E2E6E, OS:15.5, name=iPhone 13 Pro' test | xcpretty
+          command: set -o pipefail && time xcrun xcodebuild -project 'TidepoolKit.xcodeproj' -scheme 'Shared' build -destination 'platform=iOS Simulator,OS=16.1,name=iPhone 14' test | xcpretty
       - run:
           name: Build TidepoolKit Example
-          command: set -o pipefail && time xcrun xcodebuild -project 'TidepoolKit.xcodeproj' -scheme 'TidepoolKit Example' -destination 'platform=iOS Simulator, id=A3056663-B051-4F3C-BFB0-0CC9089E2E6E, OS:15.5, name=iPhone 13 Pro' build CODE_SIGNING_ALLOWED=NO | xcpretty
+          command: set -o pipefail && time xcrun xcodebuild -project 'TidepoolKit.xcodeproj' -scheme 'TidepoolKit Example' -destination 'platform=iOS Simulator,OS=16.1,name=iPhone 14' build CODE_SIGNING_ALLOWED=NO | xcpretty
