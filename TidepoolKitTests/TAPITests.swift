@@ -883,9 +883,15 @@ class TAPIVerifyAppTests: TAPIRefreshSessionTests {
     let attestationEncoded = randomString.data(using: .utf8)!.base64EncodedString()
     let assertionEncoded = randomString.data(using: .utf8)!.base64EncodedString()
 
-    private func addChallengeHandler() {
+    private func addChallengeHandlerAttestation() {
         let challengeRequestBody = TAPI.VerifyAppChallengeRequestBody(keyId: attestationKeyID)
         URLProtocolMock.handlers.append(URLProtocolMock.Handler(validator: URLProtocolMock.Validator(url: "https://test.org/v1/attestations/challenges", method: "POST", headers: headers, body: challengeRequestBody),
+                                                                success: URLProtocolMock.Success(statusCode: 201, headers: headers, body: TAPI.VerifyAppChallengeResponseBody(challenge: challenge))))
+    }
+
+    private func addChallengeHandlerAssertion() {
+        let challengeRequestBody = TAPI.VerifyAppChallengeRequestBody(keyId: attestationKeyID)
+        URLProtocolMock.handlers.append(URLProtocolMock.Handler(validator: URLProtocolMock.Validator(url: "https://test.org/v1/assertions/challenges", method: "POST", headers: headers, body: challengeRequestBody),
                                                                 success: URLProtocolMock.Success(statusCode: 201, headers: headers, body: TAPI.VerifyAppChallengeResponseBody(challenge: challenge))))
     }
 
@@ -902,9 +908,9 @@ class TAPIVerifyAppTests: TAPIRefreshSessionTests {
     }
 
     func testNetworkError() {
-        addChallengeHandler()
+        addChallengeHandlerAttestation()
         setUpNetworkError()
-        guard case .failure(let error) = performRequestChallenge(), case .network(let networkError) = error else {
+        guard case .failure(let error) = performRequestChallengeAttestation(), case .network(let networkError) = error else {
             XCTFail()
             return
         }
@@ -932,17 +938,26 @@ class TAPIVerifyAppTests: TAPIRefreshSessionTests {
     }
 
     func testResponseMalformedJSON() {
-        addChallengeHandler()
+        addChallengeHandlerAssertion()
         setUpResponseMalformedJSON()
-        guard case .failure(let error) = performRequestChallenge(), case .responseMalformedJSON = error else {
+        guard case .failure(let error) = performRequestChallengeAssertion(), case .responseMalformedJSON = error else {
             XCTFail()
             return
         }
     }
 
-    func testSuccessChallenge() {
-        addChallengeHandler()
-        guard case .success(let challenge) = performRequestChallenge() else {
+    func testSuccessChallengeAttestation() {
+        addChallengeHandlerAttestation()
+        guard case .success(let challenge) = performRequestChallengeAttestation() else {
+            XCTFail()
+            return
+        }
+        XCTAssertEqual(challenge, self.challenge)
+    }
+
+    func testSuccessChallengeAssertion() {
+        addChallengeHandlerAssertion()
+        guard case .success(let challenge) = performRequestChallengeAssertion() else {
             XCTFail()
             return
         }
@@ -977,9 +992,16 @@ class TAPIVerifyAppTests: TAPIRefreshSessionTests {
         XCTAssertTrue(valid)
     }
 
-    private func performRequestChallenge() -> Result<String, TError>? {
+    private func performRequestChallengeAttestation() -> Result<String, TError>? {
         let expectation = XCTestExpectationWithResult<String, TError>()
         api.getAttestationChallenge(keyID: attestationKeyID) { expectation.fulfill($0) }
+        XCTAssertNotEqual(XCTWaiter.wait(for: [expectation], timeout: 10), .timedOut)
+        return expectation.result
+    }
+
+    private func performRequestChallengeAssertion() -> Result<String, TError>? {
+        let expectation = XCTestExpectationWithResult<String, TError>()
+        api.getAssertionChallenge(keyID: attestationKeyID) { expectation.fulfill($0) }
         XCTAssertNotEqual(XCTWaiter.wait(for: [expectation], timeout: 10), .timedOut)
         return expectation.result
     }
