@@ -499,22 +499,6 @@
 			path = "View Controllers";
 			sourceTree = "<group>";
 		};
-		A9285743262B91ED00AC3460 /* View Models */ = {
-			isa = PBXGroup;
-			children = (
-				A928574F262B923700AC3460 /* LoginSignupViewModel.swift */,
-			);
-			path = "View Models";
-			sourceTree = "<group>";
-		};
-		A9285744262B91F800AC3460 /* Views */ = {
-			isa = PBXGroup;
-			children = (
-				A9285755262B926B00AC3460 /* LoginSignupView.swift */,
-			);
-			path = Views;
-			sourceTree = "<group>";
-		};
 		A9307615241224C600D1E376 /* DeviceEventDatum */ = {
 			isa = PBXGroup;
 			children = (
@@ -653,6 +637,7 @@
 		A943537023C932BF0093CFA3 /* TidepoolKitUI */ = {
 			isa = PBXGroup;
 			children = (
+				C19F116029AD357F0055AC28 /* Views */,
 				A943537123C932BF0093CFA3 /* TidepoolKitUI.h */,
 				A943537223C932BF0093CFA3 /* Info.plist */,
 				A973CD2623D68FC300C44032 /* TAPI+UI.swift */,
@@ -785,8 +770,6 @@
 				A9FD367826265A53008DE1D8 /* Extensions */,
 				A9FD368C26265C6B008DE1D8 /* Previews */,
 				A9285742262B91E500AC3460 /* View Controllers */,
-				A9285743262B91ED00AC3460 /* View Models */,
-				A9285744262B91F800AC3460 /* Views */,
 			);
 			path = Internal;
 			sourceTree = "<group>";
@@ -929,6 +912,15 @@
 				A9DCED20262779350057359F /* ContentPreview.swift */,
 			);
 			path = Previews;
+			sourceTree = "<group>";
+		};
+		C19F116029AD357F0055AC28 /* Views */ = {
+			isa = PBXGroup;
+			children = (
+				A928574F262B923700AC3460 /* LoginSignupViewModel.swift */,
+				A9285755262B926B00AC3460 /* LoginSignupView.swift */,
+			);
+			path = Views;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */

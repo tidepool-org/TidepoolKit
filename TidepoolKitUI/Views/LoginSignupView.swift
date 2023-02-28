@@ -9,7 +9,7 @@
 import SwiftUI
 import TidepoolKit
 
-struct LoginSignupView: View {
+public struct LoginSignupView: View {
     @State private var isEnvironmentActionSheetPresented = false
     @State private var message = ""
     @State private var email = ""
@@ -19,7 +19,11 @@ struct LoginSignupView: View {
 
     var viewModel: LoginSignupViewModel
 
-    var body: some View {
+    public init(viewModel: LoginSignupViewModel) {
+        self.viewModel = viewModel
+    }
+
+    public var body: some View {
         ZStack {
             Color(.secondarySystemBackground)
                 .edgesIgnoringSafeArea(.all)

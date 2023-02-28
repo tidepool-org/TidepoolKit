@@ -8,13 +8,13 @@
 
 import TidepoolKit
 
-class LoginSignupViewModel: TLoginSignup {
-    weak var loginSignupDelegate: TLoginSignupDelegate?
-    var environment: TEnvironment?
+public class LoginSignupViewModel: TLoginSignup {
+    public weak var loginSignupDelegate: TLoginSignupDelegate?
+    public var environment: TEnvironment?
 
     private var api: TAPI
 
-    init(api: TAPI) {
+    public init(api: TAPI) {
         self.api = api
     }
 
@@ -26,7 +26,7 @@ class LoginSignupViewModel: TLoginSignup {
 
     func login(email: String, password: String, completion: @escaping (Error?) -> Void) {
         api.login(environment: resolvedEnvironment, email: email, password: password) { error in
-            if let error = error {
+            if let error {
                 completion(error)
                 return
             }
