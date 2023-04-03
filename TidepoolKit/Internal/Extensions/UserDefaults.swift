@@ -16,6 +16,7 @@ extension UserDefaults {
 
     private enum Key: String {
         case defaultEnvironment = "org.tidepool.TidepoolKit.DefaultEnvironment"
+        case studyProductSelection = "com.loopkit.Loop.studyProductSelection"
     }
     
     var defaultEnvironment: TEnvironment? {
@@ -27,6 +28,15 @@ extension UserDefaults {
         }
         set {
             set(try? JSONEncoder.tidepool.encode(newValue), forKey: Key.defaultEnvironment.rawValue)
+        }
+    }
+    
+    public var studyProductSelection: String? {
+        get {
+            string(forKey: Key.studyProductSelection.rawValue)
+        }
+        set {
+            set(newValue, forKey: Key.studyProductSelection.rawValue)
         }
     }
 
