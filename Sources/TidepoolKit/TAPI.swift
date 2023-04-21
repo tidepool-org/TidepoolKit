@@ -7,6 +7,8 @@
 //
 
 import Foundation
+import AppAuth
+
 
 /// Observer of the Tidepool API
 public protocol TAPIObserver: AnyObject {
@@ -19,15 +21,10 @@ public protocol TAPIObserver: AnyObject {
 }
 
 /// The Tidepool API
-public class TAPI {
+public actor TAPI {
 
-    /// All currently known environments. Will always include, as the first element, production. It will additionally include any
-    /// environments discovered from the latest DNS SRV record lookup. When an instance of TAPI is created it will automatically
-    /// perform a DNS SRV record lookup in the background. A client should generally only have one instance of TAPI.
-    public var environments: [TEnvironment] { environmentsLocked.value }
-    
     /// The default environment is derived from the host app group. See UserDefaults extension.
-    public var defaultEnvironment: TEnvironment? {
+    nonisolated public var defaultEnvironment: TEnvironment? {
         get {
             UserDefaults.appGroup?.defaultEnvironment
         }
@@ -39,43 +36,57 @@ public class TAPI {
     /// The URLSessionConfiguration used for all requests. The default is typically acceptable for most purposes. Any changes
     /// will only apply to subsequent requests.
     public var urlSessionConfiguration: URLSessionConfiguration {
-        get {
-            return urlSessionConfigurationLocked.value
+        didSet {
+            urlSession = URLSession(configuration: urlSessionConfiguration)
         }
-        set {
-            urlSessionConfigurationLocked.mutate { $0 = newValue }
-            urlSessionLocked.mutate { $0 = nil }
-        }
+    }
+
+    public func setURLSessionConfiguration(_ configuration: URLSessionConfiguration) {
+        urlSessionConfiguration = configuration
     }
 
     /// The session used for all requests.
     public var session: TSession? {
-        get {
-            return sessionLocked.value
-        }
-        set {
-            sessionLocked.mutate { $0 = newValue }
-            observers.forEach { $0.apiDidUpdateSession(newValue) }
+        didSet {
+            observers.forEach { $0.apiDidUpdateSession(self.session) }
         }
     }
 
-    public weak var logging: TLogging?
+    public func setSession(_ session: TSession?) {
+        self.session = session
+    }
+
+
+    private weak var logging: TLogging?
+
+    public func setLogging(_ newLogging: TLogging) {
+        logging = newLogging
+    }
+
 
     private var observers = WeakSynchronizedSet<TAPIObserver>()
+
+    private var clientId: String
+
+    private var redirectURL: URL
+
+    var authorization: Authorization
+    func setAuthorization(_ authorization: Authorization) {
+        self.authorization = authorization
+    }
 
     /// Create a new instance of TAPI. Automatically lookup additional environments in the background.
     ///
     /// - Parameters:
+    ///   - clientId: The client id to use when authenticating
+    ///   - redirectURL: The redirect url use when authenticating
     ///   - session: The initial session to use, if any.
-    ///   - automaticallyFetchEnvironments: Automatically fetch an updated list of environments when created.
-    public init(session: TSession? = nil, automaticallyFetchEnvironments: Bool = true) {
-        self.environmentsLocked = Locked(TAPI.implicitEnvironments)
-        self.urlSessionConfigurationLocked = Locked(TAPI.defaultURLSessionConfiguration)
-        self.urlSessionLocked = Locked(nil)
-        self.sessionLocked = Locked(session)
-        if automaticallyFetchEnvironments {
-            fetchEnvironments()
-        }
+    public init(clientId: String, redirectURL: URL, session: TSession? = nil) {
+        self.clientId = clientId
+        self.redirectURL = redirectURL
+        self.urlSessionConfiguration = TAPI.defaultURLSessionConfiguration
+        self.session = session
+        self.authorization = AppAuthAuthorization()
     }
 
     /// Start observing the API.
@@ -95,71 +106,134 @@ public class TAPI {
         observers.removeElement(observer)
     }
 
-    // MARK: - Environment
+    private func lookupOIDConfiguration(environment: TEnvironment) async throws -> ProviderConfiguration {
 
-    /// Manually fetch the latest environments. Production is always the first element.
-    ///
-    /// - Parameters:
-    ///   - completion: The completion function to invoke with the latest environments or any error.
-    public func fetchEnvironments(completion: ((Result<[TEnvironment], TError>) -> Void)? = nil) {
-        DispatchQueue.global(qos: .background).async {
-            DNS.lookupSRVRecords(for: TAPI.DNSSRVRecordsDomainName) { result in
-                switch result {
-                case .failure(let error):
-                    self.logging?.error("Failure during DNS SRV record lookup [\(error)]")
-                    completion?(.failure(.network(error)))
-                case .success(let records):
-                    var records = records + TAPI.DNSSRVRecordsImplicit
-                    records = records.map { record in
-                        if record.host != "localhost" {
-                            return record
-                        }
-                        return DNSSRVRecord(priority: UInt16.max, weight: record.weight, host: record.host, port: record.port)
-                    }
-                    let environments = records.sorted().environments
-                    self.environmentsLocked.mutate { $0 = environments }
-                    self.logging?.debug("Successful DNS SRV record lookup")
-                    completion?(.success(environments))
-                }
-            }
+        // Lookup /info for current Tidepool environment, for issuer URL
+        let info = try await getInfo(environment: environment)
+
+        guard let issuer = info.auth?.issuerURL else {
+            throw TError.missingAuthenticationIssuer
         }
+
+        return try await getServiceConfiguration(issuer: issuer)
     }
 
     // MARK: - Authentication
 
-    /// Login to the Tidepool environment using the email and password. This is not typically invoked directly, but instead is
+    public func revokeTokens() async throws {
+        guard let session else {
+            throw TError.sessionMissing
+        }
+
+        // Lookup /info for current Tidepool environment, for issuer URL
+        let info = try await getInfo(environment: session.environment)
+
+        guard let issuer = info.auth?.issuerURL else {
+            throw TError.missingAuthenticationIssuer
+        }
+
+        let config = try await getServiceConfiguration(issuer: issuer)
+
+        guard let revokeURLStr = config.revocationEndpoint, let revokeURL = URL(string: revokeURLStr) else {
+            throw TError.missingAuthenticationConfiguration
+        }
+
+        try await revokeToken(revocationURL: revokeURL, token: session.accessToken, tokenType: "access_token")
+
+        if let refreshToken = session.refreshToken {
+            try await revokeToken(revocationURL: revokeURL, token: refreshToken, tokenType: "refresh_token")
+        }
+    }
+
+    private func revokeToken(revocationURL: URL, token: String, tokenType: String) async throws {
+
+        var bodyComponents = URLComponents()
+        bodyComponents.queryItems = [
+            URLQueryItem(name: "token", value: token),
+            URLQueryItem(name: "token_type_hint", value: tokenType),
+            URLQueryItem(name: "client_id", value: clientId),
+        ]
+
+        var request = URLRequest(url: revocationURL)
+        request.setValue("application/x-www-form-urlencoded", forHTTPHeaderField: "Content-Type")
+        request.httpMethod = "POST"
+        request.httpBody = bodyComponents.query?.data(using: .utf8)
+
+        let (data, response) = try await urlSession.data(for: request)
+
+        guard let response = response as? HTTPURLResponse else {
+            throw TError.responseUnexpected(response, data)
+        }
+
+        guard response.statusCode >= 200 && response.statusCode <= 299 else {
+            throw TError.responseUnexpectedStatusCode(response, data)
+        }
+
+        // Token has successfully been
+    }
+
+    /// Login to the Tidepool environment using AppAuth (OAuth2/OpenID-Connect)
     /// used internally by the LoginSignupViewController.
     ///
     /// - Parameters:
     ///   - environment: The environment to login.
-    ///   - email: The email to use for login.
-    ///   - password: The password to use for login.
+    ///   - presenting: A UIViewController to present the login modal from. Can be UIApplication.shared.windows.first!.rootViewController!
     ///   - completion: The completion function to invoke with any error.
-    public func login(environment: TEnvironment, email: String, password: String, completion: @escaping (TError?) -> Void) {
-        var request = createRequest(environment: environment, method: "POST", path: "/auth/login")
-        request?.setValue(basicAuthorizationFromCredentials(email: email, password: password), forHTTPHeaderField: HTTPHeaderField.authorization.rawValue)
-        performRequest(request, allowSessionRefresh: false) { (result: DecodableHTTPResult<LoginResponse>) -> Void in
-            switch result {
-            case .failure(let error):
-                switch error {
-                case .requestNotAuthorized(let response, let data):     // CUSTOM: Backend currently returns status code 403 to imply email not verified
-                    completion(.requestEmailNotVerified(response, data))
-                default:
-                    completion(error)
-                }
-            case .success((let response, let data, let loginResponse)):
-                if let authenticationToken = response.value(forHTTPHeaderField: "X-Tidepool-Session-Token"), !authenticationToken.isEmpty {
-                    if loginResponse.termsAccepted?.isEmpty == false {     // CUSTOM: Backend does not currently explicitly check if terms are accepted
-                        self.session = TSession(environment: environment, authenticationToken: authenticationToken, userId: loginResponse.userId, email: email)
-                        completion(nil)
-                    } else {
-                        completion(.requestTermsOfServiceNotAccepted(response, data))
-                    }
-                } else {
-                    completion(.responseNotAuthenticated(response, data))
+    public func login(environment: TEnvironment, presenting: UIViewController) async throws {
+
+        let config = try await lookupOIDConfiguration(environment: environment)
+
+        guard let oidConfig = OIDServiceConfiguration(from: config) else {
+            throw TError.missingAuthenticationConfiguration
+        }
+
+        let request = OIDAuthorizationRequest(
+            configuration: oidConfig,
+            clientId: self.clientId,
+            clientSecret: nil,
+            scopes: ["openid", "offline_access"],
+            redirectURL: self.redirectURL,
+            responseType: OIDResponseTypeCode,
+            additionalParameters: [:]
+        )
+
+        let authState: any AuthorizationState
+
+        do {
+            authState = try await authorization.presentAuth(request: request, presenting: presenting)
+        } catch {
+            let authError = error as NSError
+            if authError.domain == OIDGeneralErrorDomain {
+                if authError.code == -3 /* OIDErrorCodeUserCanceledAuthorizationFlow */ ||
+                    authError.code == -4 /* OIDErrorCodeProgramCanceledAuthorizationFlow */
+                {
+                    throw TError.loginCanceled
                 }
             }
+            throw error
         }
+
+        guard let accessToken = authState.accessToken else
+        {
+            throw TError.missingAuthenticationToken
+        }
+
+        self.logging?.debug("Authorization successful, access token: \(accessToken)")
+
+        // getAuthUser
+        var userRequest = try createRequest(environment: environment, method: "GET", path: "/auth/user")
+        userRequest.setValue(accessToken, forHTTPHeaderField: HTTPHeaderField.tidepoolSessionToken.rawValue)
+
+        let currentUser: TUser = try await performRequest(userRequest, allowSessionRefresh: true)
+
+        self.session = TSession(
+            environment: environment,
+            accessToken: accessToken,
+            accessTokenExpiration: authState.accessTokenExpirationDate,
+            refreshToken: authState.refreshToken,
+            userId: currentUser.userid,
+            username: currentUser.username)
+
     }
 
     private func basicAuthorizationFromCredentials(email: String, password: String) -> String {
@@ -172,63 +246,65 @@ public class TAPI {
     /// An .requestNotAuthenticated error indicates that the old session is no longer valid. All other errors
     /// indicate that the old session is still valid and refresh can be retried.
     ///
-    /// - Parameters:
-    ///   - completion: The completion function to invoke with any error.
-    public func refreshSession(completion: @escaping (TError?) -> Void) {
-        guard let session = session else {
-            completion(.sessionMissing)
-            return
+
+    public func refreshSession() async throws {
+        guard let session else {
+            throw TError.sessionMissing
         }
 
-        let request = createRequest(method: "GET", path: "/auth/login")
-        performRequest(request, allowSessionRefresh: false) { (result: HTTPResult) -> Void in
-            switch result {
-            case .failure(let error):
-                if case .requestNotAuthenticated = error {
-                    self.session = nil
-                }
-                completion(error)
-            case .success((let response, let data)):
-                if let authenticationToken = response.value(forHTTPHeaderField: "X-Tidepool-Session-Token"), !authenticationToken.isEmpty {
-                    self.session = TSession(session: session, authenticationToken: authenticationToken)
-                    completion(nil)
-                } else {
-                    completion(.responseNotAuthenticated(response, data))
-                }
-            }
+        guard let refreshToken = session.refreshToken else {
+            throw TError.refreshTokenMissing
         }
+
+        let config = try await lookupOIDConfiguration(environment: session.environment)
+
+        guard let oidConfig = OIDServiceConfiguration(from: config) else {
+            throw TError.missingAuthenticationConfiguration
+        }
+
+        let request = OIDTokenRequest(
+            configuration: oidConfig,
+            grantType: OIDGrantTypeRefreshToken,
+            authorizationCode: nil,
+            redirectURL: nil,
+            clientID: self.clientId,
+            clientSecret: nil,
+            scope: nil,
+            refreshToken: refreshToken,
+            codeVerifier: nil,
+            additionalParameters: nil)
+
+
+        let tokenResponse = try await authorization.requestToken(request)
+
+        if let newAccessToken = tokenResponse.accessToken {
+            self.session = TSession(
+                environment: session.environment,
+                accessToken: newAccessToken,
+                accessTokenExpiration: tokenResponse.accessTokenExpirationDate,
+                refreshToken: tokenResponse.refreshToken,
+                userId: session.userId,
+                username: session.username)
+        }
+        
     }
 
     /// Logout the Tidepool API session.
     ///
-    /// - Parameters:
-    ///   - completion: The completion function to invoke with any error.
-    public func logout(completion: @escaping (TError?) -> Void) {
-        guard session != nil else {
-            completion(.sessionMissing)
-            return
-        }
-
-        let request = createRequest(method: "POST", path: "/auth/logout")
-        performRequest(request, allowSessionRefresh: false) { (error: TError?) -> Void in
-            if error == nil {
-                self.session = nil
-            }
-            completion(error)
-        }
+    public func logout() {
+        self.session = nil
     }
 
     // MARK: - Info
 
-    /// Get the info.
+    /// Get Tidepool environment information for the specified environment.
     ///
     /// - Parameters:
     ///   - environment: The environment to get the info for.
-    ///   - completion: The completion function to invoke with any error.
-    public func getInfo(environment: TEnvironment? = nil, completion: @escaping (Result<TInfo, TError>) -> Void) {
-        // Note: no session is needed
-        let request = createRequest(environment: environment ?? session?.environment ?? defaultEnvironment ?? environments.first!, method: "GET", path: "/info")
-        performRequest(request, allowSessionRefresh: false, completion: completion)
+    /// - Returns: A ``TInfo`` structure
+    public func getInfo(environment: TEnvironment) async throws -> TInfo {
+        let request = try createRequest(environment: environment, method: "GET", path: "/info")
+        return try await performRequest(request, allowSessionRefresh: false)
     }
 
     // MARK: - Profile
@@ -238,14 +314,13 @@ public class TAPI {
     /// - Parameters:
     ///   - userId: The user id for which to get the profile. If no user id is specified, then the session user id is used.
     ///   - completion: The completion function to invoke with any error.
-    public func getProfile(userId: String? = nil, completion: @escaping (Result<TProfile, TError>) -> Void) {
+    public func getProfile(userId: String? = nil) async throws -> TProfile {
         guard let session = session else {
-            completion(.failure(.sessionMissing))
-            return
+            throw TError.sessionMissing
         }
 
-        let request = createRequest(method: "GET", path: "/metadata/\(userId ?? session.userId)/profile")
-        performRequest(request, completion: completion)
+        let request = try createRequest(method: "GET", path: "/metadata/\(userId ?? session.userId)/profile")
+        return try await performRequest(request)
     }
 
     // MARK: - Users
@@ -273,14 +348,13 @@ public class TAPI {
     ///   - prescriptionClaim: The prescription claim to submit.
     ///   - userId: The user id for which to claim the prescription. If no user id is specified, then the session user id is used.
     ///   - completion: The completion function to invoke with any error.
-    public func claimPrescription(prescriptionClaim: TPrescriptionClaim, userId: String? = nil, completion: @escaping (Result<TPrescription, TError>) -> Void) {
+    public func claimPrescription(prescriptionClaim: TPrescriptionClaim, userId: String? = nil) async throws -> TPrescription {
         guard let session = session else {
-            completion(.failure(.sessionMissing))
-            return
+            throw TError.sessionMissing
         }
 
-        let request = createRequest(method: "POST", path: "/v1/patients/\(userId ?? session.userId)/prescriptions", body: prescriptionClaim)
-        performRequest(request, completion: completion)
+        let request = try createRequest(method: "POST", path: "/v1/patients/\(userId ?? session.userId)/prescriptions", body: prescriptionClaim)
+        return try await performRequest(request)
     }
 
     // MARK: - Data Sets
@@ -292,14 +366,13 @@ public class TAPI {
     ///   - filter: The filter to use when requesting the data sets.
     ///   - userId: The user id for which to get the data sets. If no user id is specified, then the session user id is used.
     ///   - completion: The completion function to invoke with any error.
-    public func listDataSets(filter: TDataSet.Filter? = nil, userId: String? = nil, completion: @escaping (Result<[TDataSet], TError>) -> Void) {
+    public func listDataSets(filter: TDataSet.Filter? = nil, userId: String? = nil) async throws -> [TDataSet] {
         guard let session = session else {
-            completion(.failure(.sessionMissing))
-            return
+            throw TError.sessionMissing
         }
 
-        let request = createRequest(method: "GET", path: "/v1/users/\(userId ?? session.userId)/data_sets", queryItems: filter?.queryItems)
-        performRequest(request, completion: completion)
+        let request = try createRequest(method: "GET", path: "/v1/users/\(userId ?? session.userId)/data_sets", queryItems: filter?.queryItems)
+        return try await performRequest(request)
     }
 
     /// Create a data set for the specified user id. If no user id is specified, then the session user id is used.
@@ -308,21 +381,14 @@ public class TAPI {
     ///   - dataSet: The data set to create.
     ///   - userId: The user id for which to create the data set. If no user id is specified, then the session user id is used.
     ///   - completion: The completion function to invoke with any error.
-    public func createDataSet(_ dataSet: TDataSet, userId: String? = nil, completion: @escaping (Result<TDataSet, TError>) -> Void) {
+    public func createDataSet(_ dataSet: TDataSet, userId: String? = nil) async throws -> TDataSet {
         guard let session = session else {
-            completion(.failure(.sessionMissing))
-            return
+            throw TError.sessionMissing
         }
 
-        let request = createRequest(method: "POST", path: "/v1/users/\(userId ?? session.userId)/data_sets", body: dataSet)
-        performRequest(request) { (result: DecodableResult<LegacyResponse.Success<TDataSet>>) -> Void in
-            switch result {
-            case .failure(let error):
-                completion(.failure(error))
-            case .success(let legacyResponse):
-                completion(.success(legacyResponse.data))
-            }
-        }
+        let request = try createRequest(method: "POST", path: "/v1/users/\(userId ?? session.userId)/data_sets", body: dataSet)
+        let legacyResponse: LegacyResponse.Success<TDataSet> = try await performRequest(request)
+        return legacyResponse.data
     }
 
     // MARK: - Datum
@@ -336,22 +402,15 @@ public class TAPI {
     /// - Parameters:
     ///   - filter: The filter to use when requesting the data.
     ///   - userId: The user id for which to get the data. If no user id is specified, then the session user id is used.
-    ///   - completion: The completion function to invoke with any error.
-    public func listData(filter: TDatum.Filter? = nil, userId: String? = nil, completion: @escaping (DataResult) -> Void) {
+    /// - Returns: a tuple with the decoded data and any malformed entries
+    public func listData(filter: TDatum.Filter? = nil, userId: String? = nil) async throws -> ([TDatum], MalformedResult) {
         guard let session = session else {
-            completion(.failure(.sessionMissing))
-            return
+            throw TError.sessionMissing
         }
 
-        let request = createRequest(method: "GET", path: "/data/\(userId ?? session.userId)", queryItems: filter?.queryItems)
-        performRequest(request) { (result: DecodableResult<DataResponse>) -> Void in
-            switch result {
-            case .failure(let error):
-                completion(.failure(error))
-            case .success(let data):
-                completion(.success((data.data, data.malformed)))
-            }
-        }
+        let request = try createRequest(method: "GET", path: "/data/\(userId ?? session.userId)", queryItems: filter?.queryItems)
+        let data: DataResponse = try await performRequest(request)
+        return (data.data, data.malformed)
     }
 
     /// Create data for the specified data set id.
@@ -359,36 +418,32 @@ public class TAPI {
     /// - Parameters:
     ///   - data: The data to create.
     ///   - dataSetId: The data set id for which to create the data.
-    ///   - completion: The completion function to invoke with any error.
-    public func createData(_ data: [TDatum], dataSetId: String, completion: @escaping (TError?) -> Void) {
+    public func createData(_ data: [TDatum], dataSetId: String) async throws {
         guard session != nil else {
-            completion(.sessionMissing)
-            return
+            throw TError.sessionMissing
         }
+
         guard !data.isEmpty else {
-            completion(nil)
             return
         }
 
-        let request = createRequest(method: "POST", path: "/v1/data_sets/\(dataSetId)/data", body: data)
-        performRequest(request) { (result: DecodableResult<LegacyResponse.Success<DataResponse>>) -> Void in
-            switch result {
-            case .failure(let error):
+        let request = try createRequest(method: "POST", path: "/v1/data_sets/\(dataSetId)/data", body: data)
+
+        do {
+            let _: LegacyResponse.Success<DataResponse> = try await performRequest(request)
+        } catch {
+            if let error = error as? TError {
                 if case .requestMalformed(let response, let data) = error {
                     if let data = data {
                         if let legacyResponse = try? JSONDecoder.tidepool.decode(LegacyResponse.Failure.self, from: data) {
-                            completion(.requestMalformedJSON(response, data, legacyResponse.errors))
-                            return
+                            throw TError.requestMalformedJSON(response, data, legacyResponse.errors)
                         } else if let error = try? JSONDecoder.tidepool.decode(TError.Detail.self, from: data) {
-                            completion(.requestMalformedJSON(response, data, [error]))
-                            return
+                            throw TError.requestMalformedJSON(response, data, [error])
                         }
                     }
                 }
-                completion(error)
-            case .success:
-                completion(nil)
             }
+            throw error
         }
     }
 
@@ -397,19 +452,17 @@ public class TAPI {
     /// - Parameters:
     ///   - selectors: The selectors for the data to delete.
     ///   - dataSetId: The data set id from which to delete the data.
-    ///   - completion: The completion function to invoke with any error.
-    public func deleteData(withSelectors selectors: [TDatum.Selector], dataSetId: String, completion: @escaping (TError?) -> Void) {
+    public func deleteData(withSelectors selectors: [TDatum.Selector], dataSetId: String) async throws {
         guard session != nil else {
-            completion(.sessionMissing)
-            return
+            throw TError.sessionMissing
         }
+
         guard !selectors.isEmpty else {
-            completion(nil)
             return
         }
         
-        let request = createRequest(method: "DELETE", path: "/v1/data_sets/\(dataSetId)/data", body: selectors)
-        performRequest(request, completion: completion)
+        let request = try createRequest(method: "DELETE", path: "/v1/data_sets/\(dataSetId)/data", body: selectors)
+        try await performRequestNotDecodingResponse(request)
     }
 
     // MARK: - Verify Device
@@ -418,23 +471,17 @@ public class TAPI {
     ///
     /// - Parameters:
     ///   - deviceToken: The device token used to verify the validity of a device.
-    ///   - completion: The completion function to invoke with any error.
-    public func verifyDevice(deviceToken: Data, completion: @escaping (Result<Bool, TError>) -> Void) {
+    /// - Returns: Whether the device is valid
+    public func verifyDevice(deviceToken: Data) async throws -> Bool {
         guard session != nil else {
-            completion(.failure(.sessionMissing))
-            return
+            throw TError.sessionMissing
         }
 
         let body = VerifyDeviceRequestBody(deviceToken: deviceToken.base64EncodedString())
-        let request = createRequest(method: "POST", path: "/v1/device_check/verify", body: body)
-        performRequest(request) { (result: DecodableResult<VerifyDeviceResponseBody>) -> Void in
-            switch result {
-            case .failure(let error):
-                completion(.failure(error))
-            case .success(let response):
-                completion(.success(response.valid))
-            }
-        }
+        let request = try createRequest(method: "POST", path: "/v1/device_check/verify", body: body)
+
+        let response: VerifyDeviceResponseBody = try await performRequest(request)
+        return response.valid
     }
 
     struct VerifyDeviceRequestBody: Codable {
@@ -455,46 +502,32 @@ public class TAPI {
     ///
     /// - Parameters:
     ///   - keyID: The key ID generated by Device Check Attestation Service.
-    ///   - completion: The completion function to invoke with any error.
-    public func getAttestationChallenge(keyID: String, completion: @escaping (Result<String, TError>) -> Void) {
+    /// - Returns: The attestation challenge
+    public func getAttestationChallenge(keyID: String) async throws -> String {
         guard session != nil else {
-            completion(.failure(.sessionMissing))
-            return
+            throw TError.sessionMissing
         }
 
         let body = VerifyAppChallengeRequestBody(keyId: keyID)
-        let request = createRequest(method: "POST", path: "/v1/attestations/challenges", body: body)
-        performRequest(request) { (result: DecodableResult<VerifyAppChallengeResponseBody>) -> Void in
-            switch result {
-            case .failure(let error):
-                completion(.failure(error))
-            case .success(let response):
-                completion(.success(response.challenge))
-            }
-        }
+        let request = try createRequest(method: "POST", path: "/v1/attestations/challenges", body: body)
+        let response: VerifyAppChallengeResponseBody = try await performRequest(request)
+        return response.challenge
     }
 
     /// Get the server challenge to be used to assert the validity of an app request.
     ///
     /// - Parameters:
     ///   - keyID: The key ID generated by Device Check Attestation Service.
-    ///   - completion: The completion function to invoke with any error.
-    public func getAssertionChallenge(keyID: String, completion: @escaping (Result<String, TError>) -> Void) {
+    /// - returns: The assertion challenge
+    public func getAssertionChallenge(keyID: String) async throws -> String {
         guard session != nil else {
-            completion(.failure(.sessionMissing))
-            return
+            throw TError.sessionMissing
         }
 
         let body = VerifyAppChallengeRequestBody(keyId: keyID)
-        let request = createRequest(method: "POST", path: "/v1/assertions/challenges", body: body)
-        performRequest(request) { (result: DecodableResult<VerifyAppChallengeResponseBody>) -> Void in
-            switch result {
-            case .failure(let error):
-                completion(.failure(error))
-            case .success(let response):
-                completion(.success(response.challenge))
-            }
-        }
+        let request = try createRequest(method: "POST", path: "/v1/assertions/challenges", body: body)
+        let response: VerifyAppChallengeResponseBody = try await performRequest(request)
+        return response.challenge
     }
 
     /// Verify the app attestation.
@@ -503,22 +536,16 @@ public class TAPI {
     ///   - keyID: The key ID generated by Device Check Attestation Service.
     ///   - challenge: The server provided challenge
     ///   - attestation: The attestation generated by the Device Check Attestation Service (base64 encoded)
-    ///   - completion: The completion function to invoke with any error.
-    public func verifyAttestation(keyID: String, challenge: String, attestation: String, completion: @escaping (Result<Bool, TError>) -> Void) {
+    /// - Returns: true if the app attestation is verified
+    public func verifyAttestation(keyID: String, challenge: String, attestation: String) async throws -> Bool {
         guard session != nil else {
-            completion(.failure(.sessionMissing))
-            return
+            throw TError.sessionMissing
         }
 
         let body = VerifyAppAttestationVerificationRequestBody(keyId: keyID, challenge: challenge, attestation: attestation)
-        let request = createRequest(method: "POST", path: "/v1/attestations/verifications", body: body)
-        performRequest(request) { (error: TError?) -> Void in
-            if let error = error {
-                completion(.failure(error))
-            } else {
-                completion(.success(true))
-            }
-        }
+        let request = try createRequest(method: "POST", path: "/v1/attestations/verifications", body: body)
+        try await performRequestNotDecodingResponse(request)
+        return true
     }
 
     /// Verify the app assertion.
@@ -527,22 +554,16 @@ public class TAPI {
     ///   - keyID: The key ID generated by Device Check Attestation Service.
     ///   - challenge: The server provided challenge
     ///   - assertion: The assertion generated by the Device Check Attestation Service (base64 encoded)
-    ///   - completion: The completion function to invoke with any error.
-    public func verifyAssertion(keyID: String, challenge: String, assertion: String, completion: @escaping (Result<Bool, TError>) -> Void) {
-            guard session != nil else {
-                completion(.failure(.sessionMissing))
-                return
-            }
+    /// - Returns: true if the app assertion is verified
+    public func verifyAssertion(keyID: String, challenge: String, assertion: String) async throws -> Bool {
+        guard session != nil else {
+            throw TError.sessionMissing
+        }
 
-            let body = VerifyAppAssertionVerificationRequestBody(keyId: keyID, challenge: challenge, assertion: assertion)
-            let request = createRequest(method: "POST", path: "/v1/assertions/verifications", body: body)
-            performRequest(request) { (error: TError?) -> Void in
-                if let error = error {
-                    completion(.failure(error))
-                } else {
-                    completion(.success(true))
-                }
-            }
+        let body = VerifyAppAssertionVerificationRequestBody(keyId: keyID, challenge: challenge, assertion: assertion)
+        let request = try createRequest(method: "POST", path: "/v1/assertions/verifications", body: body)
+        try await performRequestNotDecodingResponse(request)
+        return true
     }
 
     struct VerifyAppChallengeRequestBody: Codable {
@@ -573,38 +594,29 @@ public class TAPI {
 
     // MARK: - Internal - Create Request
 
-    private func createRequest<E>(method: String, path: String, body: E) -> URLRequest? where E: Encodable {
-        var request = createRequest(method: method, path: path)
-        request?.setValue("application/json; charset=utf-8", forHTTPHeaderField: HTTPHeaderField.contentType.rawValue)
-        do {
-            let encoded = try JSONEncoder.tidepool.encode(body)
-            logging?.debug("Sending: " + (String(data: encoded, encoding: .utf8) ?? "invalid request"))
-            request?.httpBody = encoded
-        } catch let error {
-            logging?.error("Failure encoding request body [\(error)]")
-            return nil
-        }
+    private func createRequest<E>(method: String, path: String, body: E) throws -> URLRequest where E: Encodable {
+        var request = try createRequest(method: method, path: path)
+        request.setValue("application/json; charset=utf-8", forHTTPHeaderField: HTTPHeaderField.contentType.rawValue)
+        let encoded = try JSONEncoder.tidepool.encode(body)
+        request.httpBody = encoded
         return request
     }
 
-    private func createRequest(method: String, path: String, queryItems: [URLQueryItem]? = nil) -> URLRequest? {
+    private func createRequest(method: String, path: String, queryItems: [URLQueryItem]? = nil) throws -> URLRequest {
         guard let session = session else {
-            return nil
+            throw TError.sessionMissing
         }
 
-        var request = createRequest(environment: session.environment, method: method, path: path, queryItems: queryItems)
-        request?.setValue(session.authenticationToken, forHTTPHeaderField: HTTPHeaderField.tidepoolSessionToken.rawValue)
+        var request = try createRequest(environment: session.environment, method: method, path: path, queryItems: queryItems)
+        request.setValue(session.accessToken, forHTTPHeaderField: HTTPHeaderField.tidepoolSessionToken.rawValue)
         if let trace = session.trace {
-            request?.setValue(trace, forHTTPHeaderField: HTTPHeaderField.tidepoolTraceSession.rawValue)
+            request.setValue(trace, forHTTPHeaderField: HTTPHeaderField.tidepoolTraceSession.rawValue)
         }
         return request
     }
 
-    private func createRequest(environment: TEnvironment, method: String, path: String, queryItems: [URLQueryItem]? = nil) -> URLRequest? {
-        guard let url = environment.url(path: path, queryItems: queryItems) else {
-            logging?.error("Failure creating request URL [environment='\(environment)'; path='\(path)'; queryItems=\(String(describing: queryItems))")
-            return nil
-        }
+    private func createRequest(environment: TEnvironment, method: String, path: String, queryItems: [URLQueryItem]? = nil) throws -> URLRequest {
+        let url = try environment.url(path: path, queryItems: queryItems)
         var request = URLRequest(url: url)
         request.httpMethod = method
         return request
@@ -614,116 +626,133 @@ public class TAPI {
 
     private typealias DecodableResult<D> = Result<D, TError> where D: Decodable
 
-    private func performRequest<D>(_ request: URLRequest?, allowSessionRefresh: Bool = true, completion: @escaping (DecodableResult<D>) -> Void) where D: Decodable {
-        performRequest(request, allowSessionRefresh: allowSessionRefresh) { (result: DecodableHTTPResult<D>) -> Void in
-            switch result {
-            case .failure(let error):
-                completion(.failure(error))
-            case .success((_, _, let decoded)):
-                completion(.success(decoded))
-            }
-        }
+    private func performRequest<D>(_ request: URLRequest?, allowSessionRefresh: Bool = true) async throws -> D where D: Decodable {
+        let (_, _, decoded): (HTTPURLResponse, Data?, D) = try await performRequest(request, allowSessionRefresh: allowSessionRefresh)
+        return decoded
     }
 
     private typealias DecodableHTTPResult<D> = Result<(HTTPURLResponse, Data, D), TError> where D: Decodable
 
-    private func performRequest<D>(_ request: URLRequest?, allowSessionRefresh: Bool = true, completion: @escaping (DecodableHTTPResult<D>) -> Void) where D: Decodable {
-        performRequest(request, allowSessionRefresh: allowSessionRefresh) { (result: HTTPResult) -> Void in
-            switch result {
-            case .failure(let error):
-                completion(.failure(error))
-            case .success((let response, let data)):
-                if let data = data {
-                    do {
-                        completion(.success((response, data, try JSONDecoder.tidepool.decode(D.self, from: data))))
-                    } catch let error {
-                        completion(.failure(.responseMalformedJSON(response, data, error)))
-                    }
-                } else {
-                    completion(.failure(.responseMissingJSON(response)))
-                }
+    private func performRequest<D>(_ request: URLRequest?, allowSessionRefresh: Bool = true) async throws -> (HTTPURLResponse, Data, D) where D: Decodable {
+        let (response, data) = try await performRequest(request, allowSessionRefresh: allowSessionRefresh)
+        if let data = data {
+            do {
+                return (response, data, try JSONDecoder.tidepool.decode(D.self, from: data))
+            } catch let error {
+                throw TError.responseMalformedJSON(response, data, error)
             }
-        }
-    }
-
-    private func performRequest(_ request: URLRequest?, allowSessionRefresh: Bool = true, completion: @escaping (TError?) -> Void) {
-        performRequest(request, allowSessionRefresh: allowSessionRefresh) { (result: HTTPResult) -> Void in
-            switch result {
-            case .failure(let error):
-                completion(error)
-            case .success:
-                completion(nil)
-            }
+        } else {
+            throw TError.responseMissingJSON(response)
         }
     }
 
     private typealias HTTPResult = Result<(HTTPURLResponse, Data?), TError>
 
-    private func performRequest(_ request: URLRequest?, allowSessionRefresh: Bool = true, completion: @escaping (HTTPResult) -> Void) {
-        if allowSessionRefresh, let session = session, session.wantsRefresh {
-            refreshSessionAndPerformRequest(request, completion: completion)
+    private func performRequest(_ request: URLRequest?, allowSessionRefresh: Bool = true) async throws -> (HTTPURLResponse, Data?) {
+        if allowSessionRefresh, let session = session, session.shouldRefresh() {
+            return try await refreshSessionAndPerformRequest(request)
         } else {
-            performRequest(request, allowSessionRefreshAfterFailure: allowSessionRefresh, completion: completion)
+            return try await performRequest(request, allowSessionRefreshAfterFailure: allowSessionRefresh)
         }
     }
 
-    private func performRequest(_ request: URLRequest?, allowSessionRefreshAfterFailure: Bool, completion: @escaping (HTTPResult) -> Void) {
-        guard let request = request else {
-            completion(.failure(.requestInvalid))
-            return
+    private func performRequestNotDecodingResponse(_ request: URLRequest?, allowSessionRefresh: Bool = true) async throws {
+        if allowSessionRefresh, let session = session, session.shouldRefresh() {
+            let _ = try await refreshSessionAndPerformRequest(request)
+        } else {
+            let _ = try await performRequest(request, allowSessionRefreshAfterFailure: allowSessionRefresh)
+        }
+    }
+
+    private func performRequest(_ request: URLRequest?, allowSessionRefreshAfterFailure: Bool = true) async throws -> (HTTPURLResponse, Data?) {
+        guard let request else {
+            throw TError.requestInvalid
         }
 
-        let task = urlSession.dataTask(with: request) { (data, response, error) in
-            if let error = error {
-                completion(.failure(.network(error)))
-            } else if let response = response as? HTTPURLResponse {
-                if allowSessionRefreshAfterFailure, response.statusCode == 401 {
-                    self.refreshSessionAndPerformRequest(request, completion: completion)
-                } else {
-                    completion(self.processStatusCode(response: response, data: data))
-                }
+        logging?.debug("Sending: \(request)")
+        logging?.debug("Headers: \(String(describing: request.allHTTPHeaderFields))")
+        if let body = request.httpBody, let bodyStr = String(data:body, encoding: .utf8) {
+            logging?.debug("Body: \(bodyStr)")
+        }
+
+        let (data, response): (Data, URLResponse)
+        do {
+            (data, response) = try await urlSession.data(for: request)
+        } catch {
+            throw TError.network(error)
+        }
+
+        if let response = response as? HTTPURLResponse {
+            if allowSessionRefreshAfterFailure, response.statusCode == 401 {
+                self.logging?.info("Refreshing session")
+                return try await self.refreshSessionAndPerformRequest(request)
             } else {
-                completion(.failure(.responseUnexpected(response, data)))
+                if let responseBody = String(data: data, encoding: .utf8) {
+                    self.logging?.debug("Received \(responseBody)")
+                }
+
+                let statusCode = response.statusCode
+                switch statusCode {
+                case 200...299:
+                    return (response, data)
+                case 400:
+                    throw TError.requestMalformed(response, data)
+                case 401:
+                    throw TError.requestNotAuthenticated
+                case 403:
+                    throw TError.requestNotAuthorized(response, data)
+                case 404:
+                    throw TError.requestResourceNotFound(response, data)
+                default:
+                    throw TError.responseUnexpectedStatusCode(response, data)
+                }
             }
-        }
-        task.resume()
-    }
-
-    private func refreshSessionAndPerformRequest(_ request: URLRequest?, completion: @escaping (HTTPResult) -> Void) {
-        refreshSession() { error in
-            if let error = error {
-                completion(.failure(error))
-                return
-            }
-
-            guard let session = self.session else {
-                completion(.failure(.sessionMissing))
-                return
-            }
-
-            var request = request
-            request?.setValue(session.authenticationToken, forHTTPHeaderField: HTTPHeaderField.tidepoolSessionToken.rawValue)
-            self.performRequest(request, allowSessionRefreshAfterFailure: false, completion: completion)
-        }
-    }
-
-    private func processStatusCode(response: HTTPURLResponse, data: Data?) -> HTTPResult {
-        let statusCode = response.statusCode
-        switch statusCode {
-        case 200...299:
-            return .success((response, data))
-        case 400:
-            return .failure(.requestMalformed(response, data))
-        case 401:
-            return .failure(.requestNotAuthenticated(response, data))
-        case 403:
-            return .failure(.requestNotAuthorized(response, data))
-        case 404:
-            return .failure(.requestResourceNotFound(response, data))
-        default:
-            return .failure(.responseUnexpectedStatusCode(response, data))
+        } else {
+            throw TError.responseUnexpected(response, data)
         }
     }
+
+    private func refreshSessionAndPerformRequest(_ request: URLRequest?) async throws -> (HTTPURLResponse, Data?) {
+        do {
+            try await refreshSession()
+        } catch {
+            let tokenError = error as NSError
+            if tokenError.domain == OIDOAuthTokenErrorDomain {
+                let errorCode = tokenError.userInfo[OIDOAuthErrorResponseErrorKey] ?? "unknown";
+                logging?.error("Auth error while refreshing token: \(errorCode) \(error.localizedDescription)")
+                self.session = nil
+            } else {
+                logging?.error("Error refreshing token: \(error.localizedDescription)")
+            }
+            throw TError.requestNotAuthenticated
+        }
+        guard let session = self.session else {
+            throw TError.sessionMissing
+        }
+        var request1 = request
+        request1?.setValue(session.accessToken, forHTTPHeaderField: HTTPHeaderField.tidepoolSessionToken.rawValue)
+        return try await self.performRequest(request1, allowSessionRefreshAfterFailure: false)
+    }
+
+    private func getServiceConfiguration(issuer: URL) async throws -> ProviderConfiguration {
+
+        // Lookup OpenID-Connect Service provider configuration
+
+        let (data, response) = try await urlSession.data(from: issuer.appendingPathComponent(".well-known/openid-configuration"))
+
+        guard let response = response as? HTTPURLResponse else {
+            throw TError.responseUnexpected(response, data)
+        }
+
+        guard response.statusCode >= 200 && response.statusCode <= 299 else {
+            throw TError.responseUnexpectedStatusCode(response, data)
+        }
+
+        let decoder = JSONDecoder()
+        decoder.keyDecodingStrategy = .convertFromSnakeCase
+        return try decoder.decode(ProviderConfiguration.self, from: data)
+    }
+
 
     private static var defaultUserAgent: String {
         return "\(Bundle.main.userAgent) \(Bundle(for: self).userAgent) \(ProcessInfo.processInfo.userAgent)"
@@ -738,30 +767,8 @@ public class TAPI {
         return urlSessionConfiguration
     }
 
-    private var urlSessionConfigurationLocked: Locked<URLSessionConfiguration>
+    private var urlSession: URLSession = URLSession(configuration: defaultURLSessionConfiguration)
 
-    private var urlSession: URLSession! {
-        let urlSessionConfiguration = urlSessionConfigurationLocked.value
-        return urlSessionLocked.mutate { urlSession in
-            if urlSession == nil {
-                urlSession = URLSession(configuration: urlSessionConfiguration)
-            }
-        }
-    }
-
-    private var urlSessionLocked: Locked<URLSession?>
-
-    private var sessionLocked: Locked<TSession?>
-
-    private static var implicitEnvironments: [TEnvironment] {
-        return DNSSRVRecordsImplicit.environments
-    }
-
-    private var environmentsLocked: Locked<[TEnvironment]>
-
-    private static let DNSSRVRecordsDomainName = "environments-srv.tidepool.org"
-
-    private static let DNSSRVRecordsImplicit = [DNSSRVRecord(priority: UInt16.min, weight: UInt16.max, host: "app.tidepool.org", port: 443)]
 
     private enum HTTPHeaderField: String {
         case authorization = "Authorization"

@@ -8,10 +8,23 @@
 
 import os.log
 import UIKit
+import SwiftUI
 import TidepoolKit
+
 
 class RootTableViewController: UITableViewController, TAPIObserver {
     private let api: TAPI
+    private var session: TSession? {
+        didSet {
+            UserDefaults.standard.session = session
+            if let session = session {
+                self.environment = session.environment
+            } else {
+                self.dataSetId = nil
+            }
+            updateViews()
+        }
+    }
     private var environment: TEnvironment? {
         didSet {
             UserDefaults.standard.environment = environment
@@ -36,28 +49,21 @@ class RootTableViewController: UITableViewController, TAPIObserver {
     private let logging = Logging()
 
     required init?(coder: NSCoder) {
-        self.api = TAPI(session: UserDefaults.standard.session)
+        self.session = UserDefaults.standard.session
+        self.api = TAPI(clientId: "diy-loop", redirectURL:  URL(string: "org.loopkit.Loop://tidepool_service_redirect")!, session: session)
         self.environment = UserDefaults.standard.environment
         self.dataSetId = UserDefaults.standard.dataSetId
 
         super.init(coder: coder)
 
-        api.logging = logging
-        api.addObserver(self)
-    }
-
-    deinit {
-        api.removeObserver(self)
+        Task {
+            await api.setLogging(logging)
+            await api.addObserver(self)
+        }
     }
 
     func apiDidUpdateSession(_ session: TSession?) {
-        UserDefaults.standard.session = session
-        if let session = session {
-            self.environment = session.environment
-        } else {
-            self.dataSetId = nil
-        }
-        updateViews()
+        self.session = session
     }
 
     override func viewDidLoad() {
@@ -72,7 +78,7 @@ class RootTableViewController: UITableViewController, TAPIObserver {
 
     private func updateViews() {
         tableView.reloadData()
-        navigationItem.rightBarButtonItem?.isEnabled = api.session != nil
+        navigationItem.rightBarButtonItem?.isEnabled = session != nil
     }
 
     private struct SharedStatus: Codable, Equatable {
@@ -81,7 +87,7 @@ class RootTableViewController: UITableViewController, TAPIObserver {
     }
 
     @objc func share() {
-        guard let session = api.session,
+        guard let session = session,
             let data = try? JSONEncoder.pretty.encode(SharedStatus(session: session, dataSetId: dataSetId)),
             let text = String(data: data, encoding: .utf8) else
         {
@@ -106,9 +112,9 @@ class RootTableViewController: UITableViewController, TAPIObserver {
     }
 
     private enum Authentication: Int, CaseIterable {
-        case login
+        case account
         case refresh
-        case logout
+        case revoke
     }
 
     private enum Profile: Int, CaseIterable {
@@ -167,29 +173,29 @@ class RootTableViewController: UITableViewController, TAPIObserver {
         case .status:
             let cell = tableView.dequeueReusableCell(withIdentifier: StatusTableViewCell.className, for: indexPath) as! StatusTableViewCell
             cell.environmentLabel?.text = environment?.description ?? defaultStatusLabelText
-            cell.authenticationTokenLabel?.text = api.session?.authenticationToken ?? defaultStatusLabelText
-            cell.userIdLabel?.text = api.session?.userId ?? defaultStatusLabelText
+            cell.authenticationTokenLabel?.text = session?.accessToken ?? defaultStatusLabelText
+            cell.userIdLabel?.text = session?.userId ?? defaultStatusLabelText
             cell.dataSetIdLabel?.text = dataSetId ?? defaultStatusLabelText
             return cell
         case .authentication:
             let cell = tableView.dequeueReusableCell(withIdentifier: TextButtonTableViewCell.className, for: indexPath) as! TextButtonTableViewCell
             switch Authentication(rawValue: indexPath.row)! {
-            case .login:
-                cell.textLabel?.text = NSLocalizedString("Login", comment: "The text label of the authentication login cell")
+            case .account:
+                cell.textLabel?.text = NSLocalizedString("Account", comment: "The text label of the account cell")
                 cell.accessoryType = .disclosureIndicator
-                cell.isEnabled = api.session == nil
+                cell.isEnabled = session == nil
             case .refresh:
                 cell.textLabel?.text = NSLocalizedString("Refresh", comment: "The text label of the authentication refresh cell")
-                cell.isEnabled = api.session != nil
-            case .logout:
-                cell.textLabel?.text = NSLocalizedString("Logout", comment: "The text label of the authentication logout cell")
-                cell.isEnabled = api.session != nil
+                cell.isEnabled = session != nil
+            case .revoke:
+                cell.textLabel?.text = NSLocalizedString("Revoke Token", comment: "The text label of the authentication revoke cell")
+                cell.isEnabled = session != nil
             }
             return cell
         case .profile:
             let cell = tableView.dequeueReusableCell(withIdentifier: TextButtonTableViewCell.className, for: indexPath) as! TextButtonTableViewCell
             cell.accessoryType = .disclosureIndicator
-            cell.isEnabled = api.session != nil
+            cell.isEnabled = session != nil
             switch Profile(rawValue: indexPath.row)! {
             case .get:
                 cell.textLabel?.text = NSLocalizedString("Get Profile", comment: "The text label of the get profile cell")
@@ -198,7 +204,7 @@ class RootTableViewController: UITableViewController, TAPIObserver {
         case .dataSet:
             let cell = tableView.dequeueReusableCell(withIdentifier: TextButtonTableViewCell.className, for: indexPath) as! TextButtonTableViewCell
             cell.accessoryType = .disclosureIndicator
-            cell.isEnabled = api.session != nil
+            cell.isEnabled = session != nil
             switch DataSet(rawValue: indexPath.row)! {
             case .list:
                 cell.textLabel?.text = NSLocalizedString("List Data Sets", comment: "The text label of the list data sets cell")
@@ -212,13 +218,13 @@ class RootTableViewController: UITableViewController, TAPIObserver {
             switch Datum(rawValue: indexPath.row)! {
             case .list:
                 cell.textLabel?.text = NSLocalizedString("List Data", comment: "The text label of the list data cell")
-                cell.isEnabled = api.session != nil
+                cell.isEnabled = session != nil
             case .create:
                 cell.textLabel?.text = NSLocalizedString("Create Data", comment: "The text label of the create data cell")
-                cell.isEnabled = api.session != nil && dataSetId != nil
+                cell.isEnabled = session != nil && dataSetId != nil
             case .delete:
                 cell.textLabel?.text = NSLocalizedString("Delete Data", comment: "The text label of the delete data cell")
-                cell.isEnabled = api.session != nil && dataSetId != nil && datumSelectors != nil
+                cell.isEnabled = session != nil && dataSetId != nil && datumSelectors != nil
             }
             return cell
         }
@@ -230,22 +236,22 @@ class RootTableViewController: UITableViewController, TAPIObserver {
             return false
         case .authentication:
             switch Authentication(rawValue: indexPath.row)! {
-            case .login:
-                return api.session == nil
+            case .account:
+                return true
             default:
-                return api.session != nil
+                return session != nil
             }
         case .datum:
             switch Datum(rawValue: indexPath.row)! {
             case .create:
-                return api.session != nil && dataSetId != nil
+                return session != nil && dataSetId != nil
             case .delete:
-                return api.session != nil && dataSetId != nil && datumSelectors != nil
+                return session != nil && dataSetId != nil && datumSelectors != nil
             default:
-                return api.session != nil
+                return session != nil
             }
         default:
-            return api.session != nil
+            return session != nil
         }
     }
 
@@ -255,180 +261,185 @@ class RootTableViewController: UITableViewController, TAPIObserver {
             break
         case .authentication:
             let cell = tableView.cellForRow(at: indexPath) as! TextButtonTableViewCell
-            cell.isLoading = true
             switch Authentication(rawValue: indexPath.row)! {
-            case .login:
-                login(completion: cell.stopLoading)
+            case .account:
+                showAccount()
             case .refresh:
-                refresh(completion: cell.stopLoading)
-            case .logout:
-                logout(completion: cell.stopLoading)
+                Task {
+                    cell.isLoading = true
+                    await refresh()
+                    cell.stopLoading()
+                }
+            case .revoke:
+                Task {
+                    cell.isLoading = true
+                    await revokeToken()
+                    cell.stopLoading()
+                }
             }
         case .profile:
             let cell = tableView.cellForRow(at: indexPath) as! TextButtonTableViewCell
-            cell.isLoading = true
-            getProfile(completion: cell.stopLoading)
+            Task {
+                cell.isLoading = true
+                await getProfile()
+                cell.stopLoading()
+            }
         case .dataSet:
             let cell = tableView.cellForRow(at: indexPath) as! TextButtonTableViewCell
             cell.isLoading = true
-            switch DataSet(rawValue: indexPath.row)! {
-            case .list:
-                listDataSets(completion: cell.stopLoading)
-            case .create:
-                createDataSet(completion: cell.stopLoading)
+            Task {
+                switch DataSet(rawValue: indexPath.row)! {
+                case .list:
+                    await listDataSets()
+                case .create:
+                    await createDataSet()
+                }
+                cell.stopLoading()
             }
         case .datum:
             let cell = tableView.cellForRow(at: indexPath) as! TextButtonTableViewCell
             cell.isLoading = true
-            switch Datum(rawValue: indexPath.row)! {
-            case .list:
-                listData(completion: cell.stopLoading)
-            case .create:
-                createData(completion: cell.stopLoading)
-            case .delete:
-                deleteData(completion: cell.stopLoading)
+            Task {
+                switch Datum(rawValue: indexPath.row)! {
+                case .list:
+                    await listData()
+                case .create:
+                    await createData()
+                case .delete:
+                    await deleteData()
+                }
+                cell.stopLoading()
             }
         }
         tableView.deselectRow(at: indexPath, animated: true)
     }
 
     // MARK: - Authentication
-
-    private func login(completion: @escaping () -> Void) {
-        var loginSignupViewController = api.loginSignupViewController()
-        loginSignupViewController.loginSignupDelegate = self
-        loginSignupViewController.environment = environment
-        present(loginSignupViewController, animated: true)
-        completion()
+    private var loginPresentingViewController: UIViewController {
+        return self.presentedViewController ?? self
     }
 
-    private func refresh(completion: @escaping () -> Void) {
-        api.refreshSession() { error in
-            DispatchQueue.main.async {
-                if let error = error {
-                    self.present(UIAlertController(error: error), animated: true)
+    private func showAccount() {
+        Task {
+            let environments = try await TEnvironment.fetchEnvironments()
+            let currentEnvironment = self.session?.environment ?? self.api.defaultEnvironment ?? environments.first!
+            let view = LoginView(
+                selectedEnvironment: currentEnvironment,
+                isLoggedIn: session != nil,
+                environments: environments) { environment throws in
+                    try await self.api.login(environment: environment, presenting: self.loginPresentingViewController)
+                } logout: {
+                    Task {
+                        await self.api.logout()
+                    }
                 }
-                completion()
-            }
+
+            let loginViewController = UIHostingController(rootView: view)
+            present(loginViewController, animated: true)
         }
     }
 
-    private func logout(completion: @escaping () -> Void) {
-        api.logout() { error in
-            DispatchQueue.main.async {
-                if let error = error {
-                    self.present(UIAlertController(error: error), animated: true)
-                }
-                completion()
-            }
+    private func refresh() async {
+        do {
+            try await api.refreshSession()
+        } catch {
+            self.present(UIAlertController(error: error), animated: true)
         }
+    }
+
+    private func revokeToken() async {
+        do {
+            try await api.revokeTokens()
+        } catch {
+            self.present(UIAlertController(error: error), animated: true)
+        }
+    }
+
+
+    private func logout() async {
+        await api.logout()
     }
 
     // MARK: - Profile
 
-    private func getProfile(completion: @escaping () -> Void) {
-        api.getProfile() { result in
-            DispatchQueue.main.async {
-                switch result {
-                case .failure(let error):
-                    self.present(UIAlertController(error: error), animated: true)
-                case .success(let profile):
-                    self.display(profile, withTitle: "Get Profile")
-                }
-                completion()
-            }
+    private func getProfile() async {
+        do {
+            let profile = try await api.getProfile()
+            self.display(profile, withTitle: "Get Profile")
+        } catch {
+            self.present(UIAlertController(error: error), animated: true)
         }
     }
 
     // MARK: - Data Set
 
-    private func listDataSets(completion: @escaping () -> Void) {
+    private func listDataSets() async {
         let filter = TDataSet.Filter(clientName: Bundle.main.bundleIdentifier)
-        api.listDataSets(filter: filter) { result in
-            DispatchQueue.main.async {
-                switch result {
-                case .failure(let error):
-                    self.present(UIAlertController(error: error), animated: true)
-                case .success(let dataSets):
-                    self.dataSetId = dataSets.first?.uploadId
-                    self.display(dataSets, withTitle: "List Data Sets")
-                }
-                completion()
-            }
+        do {
+            let dataSets = try await api.listDataSets(filter: filter)
+            self.dataSetId = dataSets.first?.uploadId
+            self.display(dataSets, withTitle: "List Data Sets")
+        } catch {
+            self.present(UIAlertController(error: error), animated: true)
         }
     }
 
-    private func createDataSet(completion: @escaping () -> Void) {
+    private func createDataSet() async {
         let client = TDataSet.Client(name: Bundle.main.bundleIdentifier!, version: Bundle.main.semanticVersion!)
         let deduplicator = TDataSet.Deduplicator(name: .none)
         let dataSet = TDataSet(dataSetType: .continuous, client: client, deduplicator: deduplicator)
-        api.createDataSet(dataSet) { result in
-            DispatchQueue.main.async {
-                switch result {
-                case .failure(let error):
-                    self.present(UIAlertController(error: error), animated: true)
-                case .success(let dataSet):
-                    self.dataSetId = dataSet.uploadId
-                    self.display(dataSet, withTitle: "Create Data Set")
-                }
-                completion()
-            }
+        do {
+            let dataSet = try await api.createDataSet(dataSet)
+            self.dataSetId = dataSet.uploadId
+            self.display(dataSet, withTitle: "Create Data Set")
+        } catch {
+            self.present(UIAlertController(error: error), animated: true)
         }
     }
 
     // MARK: - Datum
 
-    private func listData(completion: @escaping () -> Void) {
+    private func listData() async {
         let filter = TDatum.Filter(dataSetId: dataSetId)
-        api.listData(filter: filter) { result in
-            DispatchQueue.main.async {
-                switch result {
-                case .failure(let error):
-                    self.present(UIAlertController(error: error), animated: true)
-                case .success((let data, let malformed)):
-                    if !malformed.isEmpty {
-                        self.present(UIAlertController(error: "Response contains malformed data.") {
-                            self.display(malformed, withTitle: "MALFORMED - List Data")
-                        }, animated: true)
-                    } else {
-                        self.display(data, withTitle: "List Data")
-                    }
-                }
-                completion()
+        do {
+            let (data, malformed) = try await api.listData(filter: filter)
+            if !malformed.isEmpty {
+                self.present(UIAlertController(error: "Response contains malformed data.") {
+                    self.display(malformed, withTitle: "MALFORMED - List Data")
+                }, animated: true)
+            } else {
+                self.display(data, withTitle: "List Data")
             }
+        } catch {
+            self.present(UIAlertController(error: error), animated: true)
         }
     }
 
-    private func createData(completion: @escaping () -> Void) {
+    private func createData() async {
         let data = Sample.Datum.data()
-        api.createData(data, dataSetId: dataSetId!) { error in
-            DispatchQueue.main.async {
-                if let error = error {
-                    if case .requestMalformedJSON(_, _, let errors) = error {
-                        self.present(UIAlertController(error: "Response contains errors.") {
-                            self.display(errors, withTitle: "ERRORS - Create Data")
-                        }, animated: true)
-                    } else {
-                        self.present(UIAlertController(error: error), animated: true)
-                    }
+        do {
+            try await api.createData(data, dataSetId: dataSetId!)
+        } catch {
+            if let error = error as? TError {
+                if case .requestMalformedJSON(_, _, let errors) = error {
+                    self.present(UIAlertController(error: "Request contains errors.") {
+                        self.display(errors, withTitle: "ERRORS - Create Data")
+                    }, animated: true)
                 } else {
-                    self.datumSelectors = data.compactMap { $0.selector }
+                    self.present(UIAlertController(error: error), animated: true)
                 }
-                completion()
+            } else {
+                self.datumSelectors = data.compactMap { $0.selector }
             }
         }
     }
 
-    private func deleteData(completion: @escaping () -> Void) {
-        api.deleteData(withSelectors: datumSelectors!, dataSetId: dataSetId!) { error in
-            DispatchQueue.main.async {
-                if let error = error {
-                    self.present(UIAlertController(error: error), animated: true)
-                } else {
-                    self.datumSelectors = nil
-                }
-                completion()
-            }
+    private func deleteData() async {
+        do {
+            try await api.deleteData(withSelectors: datumSelectors!, dataSetId: dataSetId!)
+            self.datumSelectors = nil
+        } catch {
+            self.present(UIAlertController(error: error), animated: true)
         }
     }
 
@@ -458,20 +469,5 @@ class RootTableViewController: UITableViewController, TAPIObserver {
             return
         }
         show(TextViewController(text: text, withTitle: title), sender: self)
-    }
-}
-
-extension RootTableViewController: TLoginSignupDelegate {
-    func loginSignupDidComplete(completion: @escaping (Error?) -> Void) {
-        DispatchQueue.main.async {
-            self.dismiss(animated: true)
-            completion(nil)
-        }
-    }
-
-    func loginSignupCancelled() {
-        DispatchQueue.main.async {
-            self.dismiss(animated: true)
-        }
     }
 }

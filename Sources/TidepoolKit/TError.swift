@@ -17,8 +17,29 @@ public enum TError: Error {
     /// The session is missing.
     case sessionMissing
 
+    /// The login was canceled.
+    case loginCanceled
+
+    /// Missing refresh token
+    case refreshTokenMissing
+
+    /// Missing authentication issuer.
+    case missingAuthenticationIssuer
+
+    /// Missing authentication configuration.
+    case missingAuthenticationConfiguration
+
+    /// Missing authentication token.
+    case missingAuthenticationToken
+
+    /// Missing authentication state.
+    case missingAuthenticationState
+
     /// The request was invalid and not sent.
     case requestInvalid
+
+    /// URLComponents are invalid for forming a URL
+    case invalidURL(URLComponents)
 
     /// The server responded that the request was bad or malformed. Equivalent to HTTP status code 400.
     case requestMalformed(HTTPURLResponse, Data?)
@@ -27,7 +48,7 @@ public enum TError: Error {
     case requestMalformedJSON(HTTPURLResponse, Data, [Detail])
 
     /// The server responded that the request was not authenticated. Equivalent to HTTP status code 401.
-    case requestNotAuthenticated(HTTPURLResponse, Data?)
+    case requestNotAuthenticated
 
     /// The server responded that the request was authenticated, but not authorized. Equivalent to HTTP status code 403.
     case requestNotAuthorized(HTTPURLResponse, Data?)
@@ -60,7 +81,7 @@ public enum TError: Error {
     case responseUnexpectedJSON(HTTPURLResponse, Data)
 
     /// The server response included malformed data.
-    case responseMalformedData(HTTPURLResponse, Data)
+    case responseMalformed(TAPI.MalformedResult)
 
     public struct Detail: Codable, Equatable {
         public var code: String
@@ -84,8 +105,22 @@ extension TError: LocalizedError {
             return LocalizedString("A network error occurred.", comment: "The default localized description of the network error")
         case .sessionMissing:
             return LocalizedString("The session is missing.", comment: "The default localized description of the session missing error")
+        case .loginCanceled:
+            return LocalizedString("Login was canceled.", comment: "Localized description for TError.loginCanceled")
+        case .refreshTokenMissing:
+            return LocalizedString("The refreshToken is missing.", comment: "The default localized description of the refresh token missing error")
+        case .missingAuthenticationIssuer:
+            return LocalizedString("Missing authentication issuer.", comment: "The default localized description of the missingAuthenticationIssuer error")
+        case .missingAuthenticationConfiguration:
+            return LocalizedString("Missing authentication configuration.", comment: "The default localized description of the missingAuthenticationConfiguration error")
+        case .missingAuthenticationToken:
+            return LocalizedString("Missing authentication token.", comment: "The default localized description of the missingAuthenticationToken error")
+        case .missingAuthenticationState:
+            return LocalizedString("Missing authentication state.", comment: "The default localized description of the missingAuthenticationState error")
         case .requestInvalid:
             return LocalizedString("The request was invalid.", comment: "The default localized description of the request invalid error")
+        case .invalidURL(let components):
+            return String(format: LocalizedString("Failure creating request URL: %1$@", comment: "Error description for invalidURL (1: url components)"), String(describing: components))
         case .requestMalformed:
             return LocalizedString("The request was invalid.", comment: "The default localized description of the request malformed error")
         case .requestMalformedJSON:
@@ -102,8 +137,8 @@ extension TError: LocalizedError {
             return LocalizedString("The requested resource was not found.", comment: "The default localized description of the request resource not found error")
         case .responseUnexpected:
             return LocalizedString("The request returned an unexpected response.", comment: "The default localized description of the response unexpected error")
-        case .responseUnexpectedStatusCode:
-            return LocalizedString("The request returned an unexpected response status code.", comment: "The default localized description of the response unexpected status code error")
+        case .responseUnexpectedStatusCode(let response, _):
+            return String(format: LocalizedString("The request returned an unexpected response status code: %1$@", comment: "The formate string for localized description of the response unexpected status code error (1: status code)"), String(describing: response.statusCode))
         case .responseNotAuthenticated:
             return LocalizedString("The request returned an unauthenticated response.", comment: "The default localized description of the response not authenticated error")
         case .responseMissingJSON:
@@ -112,7 +147,7 @@ extension TError: LocalizedError {
             return LocalizedString("The request returned an invalid JSON response.", comment: "The default localized description of the response malformed JSON error")
         case .responseUnexpectedJSON:
             return LocalizedString("The request returned an unexpected JSON response.", comment: "The default localized description of the response unexpected JSON error")
-        case .responseMalformedData:
+        case .responseMalformed:
             return LocalizedString("The request returned an invalid response.", comment: "The default localized description of the response malformed data error")
         }
     }
