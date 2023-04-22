@@ -8,7 +8,7 @@
 
 import Foundation
 import AppAuth
-
+import UIKit
 
 /// Observer of the Tidepool API
 public protocol TAPIObserver: AnyObject {
@@ -330,14 +330,13 @@ public actor TAPI {
     /// - Parameters:
     ///   - userId: The user id for which to get the profile. If no user id is specified, then the session user id is used.
     ///   - completion: The completion function to invoke with any error.
-    public func getUsers(userId: String? = nil, completion: @escaping (Result<[TTrusteeUser], TError>) -> Void) {
+    public func getUsers(userId: String? = nil) async throws -> TTrusteeUser {
         guard let session = session else {
-            completion(.failure(.sessionMissing))
-            return
+            throw TError.sessionMissing
         }
 
-        let request = createRequest(method: "GET", path: "/metadata/users/\(userId ?? session.userId)/users")
-        performRequest(request, completion: completion)
+        let request = try createRequest(method: "GET", path: "/metadata/users/\(userId ?? session.userId)/users")
+        return try await performRequest(request)
     }
 
     // MARK: - Prescriptions

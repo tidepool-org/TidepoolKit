@@ -21,9 +21,9 @@
 /* End PBXAggregateTarget section */
 
 /* Begin PBXBuildFile section */
-		C16119D329D2863200E70E5E /* TTrusteeUser.swift in Sources */ = {isa = PBXBuildFile; fileRef = C16119D229D2863200E70E5E /* TTrusteeUser.swift */; };
 		C145902829E5C2790072BF00 /* AppAuth in Frameworks */ = {isa = PBXBuildFile; productRef = C145902729E5C2790072BF00 /* AppAuth */; };
 		C145902A29E5C2790072BF00 /* AppAuthCore in Frameworks */ = {isa = PBXBuildFile; productRef = C145902929E5C2790072BF00 /* AppAuthCore */; };
+		C16119D329D2863200E70E5E /* TTrusteeUser.swift in Sources */ = {isa = PBXBuildFile; fileRef = C16119D229D2863200E70E5E /* TTrusteeUser.swift */; };
 		C16DA94529B8CDF400CC3610 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = C16DA93E29B8CB6400CC3610 /* Assets.xcassets */; };
 		C19C9F5229CA0E6D00A6D3D0 /* Localizable.strings in Resources */ = {isa = PBXBuildFile; fileRef = C19C9F5429CA0E6D00A6D3D0 /* Localizable.strings */; };
 		C1A6210D29EC840F00B5A073 /* TUser.swift in Sources */ = {isa = PBXBuildFile; fileRef = C1A6210C29EC840F00B5A073 /* TUser.swift */; };
@@ -1269,8 +1269,8 @@
 				ONLY_ACTIVE_ARCH = YES;
 				OTHER_SWIFT_FLAGS = "$(inherited) -DXcode";
 				PRODUCT_NAME = "$(TARGET_NAME)";
-				SDKROOT = macosx;
-				SUPPORTED_PLATFORMS = "$(AVAILABLE_PLATFORMS)";
+				SDKROOT = iphoneos;
+				SUPPORTED_PLATFORMS = "iphonesimulator iphoneos";
 				SUPPORTS_MACCATALYST = YES;
 				SWIFT_ACTIVE_COMPILATION_CONDITIONS = "$(inherited) SWIFT_PACKAGE DEBUG";
 				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
@@ -1301,8 +1301,8 @@
 				MACOSX_DEPLOYMENT_TARGET = 10.10;
 				OTHER_SWIFT_FLAGS = "$(inherited) -DXcode";
 				PRODUCT_NAME = "$(TARGET_NAME)";
-				SDKROOT = macosx;
-				SUPPORTED_PLATFORMS = "$(AVAILABLE_PLATFORMS)";
+				SDKROOT = iphoneos;
+				SUPPORTED_PLATFORMS = "iphonesimulator iphoneos";
 				SUPPORTS_MACCATALYST = YES;
 				SWIFT_ACTIVE_COMPILATION_CONDITIONS = "$(inherited) SWIFT_PACKAGE";
 				SWIFT_COMPILATION_MODE = wholemodule;
