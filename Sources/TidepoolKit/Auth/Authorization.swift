@@ -74,7 +74,7 @@ class AppAuthAuthorization: Authorization {
     func presentAuth(request: OIDAuthorizationRequest, presenting: UIViewController) async throws -> AuthorizationState {
         // Present the authentication session using AppAuth
         let result: (OIDAuthState, OIDExternalUserAgentSession) = try await withCheckedThrowingContinuation { continuation in
-            DispatchQueue.main.async {
+            Task { @MainActor in
                 var f: OIDExternalUserAgentSession? = nil
                 f = OIDAuthState.authState(byPresenting: request, presenting: presenting) { authState, error in
                     if let error = error {
