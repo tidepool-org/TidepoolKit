@@ -50,7 +50,7 @@ class RootTableViewController: UITableViewController, TAPIObserver {
 
     required init?(coder: NSCoder) {
         self.session = UserDefaults.standard.session
-        self.api = TAPI(clientId: "diy-loop", redirectURL:  URL(string: "org.loopkit.Loop://tidepool_service_redirect")!, session: session)
+        self.api = TAPI(clientId: "tidepoolkit-example", redirectURL: URL(string: "org.tidepool.tidepoolkit.auth://redirect")!, session: session)
         self.environment = UserDefaults.standard.environment
         self.dataSetId = UserDefaults.standard.dataSetId
 
