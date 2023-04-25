@@ -16,7 +16,6 @@ extension UserDefaults {
 
     private enum Key: String {
         case defaultEnvironment = "org.tidepool.TidepoolKit.DefaultEnvironment"
-        case studyProductSelection = "org.tidepool.plugins.TidepoolSupport.StudyProductSelection"
     }
     
     var defaultEnvironment: TEnvironment? {
@@ -30,16 +29,6 @@ extension UserDefaults {
             set(try? JSONEncoder.tidepool.encode(newValue), forKey: Key.defaultEnvironment.rawValue)
         }
     }
-    
-    public var studyProductSelection: String? {
-        get {
-            string(forKey: Key.studyProductSelection.rawValue)
-        }
-        set {
-            set(newValue, forKey: Key.studyProductSelection.rawValue)
-        }
-    }
-
 }
 
 extension Bundle {
