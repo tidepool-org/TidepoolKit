@@ -352,7 +352,7 @@ public actor TAPI {
     ///
     /// - Parameters:
     ///   - userId: The user id for which to get the profile. If no user id is specified, then the session user id is used.
-    /// - Returns: the TProfile struct populated with the user's profile information.
+    /// - Returns: the ``TProfile`` struct populated with the user's profile information.
     public func getProfile(userId: String? = nil) async throws -> TProfile {
         guard let session = session else {
             throw TError.sessionMissing
@@ -368,7 +368,7 @@ public actor TAPI {
     ///
     /// - Parameters:
     ///   - userId: The user id for which to get the profile. If no user id is specified, then the session user id is used.
-    /// - Returns: A list of TTrusteeUser structures
+    /// - Returns: A list of ``TTrusteeUser`` structures
     public func getUsers(userId: String? = nil) async throws -> [TTrusteeUser] {
         guard let session = session else {
             throw TError.sessionMissing
@@ -385,7 +385,7 @@ public actor TAPI {
     /// - Parameters:
     ///   - prescriptionClaim: The prescription claim to submit.
     ///   - userId: The user id for which to claim the prescription. If no user id is specified, then the session user id is used.
-    /// - Returns: The TPrescription structure
+    /// - Returns: The ``TPrescription`` structure
     public func claimPrescription(prescriptionClaim: TPrescriptionClaim, userId: String? = nil) async throws -> TPrescription {
         guard let session = session else {
             throw TError.sessionMissing
@@ -403,7 +403,7 @@ public actor TAPI {
     /// - Parameters:
     ///   - filter: The filter to use when requesting the data sets.
     ///   - userId: The user id for which to get the data sets. If no user id is specified, then the session user id is used.
-    /// - Returns: A list of TDataSet structures
+    /// - Returns: A list of ``TDataSet`` structures
     public func listDataSets(filter: TDataSet.Filter? = nil, userId: String? = nil) async throws -> [TDataSet] {
         guard let session = session else {
             throw TError.sessionMissing
@@ -418,7 +418,7 @@ public actor TAPI {
     /// - Parameters:
     ///   - dataSet: The data set to create.
     ///   - userId: The user id for which to create the data set. If no user id is specified, then the session user id is used.
-    /// - Returns: The created TDataSet
+    /// - Returns: The created ``TDataSet``
     public func createDataSet(_ dataSet: TDataSet, userId: String? = nil) async throws -> TDataSet {
         guard let session = session else {
             throw TError.sessionMissing
@@ -440,7 +440,7 @@ public actor TAPI {
     /// - Parameters:
     ///   - filter: The filter to use when requesting the data.
     ///   - userId: The user id for which to get the data. If no user id is specified, then the session user id is used.
-    /// - Returns: a tuple with the decoded data and any malformed entries
+    /// - Returns: a tuple with the decoded ``TDatum`` structs and any malformed entries
     public func listData(filter: TDatum.Filter? = nil, userId: String? = nil) async throws -> ([TDatum], MalformedResult) {
         guard let session = session else {
             throw TError.sessionMissing
