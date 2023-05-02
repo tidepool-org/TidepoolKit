@@ -8,7 +8,7 @@
 
 import Foundation
 
-struct ProviderConfiguration: Codable, Equatable {
+public struct ProviderConfiguration: Codable, Equatable {
 
     var issuer: String
     var authorizationEndpoint: String

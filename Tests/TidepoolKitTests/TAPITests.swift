@@ -23,7 +23,7 @@ class TAPITests: XCTestCase {
 
         URLProtocolMock.handlers = []
 
-        self.api = TAPI(clientId: "test", redirectURL: URL(string: "org.tidepool.TidepoolKit://redirect")!)
+        self.api = TAPI(clientId: "test", redirectURL: URL(string: "org.tidepool.tidepoolkit.auth://redirect")!)
         let urlSessionConfiguration = await api.urlSessionConfiguration
         urlSessionConfiguration.protocolClasses = [URLProtocolMock.self]
         await self.api.setURLSessionConfiguration(urlSessionConfiguration)
@@ -286,7 +286,7 @@ class TAPILoginTests: TAPISessionTests {
             try await api.login(environment: session.environment, presenting: mockUIViewController)
 
             XCTAssertEqual(authorization.lastAuthRequest?.clientID, "test")
-            XCTAssertEqual(authorization.lastAuthRequest?.redirectURL, URL(string: "org.tidepool.TidepoolKit://redirect"))
+            XCTAssertEqual(authorization.lastAuthRequest?.redirectURL, URL(string: "org.tidepool.tidepoolkit.auth://redirect"))
             XCTAssertEqual(authorization.lastAuthRequest?.scope, "openid offline_access")
 
             let session = await api.session

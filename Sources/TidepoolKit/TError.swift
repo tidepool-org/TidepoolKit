@@ -29,11 +29,17 @@ public enum TError: Error {
     /// Missing authentication configuration.
     case missingAuthenticationConfiguration
 
+    /// Missing authentication code.
+    case missingAuthenticationCode
+
     /// Missing authentication token.
     case missingAuthenticationToken
 
     /// Missing authentication state.
     case missingAuthenticationState
+
+    /// Missing authentication state.
+    case authenticationError(String)
 
     /// The request was invalid and not sent.
     case requestInvalid
@@ -113,10 +119,14 @@ extension TError: LocalizedError {
             return LocalizedString("Missing authentication issuer.", comment: "The default localized description of the missingAuthenticationIssuer error")
         case .missingAuthenticationConfiguration:
             return LocalizedString("Missing authentication configuration.", comment: "The default localized description of the missingAuthenticationConfiguration error")
+        case .missingAuthenticationCode:
+            return LocalizedString("Missing authentication challenge response code.", comment: "The default localized description of the missingAuthenticationCode error")
         case .missingAuthenticationToken:
             return LocalizedString("Missing authentication token.", comment: "The default localized description of the missingAuthenticationToken error")
         case .missingAuthenticationState:
             return LocalizedString("Missing authentication state.", comment: "The default localized description of the missingAuthenticationState error")
+        case .authenticationError(let message):
+            return String(format: LocalizedString("Authentication error: %1$@", comment: "The format string for an authentication error with a message. (1: the error message describing why authentication errored"), message)
         case .requestInvalid:
             return LocalizedString("The request was invalid.", comment: "The default localized description of the request invalid error")
         case .invalidURL(let components):
@@ -138,7 +148,7 @@ extension TError: LocalizedError {
         case .responseUnexpected:
             return LocalizedString("The request returned an unexpected response.", comment: "The default localized description of the response unexpected error")
         case .responseUnexpectedStatusCode(let response, _):
-            return String(format: LocalizedString("The request returned an unexpected response status code: %1$@", comment: "The formate string for localized description of the response unexpected status code error (1: status code)"), String(describing: response.statusCode))
+            return String(format: LocalizedString("The request returned an unexpected response status code: %1$@", comment: "The format string for localized description of the response unexpected status code error (1: status code)"), String(describing: response.statusCode))
         case .responseNotAuthenticated:
             return LocalizedString("The request returned an unauthenticated response.", comment: "The default localized description of the response not authenticated error")
         case .responseMissingJSON:

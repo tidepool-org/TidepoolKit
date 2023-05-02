@@ -66,9 +66,9 @@ public actor TAPI {
 
     private var observers = WeakSynchronizedSet<TAPIObserver>()
 
-    private var clientId: String
+    var clientId: String
 
-    private var redirectURL: URL
+    var redirectURL: URL
 
     var authorization: Authorization
     func setAuthorization(_ authorization: Authorization) {
@@ -106,7 +106,9 @@ public actor TAPI {
         observers.removeElement(observer)
     }
 
-    private func lookupOIDConfiguration(environment: TEnvironment) async throws -> ProviderConfiguration {
+    // MARK: - Authentication
+
+    public func lookupOIDConfiguration(environment: TEnvironment) async throws -> ProviderConfiguration {
 
         // Lookup /info for current Tidepool environment, for issuer URL
         let info = try await getInfo(environment: environment)
@@ -117,8 +119,6 @@ public actor TAPI {
 
         return try await getServiceConfiguration(issuer: issuer)
     }
-
-    // MARK: - Authentication
 
     public func revokeTokens() async throws {
         guard let session else {
@@ -172,6 +172,39 @@ public actor TAPI {
         // Token has successfully been
     }
 
+    func exchangeCodeForToken(verifier: String, code: String, config: ProviderConfiguration) async throws -> TokenResponse {
+        var components = URLComponents()
+        components.queryItems = [
+            URLQueryItem(name:"client_id", value: clientId),
+            URLQueryItem(name:"redirect_uri", value: redirectURL.absoluteString),
+            URLQueryItem(name:"grant_type", value: "authorization_code"),
+            URLQueryItem(name:"code_verifier", value: verifier),
+            URLQueryItem(name:"code", value: code),
+        ]
+
+        guard let endpoint = URL(string: config.tokenEndpoint) else {
+            throw TError.missingAuthenticationConfiguration
+        }
+
+        var request = URLRequest(url: endpoint)
+        request.setValue("application/x-www-form-urlencoded", forHTTPHeaderField: "Content-Type")
+        request.httpMethod = "POST"
+        request.httpBody = components.query?.data(using: .utf8)
+
+        let (data, response) = try await urlSession.data(for: request)
+
+        guard let httpResponse = response as? HTTPURLResponse else {
+            throw TError.responseUnexpected(response, data)
+        }
+
+        do {
+            let v = try JSONDecoder().decode(TokenResponse.self, from: data)
+            return v
+        } catch {
+            throw TError.responseMalformedJSON(httpResponse, data, error)
+        }
+    }
+
     /// Login to the Tidepool environment using AppAuth (OAuth2/OpenID-Connect)
     /// used internally by the LoginSignupViewController.
     ///
@@ -218,6 +251,14 @@ public actor TAPI {
             throw TError.missingAuthenticationToken
         }
 
+        try await createSession(
+            environment: environment,
+            accessToken: accessToken,
+            accessTokenExpiration: authState.accessTokenExpirationDate,
+            refreshToken: authState.refreshToken)
+    }
+
+    public func createSession(environment: TEnvironment, accessToken: String, accessTokenExpiration: Date?, refreshToken: String?) async throws {
         self.logging?.debug("Authorization successful, access token: \(accessToken)")
 
         // getAuthUser
@@ -229,11 +270,10 @@ public actor TAPI {
         self.session = TSession(
             environment: environment,
             accessToken: accessToken,
-            accessTokenExpiration: authState.accessTokenExpirationDate,
-            refreshToken: authState.refreshToken,
+            accessTokenExpiration: accessTokenExpiration,
+            refreshToken: refreshToken,
             userId: currentUser.userid,
             username: currentUser.username)
-
     }
 
     private func basicAuthorizationFromCredentials(email: String, password: String) -> String {
@@ -330,7 +370,7 @@ public actor TAPI {
     /// - Parameters:
     ///   - userId: The user id for which to get the profile. If no user id is specified, then the session user id is used.
     ///   - completion: The completion function to invoke with any error.
-    public func getUsers(userId: String? = nil) async throws -> TTrusteeUser {
+    public func getUsers(userId: String? = nil) async throws -> [TTrusteeUser] {
         guard let session = session else {
             throw TError.sessionMissing
         }
