@@ -108,7 +108,7 @@ public actor TAPI {
 
     // MARK: - Authentication
 
-    public func lookupOIDConfiguration(environment: TEnvironment) async throws -> ProviderConfiguration {
+    func lookupOIDConfiguration(environment: TEnvironment) async throws -> ProviderConfiguration {
 
         // Lookup /info for current Tidepool environment, for issuer URL
         let info = try await getInfo(environment: environment)
@@ -169,7 +169,7 @@ public actor TAPI {
             throw TError.responseUnexpectedStatusCode(response, data)
         }
 
-        // Token has successfully been
+        // Token has successfully been revoked
     }
 
     func exchangeCodeForToken(verifier: String, code: String, config: ProviderConfiguration) async throws -> TokenResponse {
