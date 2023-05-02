@@ -25,6 +25,11 @@
 		C145902A29E5C2790072BF00 /* AppAuthCore in Frameworks */ = {isa = PBXBuildFile; productRef = C145902929E5C2790072BF00 /* AppAuthCore */; };
 		C16119D329D2863200E70E5E /* TTrusteeUser.swift in Sources */ = {isa = PBXBuildFile; fileRef = C16119D229D2863200E70E5E /* TTrusteeUser.swift */; };
 		C16DA94529B8CDF400CC3610 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = C16DA93E29B8CB6400CC3610 /* Assets.xcassets */; };
+		C17CDEE92A01378A003F4C84 /* TokenResponse.swift in Sources */ = {isa = PBXBuildFile; fileRef = C17CDEE62A01378A003F4C84 /* TokenResponse.swift */; };
+		C17CDEEA2A01378A003F4C84 /* CodeGenerator.swift in Sources */ = {isa = PBXBuildFile; fileRef = C17CDEE72A01378A003F4C84 /* CodeGenerator.swift */; };
+		C17CDEEB2A01378A003F4C84 /* OAuth2Authenticator.swift in Sources */ = {isa = PBXBuildFile; fileRef = C17CDEE82A01378A003F4C84 /* OAuth2Authenticator.swift */; };
+		C17CDEEE2A0137A3003F4C84 /* URL.swift in Sources */ = {isa = PBXBuildFile; fileRef = C17CDEEC2A0137A3003F4C84 /* URL.swift */; };
+		C17CDEEF2A0137A3003F4C84 /* Data.swift in Sources */ = {isa = PBXBuildFile; fileRef = C17CDEED2A0137A3003F4C84 /* Data.swift */; };
 		C19C9F5229CA0E6D00A6D3D0 /* Localizable.strings in Resources */ = {isa = PBXBuildFile; fileRef = C19C9F5429CA0E6D00A6D3D0 /* Localizable.strings */; };
 		C1A6210D29EC840F00B5A073 /* TUser.swift in Sources */ = {isa = PBXBuildFile; fileRef = C1A6210C29EC840F00B5A073 /* TUser.swift */; };
 		C1C9414329EEDC55008D3E05 /* Authorization.swift in Sources */ = {isa = PBXBuildFile; fileRef = C1C9414129EEDC54008D3E05 /* Authorization.swift */; };
@@ -205,6 +210,11 @@
 		C15ADC6E29CA17D1008D80F1 /* sk */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = sk; path = sk.lproj/Localizable.strings; sourceTree = "<group>"; };
 		C16119D229D2863200E70E5E /* TTrusteeUser.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TTrusteeUser.swift; sourceTree = "<group>"; };
 		C16DA93E29B8CB6400CC3610 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
+		C17CDEE62A01378A003F4C84 /* TokenResponse.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TokenResponse.swift; sourceTree = "<group>"; };
+		C17CDEE72A01378A003F4C84 /* CodeGenerator.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CodeGenerator.swift; sourceTree = "<group>"; };
+		C17CDEE82A01378A003F4C84 /* OAuth2Authenticator.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = OAuth2Authenticator.swift; sourceTree = "<group>"; };
+		C17CDEEC2A0137A3003F4C84 /* URL.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = URL.swift; sourceTree = "<group>"; };
+		C17CDEED2A0137A3003F4C84 /* Data.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Data.swift; sourceTree = "<group>"; };
 		C1A6210C29EC840F00B5A073 /* TUser.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TUser.swift; sourceTree = "<group>"; };
 		C1B1539429CA264600563369 /* es */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = es; path = es.lproj/Localizable.strings; sourceTree = "<group>"; };
 		C1C9414129EEDC54008D3E05 /* Authorization.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Authorization.swift; sourceTree = "<group>"; };
@@ -380,6 +390,9 @@
 		C1C9414029EEDC54008D3E05 /* Auth */ = {
 			isa = PBXGroup;
 			children = (
+				C17CDEE72A01378A003F4C84 /* CodeGenerator.swift */,
+				C17CDEE82A01378A003F4C84 /* OAuth2Authenticator.swift */,
+				C17CDEE62A01378A003F4C84 /* TokenResponse.swift */,
 				C1C9414129EEDC54008D3E05 /* Authorization.swift */,
 				C1C9414229EEDC54008D3E05 /* ProviderConfiguration.swift */,
 			);
@@ -574,6 +587,8 @@
 		OBJ_17 /* Extensions */ = {
 			isa = PBXGroup;
 			children = (
+				C17CDEED2A0137A3003F4C84 /* Data.swift */,
+				C17CDEEC2A0137A3003F4C84 /* URL.swift */,
 				OBJ_18 /* Bundle.swift */,
 				OBJ_19 /* Codable.swift */,
 				OBJ_20 /* DNS+TEnvironment.swift */,
@@ -895,11 +910,16 @@
 				OBJ_189 /* Date.swift in Sources */,
 				OBJ_190 /* HTTPURLResponse.swift in Sources */,
 				OBJ_191 /* Image.swift in Sources */,
+				C17CDEEE2A0137A3003F4C84 /* URL.swift in Sources */,
 				OBJ_192 /* ProcessInfo.swift in Sources */,
+				C17CDEEF2A0137A3003F4C84 /* Data.swift in Sources */,
 				OBJ_193 /* TimeInterval.swift in Sources */,
+				C17CDEEA2A01378A003F4C84 /* CodeGenerator.swift in Sources */,
 				OBJ_194 /* UserDefaults.swift in Sources */,
 				OBJ_195 /* Locked.swift in Sources */,
 				OBJ_196 /* ContentPreview.swift in Sources */,
+				C17CDEE92A01378A003F4C84 /* TokenResponse.swift in Sources */,
+				C17CDEEB2A01378A003F4C84 /* OAuth2Authenticator.swift in Sources */,
 				OBJ_197 /* DataResponse.swift in Sources */,
 				OBJ_198 /* LegacyResponse.swift in Sources */,
 				OBJ_199 /* LoginResponse.swift in Sources */,
