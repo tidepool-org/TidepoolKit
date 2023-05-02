@@ -35,7 +35,7 @@ public actor TAPI {
 
     /// The URLSessionConfiguration used for all requests. The default is typically acceptable for most purposes. Any changes
     /// will only apply to subsequent requests.
-    public var urlSessionConfiguration: URLSessionConfiguration {
+    private(set) var urlSessionConfiguration: URLSessionConfiguration {
         didSet {
             urlSession = URLSession(configuration: urlSessionConfiguration)
         }
@@ -46,7 +46,7 @@ public actor TAPI {
     }
 
     /// The session used for all requests.
-    public var session: TSession? {
+    private(set) var session: TSession? {
         didSet {
             observers.forEach { $0.apiDidUpdateSession(self.session) }
         }
@@ -211,7 +211,6 @@ public actor TAPI {
     /// - Parameters:
     ///   - environment: The environment to login.
     ///   - presenting: A UIViewController to present the login modal from. Can be UIApplication.shared.windows.first!.rootViewController!
-    ///   - completion: The completion function to invoke with any error.
     public func login(environment: TEnvironment, presenting: UIViewController) async throws {
 
         let config = try await lookupOIDConfiguration(environment: environment)
@@ -353,7 +352,7 @@ public actor TAPI {
     ///
     /// - Parameters:
     ///   - userId: The user id for which to get the profile. If no user id is specified, then the session user id is used.
-    ///   - completion: The completion function to invoke with any error.
+    /// - Returns: the TProfile struct populated with the user's profile information.
     public func getProfile(userId: String? = nil) async throws -> TProfile {
         guard let session = session else {
             throw TError.sessionMissing
@@ -369,7 +368,7 @@ public actor TAPI {
     ///
     /// - Parameters:
     ///   - userId: The user id for which to get the profile. If no user id is specified, then the session user id is used.
-    ///   - completion: The completion function to invoke with any error.
+    /// - Returns: A list of TTrusteeUser structures
     public func getUsers(userId: String? = nil) async throws -> [TTrusteeUser] {
         guard let session = session else {
             throw TError.sessionMissing
@@ -386,7 +385,7 @@ public actor TAPI {
     /// - Parameters:
     ///   - prescriptionClaim: The prescription claim to submit.
     ///   - userId: The user id for which to claim the prescription. If no user id is specified, then the session user id is used.
-    ///   - completion: The completion function to invoke with any error.
+    /// - Returns: The TPrescription structure
     public func claimPrescription(prescriptionClaim: TPrescriptionClaim, userId: String? = nil) async throws -> TPrescription {
         guard let session = session else {
             throw TError.sessionMissing
@@ -404,7 +403,7 @@ public actor TAPI {
     /// - Parameters:
     ///   - filter: The filter to use when requesting the data sets.
     ///   - userId: The user id for which to get the data sets. If no user id is specified, then the session user id is used.
-    ///   - completion: The completion function to invoke with any error.
+    /// - Returns: A list of TDataSet structures
     public func listDataSets(filter: TDataSet.Filter? = nil, userId: String? = nil) async throws -> [TDataSet] {
         guard let session = session else {
             throw TError.sessionMissing
@@ -419,7 +418,7 @@ public actor TAPI {
     /// - Parameters:
     ///   - dataSet: The data set to create.
     ///   - userId: The user id for which to create the data set. If no user id is specified, then the session user id is used.
-    ///   - completion: The completion function to invoke with any error.
+    /// - Returns: The created TDataSet
     public func createDataSet(_ dataSet: TDataSet, userId: String? = nil) async throws -> TDataSet {
         guard let session = session else {
             throw TError.sessionMissing
