@@ -30,6 +30,7 @@
 		C17CDEEB2A01378A003F4C84 /* OAuth2Authenticator.swift in Sources */ = {isa = PBXBuildFile; fileRef = C17CDEE82A01378A003F4C84 /* OAuth2Authenticator.swift */; };
 		C17CDEEE2A0137A3003F4C84 /* URL.swift in Sources */ = {isa = PBXBuildFile; fileRef = C17CDEEC2A0137A3003F4C84 /* URL.swift */; };
 		C17CDEEF2A0137A3003F4C84 /* Data.swift in Sources */ = {isa = PBXBuildFile; fileRef = C17CDEED2A0137A3003F4C84 /* Data.swift */; };
+		C18A08EB2A0DD04E005A41FE /* TInvite.swift in Sources */ = {isa = PBXBuildFile; fileRef = C18A08EA2A0DD04E005A41FE /* TInvite.swift */; };
 		C19C9F5229CA0E6D00A6D3D0 /* Localizable.strings in Resources */ = {isa = PBXBuildFile; fileRef = C19C9F5429CA0E6D00A6D3D0 /* Localizable.strings */; };
 		C1A6210D29EC840F00B5A073 /* TUser.swift in Sources */ = {isa = PBXBuildFile; fileRef = C1A6210C29EC840F00B5A073 /* TUser.swift */; };
 		C1C9414329EEDC55008D3E05 /* Authorization.swift in Sources */ = {isa = PBXBuildFile; fileRef = C1C9414129EEDC54008D3E05 /* Authorization.swift */; };
@@ -215,6 +216,7 @@
 		C17CDEE82A01378A003F4C84 /* OAuth2Authenticator.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = OAuth2Authenticator.swift; sourceTree = "<group>"; };
 		C17CDEEC2A0137A3003F4C84 /* URL.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = URL.swift; sourceTree = "<group>"; };
 		C17CDEED2A0137A3003F4C84 /* Data.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Data.swift; sourceTree = "<group>"; };
+		C18A08EA2A0DD04E005A41FE /* TInvite.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TInvite.swift; sourceTree = "<group>"; };
 		C1A6210C29EC840F00B5A073 /* TUser.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TUser.swift; sourceTree = "<group>"; };
 		C1B1539429CA264600563369 /* es */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = es; path = es.lproj/Localizable.strings; sourceTree = "<group>"; };
 		C1C9414129EEDC54008D3E05 /* Authorization.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Authorization.swift; sourceTree = "<group>"; };
@@ -646,6 +648,7 @@
 				OBJ_89 /* TOrigin.swift */,
 				OBJ_90 /* TProfile.swift */,
 				C16119D229D2863200E70E5E /* TTrusteeUser.swift */,
+				C18A08EA2A0DD04E005A41FE /* TInvite.swift */,
 			);
 			path = Model;
 			sourceTree = "<group>";
@@ -963,6 +966,7 @@
 				OBJ_236 /* TSMBGDatum.swift in Sources */,
 				OBJ_237 /* TWaterDatum.swift in Sources */,
 				OBJ_238 /* TPrescription.swift in Sources */,
+				C18A08EB2A0DD04E005A41FE /* TInvite.swift in Sources */,
 				OBJ_239 /* TPrescriptionClaim.swift in Sources */,
 				OBJ_240 /* TAssociation.swift in Sources */,
 				C16119D329D2863200E70E5E /* TTrusteeUser.swift in Sources */,

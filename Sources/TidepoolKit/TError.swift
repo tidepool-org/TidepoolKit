@@ -89,6 +89,10 @@ public enum TError: Error {
     /// The server response included malformed data.
     case responseMalformed(TAPI.MalformedResult)
 
+    /// The api returned a reason for the failure.
+    case errorResponse(String)
+
+
     public struct Detail: Codable, Equatable {
         public var code: String
         public var title: String
@@ -105,6 +109,16 @@ public enum TError: Error {
 }
 
 extension TError: LocalizedError {
+
+    public var recoverySuggestion: String? {
+        switch self {
+        case .sessionMissing:
+            return LocalizedString("Please log in.", comment: "The recoverySuggestion of the session missing error")
+        default:
+            return nil
+        }
+    }
+
     public var errorDescription: String? {
         switch self {
         case .network:
@@ -159,6 +173,8 @@ extension TError: LocalizedError {
             return LocalizedString("The request returned an unexpected JSON response.", comment: "The default localized description of the response unexpected JSON error")
         case .responseMalformed:
             return LocalizedString("The request returned an invalid response.", comment: "The default localized description of the response malformed data error")
+        case .errorResponse(let reason):
+            return reason
         }
     }
 }

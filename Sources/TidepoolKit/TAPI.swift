@@ -46,7 +46,7 @@ public actor TAPI {
     }
 
     /// The session used for all requests.
-    private(set) var session: TSession? {
+    public private(set) var session: TSession? {
         didSet {
             observers.forEach { $0.apiDidUpdateSession(self.session) }
         }
@@ -55,7 +55,6 @@ public actor TAPI {
     public func setSession(_ session: TSession?) {
         self.session = session
     }
-
 
     private weak var logging: TLogging?
 
@@ -362,7 +361,7 @@ public actor TAPI {
         return try await performRequest(request)
     }
 
-    // MARK: - Users
+    // MARK: - Sharing
 
     /// List all users who have trustee or trustor access to the user account identified by userId. If no user id is specified, then the session user id is used.
     ///
@@ -377,6 +376,23 @@ public actor TAPI {
         let request = try createRequest(method: "GET", path: "/metadata/users/\(userId ?? session.userId)/users")
         return try await performRequest(request)
     }
+
+    /// Sends an invitation to join the care team of the user identified by userId.
+    ///
+    /// - Parameters:
+    ///   - request: A TInviteRequest structure indicating offered permissions, and email to send the invite to.
+    ///   - userId: The user id of the account offering to grant access.
+    /// - Returns: A ``TInvite`` structure
+    public func sendInvite(request: TInviteRequest, userId: String? = nil) async throws -> TInvite {
+        guard let session = session else {
+            throw TError.sessionMissing
+        }
+
+        let request = try createRequest(method: "POST", path: "confirm/send/invite/\(userId ?? session.userId)", body: request)
+        return try await performRequest(request)
+    }
+
+
 
     // MARK: - Prescriptions
 
@@ -720,6 +736,11 @@ public actor TAPI {
             throw TError.network(error)
         }
 
+        struct TErrorResponse: Codable {
+            let code: Int
+            let reason: String
+        }
+
         if let response = response as? HTTPURLResponse {
             if allowSessionRefreshAfterFailure, response.statusCode == 401 {
                 self.logging?.info("Refreshing session")
@@ -733,16 +754,22 @@ public actor TAPI {
                 switch statusCode {
                 case 200...299:
                     return (response, data)
-                case 400:
-                    throw TError.requestMalformed(response, data)
-                case 401:
-                    throw TError.requestNotAuthenticated
-                case 403:
-                    throw TError.requestNotAuthorized(response, data)
-                case 404:
-                    throw TError.requestResourceNotFound(response, data)
                 default:
-                    throw TError.responseUnexpectedStatusCode(response, data)
+                    if let reason = (try? JSONDecoder.tidepool.decode(TErrorResponse.self, from: data))?.reason {
+                        throw TError.errorResponse(reason)
+                    }
+                    switch statusCode {
+                    case 400:
+                        throw TError.requestMalformed(response, data)
+                    case 401:
+                        throw TError.requestNotAuthenticated
+                    case 403:
+                        throw TError.requestNotAuthorized(response, data)
+                    case 404:
+                        throw TError.requestResourceNotFound(response, data)
+                    default:
+                        throw TError.responseUnexpectedStatusCode(response, data)
+                    }
                 }
             }
         } else {
