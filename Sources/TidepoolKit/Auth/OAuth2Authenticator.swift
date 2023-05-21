@@ -9,19 +9,53 @@
 import Foundation
 import AuthenticationServices
 
+public protocol OAuth2AuthenticatorSessionProvider {
+    func startSession(authURL: URL, callbackScheme: String?) async throws -> URL
+}
+
+@MainActor
+public class ASWebAuthenticationSessionProvider: OAuth2AuthenticatorSessionProvider {
+
+    private let contextProviding: ASWebAuthenticationPresentationContextProviding
+    private var authenticationSession: ASWebAuthenticationSession?
+
+    public init(contextProviding: ASWebAuthenticationPresentationContextProviding) {
+        self.contextProviding = contextProviding
+    }
+
+    public func startSession(authURL: URL, callbackScheme: String?) async throws -> URL {
+        let callbackURL: URL = try await withCheckedThrowingContinuation { continuation in
+            self.authenticationSession = ASWebAuthenticationSession(url: authURL, callbackURLScheme: callbackScheme) { callbackURL, error in
+                if let error {
+                    continuation.resume(throwing: error)
+                    return
+                }
+
+                guard let callbackURL = callbackURL else {
+                    continuation.resume(throwing: TError.missingAuthenticationState)
+                    return
+                }
+
+                continuation.resume(returning: callbackURL)
+            }
+            authenticationSession?.presentationContextProvider = contextProviding
+            authenticationSession?.start()
+        }
+        return callbackURL
+    }
+}
+
 public class OAuth2Authenticator {
     private let api: TAPI
     private let environment: TEnvironment
-    private let contextProviding: ASWebAuthenticationPresentationContextProviding
-
     private var config: ProviderConfiguration?
     private var codeGenerator: CodeGenerator
-    private var authenticationSession: ASWebAuthenticationSession?
+    private var sessionProvider: OAuth2AuthenticatorSessionProvider
 
-    public init(api: TAPI, environment: TEnvironment, contextProviding: ASWebAuthenticationPresentationContextProviding) {
+    public init(api: TAPI, environment: TEnvironment, sessionProvider: OAuth2AuthenticatorSessionProvider) {
         self.api = api
         self.environment = environment
-        self.contextProviding = contextProviding
+        self.sessionProvider = sessionProvider
         self.codeGenerator = CodeGenerator()
     }
 
@@ -56,24 +90,8 @@ public class OAuth2Authenticator {
             throw TError.missingAuthenticationConfiguration
         }
 
-        let callbackURL: URL = try await withCheckedThrowingContinuation { continuation in
-            self.authenticationSession = ASWebAuthenticationSession(url: authURL, callbackURLScheme: scheme) { callbackURL, error in
-                if let error {
-                    continuation.resume(throwing: error)
-                    return
-                }
-
-                guard let callbackURL = callbackURL else {
-                    continuation.resume(throwing: TError.missingAuthenticationState)
-                    return
-                }
-
-                continuation.resume(returning: callbackURL)
-            }
-            authenticationSession?.presentationContextProvider = contextProviding
-            authenticationSession?.start()
-        }
-
+        let callbackURL: URL = try await sessionProvider.startSession(authURL: authURL, callbackScheme: scheme)
+        
         guard callbackURL.getQueryParam(value: "error") == nil else {
             throw TError.authenticationError( callbackURL.getQueryParam(value: "error")!)
         }

@@ -7,9 +7,33 @@
 //
 
 import XCTest
-import AppAuth
 @testable import TidepoolKit
+import AuthenticationServices
 
+
+public class MockSessionProvider: OAuth2AuthenticatorSessionProvider {
+
+    var authURL: URL?
+    var callbackScheme: String?
+    var callbackURL: URL?
+    var error: TError?
+
+    public init(callbackURL: URL? = nil, error: TError? = nil) {
+        self.callbackURL = callbackURL
+        self.error = error
+    }
+
+    public func startSession(authURL: URL, callbackScheme: String?) async throws -> URL {
+        self.authURL = authURL
+        self.callbackScheme = callbackScheme
+
+        if let error {
+            throw error
+        }
+
+        return callbackURL!
+    }
+}
 
 class TAPITests: XCTestCase {
     var api: TAPI!
@@ -43,10 +67,6 @@ class TAPITests: XCTestCase {
     }
 
     func setUpRequestNotAuthenticated() async {
-        // Sets up the first api request to fail with a 401, and then returns a failure on the token refresh as well
-        let authorization = MockAuthorization()
-        authorization.refreshTokenError = MockAuthorization.tokenAccessDeniedError
-        await api.setAuthorization(authorization)
         URLProtocolMock.handlers[0].success?.statusCode = 401
     }
 
@@ -171,69 +191,9 @@ class TAPIInfoTests: TAPITests {
     
 }
 
-extension OIDServiceConfiguration {
-    static var mock: OIDServiceConfiguration {
-        return OIDServiceConfiguration(authorizationEndpoint: URL(string: "http://auth.bar.baz:123/auth")!, tokenEndpoint: URL(string: "http://auth.bar.baz:123/token")!)
-    }
-}
-
-class MockAuthorization: Authorization {
-
-    static var tokenAccessDeniedError = NSError(domain: OIDOAuthTokenErrorDomain, code: -4)
-
-    var currentAuthorizationFlow: OIDExternalUserAgentSession?
-    var lastAuthRequest: OIDAuthorizationRequest?
-    var loginFailureError: Error?
-
-    var lastTokenRequest: OIDTokenRequest?
-    var refreshTokenError: Error?
-
-    var accessTokenExpirationDate: Date?
-
-    func getServiceConfiguration(issuer: URL) async throws -> OIDServiceConfiguration {
-        return OIDServiceConfiguration.mock
-    }
-
-    func presentAuth(request: OIDAuthorizationRequest, presenting: UIViewController) async throws -> AuthorizationState {
-        lastAuthRequest = request
-        if let loginFailureError {
-            throw loginFailureError
-        }
-        let authorizationResponse = MockAuthorizationResponse(
-            accessToken: "mockAccessToken",
-            accessTokenExpirationDate: accessTokenExpirationDate,
-            refreshToken: "mockRefreshToken")
-        return authorizationResponse
-    }
-
-    func requestToken(_ request: OIDTokenRequest) async throws -> AuthorizationState {
-        lastTokenRequest = request
-
-        if let refreshTokenError {
-            throw refreshTokenError
-        }
-
-        let authorizationResponse = MockAuthorizationResponse(
-            accessToken: "refreshedAccessToken",
-            accessTokenExpirationDate: accessTokenExpirationDate,
-            refreshToken: "refreshedRefreshToken")
-        return authorizationResponse
-
-    }
-}
-
-struct MockAuthorizationResponse: AuthorizationState {
-    var accessToken: String?
-
-    var accessTokenExpirationDate: Date?
-
-    var refreshToken: String?
-}
-
 class TAPISessionTests: TAPITests {
     var session: TSession!
     var headers: [String: String]!
-    var authorization: MockAuthorization!
 
     static var mockUser: TUser {
         return TUser(
@@ -265,11 +225,9 @@ class TAPISessionTests: TAPITests {
         session = TSession(environment: environment, accessToken: accessToken, accessTokenExpiration: nil, refreshToken: refreshToken, userId: userId, username: "test@test.com")
         headers = ["X-Tidepool-Session-Token": accessToken, "X-Tidepool-Trace-Session": session.trace!]
         await api.setSession(session)
-        authorization = MockAuthorization()
-        await api.setAuthorization(authorization)
-
     }
 }
+
 
 class TAPILoginTests: TAPISessionTests {
 
@@ -277,22 +235,34 @@ class TAPILoginTests: TAPISessionTests {
         try await super.setUp()
     }
 
-
     func testSuccessfulLogin() async {
-        let mockUIViewController = await UIViewController()
         do {
-            URLProtocolMock.handlers = [environmentInfoHandler, authConfigHandler, userHandler]
 
-            try await api.login(environment: session.environment, presenting: mockUIViewController)
+            let tokenResponse = TokenResponse(
+                expiresIn: 720,
+                accessToken: "access-token",
+                idToken: "id-token",
+                scope: "openid profile offline_access email",
+                tokenType: "Bearer",
+                refreshToken: "refresh-token")
 
-            XCTAssertEqual(authorization.lastAuthRequest?.clientID, "test")
-            XCTAssertEqual(authorization.lastAuthRequest?.redirectURL, URL(string: "org.tidepool.tidepoolkit.auth://redirect"))
-            XCTAssertEqual(authorization.lastAuthRequest?.scope, "openid offline_access")
+            let tokenHandler = URLProtocolMock.Handler(validator: URLProtocolMock.Validator(url: "https://test.org/authurl/realms/testrealm/token", method: "POST"), success: URLProtocolMock.Success(statusCode: 200, body: tokenResponse))
+
+            URLProtocolMock.handlers = [environmentInfoHandler, authConfigHandler, tokenHandler, userHandler]
+
+            let successURL = URL(string: "org.tidepool.tidepoolkit.auth://redirect?session_state=772325d7-558f-4d78-9497-22fc7dc6d7e1&code=6b894e86-f388-4a8c-960d-80e266d32bc4.772325d7-558f-4d78-9497-22fc7dc6d7e1.9ea82277-141b-48ce-9c77-61c03f623d9b")
+
+            let sessionProvider = MockSessionProvider(callbackURL: successURL)
+
+            let authenticator = OAuth2Authenticator(api: api, environment: environment, sessionProvider: sessionProvider)
+
+            try await authenticator.login()
+
+            XCTAssertEqual(sessionProvider.callbackScheme, "org.tidepool.tidepoolkit.auth")
 
             let session = await api.session
-            XCTAssertEqual(session?.accessToken, "mockAccessToken")
-            XCTAssertEqual(session?.accessTokenExpiration, nil)
-            XCTAssertEqual(session?.refreshToken, "mockRefreshToken")
+            XCTAssertEqual(session?.accessToken, "access-token")
+            XCTAssertEqual(session?.refreshToken, "refresh-token")
         } catch {
             XCTFail(String(describing: error))
         }
@@ -300,34 +270,42 @@ class TAPILoginTests: TAPISessionTests {
 
     func testFailedLogin() async {
         URLProtocolMock.handlers = [environmentInfoHandler, authConfigHandler]
-        let mockUIViewController = await UIViewController()
+        let sessionProvider = MockSessionProvider(error: TError.missingAuthenticationState)
+
         do {
-            authorization.loginFailureError = TError.missingAuthenticationState
+            let authenticator = OAuth2Authenticator(api: api, environment: environment, sessionProvider: sessionProvider)
+
             await api.setSession(nil)
 
-            try await api.login(environment: session.environment, presenting: mockUIViewController)
+            try await authenticator.login()
             XCTFail("Login should not succeed")
         } catch {
             let session = await api.session
             XCTAssertNil(session)
+            XCTAssertEqual(sessionProvider.callbackScheme, "org.tidepool.tidepoolkit.auth")
         }
     }
 
     func testSessionRefresh() async {
         do {
-            URLProtocolMock.handlers = [environmentInfoHandler, authConfigHandler]
-            let newExpiration = Date().addingTimeInterval(12 * 60 * 60)
-            authorization.accessTokenExpirationDate = newExpiration
+
+            let tokenResponse = TokenResponse(
+                expiresIn: 720,
+                accessToken: "refreshedAccessToken",
+                idToken: "id-token",
+                scope: "openid profile offline_access email",
+                tokenType: "Bearer",
+                refreshToken: "refreshedRefreshToken")
+
+            let tokenHandler = URLProtocolMock.Handler(validator: URLProtocolMock.Validator(url: "https://test.org/authurl/realms/testrealm/token", method: "POST"), success: URLProtocolMock.Success(statusCode: 200, body: tokenResponse))
+
+            URLProtocolMock.handlers = [environmentInfoHandler, authConfigHandler, tokenHandler]
+
             try await api.refreshSession()
 
             let session = await api.session
 
-            XCTAssertEqual(authorization.lastTokenRequest?.clientID, "test")
-            XCTAssertEqual(authorization.lastTokenRequest?.redirectURL, nil)
-            XCTAssertEqual(authorization.lastTokenRequest?.scope, nil)
-
             XCTAssertEqual(session?.accessToken, "refreshedAccessToken")
-            XCTAssertEqual(session?.accessTokenExpiration, newExpiration)
             XCTAssertEqual(session?.refreshToken, "refreshedRefreshToken")
         } catch {
             XCTFail(String(describing: error))
@@ -340,9 +318,20 @@ class TAPILoginTests: TAPISessionTests {
 
         let headers = ["X-Tidepool-Session-Token": refreshedAccessToken, "X-Tidepool-Trace-Session": session.trace!]
 
+        let tokenResponse = TokenResponse(
+            expiresIn: 720,
+            accessToken: "refreshedAccessToken",
+            idToken: "id-token",
+            scope: "openid profile offline_access email",
+            tokenType: "Bearer",
+            refreshToken: "refreshedRefreshToken")
+
+        let tokenHandler = URLProtocolMock.Handler(validator: URLProtocolMock.Validator(url: "https://test.org/authurl/realms/testrealm/token", method: "POST"), success: URLProtocolMock.Success(statusCode: 200, body: tokenResponse))
+
         URLProtocolMock.handlers = [
             environmentInfoHandler,
             authConfigHandler,
+            tokenHandler,
             URLProtocolMock.Handler(validator: URLProtocolMock.Validator(url: "https://test.org/metadata/\(userId)/profile", method: "GET", headers: headers), success: URLProtocolMock.Success(statusCode: 200, headers: headers, body: TProfileTests.profile))
         ]
 
@@ -365,7 +354,6 @@ class TAPILoginTests: TAPISessionTests {
 
             XCTAssertEqual(profile, TProfileTests.profile)
 
-            XCTAssertNotNil(authorization.lastTokenRequest)
             let refreshedSession = await api.session
             XCTAssertEqual(refreshedSession?.accessToken, refreshedAccessToken)
 
@@ -379,9 +367,7 @@ class TAPILoginTests: TAPISessionTests {
         // Should refresh on both 401 and 403, I think
         XCTFail("TODO")
     }
-
 }
-
 
 class TAPIGetProfileTests: TAPISessionTests {
 
@@ -410,8 +396,11 @@ class TAPIGetProfileTests: TAPISessionTests {
     }
 
     func testRequestNotAuthenticated() async {
-        URLProtocolMock.handlers = [getProfileHandler, environmentInfoHandler, authConfigHandler]
+        URLProtocolMock.handlers = [getProfileHandler, environmentInfoHandler]
         await setUpRequestNotAuthenticated()
+
+        // Session refresh also fails
+        URLProtocolMock.handlers[1].success?.statusCode = 401
 
         do {
             let _ = try await api.getProfile()

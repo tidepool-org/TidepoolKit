@@ -116,8 +116,8 @@ class TDatumFilterTests: XCTestCase {
         XCTAssertEqual(filter.dexcom, false)
         XCTAssertEqual(filter.medtronic, true)
         XCTAssertEqual(filter.latest, false)
-        XCTAssertEqual(filter.types, ["cgm", "bolus"])
-        XCTAssertEqual(filter.subTypes, ["normal", "extended"])
+        XCTAssertEqual(filter.type, ["cgm", "bolus"])
+        XCTAssertEqual(filter.subType, ["normal", "extended"])
     }
 
     func testQueryItems() {
@@ -129,8 +129,8 @@ class TDatumFilterTests: XCTestCase {
                                                              URLQueryItem(name: "dexcom", value: "false"),
                                                              URLQueryItem(name: "medtronic", value: "true"),
                                                              URLQueryItem(name: "latest", value: "false"),
-                                                             URLQueryItem(name: "types", value: "cgm,bolus"),
-                                                             URLQueryItem(name: "subTypes", value: "normal,extended")])
+                                                             URLQueryItem(name: "type", value: "cgm,bolus"),
+                                                             URLQueryItem(name: "subType", value: "normal,extended")])
     }
 }
 

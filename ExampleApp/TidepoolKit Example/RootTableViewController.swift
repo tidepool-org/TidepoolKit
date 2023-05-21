@@ -10,9 +10,11 @@ import os.log
 import UIKit
 import SwiftUI
 import TidepoolKit
+import AuthenticationServices
 
 
 class RootTableViewController: UITableViewController, TAPIObserver {
+
     private let api: TAPI
     private var session: TSession? {
         didSet {
@@ -315,10 +317,6 @@ class RootTableViewController: UITableViewController, TAPIObserver {
     }
 
     // MARK: - Authentication
-    private var loginPresentingViewController: UIViewController {
-        return self.presentedViewController ?? self
-    }
-
     private func showAccount() {
         Task {
             let environments = try await TEnvironment.fetchEnvironments()
@@ -327,7 +325,9 @@ class RootTableViewController: UITableViewController, TAPIObserver {
                 selectedEnvironment: currentEnvironment,
                 isLoggedIn: session != nil,
                 environments: environments) { environment throws in
-                    try await self.api.login(environment: environment, presenting: self.loginPresentingViewController)
+                    let sessionProvider = ASWebAuthenticationSessionProvider(contextProviding: self)
+                    let auth = OAuth2Authenticator(api: self.api, environment: environment, sessionProvider: sessionProvider)
+                    try await auth.login()
                 } logout: {
                     Task {
                         await self.api.logout()
@@ -469,5 +469,11 @@ class RootTableViewController: UITableViewController, TAPIObserver {
             return
         }
         show(TextViewController(text: text, withTitle: title), sender: self)
+    }
+}
+
+extension RootTableViewController: ASWebAuthenticationPresentationContextProviding {
+    func presentationAnchor(for session: ASWebAuthenticationSession) -> ASPresentationAnchor {
+        return (UIApplication.shared.delegate as! AppDelegate).window!
     }
 }

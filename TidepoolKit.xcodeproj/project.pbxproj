@@ -3,7 +3,7 @@
 	archiveVersion = 1;
 	classes = {
 	};
-	objectVersion = 52;
+	objectVersion = 46;
 	objects = {
 
 /* Begin PBXAggregateTarget section */
@@ -21,8 +21,6 @@
 /* End PBXAggregateTarget section */
 
 /* Begin PBXBuildFile section */
-		C145902829E5C2790072BF00 /* AppAuth in Frameworks */ = {isa = PBXBuildFile; productRef = C145902729E5C2790072BF00 /* AppAuth */; };
-		C145902A29E5C2790072BF00 /* AppAuthCore in Frameworks */ = {isa = PBXBuildFile; productRef = C145902929E5C2790072BF00 /* AppAuthCore */; };
 		C16119D329D2863200E70E5E /* TTrusteeUser.swift in Sources */ = {isa = PBXBuildFile; fileRef = C16119D229D2863200E70E5E /* TTrusteeUser.swift */; };
 		C16DA94529B8CDF400CC3610 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = C16DA93E29B8CB6400CC3610 /* Assets.xcassets */; };
 		C17CDEE92A01378A003F4C84 /* TokenResponse.swift in Sources */ = {isa = PBXBuildFile; fileRef = C17CDEE62A01378A003F4C84 /* TokenResponse.swift */; };
@@ -33,7 +31,6 @@
 		C18A08EB2A0DD04E005A41FE /* TInvite.swift in Sources */ = {isa = PBXBuildFile; fileRef = C18A08EA2A0DD04E005A41FE /* TInvite.swift */; };
 		C19C9F5229CA0E6D00A6D3D0 /* Localizable.strings in Resources */ = {isa = PBXBuildFile; fileRef = C19C9F5429CA0E6D00A6D3D0 /* Localizable.strings */; };
 		C1A6210D29EC840F00B5A073 /* TUser.swift in Sources */ = {isa = PBXBuildFile; fileRef = C1A6210C29EC840F00B5A073 /* TUser.swift */; };
-		C1C9414329EEDC55008D3E05 /* Authorization.swift in Sources */ = {isa = PBXBuildFile; fileRef = C1C9414129EEDC54008D3E05 /* Authorization.swift */; };
 		C1C9414429EEDC55008D3E05 /* ProviderConfiguration.swift in Sources */ = {isa = PBXBuildFile; fileRef = C1C9414229EEDC54008D3E05 /* ProviderConfiguration.swift */; };
 		OBJ_181 /* JSONDecoder.swift in Sources */ = {isa = PBXBuildFile; fileRef = OBJ_10 /* JSONDecoder.swift */; };
 		OBJ_182 /* JSONEncoder.swift in Sources */ = {isa = PBXBuildFile; fileRef = OBJ_11 /* JSONEncoder.swift */; };
@@ -219,7 +216,6 @@
 		C18A08EA2A0DD04E005A41FE /* TInvite.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TInvite.swift; sourceTree = "<group>"; };
 		C1A6210C29EC840F00B5A073 /* TUser.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TUser.swift; sourceTree = "<group>"; };
 		C1B1539429CA264600563369 /* es */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = es; path = es.lproj/Localizable.strings; sourceTree = "<group>"; };
-		C1C9414129EEDC54008D3E05 /* Authorization.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Authorization.swift; sourceTree = "<group>"; };
 		C1C9414229EEDC54008D3E05 /* ProviderConfiguration.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ProviderConfiguration.swift; sourceTree = "<group>"; };
 		OBJ_10 /* JSONDecoder.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = JSONDecoder.swift; sourceTree = "<group>"; };
 		OBJ_103 /* JSONDecoderTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = JSONDecoderTests.swift; sourceTree = "<group>"; };
@@ -364,8 +360,6 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 0;
 			files = (
-				C145902829E5C2790072BF00 /* AppAuth in Frameworks */,
-				C145902A29E5C2790072BF00 /* AppAuthCore in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -395,7 +389,6 @@
 				C17CDEE72A01378A003F4C84 /* CodeGenerator.swift */,
 				C17CDEE82A01378A003F4C84 /* OAuth2Authenticator.swift */,
 				C17CDEE62A01378A003F4C84 /* TokenResponse.swift */,
-				C1C9414129EEDC54008D3E05 /* Authorization.swift */,
 				C1C9414229EEDC54008D3E05 /* ProviderConfiguration.swift */,
 			);
 			path = Auth;
@@ -807,8 +800,6 @@
 			);
 			name = TidepoolKit;
 			packageProductDependencies = (
-				C145902729E5C2790072BF00 /* AppAuth */,
-				C145902929E5C2790072BF00 /* AppAuthCore */,
 			);
 			productName = TidepoolKit;
 			productReference = "tidepoolkit::TidepoolKit::Product" /* TidepoolKit.framework */;
@@ -871,7 +862,6 @@
 			);
 			mainGroup = OBJ_5;
 			packageReferences = (
-				C145902629E5C2790072BF00 /* XCRemoteSwiftPackageReference "AppAuth-iOS" */,
 			);
 			productRefGroup = OBJ_170 /* Products */;
 			projectDirPath = "";
@@ -972,7 +962,6 @@
 				C16119D329D2863200E70E5E /* TTrusteeUser.swift in Sources */,
 				OBJ_241 /* TBloodGlucose.swift in Sources */,
 				OBJ_242 /* TCarbohydrate.swift in Sources */,
-				C1C9414329EEDC55008D3E05 /* Authorization.swift in Sources */,
 				OBJ_243 /* TDataSet.swift in Sources */,
 				OBJ_244 /* TDictionary.swift in Sources */,
 				OBJ_245 /* TInfo.swift in Sources */,
@@ -1122,10 +1111,7 @@
 				HEADER_SEARCH_PATHS = "$(inherited)";
 				INFOPLIST_FILE = TidepoolKit.xcodeproj/TidepoolKit_Info.plist;
 				IPHONEOS_DEPLOYMENT_TARGET = 14.0;
-				LD_RUNPATH_SEARCH_PATHS = (
-					"$(inherited)",
-					"$(TOOLCHAIN_DIR)/usr/lib/swift/macosx",
-				);
+				LD_RUNPATH_SEARCH_PATHS = "$(inherited) $(TOOLCHAIN_DIR)/usr/lib/swift/macosx";
 				MACOSX_DEPLOYMENT_TARGET = 10.13;
 				OTHER_CFLAGS = "$(inherited)";
 				OTHER_LDFLAGS = "$(inherited)";
@@ -1155,10 +1141,7 @@
 				HEADER_SEARCH_PATHS = "$(inherited)";
 				INFOPLIST_FILE = TidepoolKit.xcodeproj/TidepoolKit_Info.plist;
 				IPHONEOS_DEPLOYMENT_TARGET = 14.0;
-				LD_RUNPATH_SEARCH_PATHS = (
-					"$(inherited)",
-					"$(TOOLCHAIN_DIR)/usr/lib/swift/macosx",
-				);
+				LD_RUNPATH_SEARCH_PATHS = "$(inherited) $(TOOLCHAIN_DIR)/usr/lib/swift/macosx";
 				MACOSX_DEPLOYMENT_TARGET = 10.13;
 				OTHER_CFLAGS = "$(inherited)";
 				OTHER_LDFLAGS = "$(inherited)";
@@ -1219,11 +1202,7 @@
 				HEADER_SEARCH_PATHS = "$(inherited)";
 				INFOPLIST_FILE = TidepoolKit.xcodeproj/TidepoolKitTests_Info.plist;
 				IPHONEOS_DEPLOYMENT_TARGET = 14.0;
-				LD_RUNPATH_SEARCH_PATHS = (
-					"$(inherited)",
-					"@loader_path/../Frameworks",
-					"@loader_path/Frameworks",
-				);
+				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @loader_path/../Frameworks @loader_path/Frameworks";
 				MACOSX_DEPLOYMENT_TARGET = 11.0;
 				OTHER_CFLAGS = "$(inherited)";
 				OTHER_LDFLAGS = "$(inherited)";
@@ -1250,11 +1229,7 @@
 				HEADER_SEARCH_PATHS = "$(inherited)";
 				INFOPLIST_FILE = TidepoolKit.xcodeproj/TidepoolKitTests_Info.plist;
 				IPHONEOS_DEPLOYMENT_TARGET = 14.0;
-				LD_RUNPATH_SEARCH_PATHS = (
-					"$(inherited)",
-					"@loader_path/../Frameworks",
-					"@loader_path/Frameworks",
-				);
+				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @loader_path/../Frameworks @loader_path/Frameworks";
 				MACOSX_DEPLOYMENT_TARGET = 11.0;
 				OTHER_CFLAGS = "$(inherited)";
 				OTHER_LDFLAGS = "$(inherited)";
@@ -1329,8 +1304,7 @@
 				SUPPORTED_PLATFORMS = "iphonesimulator iphoneos";
 				SUPPORTS_MACCATALYST = YES;
 				SWIFT_ACTIVE_COMPILATION_CONDITIONS = "$(inherited) SWIFT_PACKAGE";
-				SWIFT_COMPILATION_MODE = wholemodule;
-				SWIFT_OPTIMIZATION_LEVEL = "-O";
+				SWIFT_OPTIMIZATION_LEVEL = "-Owholemodule";
 				USE_HEADERMAP = NO;
 			};
 			name = Release;
@@ -1384,30 +1358,6 @@
 			defaultConfigurationName = Release;
 		};
 /* End XCConfigurationList section */
-
-/* Begin XCRemoteSwiftPackageReference section */
-		C145902629E5C2790072BF00 /* XCRemoteSwiftPackageReference "AppAuth-iOS" */ = {
-			isa = XCRemoteSwiftPackageReference;
-			repositoryURL = "https://github.com/openid/AppAuth-iOS";
-			requirement = {
-				kind = upToNextMajorVersion;
-				minimumVersion = 1.3.0;
-			};
-		};
-/* End XCRemoteSwiftPackageReference section */
-
-/* Begin XCSwiftPackageProductDependency section */
-		C145902729E5C2790072BF00 /* AppAuth */ = {
-			isa = XCSwiftPackageProductDependency;
-			package = C145902629E5C2790072BF00 /* XCRemoteSwiftPackageReference "AppAuth-iOS" */;
-			productName = AppAuth;
-		};
-		C145902929E5C2790072BF00 /* AppAuthCore */ = {
-			isa = XCSwiftPackageProductDependency;
-			package = C145902629E5C2790072BF00 /* XCRemoteSwiftPackageReference "AppAuth-iOS" */;
-			productName = AppAuthCore;
-		};
-/* End XCSwiftPackageProductDependency section */
 	};
 	rootObject = OBJ_1 /* Project object */;
 }

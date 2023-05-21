@@ -163,8 +163,8 @@ extension TDatum {
         public var dexcom: Bool?
         public var medtronic: Bool?
         public var latest: Bool?
-        public var types: [String]?
-        public var subTypes: [String]?
+        public var type: [String]?
+        public var subType: [String]?
 
         public init(startDate: Date? = nil, endDate: Date? = nil, dataSetId: String? = nil, deviceId: String? = nil,
                     carelink: Bool? = nil, dexcom: Bool? = nil, medtronic: Bool? = nil, latest: Bool? = nil,
@@ -177,8 +177,8 @@ extension TDatum {
             self.dexcom = dexcom
             self.medtronic = medtronic
             self.latest = latest
-            self.types = types
-            self.subTypes = subTypes
+            self.type = types
+            self.subType = subTypes
         }
 
         public var queryItems: [URLQueryItem]? {
@@ -207,11 +207,11 @@ extension TDatum {
             if let latest = latest {
                 queryItems.append(URLQueryItem(name: "latest", value: latest.description))
             }
-            if let types = types {
-                queryItems.append(URLQueryItem(name: "types", value: types.joined(separator: ",")))
+            if let types = type {
+                queryItems.append(URLQueryItem(name: "type", value: types.joined(separator: ",")))
             }
-            if let subTypes = subTypes {
-                queryItems.append(URLQueryItem(name: "subTypes", value: subTypes.joined(separator: ",")))
+            if let subTypes = subType {
+                queryItems.append(URLQueryItem(name: "subType", value: subTypes.joined(separator: ",")))
             }
             return queryItems
         }
