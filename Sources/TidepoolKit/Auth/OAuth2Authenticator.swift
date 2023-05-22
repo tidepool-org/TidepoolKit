@@ -24,7 +24,7 @@ public class ASWebAuthenticationSessionProvider: OAuth2AuthenticatorSessionProvi
     }
 
     public func startSession(authURL: URL, callbackScheme: String?) async throws -> URL {
-        let callbackURL: URL = try await withCheckedThrowingContinuation { continuation in
+        try await withCheckedThrowingContinuation { continuation in
             self.authenticationSession = ASWebAuthenticationSession(url: authURL, callbackURLScheme: callbackScheme) { callbackURL, error in
                 if let error {
                     continuation.resume(throwing: error)
@@ -41,7 +41,6 @@ public class ASWebAuthenticationSessionProvider: OAuth2AuthenticatorSessionProvi
             authenticationSession?.presentationContextProvider = contextProviding
             authenticationSession?.start()
         }
-        return callbackURL
     }
 }
 
