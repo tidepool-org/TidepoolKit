@@ -7,27 +7,11 @@
 
 import Foundation
 
-public struct TPermissionFlag: Codable {
-    public init() {}
-}
-
-public struct TInvitePermissions: Codable {
-    let note: TPermissionFlag?
-    let upload: TPermissionFlag?
-    let view: TPermissionFlag?
-
-    public init(note: TPermissionFlag? = nil, upload: TPermissionFlag? = nil, view: TPermissionFlag? = nil) {
-        self.note = note
-        self.upload = upload
-        self.view = view
-    }
-}
-
 public struct TInviteRequest: Codable {
     let email: String
-    let permissions: TInvitePermissions
+    let permissions: TPermissions
 
-    public init(email: String, permissions: TInvitePermissions) {
+    public init(email: String, permissions: TPermissions) {
         self.email = email
         self.permissions = permissions
     }
