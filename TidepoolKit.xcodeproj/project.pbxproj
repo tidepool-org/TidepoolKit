@@ -21,6 +21,7 @@
 /* End PBXAggregateTarget section */
 
 /* Begin PBXBuildFile section */
+		B4EF22E42A3B9A2F003507F6 /* TCreator.swift in Sources */ = {isa = PBXBuildFile; fileRef = B4EF22E32A3B9A2F003507F6 /* TCreator.swift */; };
 		C16119D329D2863200E70E5E /* TTrusteeUser.swift in Sources */ = {isa = PBXBuildFile; fileRef = C16119D229D2863200E70E5E /* TTrusteeUser.swift */; };
 		C16DA94529B8CDF400CC3610 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = C16DA93E29B8CB6400CC3610 /* Assets.xcassets */; };
 		C17CDEE92A01378A003F4C84 /* TokenResponse.swift in Sources */ = {isa = PBXBuildFile; fileRef = C17CDEE62A01378A003F4C84 /* TokenResponse.swift */; };
@@ -186,6 +187,7 @@
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
+		B4EF22E32A3B9A2F003507F6 /* TCreator.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TCreator.swift; sourceTree = "<group>"; };
 		C100F68429CA25E100586CAB /* en */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = en; path = en.lproj/Localizable.strings; sourceTree = "<group>"; };
 		C15ADC5A29CA1688008D80F1 /* ar */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = ar; path = ar.lproj/Localizable.strings; sourceTree = "<group>"; };
 		C15ADC5B29CA1690008D80F1 /* cs */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = cs; path = cs.lproj/Localizable.strings; sourceTree = "<group>"; };
@@ -631,12 +633,12 @@
 		OBJ_38 /* Model */ = {
 			isa = PBXGroup;
 			children = (
-				C1A6210C29EC840F00B5A073 /* TUser.swift */,
 				OBJ_39 /* Datum */,
 				OBJ_78 /* Prescription */,
 				OBJ_81 /* TAssociation.swift */,
 				OBJ_82 /* TBloodGlucose.swift */,
 				OBJ_83 /* TCarbohydrate.swift */,
+				B4EF22E32A3B9A2F003507F6 /* TCreator.swift */,
 				OBJ_84 /* TDataSet.swift */,
 				OBJ_85 /* TDictionary.swift */,
 				OBJ_86 /* TInfo.swift */,
@@ -648,6 +650,7 @@
 				C16119D229D2863200E70E5E /* TTrusteeUser.swift */,
 				C18A08EA2A0DD04E005A41FE /* TInvite.swift */,
 				E086D1CF2A2E4EEF00BA2ED4 /* TPendingInvite.swift */,
+				C1A6210C29EC840F00B5A073 /* TUser.swift */,
 			);
 			path = Model;
 			sourceTree = "<group>";
@@ -911,6 +914,7 @@
 				OBJ_191 /* Image.swift in Sources */,
 				C1A85A9E2A1CFDB800430101 /* TPermissions.swift in Sources */,
 				C17CDEEE2A0137A3003F4C84 /* URL.swift in Sources */,
+				B4EF22E42A3B9A2F003507F6 /* TCreator.swift in Sources */,
 				OBJ_192 /* ProcessInfo.swift in Sources */,
 				C17CDEEF2A0137A3003F4C84 /* Data.swift in Sources */,
 				OBJ_193 /* TimeInterval.swift in Sources */,
