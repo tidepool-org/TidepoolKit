@@ -340,17 +340,31 @@ public actor TAPI {
         return try await performRequest(request)
     }
     
-    /// List all pending invites for access to the user account identified by userId. If no user id is specified, then the session user id is used.
+    /// List all pending invites sent from the user account identified by userId. If no user id is specified, then the session user id is used.
     ///
     /// - Parameters:
     ///   - userId: The user id for which to get the pending invites. If no user id is specified, then the session user id is used.
     /// - Returns: A list of ``TPendingInvite`` structures
-    public func getPendingInvites(userId: String? = nil) async throws -> [TPendingInvite] {
+    public func getPendingInvitesSent(userId: String? = nil) async throws -> [TPendingInvite] {
         guard let session = session else {
             throw TError.sessionMissing
         }
 
         let request = try createRequest(method: "GET", path: "/confirm/invite/\(userId ?? session.userId)")
+        return try await performRequest(request)
+    }
+    
+    /// List all pending invites received by the user account identified by userId. If no user id is specified, then the session user id is used.
+    ///
+    /// - Parameters:
+    ///   - userId: The user id for which to get the pending invites. If no user id is specified, then the session user id is used.
+    /// - Returns: A list of ``TPendingInvite`` structures
+    public func getPendingInvitesReceived(userId: String? = nil) async throws -> [TPendingInvite] {
+        guard let session = session else {
+            throw TError.sessionMissing
+        }
+
+        let request = try createRequest(method: "GET", path: "/confirm/invitations/\(userId ?? session.userId)")
         return try await performRequest(request)
     }
     
