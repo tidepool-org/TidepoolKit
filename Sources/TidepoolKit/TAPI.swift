@@ -388,16 +388,34 @@ public actor TAPI {
     /// - Parameters:
     ///   - userId: The user id. If no user id is specified, then the session user id is used.
     ///   - invitedByUserId: The user id of the user that sent the invited.
-    /// - Returns: A confirmation/response
-    public func acceptInvite(userId: String? = nil, invitedByUserId: String) async throws -> String {
+    public func acceptInvite(userId: String? = nil, invitedByUserId: String, key: String) async throws {
         guard let session = session else {
             throw TError.sessionMissing
         }
 
-        let request = try createRequest(method: "PUT", path: "/confirm/accept/invite/\(userId ?? session.userId)/\(invitedByUserId)")
-        return try await performRequest(request)
+        let body = PendingInviteKeyBody(key: key)
+        let request = try createRequest(method: "PUT", path: "/confirm/accept/invite/\(userId ?? session.userId)/\(invitedByUserId)", body: body)
+        try await performRequestNotDecodingResponse(request)
     }
     
+    /// Reject a pending invite sent to the user account identified by userId. If no user id is specified, then the session user id is used.
+    ///
+    /// - Parameters:
+    ///   - userId: The user id. If no user id is specified, then the session user id is used.
+    ///   - invitedByUserId: The user id of the user that sent the invited.
+    public func rejectInvite(userId: String? = nil, invitedByUserId: String, key: String) async throws {
+        guard let session = session else {
+            throw TError.sessionMissing
+        }
+        let body = PendingInviteKeyBody(key: key)
+        let request = try createRequest(method: "PUT", path: "/confirm/dismiss/invite/\(userId ?? session.userId)/\(invitedByUserId)", body: body)
+        try await performRequestNotDecodingResponse(request)
+    }
+    
+    struct PendingInviteKeyBody: Codable {
+        let key: String
+    }
+
     /// Update permissions of individual user userId in group sharerId.
     /// The permissions provided in the request body replace all existing permissions for that user.
     /// Therefore to delete a permission, submit the request body without that permission.
@@ -411,11 +429,10 @@ public actor TAPI {
         guard let session = session else {
             throw TError.sessionMissing
         }
-
+        
         let request = try createRequest(method: "POST", path: "/access/\(sharerId ?? session.userId)/\(userId)", body: permissions)
         return try await performRequest(request)
     }
-
 
     // MARK: - Prescriptions
 
