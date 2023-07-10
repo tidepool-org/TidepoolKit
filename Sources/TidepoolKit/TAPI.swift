@@ -383,6 +383,20 @@ public actor TAPI {
         return try await performRequest(request)
     }
     
+    /// Resend invite to follow the user account specified by the ``creatorId`` of the original ``TInvite`` structure.
+    ///
+    /// - Parameters:
+    ///   - key: The unique identification key of the original ``TInvite`` structure.
+    /// - Returns: A confirmation/response
+    public func resendInvite(key: String) async throws -> String {
+        guard session != nil else {
+            throw TError.sessionMissing
+        }
+
+        let request = try createRequest(method: "PATCH", path: "/confirm/resend/invite/\(key)")
+        return try await performRequest(request)
+    }
+    
     /// Accept a pending invite sent to the user account identified by userId. If no user id is specified, then the session user id is used.
     ///
     /// - Parameters:
