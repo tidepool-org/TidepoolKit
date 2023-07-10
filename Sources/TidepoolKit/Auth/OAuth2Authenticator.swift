@@ -38,6 +38,7 @@ public class ASWebAuthenticationSessionProvider: OAuth2AuthenticatorSessionProvi
 
                 continuation.resume(returning: callbackURL)
             }
+            authenticationSession?.prefersEphemeralWebBrowserSession = true
             authenticationSession?.presentationContextProvider = contextProviding
             authenticationSession?.start()
         }
