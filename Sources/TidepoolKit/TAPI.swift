@@ -373,22 +373,22 @@ public actor TAPI {
     /// - Parameters:
     ///   - userId: The user id. If no user id is specified, then the session user id is used.
     ///   - invitedByEmail: The email that has been invited.
-    /// - Returns: A confirmation/response
-    public func cancelInvite(userId: String? = nil, invitedByEmail: String) async throws -> String {
+    /// - Returns: A confirmation/response with void body.
+    public func cancelInvite(userId: String? = nil, invitedByEmail: String) async throws {
         guard let session = session else {
             throw TError.sessionMissing
         }
 
         let request = try createRequest(method: "PUT", path: "/confirm/\(userId ?? session.userId)/invited/\(invitedByEmail)")
-        return try await performRequest(request)
+        try await performRequestNotDecodingResponse(request)
     }
     
     /// Resend invite to follow the user account specified by the ``creatorId`` of the original ``TInvite`` structure.
     ///
     /// - Parameters:
     ///   - key: The unique identification key of the original ``TInvite`` structure.
-    /// - Returns: A confirmation/response
-    public func resendInvite(key: String) async throws -> String {
+    /// - Returns: A ``TPendingInvite`` structure.
+    public func resendInvite(key: String) async throws -> TPendingInvite {
         guard session != nil else {
             throw TError.sessionMissing
         }
