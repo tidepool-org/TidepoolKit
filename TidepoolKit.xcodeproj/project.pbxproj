@@ -21,6 +21,7 @@
 /* End PBXAggregateTarget section */
 
 /* Begin PBXBuildFile section */
+		B4B0A0802AB47302004B0699 /* TClientData.swift in Sources */ = {isa = PBXBuildFile; fileRef = B4B0A07F2AB47302004B0699 /* TClientData.swift */; };
 		B4EF22E42A3B9A2F003507F6 /* TCreator.swift in Sources */ = {isa = PBXBuildFile; fileRef = B4EF22E32A3B9A2F003507F6 /* TCreator.swift */; };
 		C16119D329D2863200E70E5E /* TTrusteeUser.swift in Sources */ = {isa = PBXBuildFile; fileRef = C16119D229D2863200E70E5E /* TTrusteeUser.swift */; };
 		C16DA94529B8CDF400CC3610 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = C16DA93E29B8CB6400CC3610 /* Assets.xcassets */; };
@@ -187,6 +188,7 @@
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
+		B4B0A07F2AB47302004B0699 /* TClientData.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TClientData.swift; sourceTree = "<group>"; };
 		B4EF22E32A3B9A2F003507F6 /* TCreator.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TCreator.swift; sourceTree = "<group>"; };
 		C100F68429CA25E100586CAB /* en */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = en; path = en.lproj/Localizable.strings; sourceTree = "<group>"; };
 		C15ADC5A29CA1688008D80F1 /* ar */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = ar; path = ar.lproj/Localizable.strings; sourceTree = "<group>"; };
@@ -666,6 +668,7 @@
 				OBJ_63 /* TCBGDatum.swift */,
 				OBJ_64 /* TCGMSettingsDatum.swift */,
 				OBJ_65 /* TCalculatorDatum.swift */,
+				B4B0A07F2AB47302004B0699 /* TClientData.swift */,
 				OBJ_66 /* TControllerSettingsDatum.swift */,
 				OBJ_67 /* TControllerStatusDatum.swift */,
 				OBJ_68 /* TDatum.swift */,
@@ -970,6 +973,7 @@
 				OBJ_238 /* TPrescription.swift in Sources */,
 				C18A08EB2A0DD04E005A41FE /* TInvite.swift in Sources */,
 				OBJ_239 /* TPrescriptionClaim.swift in Sources */,
+				B4B0A0802AB47302004B0699 /* TClientData.swift in Sources */,
 				OBJ_240 /* TAssociation.swift in Sources */,
 				C16119D329D2863200E70E5E /* TTrusteeUser.swift in Sources */,
 				OBJ_241 /* TBloodGlucose.swift in Sources */,
