@@ -308,6 +308,15 @@ public actor TAPI {
         let request = try createRequest(method: "GET", path: "/metadata/\(userId ?? session.userId)/profile")
         return try await performRequest(request)
     }
+    
+    public func setProfile(request: TProfile, userId: String? = nil) async throws -> TProfile {
+        guard let session = session else {
+            throw TError.sessionMissing
+        }
+
+        let request = try createRequest(method: "POST", path: "/metadata/\(userId ?? session.userId)/profile", body: request)
+        return try await performRequest(request)
+    }
 
     // MARK: - Sharing
 
