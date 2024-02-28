@@ -39,12 +39,12 @@ public struct TPendingInvite: Codable, Equatable {
 }
 
 public struct TPendingInviteContext: Codable, Equatable {
-    public let nickname: String
-    public let permissions: TPermissions
+    public let nickname: String?
+    public let permissions: TPermissions?
     
     init(
-        nickname: String,
-        permissions: TPermissions
+        nickname: String?,
+        permissions: TPermissions?
     ) {
         self.nickname = nickname
         self.permissions = permissions
