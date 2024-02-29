@@ -699,6 +699,34 @@ public actor TAPI {
             self.assertion = assertion
         }
     }
+    
+    // MARK: - Push Notifications
+    
+    /// Registers the current device to the provided userId for sending push notifications via APNs.
+    ///
+    /// - Parameters:
+    ///   - pushToken: The token generated from `didRegisterForRemoteNotificationsWithDeviceToken`.
+    ///   - userId: The user id for which to get the data sets. If no user id is specified, then the session user id is used.
+    /// - Returns: A list of ``TDataSet`` structures
+    public func registerPushToken(pushToken: Data, userId: String? = nil) async throws {
+        guard let session = session else {
+            throw TError.sessionMissing
+        }
+
+        #if DEBUG
+        let environment = "sandbox"
+        #else
+        let environment = "production"
+        #endif
+        let body = ["apple": RegisterPushTokenRequestBody(token: pushToken.base64EncodedString(), environment: environment)]
+        let request = try createRequest(method: "POST", path: "/v1/users/\(userId ?? session.userId)/device_tokens", body: body)
+        let _ = try await performRequest(request, allowSessionRefreshAfterFailure: false)
+    }
+    
+    struct RegisterPushTokenRequestBody: Codable {
+        let token: String
+        let environment: String
+    }
 
     // MARK: - Internal - Create Request
 
