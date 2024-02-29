@@ -702,11 +702,10 @@ public actor TAPI {
     
     // MARK: - Push Notifications
     
-    /// List the data sets for the specified user id. If no user id is specified, then the session user id is used. A filter can
-    /// be specified to reduce the data sets returned.
+    /// Registers the current device to the provided userId for sending push notifications via APNs.
     ///
     /// - Parameters:
-    ///   - filter: The filter to use when requesting the data sets.
+    ///   - pushToken: The token generated from `didRegisterForRemoteNotificationsWithDeviceToken`.
     ///   - userId: The user id for which to get the data sets. If no user id is specified, then the session user id is used.
     /// - Returns: A list of ``TDataSet`` structures
     public func registerPushToken(pushToken: Data, userId: String? = nil) async throws {
