@@ -8,6 +8,7 @@
 
 import Foundation
 import UIKit
+import CryptoKit
 
 /// Observer of the Tidepool API
 public protocol TAPIObserver: AnyObject {
@@ -727,6 +728,39 @@ public actor TAPI {
         let token: String
         let environment: String
     }
+
+    // MARK: - Device Logs
+
+    /// Uploads device logs
+    ///
+    /// - Parameters:
+    ///   - logs: entries to upload
+    ///   - start: the start date of the period that contains the log entries
+    ///   - end: the end date of the period that contains the log entries
+    public func uploadDeviceLogs(logs: [TDeviceLogEntry], start: Date, end: Date) async throws -> TDeviceLogsMetadata {
+        guard let session = session else {
+            throw TError.sessionMissing
+        }
+
+        var request = try createRequest(method: "POST", path: "v1/users/\(session.userId)/device_logs")
+        request.setValue("application/json; charset=utf-8", forHTTPHeaderField: HTTPHeaderField.contentType.rawValue)
+        let encoded = try JSONEncoder.tidepool.encode(logs)
+        request.httpBody = encoded
+
+        let digest = Insecure.MD5.hash(data: encoded)
+
+        let digestStr = "MD5=" + Data(digest).base64EncodedString()
+
+        print("Sending with start: \(start.timeString)")
+        request.setValue(start.timeString, forHTTPHeaderField: "X-Logs-Start-At-Time")
+        request.setValue(end.timeString, forHTTPHeaderField: "X-Logs-End-At-Time")
+
+        print("Sending with digest: \(digestStr)")
+        request.setValue(digestStr, forHTTPHeaderField: "Digest")
+
+        return try await performRequest(request)
+    }
+
 
     // MARK: - Internal - Create Request
 
