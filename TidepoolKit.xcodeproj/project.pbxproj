@@ -33,6 +33,8 @@
 		C18A08EB2A0DD04E005A41FE /* TInvite.swift in Sources */ = {isa = PBXBuildFile; fileRef = C18A08EA2A0DD04E005A41FE /* TInvite.swift */; };
 		C19C9F5229CA0E6D00A6D3D0 /* Localizable.strings in Resources */ = {isa = PBXBuildFile; fileRef = C19C9F5429CA0E6D00A6D3D0 /* Localizable.strings */; };
 		C1A6210D29EC840F00B5A073 /* TUser.swift in Sources */ = {isa = PBXBuildFile; fileRef = C1A6210C29EC840F00B5A073 /* TUser.swift */; };
+		C1A685462C0F65300071C171 /* TDeviceLogEntry.swift in Sources */ = {isa = PBXBuildFile; fileRef = C1A685442C0F65300071C171 /* TDeviceLogEntry.swift */; };
+		C1A685472C0F65300071C171 /* TDeviceLogsMetadata.swift in Sources */ = {isa = PBXBuildFile; fileRef = C1A685452C0F65300071C171 /* TDeviceLogsMetadata.swift */; };
 		C1A85A9E2A1CFDB800430101 /* TPermissions.swift in Sources */ = {isa = PBXBuildFile; fileRef = C1A85A9D2A1CFDB800430101 /* TPermissions.swift */; };
 		C1C9414429EEDC55008D3E05 /* ProviderConfiguration.swift in Sources */ = {isa = PBXBuildFile; fileRef = C1C9414229EEDC54008D3E05 /* ProviderConfiguration.swift */; };
 		E086D1D02A2E4EEF00BA2ED4 /* TPendingInvite.swift in Sources */ = {isa = PBXBuildFile; fileRef = E086D1CF2A2E4EEF00BA2ED4 /* TPendingInvite.swift */; };
@@ -221,6 +223,8 @@
 		C17CDEED2A0137A3003F4C84 /* Data.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Data.swift; sourceTree = "<group>"; };
 		C18A08EA2A0DD04E005A41FE /* TInvite.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TInvite.swift; sourceTree = "<group>"; };
 		C1A6210C29EC840F00B5A073 /* TUser.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TUser.swift; sourceTree = "<group>"; };
+		C1A685442C0F65300071C171 /* TDeviceLogEntry.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TDeviceLogEntry.swift; sourceTree = "<group>"; };
+		C1A685452C0F65300071C171 /* TDeviceLogsMetadata.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TDeviceLogsMetadata.swift; sourceTree = "<group>"; };
 		C1A85A9D2A1CFDB800430101 /* TPermissions.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TPermissions.swift; sourceTree = "<group>"; };
 		C1B1539429CA264600563369 /* es */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = es; path = es.lproj/Localizable.strings; sourceTree = "<group>"; };
 		C1C9414229EEDC54008D3E05 /* ProviderConfiguration.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ProviderConfiguration.swift; sourceTree = "<group>"; };
@@ -642,6 +646,8 @@
 				OBJ_83 /* TCarbohydrate.swift */,
 				B4EF22E32A3B9A2F003507F6 /* TCreator.swift */,
 				OBJ_84 /* TDataSet.swift */,
+				C1A685442C0F65300071C171 /* TDeviceLogEntry.swift */,
+				C1A685452C0F65300071C171 /* TDeviceLogsMetadata.swift */,
 				OBJ_85 /* TDictionary.swift */,
 				OBJ_86 /* TInfo.swift */,
 				OBJ_87 /* TInsulin.swift */,
@@ -934,6 +940,7 @@
 				OBJ_200 /* UnfairLock.swift in Sources */,
 				OBJ_202 /* WeakSynchronizedSet.swift in Sources */,
 				OBJ_203 /* TAutomatedBasalDatum.swift in Sources */,
+				C1A685472C0F65300071C171 /* TDeviceLogsMetadata.swift in Sources */,
 				OBJ_204 /* TBasalDatum.swift in Sources */,
 				OBJ_205 /* TScheduledBasalDatum.swift in Sources */,
 				OBJ_206 /* TSuspendedBasalDatum.swift in Sources */,
@@ -984,6 +991,7 @@
 				OBJ_246 /* TInsulin.swift in Sources */,
 				OBJ_247 /* TLocation.swift in Sources */,
 				OBJ_248 /* TOrigin.swift in Sources */,
+				C1A685462C0F65300071C171 /* TDeviceLogEntry.swift in Sources */,
 				OBJ_249 /* TProfile.swift in Sources */,
 				OBJ_251 /* TAPI.swift in Sources */,
 				OBJ_252 /* TEnvironment.swift in Sources */,
