@@ -761,6 +761,30 @@ public actor TAPI {
         return try await performRequest(request)
     }
 
+    /// List device logs metadata
+    ///
+    /// - Parameters:
+    ///   - logs: entries to upload
+    ///   - start: the start date of the period that contains the log entries
+    ///   - end: the end date of the period that contains the log entries
+    public func listDeviceLogs(start: Date, end: Date) async throws -> [TDeviceLogsMetadata] {
+        guard let session = session else {
+            throw TError.sessionMissing
+        }
+
+        var request = try createRequest(
+            method: "GET",
+            path: "v1/users/\(session.userId)/device_logs",
+            queryItems: [
+                URLQueryItem(name: "startAtTime", value: start.timeString),
+                URLQueryItem(name: "endAtTime", value: end.timeString)
+            ]
+        )
+        return try await performRequest(request)
+    }
+
+
+
 
     // MARK: - Internal - Create Request
 

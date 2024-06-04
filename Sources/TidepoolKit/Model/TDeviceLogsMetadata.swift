@@ -17,6 +17,6 @@ public struct TDeviceLogsMetadata: Codable, Equatable {
     public var mediaType: String
     public var size: Int
     public var createdTime: Date
-    public var startAtTime: Date?
-    public var endAtTime: Date?
+    public var startAtTime: Date
+    public var endAtTime: Date
 }
