@@ -764,15 +764,15 @@ public actor TAPI {
     /// List device logs metadata
     ///
     /// - Parameters:
-    ///   - logs: entries to upload
     ///   - start: the start date of the period that contains the log entries
     ///   - end: the end date of the period that contains the log entries
+    /// - Returns: A list of ``TDeviceLogsMetadata`` structures
     public func listDeviceLogs(start: Date, end: Date) async throws -> [TDeviceLogsMetadata] {
         guard let session = session else {
             throw TError.sessionMissing
         }
 
-        var request = try createRequest(
+        let request = try createRequest(
             method: "GET",
             path: "v1/users/\(session.userId)/device_logs",
             queryItems: [
