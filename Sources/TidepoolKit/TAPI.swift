@@ -766,8 +766,8 @@ public actor TAPI {
     /// - Parameters:
     ///   - start: the start date of the period that contains the log entries
     ///   - end: the end date of the period that contains the log entries
-    /// - Returns: An optional list of ``TDeviceLogsMetadata`` structures. If the list is empty, `nil` is returned
-    public func listDeviceLogs(start: Date, end: Date) async throws -> [TDeviceLogsMetadata]? {
+    /// - Returns: A list of ``TDeviceLogsMetadata`` structures
+    public func listDeviceLogs(start: Date, end: Date) async throws -> [TDeviceLogsMetadata] {
         guard let session = session else {
             throw TError.sessionMissing
         }
@@ -780,7 +780,9 @@ public actor TAPI {
                 URLQueryItem(name: "endAtTime", value: end.timeString)
             ]
         )
-        return try await performRequest(request)
+        
+        let deviceLogsMetadata: [TDeviceLogsMetadata]? = try await performRequest(request)
+        return deviceLogsMetadata ?? []
     }
 
 
