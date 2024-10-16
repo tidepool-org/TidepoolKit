@@ -780,7 +780,9 @@ public actor TAPI {
                 URLQueryItem(name: "endAtTime", value: end.timeString)
             ]
         )
-        return try await performRequest(request)
+        
+        let deviceLogsMetadata: [TDeviceLogsMetadata]? = try await performRequest(request)
+        return deviceLogsMetadata ?? []
     }
 
 
