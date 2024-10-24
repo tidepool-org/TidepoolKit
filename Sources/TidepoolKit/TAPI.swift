@@ -466,6 +466,21 @@ public actor TAPI {
         return try await performRequest(request)
     }
 
+    /// Retrieve a list of prescription that the user has claimed
+    ///
+    /// - Parameters:
+    ///   - userId: The user id of the claimed prescriptions. If no user id is specified, then the session user id is used.
+    /// - Returns: An array of ``TPrescription`` structs
+    public func listPrescriptions(userId: String? = nil) async throws -> [TPrescription] {
+        guard let session = session else {
+            throw TError.sessionMissing
+        }
+
+        let request = try createRequest(method: "GET", path: "/v1/patients/\(userId ?? session.userId)/prescriptions")
+        return try await performRequest(request)
+    }
+
+
     // MARK: - Data Sets
 
     /// List the data sets for the specified user id. If no user id is specified, then the session user id is used. A filter can
