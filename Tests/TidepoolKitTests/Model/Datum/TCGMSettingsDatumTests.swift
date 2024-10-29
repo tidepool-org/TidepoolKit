@@ -29,7 +29,6 @@ class TCGMSettingsDatumTests: XCTestCase {
         "manufacturers": ["Alfa", "Romeo"],
         "model": "Spider",
         "name": "My Car",
-        "serialNumber": "1234567890",
         "softwareVersion": "12.13.14",
         "transmitterId": "ABCDEF",
         "units": "mg/dL",

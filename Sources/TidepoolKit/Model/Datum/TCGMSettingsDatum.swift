@@ -315,7 +315,6 @@ public class TCGMSettingsDatum: TDatum, Decodable {
         case manufacturers
         case model
         case name
-        case serialNumber
         case softwareVersion
         case transmitterId
         case units

@@ -496,7 +496,6 @@ public class TPumpSettingsDatum: TDatum, Decodable {
         case name
         case overridePresets
         case scheduleTimeZoneOffset
-        case serialNumber
         case softwareVersion
         case units
     }
