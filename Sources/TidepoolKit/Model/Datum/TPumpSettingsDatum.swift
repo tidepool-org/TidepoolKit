@@ -472,7 +472,6 @@ public class TPumpSettingsDatum: TDatum, Decodable {
     
     private enum CodingKeys: String, CodingKey {
         case activeScheduleName = "activeSchedule"
-        case automatedDelivery
         case basal
         case basalRateSchedule = "basalSchedule"
         case basalRateSchedules = "basalSchedules"
