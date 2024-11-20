@@ -28,6 +28,9 @@ public struct TSession: Codable, Equatable {
 
     // The username associated with this account, when the session was created
     public let username: String
+    
+    // The roles associated with this account, when the session was created
+    public let userRoles: [String]
 
     // The value of the optional X-Tidepool-Trace-Session header added to any future API network requests. The default UUID string
     // is usually sufficient, but can be changed or removed.
@@ -36,13 +39,14 @@ public struct TSession: Codable, Equatable {
     // The date the session was created
     public let createdDate: Date
     
-    public init(environment: TEnvironment, accessToken: String, accessTokenExpiration: Date?, refreshToken: String?, userId: String, username: String, trace: String? = UUID().uuidString, createdDate: Date = Date()) {
+    public init(environment: TEnvironment, accessToken: String, accessTokenExpiration: Date?, refreshToken: String?, userId: String, username: String, userRoles: [String], trace: String? = UUID().uuidString, createdDate: Date = Date()) {
         self.environment = environment
         self.accessToken = accessToken
         self.accessTokenExpiration = accessTokenExpiration
         self.refreshToken = refreshToken
         self.userId = userId
         self.username = username
+        self.userRoles = userRoles
         self.trace = trace
         self.createdDate = createdDate
     }

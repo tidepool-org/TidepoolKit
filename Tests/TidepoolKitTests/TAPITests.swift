@@ -174,7 +174,7 @@ class TAPIInfoTests: TAPITests {
 
     func testSuccessUsingSessionEnvironment() async {
         let env = TEnvironment(host: "foo.bar.baz", port: 123)
-        let session = TSession(environment: env, accessToken: accessToken, accessTokenExpiration: nil, refreshToken: nil, userId: userId, username: "test@test.com")
+        let session = TSession(environment: env, accessToken: accessToken, accessTokenExpiration: nil, refreshToken: nil, userId: userId, username: "test@test.com", userRoles: ["demo", "patient"])
 
         await api.setSession(session)
 
@@ -222,7 +222,7 @@ class TAPISessionTests: TAPITests {
     override func setUp() async throws {
         try await super.setUp()
 
-        session = TSession(environment: environment, accessToken: accessToken, accessTokenExpiration: nil, refreshToken: refreshToken, userId: userId, username: "test@test.com")
+        session = TSession(environment: environment, accessToken: accessToken, accessTokenExpiration: nil, refreshToken: refreshToken, userId: userId, username: "test@test.com", userRoles: ["demo", "patient"])
         headers = ["X-Tidepool-Session-Token": accessToken, "X-Tidepool-Trace-Session": session.trace!]
         await api.setSession(session)
     }
@@ -342,6 +342,7 @@ class TAPILoginTests: TAPISessionTests {
             refreshToken: session.refreshToken,
             userId: session.userId,
             username: session.username,
+            userRoles: session.userRoles,
             trace: session.trace
         )
 

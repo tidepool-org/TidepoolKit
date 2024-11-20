@@ -213,7 +213,8 @@ public actor TAPI {
             accessTokenExpiration: accessTokenExpiration,
             refreshToken: refreshToken,
             userId: currentUser.userid,
-            username: currentUser.username)
+            username: currentUser.username,
+            userRoles: currentUser.roles)
     }
 
     /// Refresh the Tidepool API session.
@@ -270,7 +271,8 @@ public actor TAPI {
                 accessTokenExpiration: nil, // tokenResponse.accessTokenExpirationDate,
                 refreshToken: tokenResponse.refreshToken,
                 userId: session.userId,
-                username: session.username)
+                username: session.username,
+                userRoles: session.userRoles)
         } catch {
             throw TError.responseMalformedJSON(httpResponse, data, error)
         }

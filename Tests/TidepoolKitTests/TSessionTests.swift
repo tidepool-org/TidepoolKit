@@ -16,6 +16,7 @@ class TSessionTests: XCTestCase {
                                   refreshToken: "test-refresh-token",
                                   userId: "1234567890",
                                   username: "test@test.com",
+                                  userRoles: ["demo", "patient"],
                                   trace: "test-trace",
                                   createdDate: Date.test)
     static let sessionJSONDictionary: [String: Any] = [
@@ -24,6 +25,7 @@ class TSessionTests: XCTestCase {
         "accessTokenExpiration": "2001-01-02T17:17:36.789Z",
         "userId": "1234567890",
         "username": "test@test.com",
+        "userRoles": ["demo", "patient"],
         "refreshToken": "test-refresh-token",
         "trace": "test-trace",
         "createdDate": Date.testJSONString
