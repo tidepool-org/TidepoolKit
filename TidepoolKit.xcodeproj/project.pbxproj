@@ -363,8 +363,8 @@
 		OBJ_94 /* TError.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TError.swift; sourceTree = "<group>"; };
 		OBJ_95 /* TLogging.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TLogging.swift; sourceTree = "<group>"; };
 		OBJ_96 /* TSession.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TSession.swift; sourceTree = "<group>"; };
-		"tidepoolkit::TidepoolKit::Product" /* TidepoolKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; path = TidepoolKit.framework; sourceTree = BUILT_PRODUCTS_DIR; };
-		"tidepoolkit::TidepoolKitTests::Product" /* TidepoolKitTests.xctest */ = {isa = PBXFileReference; lastKnownFileType = file; path = TidepoolKitTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
+		"tidepoolkit::TidepoolKit::Product" /* TidepoolKit.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; path = TidepoolKit.framework; sourceTree = BUILT_PRODUCTS_DIR; };
+		"tidepoolkit::TidepoolKitTests::Product" /* TidepoolKitTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; path = TidepoolKitTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -1269,6 +1269,7 @@
 		OBJ_3 /* Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
+				ASSETCATALOG_COMPILER_GENERATE_ASSET_SYMBOLS = NO;
 				CLANG_ANALYZER_LOCALIZABILITY_NONLOCALIZED = YES;
 				CLANG_ENABLE_OBJC_ARC = YES;
 				COMBINE_HIDPI_IMAGES = YES;
@@ -1304,6 +1305,7 @@
 		OBJ_4 /* Release */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
+				ASSETCATALOG_COMPILER_GENERATE_ASSET_SYMBOLS = NO;
 				CLANG_ANALYZER_LOCALIZABILITY_NONLOCALIZED = YES;
 				CLANG_ENABLE_OBJC_ARC = YES;
 				COMBINE_HIDPI_IMAGES = YES;
