@@ -10,7 +10,7 @@ import Foundation
 import AuthenticationServices
 
 public protocol OAuth2AuthenticatorSessionProvider {
-    func startSession(authURL: URL, callbackScheme: String?) async throws -> URL
+    func startSession(authURL: URL, callback: ASWebAuthenticationSession.Callback) async throws -> URL
 }
 
 @MainActor
@@ -18,14 +18,23 @@ public class ASWebAuthenticationSessionProvider: OAuth2AuthenticatorSessionProvi
 
     private let contextProviding: ASWebAuthenticationPresentationContextProviding
     private var authenticationSession: ASWebAuthenticationSession?
+    private var previouslyCompleted = false
 
     public init(contextProviding: ASWebAuthenticationPresentationContextProviding) {
         self.contextProviding = contextProviding
     }
 
-    public func startSession(authURL: URL, callbackScheme: String?) async throws -> URL {
-        try await withCheckedThrowingContinuation { continuation in
-            self.authenticationSession = ASWebAuthenticationSession(url: authURL, callbackURLScheme: callbackScheme) { callbackURL, error in
+    public func startSession(authURL: URL, callback: ASWebAuthenticationSession.Callback) async throws -> URL {
+        return try await withCheckedThrowingContinuation { continuation in
+            self.authenticationSession = ASWebAuthenticationSession(url: authURL, callback: callback) { callbackURL, error in
+                guard !self.previouslyCompleted else {
+                    return
+                }
+                
+                defer {
+                    self.previouslyCompleted = true
+                }
+
                 if let error {
                     continuation.resume(throwing: error)
                     return
@@ -90,8 +99,8 @@ public class OAuth2Authenticator {
             throw TError.missingAuthenticationConfiguration
         }
 
-        let callbackURL: URL = try await sessionProvider.startSession(authURL: authURL, callbackScheme: scheme)
-        
+        let callbackURL: URL = try await sessionProvider.startSession(authURL: authURL, callback: ASWebAuthenticationSession.Callback.customScheme(scheme))
+
         guard callbackURL.getQueryParam(value: "error") == nil else {
             throw TError.authenticationError( callbackURL.getQueryParam(value: "error")!)
         }
