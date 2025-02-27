@@ -18,6 +18,7 @@ public class ASWebAuthenticationSessionProvider: OAuth2AuthenticatorSessionProvi
 
     private let contextProviding: ASWebAuthenticationPresentationContextProviding
     private var authenticationSession: ASWebAuthenticationSession?
+    private var previouslyCompleted = false
 
     public init(contextProviding: ASWebAuthenticationPresentationContextProviding) {
         self.contextProviding = contextProviding
@@ -26,6 +27,9 @@ public class ASWebAuthenticationSessionProvider: OAuth2AuthenticatorSessionProvi
     public func startSession(authURL: URL, callbackScheme: String?) async throws -> URL {
         try await withCheckedThrowingContinuation { continuation in
             self.authenticationSession = ASWebAuthenticationSession(url: authURL, callbackURLScheme: callbackScheme) { callbackURL, error in
+                guard !self.previouslyCompleted else { return }
+                self.previouslyCompleted = true
+
                 if let error {
                     continuation.resume(throwing: error)
                     return
