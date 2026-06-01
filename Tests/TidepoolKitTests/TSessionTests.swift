@@ -43,4 +43,17 @@ class TSessionTests: XCTestCase {
     func testCodableAsJSON() {
         XCTAssertCodableAsJSON(TSessionTests.session, TSessionTests.sessionJSONDictionary)
     }
+
+    // Backward compatibility: a session persisted before `userRoles` was added
+    // should decode successfully with an empty roles array, rather than throwing
+    // and forcing the user to re-authenticate after an upgrade.
+    func testDecodingLegacySessionWithoutUserRolesYieldsEmpty() throws {
+        var legacyJSON = TSessionTests.sessionJSONDictionary
+        legacyJSON.removeValue(forKey: "userRoles")
+        let data = try JSONSerialization.data(withJSONObject: legacyJSON)
+        let decoded = try JSONDecoder.tidepool.decode(TSession.self, from: data)
+        XCTAssertEqual(decoded.userRoles, [])
+        XCTAssertEqual(decoded.userId, "1234567890")
+        XCTAssertEqual(decoded.accessToken, "test-access-token")
+    }
 }
