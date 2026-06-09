@@ -57,4 +57,33 @@ public struct TSession: Codable, Equatable {
         }
         return date.timeIntervalSince(accessTokenExpiration) > 0
     }
+
+    private enum CodingKeys: String, CodingKey {
+        case environment
+        case accessToken
+        case accessTokenExpiration
+        case refreshToken
+        case userId
+        case username
+        case userRoles
+        case trace
+        case createdDate
+    }
+
+    // Custom decoder for backward compatibility with sessions persisted before
+    // `userRoles` was added: old JSON lacks the key, so default to an empty array
+    // rather than failing the whole decode (which would drop the saved session
+    // on first launch after an upgrade and force the user to re-authenticate).
+    public init(from decoder: Decoder) throws {
+        let container = try decoder.container(keyedBy: CodingKeys.self)
+        self.environment = try container.decode(TEnvironment.self, forKey: .environment)
+        self.accessToken = try container.decode(String.self, forKey: .accessToken)
+        self.accessTokenExpiration = try container.decodeIfPresent(Date.self, forKey: .accessTokenExpiration)
+        self.refreshToken = try container.decodeIfPresent(String.self, forKey: .refreshToken)
+        self.userId = try container.decode(String.self, forKey: .userId)
+        self.username = try container.decode(String.self, forKey: .username)
+        self.userRoles = try container.decodeIfPresent([String].self, forKey: .userRoles) ?? []
+        self.trace = try container.decodeIfPresent(String.self, forKey: .trace)
+        self.createdDate = try container.decode(Date.self, forKey: .createdDate)
+    }
 }
