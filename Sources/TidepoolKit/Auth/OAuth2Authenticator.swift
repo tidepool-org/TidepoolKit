@@ -13,6 +13,8 @@ public protocol OAuth2AuthenticatorSessionProvider {
     func startSession(authURL: URL, callbackScheme: String?) async throws -> URL
 }
 
+// The browser sign-in sheet has no watchOS equivalent; signing in stays on the phone.
+#if !os(watchOS)
 @MainActor
 public class ASWebAuthenticationSessionProvider: OAuth2AuthenticatorSessionProvider {
 
@@ -48,6 +50,7 @@ public class ASWebAuthenticationSessionProvider: OAuth2AuthenticatorSessionProvi
         }
     }
 }
+#endif
 
 public class OAuth2Authenticator {
     private let api: TAPI
