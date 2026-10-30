@@ -258,7 +258,8 @@ public actor TAPI {
             throw TError.responseUnexpected(response, data)
         }
 
-        if httpResponse.statusCode == 401 {
+        if httpResponse.statusCode == 401 || Self.isInvalidGrant(statusCode: httpResponse.statusCode, data: data) {
+            self.session = nil
             throw TError.requestNotAuthenticated
         }
 
@@ -276,6 +277,11 @@ public actor TAPI {
         } catch {
             throw TError.responseMalformedJSON(httpResponse, data, error)
         }
+    }
+
+    private static func isInvalidGrant(statusCode: Int, data: Data) -> Bool {
+        struct OAuthError: Decodable { let error: String }
+        return statusCode == 400 && (try? JSONDecoder().decode(OAuthError.self, from: data))?.error == "invalid_grant"
     }
 
     /// Logout the Tidepool API session.
