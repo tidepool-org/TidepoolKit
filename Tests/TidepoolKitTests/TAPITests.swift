@@ -312,6 +312,59 @@ class TAPILoginTests: TAPISessionTests {
         }
     }
 
+    func testSessionRefreshInvalidGrantClearsSession() async {
+        let body: Data? = Data(#"{"error":"invalid_grant","error_description":"Token is not active"}"#.utf8)
+        let tokenHandler = URLProtocolMock.Handler(validator: URLProtocolMock.Validator(url: "https://test.org/authurl/realms/testrealm/token", method: "POST"), success: URLProtocolMock.Success(statusCode: 400, body: body))
+        URLProtocolMock.handlers = [environmentInfoHandler, authConfigHandler, tokenHandler]
+
+        do {
+            try await api.refreshSession()
+            XCTFail("Refresh should not succeed")
+        } catch {
+            guard case TError.requestNotAuthenticated = error else {
+                XCTFail(String(describing: error))
+                return
+            }
+        }
+        let session = await api.session
+        XCTAssertNil(session)
+    }
+
+    func testSessionRefreshUnauthorizedClearsSession() async {
+        let tokenHandler = URLProtocolMock.Handler(validator: URLProtocolMock.Validator(url: "https://test.org/authurl/realms/testrealm/token", method: "POST"), success: URLProtocolMock.Success(statusCode: 401))
+        URLProtocolMock.handlers = [environmentInfoHandler, authConfigHandler, tokenHandler]
+
+        do {
+            try await api.refreshSession()
+            XCTFail("Refresh should not succeed")
+        } catch {
+            guard case TError.requestNotAuthenticated = error else {
+                XCTFail(String(describing: error))
+                return
+            }
+        }
+        let session = await api.session
+        XCTAssertNil(session)
+    }
+
+    func testSessionRefreshServerErrorKeepsSession() async {
+        let body: Data? = Data(#"{"error":"temporarily_unavailable"}"#.utf8)
+        let tokenHandler = URLProtocolMock.Handler(validator: URLProtocolMock.Validator(url: "https://test.org/authurl/realms/testrealm/token", method: "POST"), success: URLProtocolMock.Success(statusCode: 503, body: body))
+        URLProtocolMock.handlers = [environmentInfoHandler, authConfigHandler, tokenHandler]
+
+        do {
+            try await api.refreshSession()
+            XCTFail("Refresh should not succeed")
+        } catch {
+            guard case TError.responseMalformedJSON = error else {
+                XCTFail(String(describing: error))
+                return
+            }
+        }
+        let session = await api.session
+        XCTAssertEqual(session?.refreshToken, refreshToken)
+    }
+
     func testRefreshTriggeredWhenPastExpiration() async {
 
         let refreshedAccessToken = "refreshedAccessToken"
